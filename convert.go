@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"unsafe"
 
-	"github.com/goccy/go-json"
+	json "github.com/json-iterator/go"
 )
 
 // 更安全的 reflect.StringHeader
