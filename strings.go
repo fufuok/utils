@@ -64,30 +64,29 @@ func InStrings(ss []string, s string) bool {
 }
 
 // Base64 编码
-func B64Encode(s string) string {
-	return base64.StdEncoding.EncodeToString(S2B(s))
+func B64Encode(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
 }
 
 // Base64 解码
-func B64Decode(s string) string {
-	b, err := base64.StdEncoding.DecodeString(s)
-	if err != nil {
-		return ""
+func B64Decode(s string) []byte {
+	if b, err := base64.StdEncoding.DecodeString(s); err == nil {
+		return b
 	}
 
-	return B2S(b)
+	return nil
 }
 
 // Base64 解码, 安全 URL, 替换: "+/" 为 "-_"
-func B64UrlEncode(s string) string {
-	return base64.URLEncoding.EncodeToString(S2B(s))
+func B64UrlEncode(b []byte) string {
+	return base64.URLEncoding.EncodeToString(b)
 }
 
 // Base64 解码
-func B64UrlDecode(s string) string {
+func B64UrlDecode(s string) []byte {
 	if b, err := base64.URLEncoding.DecodeString(s); err == nil {
-		return B2S(b)
+		return b
 	}
 
-	return ""
+	return nil
 }

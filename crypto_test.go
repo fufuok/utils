@@ -78,14 +78,23 @@ func TestMD5Sum(t *testing.T) {
 func TestEncrypt(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, "解码/编码~ 顶替&#", Encrypt("解码/编码~ 顶替&#", ""))
-	AssertEqual(t, "a2d474c05afa8985ccb593c07c4e1c70a47c4cd049d6865a77c61b6ff8f621a6",
+	AssertEqual(t, "BxcwmUGXjHHq9XTcZnpbmdzFWUCx7SFscefaT9KepvZB",
 		Encrypt("解码/编码~ 顶替&#", "\u1234\x33 Fufu@中文"))
+	AssertEqual(t, "7nWaJ3TEGhKh7RCMJDCHpDrDH741KpMKhRLW2N9Gxb3Tdi48sgkXDHQZBAApVTBHx5",
+		Encrypt("Fufu 中　文加密/解密~&#123a", "0123456789012345"))
+}
+
+func TestDecrypt(t *testing.T) {
+	t.Parallel()
+	AssertEqual(t, "Fufu 中　文加密/解密~&#123a",
+		Decrypt("7nWaJ3TEGhKh7RCMJDCHpDrDH741KpMKhRLW2N9Gxb3Tdi48sgkXDHQZBAApVTBHx5",
+			"0123456789012345"))
 }
 
 func TestGetenvDecrypt(t *testing.T) {
 	t.Parallel()
 	_ = os.Setenv("GO_TEST_1", "解码/编码~ 顶替&#")
-	_ = os.Setenv("GO_TEST_2", "a2d474c05afa8985ccb593c07c4e1c70a47c4cd049d6865a77c61b6ff8f621a6")
+	_ = os.Setenv("GO_TEST_2", "BxcwmUGXjHHq9XTcZnpbmdzFWUCx7SFscefaT9KepvZB")
 	encrypt, _ := SetenvEncrypt("GO_TEST_3", "Fufu", "1")
 	res1 := GetenvDecrypt("GO_TEST_1", "")
 	res2 := GetenvDecrypt("GO_TEST_2", "\u1234\x33 Fufu@中文")

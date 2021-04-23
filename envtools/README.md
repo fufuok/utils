@@ -34,11 +34,11 @@ go build main.go
 plaintext:
 	123.456
 ciphertext:
-	739d35a06faecf8f3cbe113b13e91d42
+	FH3Djy1UJiv2y5CrpDQzty
 Linux:
-	export XY_REDIS_AUTH=739d35a06faecf8f3cbe113b13e91d42
+	export XY_REDIS_AUTH=FH3Djy1UJiv2y5CrpDQzty
 Windows:
-	set XY_REDIS_AUTH=739d35a06faecf8f3cbe113b13e91d42
+	set XY_REDIS_AUTH=FH3Djy1UJiv2y5CrpDQzty
 
 
 testGetenv: XY_REDIS_AUTH = 123.456
@@ -49,7 +49,7 @@ testGetenv: XY_REDIS_AUTH = 123.456
 ## 3. 解密
 
 ```shell
-export XY_REDIS_AUTH=739d35a06faecf8f3cbe113b13e91d42
+export XY_REDIS_AUTH=FH3Djy1UJiv2y5CrpDQzty
 ./main -k=XY_REDIS_AUTH
 # testGetenv: XY_REDIS_AUTH = 123.456
 ```
@@ -87,8 +87,8 @@ var Conf tConfig
 
 func init() {
 	// 前置: 假如项目环境中已经执行了下面的配置
-	// export FF_PROJECT_1_BASE_SECRET_KEY=ccce03fe3f2230b13deff98b10d105388de979448c28aa7e4114e193bf682107
-	// export PROJECT_1_REDIS_AUTH=739d35a06faecf8f3cbe113b13e91d42
+	// export FF_PROJECT_1_BASE_SECRET_KEY=EnUNZ1FkdnsvWXTukDe4FiwhLkw5eMmjGgAYNqYwB9zn
+	// export PROJECT_1_REDIS_AUTH=FH3Djy1UJiv2y5CrpDQzty
 	// 1. 项目 git 中不会出现明文信息
 	// 2. 运行环境中也不会见到明文信息, 也不能通过环境变量值解密
 

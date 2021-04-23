@@ -102,6 +102,7 @@ func Hash(b []byte, h hash.Hash) []byte {
 	if h == nil {
 		h = md5.New()
 	}
+	h.Reset()
 	h.Write(b)
 
 	return h.Sum(nil)
@@ -161,10 +162,10 @@ func GetenvDecrypt(key string, secret string) string {
 	return Decrypt(os.Getenv(key), secret)
 }
 
-// 加密 (密钥取 32 位 MD5, AES-CBC, Hex)
+// 加密 (密钥取 32 位 MD5, AES-CBC, base58)
 func Encrypt(value, secret string) string {
 	if secret != "" {
-		value = AesCBCEnStringHex(value, MD5Hex(secret))
+		value = AesCBCEnStringB58(value, MD5Hex(secret))
 	}
 
 	return value
@@ -173,7 +174,7 @@ func Encrypt(value, secret string) string {
 // 解密
 func Decrypt(value, secret string) string {
 	if secret != "" {
-		value = AesCBCDeStringHex(value, MD5Hex(secret))
+		value = AesCBCDeStringB58(value, MD5Hex(secret))
 	}
 
 	return value

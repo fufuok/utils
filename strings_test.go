@@ -58,25 +58,26 @@ func TestInStrings(t *testing.T) {
 
 func TestB64Encode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode("解码/编码~ 顶替&#"))
+	AssertEqual(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode(S2B("解码/编码~ 顶替&#")))
 }
 
 func TestB64UrlEncode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode("解码/编码~ 顶替&#"))
+	AssertEqual(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode(S2B("解码/编码~ 顶替&#")))
 }
 
 func TestB64Decode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "解码/编码~ 顶替&#", B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
+	AssertEqual(t, []byte("解码/编码~ 顶替&#"), B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
 }
 
 func TestB64UrlDecode(t *testing.T) {
 	for _, v := range []struct {
-		in, out string
+		in  string
+		out []byte
 	}{
-		{"6Kej56CBL-e8lueggX4g6aG25pu_JiM=", "解码/编码~ 顶替&#"},
-		{"123", ""},
+		{"6Kej56CBL-e8lueggX4g6aG25pu_JiM=", []byte("解码/编码~ 顶替&#")},
+		{"123", nil},
 	} {
 		AssertEqual(t, v.out, B64UrlDecode(v.in))
 	}
@@ -150,3 +151,75 @@ func BenchmarkSprintf(b *testing.B) {
 // BenchmarkSprintf-8         	31582645	       389 ns/op	     160 B/op	       4 allocs/op
 // BenchmarkSprintf-8         	30813024	       393 ns/op	     160 B/op	       4 allocs/op
 // BenchmarkSprintf-8         	31000237	       388 ns/op	     160 B/op	       4 allocs/op
+
+func BenchmarkSprintfAny_X(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = fmt.Sprintf("%s%s%v%d",
+			[]byte("码~ 顶替&#"),
+			"2021-04-11T12:00:00+08:00",
+			true,
+			123,
+		)
+	}
+}
+
+func BenchmarkAddStringAny_X(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = AddString(
+			MustString([]byte("码~ 顶替&#")),
+			"2021-04-11T12:00:00+08:00",
+			MustString(true),
+			MustString(123),
+		)
+	}
+}
+
+func BenchmarkSprintfString_X(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = fmt.Sprintf("%s%s%s%s",
+			"码~ 顶替&#",
+			"2021-04-11T12:00:00+08:00",
+			"true",
+			"123",
+		)
+	}
+}
+
+func BenchmarkAddString_X(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = AddString(
+			"码~ 顶替&#",
+			"2021-04-11T12:00:00+08:00",
+			"true",
+			"123",
+		)
+	}
+}
+
+func BenchmarkStringsJoin_X(b *testing.B) {
+	s := []string{
+		"码~ 顶替&#",
+		"2021-04-11T12:00:00+08:00",
+		"true",
+		"123",
+	}
+	for i := 0; i < b.N; i++ {
+		_ = strings.Join(s, "")
+	}
+}
+
+// BenchmarkSprintfAny_X-8      	 3408980	       319 ns/op	      96 B/op	       3 allocs/op
+// BenchmarkSprintfAny_X-8      	 3749611	       334 ns/op	      96 B/op	       3 allocs/op
+// BenchmarkSprintfAny_X-8      	 3161620	       331 ns/op	      96 B/op	       3 allocs/op
+// BenchmarkAddStringAny_X-8    	 3043008	       397 ns/op	     104 B/op	       5 allocs/op
+// BenchmarkAddStringAny_X-8    	 3076884	       384 ns/op	     104 B/op	       5 allocs/op
+// BenchmarkAddStringAny_X-8    	 3154803	       380 ns/op	     104 B/op	       5 allocs/op
+// BenchmarkSprintfString_X-8   	 5598256	       238 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkSprintfString_X-8   	 5505559	       223 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkSprintfString_X-8   	 5557806	       214 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkAddString_X-8       	18094471	        67.9 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkAddString_X-8       	18498307	        72.5 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkAddString_X-8       	17632718	        71.9 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkStringsJoin_X-8     	12587984	       107 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkStringsJoin_X-8     	10302427	       149 ns/op	      48 B/op	       1 allocs/op
+// BenchmarkStringsJoin_X-8     	12493851	       102 ns/op	      48 B/op	       1 allocs/op

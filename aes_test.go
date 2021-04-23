@@ -79,6 +79,57 @@ func TestAesCBCDePKCS7StringHex(t *testing.T) {
 	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", actual)
 }
 
+func TestAesCBCEnStringB58(t *testing.T) {
+	actual := AesCBCEnStringB58("1", "1")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCEnStringB58("", "0123456789012345")
+	AssertEqual(t, "CnvTeK2SG7tByrMkdSKhT7", actual)
+
+	actual = AesCBCEnStringB58("Fufu 中　文加密/解密~&#123a", "0123456789012345")
+	AssertEqual(t,
+		"7oF2FkMyrFgs54hnnoymoAsXJnPgpvXpq8Tr8XFyDdw6LrvouTcnhFSnmtghqSCSih", actual)
+
+	actual = AesCBCEnStringB58("Fufu 中　文加密/解密~&#123a", "d927ad81199aa7dcadfdb4e47b6dc694")
+	AssertEqual(t,
+		"7nWaJ3TEGhKh7RCMJDCHpDrDH741KpMKhRLW2N9Gxb3Tdi48sgkXDHQZBAApVTBHx5", actual)
+}
+
+func TestAesCBCEnPKCS7StringB58(t *testing.T) {
+	actual := AesCBCEnPKCS7StringB58("1", "1")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCEnPKCS7StringB58("", "0123456789012345")
+	AssertEqual(t, "8UbX7eoJQNJWbL1GqeM5LJ", actual)
+
+	actual = AesCBCEnPKCS7StringB58("Fufu 中　文加密/解密~&#123a", "0123456789012345")
+	AssertEqual(t,
+		"7oF2FkMyrFgs54hnnoymoAsXJnPgpvXpq8Tr8XFyDdw6UGTm6E1tXrpcrtXrg5NhBp", actual)
+}
+
+func TestAesCBCDeStringB58(t *testing.T) {
+	actual := AesCBCDeStringB58("1", "1")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCDeStringB58("CnvTeK2SG7tByrMkdSKhT7", "0123456789012345")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCDeStringB58("7oF2FkMyrFgs54hnnoymoAsXJnPgpvXpq8Tr8XFyDdw6LrvouTcnhFSnmtghqSCSih", "0123456789012345")
+	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", actual)
+}
+
+func TestAesCBCDePKCS7StringB58(t *testing.T) {
+	actual := AesCBCDePKCS7StringB58("1", "1")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCDePKCS7StringB58("8UbX7eoJQNJWbL1GqeM5LJ", "0123456789012345")
+	AssertEqual(t, "", actual)
+
+	actual = AesCBCDePKCS7StringB58("7oF2FkMyrFgs54hnnoymoAsXJnPgpvXpq8Tr8XFyDdw6UGTm6E1tXrpcrtXrg5NhBp",
+		"0123456789012345")
+	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", actual)
+}
+
 func TestAesCBCEnStringB64(t *testing.T) {
 	actual := AesCBCEnStringB64("1", "1")
 	AssertEqual(t, "", actual)
@@ -138,7 +189,7 @@ func TestAesCBCDeStringB64(t *testing.T) {
 	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", actual)
 }
 
-func TestAesCBCDePKCS7StringB644(t *testing.T) {
+func TestAesCBCDePKCS7StringB64(t *testing.T) {
 	actual := AesCBCDePKCS7StringB64("1", "1")
 	AssertEqual(t, "", actual)
 
@@ -174,18 +225,18 @@ func TestAesCBCEncrypt(t *testing.T) {
 		},
 	} {
 		actual := AesCBCEncrypt(false, b, v.key)
-		AssertEqual(t, v.expected, B64Encode(B2S(actual)))
+		AssertEqual(t, v.expected, B64Encode(actual))
 	}
 
 	actual := AesCBCEncrypt(false, []byte(""), []byte("abcdefghabcdefgh"))
-	AssertEqual(t, "/06zrVSl4UrsshCLDgplgA==", B64Encode(B2S(actual)))
+	AssertEqual(t, "/06zrVSl4UrsshCLDgplgA==", B64Encode(actual))
 
 	actual = AesCBCEncrypt(false, []byte("1"), []byte("abcdefghabcdefgh"))
-	AssertEqual(t, "TzlqKoJCo9jWlqZ+gHvhvQ==", B64Encode(B2S(actual)))
+	AssertEqual(t, "TzlqKoJCo9jWlqZ+gHvhvQ==", B64Encode(actual))
 
 	// 指定向量加密
 	actual = AesCBCEncrypt(false, b, []byte("01234567890123456789012345678901"), []byte("abcdefghabcdefgh"))
-	AssertEqual(t, "+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdpZn4m+l8HNpYkY1A30Y2xh", B64Encode(B2S(actual)))
+	AssertEqual(t, "+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdpZn4m+l8HNpYkY1A30Y2xh", B64Encode(actual))
 }
 
 func TestAesCBCEncryptPKCS7(t *testing.T) {
@@ -212,12 +263,12 @@ func TestAesCBCEncryptPKCS7(t *testing.T) {
 		},
 	} {
 		actual := AesCBCEncrypt(true, b, v.key)
-		AssertEqual(t, v.expected, B64Encode(B2S(actual)))
+		AssertEqual(t, v.expected, B64Encode(actual))
 	}
 
 	// 指定向量加密
 	actual := AesCBCEncrypt(true, b, []byte("01234567890123456789012345678901"), []byte("abcdefghabcdefgh"))
-	AssertEqual(t, "+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdrGbnwtEDJRdtWYZKF2P0kb", B64Encode(B2S(actual)))
+	AssertEqual(t, "+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdrGbnwtEDJRdtWYZKF2P0kb", B64Encode(actual))
 }
 
 func TestAesCBCDecrypt(t *testing.T) {
@@ -240,7 +291,7 @@ func TestAesCBCDecrypt(t *testing.T) {
 			"4drGuwuCHASVh4nta3nml/rBWgkNcUyuTcbB1R5iFfyGkEsP6N9HuxAgg0n22vb6",
 		},
 	} {
-		actual := AesCBCDecrypt(false, S2B(B64Decode(v.res)), v.key)
+		actual := AesCBCDecrypt(false, B64Decode(v.res), v.key)
 		AssertEqual(t, expected, B2S(actual))
 	}
 
@@ -251,7 +302,7 @@ func TestAesCBCDecrypt(t *testing.T) {
 	// 指定向量加密
 	actual := AesCBCDecrypt(
 		false,
-		S2B(B64Decode("+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdpZn4m+l8HNpYkY1A30Y2xh")),
+		B64Decode("+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdpZn4m+l8HNpYkY1A30Y2xh"),
 		[]byte("01234567890123456789012345678901"),
 		[]byte("abcdefghabcdefgh"),
 	)
@@ -278,7 +329,7 @@ func TestAesCBCDecryptPKCS7(t *testing.T) {
 			"4drGuwuCHASVh4nta3nml/rBWgkNcUyuTcbB1R5iFfwb6rQnIO47Hsu1fZrc9e1J",
 		},
 	} {
-		actual := AesCBCDecrypt(true, S2B(B64Decode(v.res)), v.key)
+		actual := AesCBCDecrypt(true, B64Decode(v.res), v.key)
 		AssertEqual(t, expected, B2S(actual))
 	}
 
@@ -289,7 +340,7 @@ func TestAesCBCDecryptPKCS7(t *testing.T) {
 	// 指定向量加密
 	actual := AesCBCDecrypt(
 		true,
-		S2B(B64Decode("+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdrGbnwtEDJRdtWYZKF2P0kb")),
+		B64Decode("+bmCWToTQ/EvZMbphPZ+cImUgpYrf/q78bflV70zIdrGbnwtEDJRdtWYZKF2P0kb"),
 		[]byte("01234567890123456789012345678901"),
 		[]byte("abcdefghabcdefgh"),
 	)

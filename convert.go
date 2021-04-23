@@ -2,10 +2,11 @@ package utils
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"unsafe"
 
-	json "github.com/json-iterator/go"
+	"github.com/fufuok/utils/json"
 )
 
 // 更安全的 reflect.StringHeader
@@ -21,8 +22,25 @@ type sliceHeader struct {
 	cap  int
 }
 
-// string 转为 []byte
-func S2B(s string) (b []byte) {
+// Ref: fasthttp
+func String2Bytes(s string) (b []byte) {
+	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+	bh.Data = sh.Data
+	bh.Cap = sh.Len
+	bh.Len = sh.Len
+	return b
+}
+
+// Ref: csdn.weixin_43705457
+func Str2Bytes(s string) (b []byte) {
+	*(*string)(unsafe.Pointer(&b)) = s                                                  // 把s的地址付给b
+	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s) // 修改容量为长度
+	return
+}
+
+// Ref: csdn.u010853261
+func StringToBytes(s string) (b []byte) {
 	return *(*[]byte)(unsafe.Pointer(&sliceHeader{
 		data: (*stringHeader)(unsafe.Pointer(&s)).data,
 		len:  len(s),
@@ -30,7 +48,18 @@ func S2B(s string) (b []byte) {
 	}))
 }
 
-// []byte 转为 string
+// StringToBytes converts string to byte slice without a memory allocation.
+// Ref: gin
+func S2B(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
+}
+
+// BytesToString
 func B2S(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
