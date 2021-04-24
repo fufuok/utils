@@ -10,6 +10,181 @@
 go get github.com/fufuok/utils
 ```
 
+## 目录
+
+```go
+package utils // import "github.com/fufuok/utils"
+
+func AddString(s ...string) string
+func AddStringBytes(s ...string) []byte
+func AesCBCDeB58(s, key string) []byte
+func AesCBCDeB64(s, key string) []byte
+func AesCBCDeHex(s, key string) []byte
+func AesCBCDePKCS7B58(s, key string) []byte
+func AesCBCDePKCS7B64(s, key string) []byte
+func AesCBCDePKCS7Hex(s, key string) []byte
+func AesCBCDePKCS7StringB58(s, key string) string
+func AesCBCDePKCS7StringB64(s, key string) string
+func AesCBCDePKCS7StringHex(s, key string) string
+func AesCBCDeStringB58(s, key string) string
+func AesCBCDeStringB64(s, key string) string
+func AesCBCDeStringHex(s, key string) string
+func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
+func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
+func AesCBCEnB58(b, key []byte) string
+func AesCBCEnB64(b, key []byte) string
+func AesCBCEnHex(b, key []byte) string
+func AesCBCEnPKCS7B58(b, key []byte) string
+func AesCBCEnPKCS7B64(b, key []byte) string
+func AesCBCEnPKCS7Hex(b, key []byte) string
+func AesCBCEnPKCS7StringB58(s, key string) string
+func AesCBCEnPKCS7StringB64(s, key string) string
+func AesCBCEnPKCS7StringHex(s, key string) string
+func AesCBCEnStringB58(s, key string) string
+func AesCBCEnStringB64(s, key string) string
+func AesCBCEnStringHex(s, key string) string
+func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
+func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func AesGCMDeB58(s, key, nonce string) []byte
+func AesGCMDeB64(s, key, nonce string) []byte
+func AesGCMDeHex(s, key, nonce string) []byte
+func AesGCMDeStringB58(s, key, nonce string) string
+func AesGCMDeStringB64(s, key, nonce string) string
+func AesGCMDeStringHex(s, key, nonce string) string
+func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte)
+func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]byte, error)
+func AesGCMEnB58(b, key []byte) (string, string)
+func AesGCMEnB64(b, key []byte) (string, string)
+func AesGCMEnHex(b, key []byte) (string, string)
+func AesGCMEnStringB58(s, key string) (string, string)
+func AesGCMEnStringB64(s, key string) (string, string)
+func AesGCMEnStringHex(s, key string) (string, string)
+func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte)
+func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byte, []byte, error)
+func AssertEqual(t testing.TB, expected, actual interface{}, description ...string)
+func AssertPanics(t *testing.T, title string, f func())
+func B2S(b []byte) string
+func B64Decode(s string) []byte
+func B64Encode(b []byte) string
+func B64UrlDecode(s string) []byte
+func B64UrlEncode(b []byte) string
+func CallPath() string
+func CopyBytes(b []byte) []byte
+func CopyString(s string) string
+func Decrypt(value, secret string) string
+func DesCBCDeB58(s, key string) []byte
+func DesCBCDeB64(s, key string) []byte
+func DesCBCDeHex(s, key string) []byte
+func DesCBCDePKCS7B58(s, key string) []byte
+func DesCBCDePKCS7B64(s, key string) []byte
+func DesCBCDePKCS7Hex(s, key string) []byte
+func DesCBCDePKCS7StringB58(s, key string) string
+func DesCBCDePKCS7StringB64(s, key string) string
+func DesCBCDePKCS7StringHex(s, key string) string
+func DesCBCDeStringB58(s, key string) string
+func DesCBCDeStringB64(s, key string) string
+func DesCBCDeStringHex(s, key string) string
+func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
+func DesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
+func DesCBCEnB58(b, key []byte) string
+func DesCBCEnB64(b, key []byte) string
+func DesCBCEnHex(b, key []byte) string
+func DesCBCEnPKCS7B58(b, key []byte) string
+func DesCBCEnPKCS7B64(b, key []byte) string
+func DesCBCEnPKCS7Hex(b, key []byte) string
+func DesCBCEnPKCS7StringB58(s, key string) string
+func DesCBCEnPKCS7StringB64(s, key string) string
+func DesCBCEnPKCS7StringHex(s, key string) string
+func DesCBCEnStringB58(s, key string) string
+func DesCBCEnStringB64(s, key string) string
+func DesCBCEnStringHex(s, key string) string
+func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
+func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func EncodeUUID(id []byte) []byte
+func Encrypt(value, secret string) string
+func GetBytes(v interface{}, defaultVal ...[]byte) []byte
+func GetInt(v interface{}, defaultInt ...int) int
+func GetString(v interface{}, defaultVal ...string) string
+func GetenvDecrypt(key string, secret string) string
+func Hash(b []byte, h hash.Hash) []byte
+func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
+func HmacSHA1(b, key []byte) []byte
+func HmacSHA1Hex(s, key string) string
+func HmacSHA256(b, key []byte) []byte
+func HmacSHA256Hex(s, key string) string
+func HmacSHA512(b, key []byte) []byte
+func HmacSHA512Hex(s, key string) string
+func InInts(slice []int, n int) bool
+func InStrings(ss []string, s string) bool
+func IsDir(s string) bool
+func IsExist(s string) bool
+func IsFile(s string) bool
+func JoinBytes(b ...[]byte) []byte
+func MD5(b []byte) []byte
+func MD5Hex(s string) string
+func MD5Reader(r io.Reader) (string, error)
+func MD5Sum(filename string) (string, error)
+func MaxInt(a, b int) int
+func MinInt(a, b int) int
+func MustBool(v interface{}) bool
+func MustInt(v interface{}) int
+func MustJSON(v interface{}) []byte
+func MustJSONString(v interface{}) string
+func MustString(v interface{}) string
+func Padding(b []byte, bSize int, pkcs7 bool) []byte
+func RandBytes(n int) []byte
+func RandHex(nHalf int) string
+func RandInt(min int, max int) int
+func RandString(n int) string
+func Round(val float64, precision int) float64
+func RunPath() string
+func S2B(s string) []byte
+func SearchInt(slice []int, n int) int
+func SearchString(ss []string, s string) int
+func SetenvEncrypt(key, value, secret string) (string, error)
+func Sha1(b []byte) []byte
+func Sha1Hex(s string) string
+func Sha256(b []byte) []byte
+func Sha256Hex(s string) string
+func Sha512(b []byte) []byte
+func Sha512Hex(s string) string
+func Str2Bytes(s string) (b []byte)
+func String2Bytes(s string) (b []byte)
+func StringToBytes(s string) (b []byte)
+func UUID() []byte
+func UUIDShort() string
+func UUIDSimple() string
+func UUIDString() string
+func UnPadding(b []byte, pkcs7 bool) []byte
+func WaitNextMinute()
+func WeightedChoiceIndex(choices []TChoice) int
+func WeightedChoiceMap(choices map[interface{}]int) interface{}
+func WeightedChoiceWeightsIndex(weights []int) int
+type TChoice struct{ ... }
+    func WeightedChoice(choices ...TChoice) TChoice
+```
+
+```go
+package myip // import "github.com/fufuok/utils/myip"
+
+func ExternalIP(v ...string) string
+func ExternalIPv4() string
+func ExternalIPv6() string
+func InternalIP(dstAddr, network string) string
+func InternalIPv4() string
+func InternalIPv6() string
+func LocalIP() string
+```
+
+```go
+package base58 // import "github.com/fufuok/utils/base58"
+
+func CheckDecode(input string) (result []byte, version byte, err error)
+func CheckEncode(input []byte, version byte) string
+func Decode(b string) []byte
+func Encode(b []byte) string
+```
+
 ## 使用
 
 ```go

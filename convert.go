@@ -34,8 +34,8 @@ func String2Bytes(s string) (b []byte) {
 
 // Ref: csdn.weixin_43705457
 func Str2Bytes(s string) (b []byte) {
-	*(*string)(unsafe.Pointer(&b)) = s                                                  // 把s的地址付给b
-	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s) // 修改容量为长度
+	*(*string)(unsafe.Pointer(&b)) = s
+	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s)
 	return
 }
 

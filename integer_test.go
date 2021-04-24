@@ -6,10 +6,12 @@ import (
 
 func TestMinInt(t *testing.T) {
 	AssertEqual(t, -1, MinInt(1, -1))
+	AssertEqual(t, 0, MinInt(0, 1))
 }
 
 func TestMaxInt(t *testing.T) {
 	AssertEqual(t, 1, MaxInt(1, -1))
+	AssertEqual(t, 1, MaxInt(0, 1))
 }
 
 func TestGetInt(t *testing.T) {
