@@ -13,6 +13,7 @@ func TestGetString(t *testing.T) {
 		out string
 	}{
 		{"Fufu\n 中　文", "", "Fufu\n 中　文"},
+		{"", "", ""},
 		{nil, "", ""},
 		{nil, "NULL", "NULL"},
 		{123, "", "123"},
@@ -24,8 +25,31 @@ func TestGetString(t *testing.T) {
 		{[]int{0, 2, 1}, "", "[0 2 1]"},
 	} {
 		AssertEqual(t, v.out, GetString(v.in, v.def))
+		AssertEqual(t, v.out, GetSafeString(MustString(v.in), v.def))
 	}
-	AssertEqual(t, "", GetString(nil))
+	AssertEqual(t, "default", GetString(nil, "default"))
+	AssertEqual(t, "default", GetSafeString("", "default"))
+}
+
+func TestGetSafeString(t *testing.T) {
+	t.Parallel()
+	b := []byte("Fufu")
+	s := B2S(b)
+	safeS1 := string(b)
+	safeS2 := GetSafeB2S(b, "optional default")
+	safeS3 := GetSafeString(s, "optional default")
+	safeS4 := CopyString(s)
+	AssertEqual(t, "Fufu", s)
+
+	b[0] = 'X'
+
+	AssertEqual(t, "Xufu", s)
+	AssertEqual(t, "Fufu", safeS1)
+	AssertEqual(t, "Fufu", safeS2)
+	AssertEqual(t, "Fufu", safeS3)
+	AssertEqual(t, "Fufu", safeS4)
+
+	AssertEqual(t, "default", GetSafeB2S(nil, "default"))
 }
 
 func TestCopyString(t *testing.T) {
@@ -54,33 +78,6 @@ func TestInStrings(t *testing.T) {
 	val := []string{"a", "b", "c"}
 	AssertEqual(t, true, InStrings(val, "a"))
 	AssertEqual(t, false, InStrings(val, "d"))
-}
-
-func TestB64Encode(t *testing.T) {
-	t.Parallel()
-	AssertEqual(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode(S2B("解码/编码~ 顶替&#")))
-}
-
-func TestB64UrlEncode(t *testing.T) {
-	t.Parallel()
-	AssertEqual(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode(S2B("解码/编码~ 顶替&#")))
-}
-
-func TestB64Decode(t *testing.T) {
-	t.Parallel()
-	AssertEqual(t, []byte("解码/编码~ 顶替&#"), B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
-}
-
-func TestB64UrlDecode(t *testing.T) {
-	for _, v := range []struct {
-		in  string
-		out []byte
-	}{
-		{"6Kej56CBL-e8lueggX4g6aG25pu_JiM=", []byte("解码/编码~ 顶替&#")},
-		{"123", nil},
-	} {
-		AssertEqual(t, v.out, B64UrlDecode(v.in))
-	}
 }
 
 func BenchmarkStringPlusBig(b *testing.B) {

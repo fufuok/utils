@@ -104,6 +104,10 @@ func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetInt(v interface{}, defaultInt ...int) int
+func GetSafeB2S(b []byte, defaultVal ...string) string
+func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
+func GetSafeS2B(s string, defaultVal ...[]byte) []byte
+func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
 func GetenvDecrypt(key string, secret string) string
 func Hash(b []byte, h hash.Hash) []byte
@@ -189,6 +193,7 @@ func Encode(b []byte) string
 
 ```go
 var s string
+s = utils.GetString(123.45)         // "123.45"
 s = utils.GetString(nil)            // ""
 s = utils.GetString(nil, "default") // "default"
 s = utils.GetString([]byte("ff"))   // "ff"
@@ -196,12 +201,15 @@ s = utils.GetString(true)           // "true"
 
 x := utils.AddString(s, "OK") // "trueOK"
 
-b := utils.S2B(x)               // []byte("trueOK")
-s = utils.B2S(b)                // "trueOK"
-f := utils.CopyString(s)        // 不可变字符串
-u := string(b)                  // 标准转换
-b[0] = 'F'                      // 注意: 底层数组变化会引起 s 发生改变
-fmt.Println(string(b), s, f, u) // "FrueOK" "FrueOK" "trueOK" "trueOK"
+b = []byte("trueOK")
+s = utils.B2S(b[0:1])                                     // "t"
+safeS1 := utils.B2S([]byte(s[0:1]))                       // 转换为不可变字符串, CopyString 的实现
+safeS2 := utils.CopyString(s[0:1])                        // 不可变字符串, s 可以被 GC 回收
+safeS3 := utils.GetSafeString(s[0:1], "optional default") // 不可变字符串
+safeS4 := utils.GetSafeB2S(b[0:1], "optional default")    // 转换为不可变字符串
+safeS5 := string(b[0:1])                                  // 标准转换
+b[0] = 70                                                 // 注意: 底层数组变化会引起字符串 s 发生改变
+fmt.Println(s, safeS1, safeS2, safeS3, safeS4, safeS5)    // F t t t t t
 
 x = utils.AesCBCEnPKCS7StringHex("myData", "myKey")
 fmt.Println(x)

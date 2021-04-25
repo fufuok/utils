@@ -14,6 +14,24 @@ func GetBytes(v interface{}, defaultVal ...[]byte) []byte {
 	}
 }
 
+// Immutable, 可选指定默认值
+func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte {
+	b = CopyBytes(b)
+	if len(b) == 0 && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return b
+}
+
+// Immutable, 可选指定默认值
+func GetSafeS2B(s string, defaultVal ...[]byte) []byte {
+	b := []byte(s)
+	if len(b) == 0 && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return b
+}
+
 // Immutable, []byte to []byte
 func CopyBytes(b []byte) []byte {
 	tmp := make([]byte, len(b))

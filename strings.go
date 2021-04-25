@@ -1,23 +1,37 @@
 package utils
 
-import (
-	"encoding/base64"
-)
-
 // 获取字符串结果, 可选指定默认值
 func GetString(v interface{}, defaultVal ...string) string {
 	s := MustString(v)
-	if len(s) == 0 && len(defaultVal) > 0 {
+	if s == "" && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return s
+}
+
+// Immutable, 可选指定默认值
+func GetSafeString(s string, defaultVal ...string) string {
+	s = CopyString(s)
+	if s == "" && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return s
+}
+
+// Immutable, 可选指定默认值
+func GetSafeB2S(b []byte, defaultVal ...string) string {
+	s := string(b)
+	if s == "" && len(defaultVal) > 0 {
 		return defaultVal[0]
 	}
 	return s
 }
 
 // Immutable, string to string
+// e.g. fiberParam := utils.CopyString(c.Params("test"))
+// e.g. utils.CopyString(s[500:1000]) // 可以让 s 被 GC 回收
 func CopyString(s string) string {
-	tmp := make([]byte, len(s))
-	copy(tmp, s)
-	return B2S(tmp)
+	return B2S([]byte(s))
 }
 
 // 拼接字符串, 返回 bytes from bytes.Join()
@@ -61,32 +75,4 @@ func SearchString(ss []string, s string) int {
 // 检查字符串是否存在于 slice
 func InStrings(ss []string, s string) bool {
 	return SearchString(ss, s) != -1
-}
-
-// Base64 编码
-func B64Encode(b []byte) string {
-	return base64.StdEncoding.EncodeToString(b)
-}
-
-// Base64 解码
-func B64Decode(s string) []byte {
-	if b, err := base64.StdEncoding.DecodeString(s); err == nil {
-		return b
-	}
-
-	return nil
-}
-
-// Base64 解码, 安全 URL, 替换: "+/" 为 "-_"
-func B64UrlEncode(b []byte) string {
-	return base64.URLEncoding.EncodeToString(b)
-}
-
-// Base64 解码
-func B64UrlDecode(s string) []byte {
-	if b, err := base64.URLEncoding.DecodeString(s); err == nil {
-		return b
-	}
-
-	return nil
 }

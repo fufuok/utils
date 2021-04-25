@@ -120,6 +120,7 @@ func TestMustInt(t *testing.T) {
 		out int
 	}{
 		{"2", 2},
+		{"  2 \n ", 2},
 		{0b0010, 2},
 		{10, 10},
 		{0o77, 63},
@@ -128,8 +129,11 @@ func TestMustInt(t *testing.T) {
 		{true, 1},
 		{"0x", 0},
 		{false, 0},
-		{uint(11), 0},
-		{1.005, 0},
+		{uint(11), 11},
+		{uint64(11), 11},
+		{int64(11), 11},
+		{float32(11.0), 11},
+		{1.005, 1},
 		{nil, 0},
 	} {
 		AssertEqual(t, v.out, MustInt(v.in))
@@ -149,14 +153,44 @@ func TestMustBool(t *testing.T) {
 		{"True", true},
 		{true, true},
 		{1, true},
+		{2, true},
+		{2.1, true},
 		{0x01, true},
 		{false, false},
+		{0.1, false},
 		{0, false},
 		{"2", false},
 		{nil, false},
 		{"TrUe", false},
 	} {
 		AssertEqual(t, v.out, MustBool(v.in))
+	}
+}
+
+func TestB64Encode(t *testing.T) {
+	t.Parallel()
+	AssertEqual(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode(S2B("解码/编码~ 顶替&#")))
+}
+
+func TestB64UrlEncode(t *testing.T) {
+	t.Parallel()
+	AssertEqual(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode(S2B("解码/编码~ 顶替&#")))
+}
+
+func TestB64Decode(t *testing.T) {
+	t.Parallel()
+	AssertEqual(t, []byte("解码/编码~ 顶替&#"), B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
+}
+
+func TestB64UrlDecode(t *testing.T) {
+	for _, v := range []struct {
+		in  string
+		out []byte
+	}{
+		{"6Kej56CBL-e8lueggX4g6aG25pu_JiM=", []byte("解码/编码~ 顶替&#")},
+		{"123", nil},
+	} {
+		AssertEqual(t, v.out, B64UrlDecode(v.in))
 	}
 }
 

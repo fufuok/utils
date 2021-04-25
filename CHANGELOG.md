@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.1.1
+
+**2021-04-25**
+
+- 增加 `GetSafeB2S` `GetSafeS2B` `GetSafeBytes` `GetSafeString` 等安全函数, 用于基于 `fasthttp` 的应用
+- 优化部分转换函数, 增加更多测试用例
+
 ## v0.1.0
 
 **2021-04-23**

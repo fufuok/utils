@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"encoding/base64"
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 	"unsafe"
 
 	"github.com/fufuok/utils/json"
@@ -79,13 +81,41 @@ func MustJSONString(v interface{}) string {
 func MustString(v interface{}) string {
 	switch s := v.(type) {
 	default:
-		return fmt.Sprintf("%v", v)
+		return fmt.Sprint(v)
 	case string:
 		return s
 	case []byte:
 		return B2S(s)
+	case error:
+		return s.Error()
 	case nil:
 		return ""
+	case bool:
+		return strconv.FormatBool(s)
+	case int:
+		return strconv.Itoa(s)
+	case int8:
+		return strconv.FormatInt(int64(s), 10)
+	case int16:
+		return strconv.FormatInt(int64(s), 10)
+	case int32:
+		return strconv.Itoa(int(s))
+	case int64:
+		return strconv.FormatInt(s, 10)
+	case uint:
+		return strconv.FormatUint(uint64(s), 10)
+	case uint8:
+		return strconv.FormatUint(uint64(s), 10)
+	case uint16:
+		return strconv.FormatUint(uint64(s), 10)
+	case uint32:
+		return strconv.FormatUint(uint64(s), 10)
+	case uint64:
+		return strconv.FormatUint(s, 10)
+	case float32:
+		return strconv.FormatFloat(float64(s), 'f', -1, 32)
+	case float64:
+		return strconv.FormatFloat(s, 'f', -1, 64)
 	}
 }
 
@@ -99,9 +129,9 @@ func MustInt(v interface{}) int {
 		}
 		return 0
 	case string:
-		v, err := strconv.ParseInt(i, 0, 0)
+		v, err := strconv.Atoi(strings.TrimSpace(i))
 		if err == nil {
-			return int(v)
+			return v
 		}
 		return 0
 	case bool:
@@ -111,6 +141,30 @@ func MustInt(v interface{}) int {
 		return 0
 	case nil:
 		return 0
+	case int:
+		return i
+	case int8:
+		return int(i)
+	case int16:
+		return int(i)
+	case int32:
+		return int(i)
+	case int64:
+		return int(i)
+	case uint:
+		return int(i)
+	case uint8:
+		return int(i)
+	case uint16:
+		return int(i)
+	case uint32:
+		return int(i)
+	case uint64:
+		return int(i)
+	case float32:
+		return int(i)
+	case float64:
+		return int(i)
 	}
 }
 
@@ -118,9 +172,11 @@ func MustInt(v interface{}) int {
 func MustBool(v interface{}) bool {
 	switch t := v.(type) {
 	default:
-		if MustInt(v) == 1 {
+		if MustInt(v) != 0 {
 			return true
 		}
+	case bool:
+		return t
 	case string:
 		switch t {
 		case "1", "t", "T", "true", "TRUE", "True":
@@ -129,4 +185,32 @@ func MustBool(v interface{}) bool {
 	}
 
 	return false
+}
+
+// Base64 编码
+func B64Encode(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+// Base64 解码
+func B64Decode(s string) []byte {
+	if b, err := base64.StdEncoding.DecodeString(s); err == nil {
+		return b
+	}
+
+	return nil
+}
+
+// Base64 解码, 安全 URL, 替换: "+/" 为 "-_"
+func B64UrlEncode(b []byte) string {
+	return base64.URLEncoding.EncodeToString(b)
+}
+
+// Base64 解码
+func B64UrlDecode(s string) []byte {
+	if b, err := base64.URLEncoding.DecodeString(s); err == nil {
+		return b
+	}
+
+	return nil
 }

@@ -24,7 +24,29 @@ func TestGetBytes(t *testing.T) {
 	} {
 		AssertEqual(t, v.out, GetBytes(v.in, v.def))
 	}
-	AssertEqual(t, *new([]byte), GetBytes(nil))
+	AssertEqual(t, 0, len(GetBytes(nil)))
+	AssertEqual(t, []byte{}, GetSafeBytes(nil))
+}
+
+func TestGetSafeBytes(t *testing.T) {
+	t.Parallel()
+	b := []byte("Fufu")
+	s := B2S(b)
+	safeB1 := []byte(s)
+	safeB2 := GetSafeS2B(s)
+	safeB3 := GetSafeBytes(b)
+	safeB4 := CopyBytes(b)
+	AssertEqual(t, "Fufu", s)
+
+	b[0] = 'X'
+
+	AssertEqual(t, "Xufu", s)
+	AssertEqual(t, []byte("Fufu"), safeB1)
+	AssertEqual(t, []byte("Fufu"), safeB2)
+	AssertEqual(t, []byte("Fufu"), safeB3)
+	AssertEqual(t, []byte("Fufu"), safeB4)
+
+	AssertEqual(t, []byte("default"), GetSafeS2B("", []byte("default")))
 }
 
 func TestCopyBytes(t *testing.T) {
