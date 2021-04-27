@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.1.2
+
+**2021-04-27**
+
+- 整合 `xid.NewString` 可排序全局ID生成器, 增加助手函数
+- 增加 `Executable` `ExecutableDir` 运行时函数
+
 ## v0.1.1
 
 **2021-04-25**

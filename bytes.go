@@ -39,6 +39,12 @@ func CopyBytes(b []byte) []byte {
 	return tmp
 }
 
+// Immutable, string to []byte
+func CopyS2B(s string) []byte {
+	// []byte(s)
+	return CopyBytes(S2B(s))
+}
+
 // 拼接 []byte
 func JoinBytes(b ...[]byte) []byte {
 	var res []byte

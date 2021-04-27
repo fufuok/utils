@@ -34,6 +34,12 @@ func CopyString(s string) string {
 	return B2S([]byte(s))
 }
 
+// Immutable, []byte to string
+func CopyB2S(b []byte) string {
+	// string(b)
+	return B2S(CopyBytes(b))
+}
+
 // 拼接字符串, 返回 bytes from bytes.Join()
 func AddStringBytes(s ...string) []byte {
 	switch len(s) {

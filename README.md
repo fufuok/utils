@@ -2,7 +2,7 @@
 
 常用的助手函数
 
-若有直接引用的, 会在函数定义或 README 中注明来源, 保留 LICENSE, 感谢之!
+若有直接引用的, 会在函数定义或目录 README 中注明来源, 保留 LICENSE, 感谢之!
 
 ## 安装
 
@@ -69,7 +69,9 @@ func B64Encode(b []byte) string
 func B64UrlDecode(s string) []byte
 func B64UrlEncode(b []byte) string
 func CallPath() string
+func CopyB2S(b []byte) string
 func CopyBytes(b []byte) []byte
+func CopyS2B(s string) []byte
 func CopyString(s string) string
 func Decrypt(value, secret string) string
 func DesCBCDeB58(s, key string) []byte
@@ -102,6 +104,8 @@ func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (cipherte
 func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
 func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
+func Executable(evalSymlinks ...bool) string
+func ExecutableDir(evalSymlinks ...bool) string
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetInt(v interface{}, defaultInt ...int) int
 func GetSafeB2S(b []byte, defaultVal ...string) string
@@ -168,6 +172,16 @@ type TChoice struct{ ... }
     func WeightedChoice(choices ...TChoice) TChoice
 ```
 
+### 加解密小工具
+
+见: `envtools`
+
+### 获取内外网 IP 小工具
+
+见: `myip`
+
+或: https://github.com/fufuok/myip
+
 ```go
 package myip // import "github.com/fufuok/utils/myip"
 
@@ -180,6 +194,12 @@ func InternalIPv6() string
 func LocalIP() string
 ```
 
+### 编码解码 base58
+
+见: `base58`
+
+或: https://github.com/fufuok/basex
+
 ```go
 package base58 // import "github.com/fufuok/utils/base58"
 
@@ -188,6 +208,37 @@ func CheckEncode(input []byte, version byte) string
 func Decode(b string) []byte
 func Encode(b []byte) string
 ```
+
+### 可排序全局唯一ID生成器
+
+比 UUID 更快, 更短
+
+见: `xid`
+
+或: http://github.com/fufuok/xid
+
+```go
+package xid // import "github.com/fufuok/utils/xid"
+
+func NewBytes() []byte
+func NewString() string
+func Sort(ids []ID)
+type ID [rawLen]byte
+    func FromBytes(b []byte) (ID, error)
+    func FromString(id string) (ID, error)
+    func New() ID
+    func NewWithTime(t time.Time) ID
+    func NilID() ID
+```
+
+## JSON
+
+`json` 使用 `gin` 类似的可选组织方式:
+
+- `go build .` 默认使用 `json-iterator/go`
+- `go build -tags=gojson.` 使用标准 JSON 库 `encoding/json`
+- `go build -tags=go_json .` 使用 `goccy/go-json` (暂不成熟, 观望中)
+
 
 ## 使用
 
@@ -242,35 +293,12 @@ fmt.Println(items[idx])  // Item.4
 itemMap := map[interface{}]int{"Item.1": 1, "Item.2": 2, "Item.3": 3, "Item.4": 100}
 item := utils.WeightedChoiceMap(itemMap)
 fmt.Println(item)  // Item.4
+
+whoami := utils.Executable(true)
+whereami := utils.ExecutableDir(true)
 ```
 
 ...
-
-## 加解密小工具
-
-见: `envtools`
-
-## 获取内外网 IP 小工具
-
-见: `myip`
-
-或: https://github.com/fufuok/myip
-
-## 编码解码 base58
-
-见: `base58`
-
-或: https://github.com/fufuok/basex
-
-## JSON
-
-`json` 使用 `gin` 类似的可选组织方式:
-
-- `go build .` 默认使用 `json-iterator/go`
-- `go build -tags=gojson.` 使用标准 JSON 库 `encoding/json`
-- `go build -tags=go_json .` 使用 `goccy/go-json` (暂不成熟, 观望中)
-
-
 
 
 

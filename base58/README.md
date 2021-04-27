@@ -1,7 +1,7 @@
 base58
 ==========
 
-forked from btcsuite/btcutil
+*forked from btcsuite/btcutil v1.0.2*
 
 [![Build Status](http://img.shields.io/travis/btcsuite/btcutil.svg)](https://travis-ci.org/btcsuite/btcutil)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)

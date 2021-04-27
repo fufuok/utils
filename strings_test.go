@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"testing"
@@ -56,6 +57,36 @@ func TestCopyString(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, "Fufu 中　文\u2728->?\n*\U0001F63A", CopyString("Fufu 中　文\u2728->?\n*\U0001F63A"))
 }
+
+func TestCopyB2S(t *testing.T) {
+	t.Parallel()
+	AssertEqual(t, "仅补全函数, 实际直接使用 string()", CopyB2S([]byte("仅补全函数, 实际直接使用 string()")))
+}
+
+func BenchmarkCopyB2S(b *testing.B) {
+	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 1000)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = CopyB2S(bs)
+	}
+}
+
+func BenchmarkCopyB2SStd(b *testing.B) {
+	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 1000)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = string(bs)
+	}
+}
+
+// BenchmarkCopyB2S-8      	  394561	      6502 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyB2S-8      	  378786	      6144 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyB2S-8      	  411043	      6320 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyB2SStd-8   	  409184	      6716 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyB2SStd-8   	  428928	      5358 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyB2SStd-8   	  433293	      5687 ns/op	   27264 B/op	       1 allocs/op
 
 func TestAddString(t *testing.T) {
 	t.Parallel()
