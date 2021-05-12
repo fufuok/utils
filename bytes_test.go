@@ -75,7 +75,16 @@ func BenchmarkCopyS2B(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = CopyBytes(S2B(s))
+		_ = CopyS2B(s)
+	}
+}
+
+func BenchmarkCopyS2BAppend(b *testing.B) {
+	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 1000)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = append(append([]byte{}, s...))
 	}
 }
 
@@ -88,9 +97,12 @@ func BenchmarkCopyS2BStd(b *testing.B) {
 	}
 }
 
-// BenchmarkCopyS2B-8      	  428278	      5590 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2B-8      	  379506	      6582 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2B-8      	  430682	      6270 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8   	  376720	      6136 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8   	  402093	      5942 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8   	  434404	      6087 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2B-8         	  476196	      5158 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2B-8         	  421264	      5207 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2B-8         	  418268	      5164 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BAppend-8   	  459279	      5188 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BAppend-8   	  419443	      5278 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BAppend-8   	  402985	      5254 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BStd-8      	  435112	      5015 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BStd-8      	  399192	      5228 ns/op	   27264 B/op	       1 allocs/op
+// BenchmarkCopyS2BStd-8      	  384286	      5386 ns/op	   27264 B/op	       1 allocs/op

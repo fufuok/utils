@@ -42,7 +42,9 @@ func CopyBytes(b []byte) []byte {
 // Immutable, string to []byte
 func CopyS2B(s string) []byte {
 	// []byte(s)
-	return CopyBytes(S2B(s))
+	tmp := make([]byte, len(s))
+	copy(tmp, s)
+	return tmp
 }
 
 // 拼接 []byte

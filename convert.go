@@ -34,13 +34,6 @@ func String2Bytes(s string) (b []byte) {
 	return b
 }
 
-// Ref: csdn.weixin_43705457
-func Str2Bytes(s string) (b []byte) {
-	*(*string)(unsafe.Pointer(&b)) = s
-	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s)
-	return
-}
-
 // Ref: csdn.u010853261
 func StringToBytes(s string) (b []byte) {
 	return *(*[]byte)(unsafe.Pointer(&sliceHeader{
@@ -48,6 +41,20 @@ func StringToBytes(s string) (b []byte) {
 		len:  len(s),
 		cap:  len(s),
 	}))
+}
+
+// Ref: csdn.weixin_43705457
+func Str2Bytes(s string) (b []byte) {
+	*(*string)(unsafe.Pointer(&b)) = s
+	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s)
+	return
+}
+
+// Ref: Allenxuxu / toolkit
+func StrToBytes(s string) []byte {
+	x := (*[2]uintptr)(unsafe.Pointer(&s))
+	h := [3]uintptr{x[0], x[1], x[1]}
+	return *(*[]byte)(unsafe.Pointer(&h))
 }
 
 // StringToBytes converts string to byte slice without a memory allocation.

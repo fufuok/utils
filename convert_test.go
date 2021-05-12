@@ -53,6 +53,22 @@ func TestStr2Bytes(t *testing.T) {
 	AssertEqual(t, []byte(expected), actual)
 }
 
+func TestStrToBytes(t *testing.T) {
+	t.Parallel()
+	for i := 0; i < 100; i++ {
+		s := RandString(64)
+		expected := []byte(s)
+		actual := StrToBytes(s)
+		AssertEqual(t, expected, actual)
+		AssertEqual(t, len(expected), len(actual))
+	}
+
+	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	actual := StrToBytes(expected)
+
+	AssertEqual(t, []byte(expected), actual)
+}
+
 func TestS2B(t *testing.T) {
 	t.Parallel()
 	for i := 0; i < 100; i++ {
@@ -194,7 +210,7 @@ func TestB64UrlDecode(t *testing.T) {
 	}
 }
 
-func BenchmarkStringToBytes(b *testing.B) {
+func BenchmarkS2BStringToBytes(b *testing.B) {
 	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -203,7 +219,7 @@ func BenchmarkStringToBytes(b *testing.B) {
 	}
 }
 
-func BenchmarkString2Bytes(b *testing.B) {
+func BenchmarkS2BString2Bytes(b *testing.B) {
 	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -212,12 +228,21 @@ func BenchmarkString2Bytes(b *testing.B) {
 	}
 }
 
-func BenchmarkStr2Bytes(b *testing.B) {
+func BenchmarkS2BStr2Bytes(b *testing.B) {
 	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = Str2Bytes(s)
+	}
+}
+
+func BenchmarkS2BStrToBytes(b *testing.B) {
+	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = StrToBytes(s)
 	}
 }
 
@@ -230,7 +255,7 @@ func BenchmarkS2B(b *testing.B) {
 	}
 }
 
-func BenchmarkStdStringToBytes(b *testing.B) {
+func BenchmarkS2BStdStringToBytes(b *testing.B) {
 	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -239,8 +264,9 @@ func BenchmarkStdStringToBytes(b *testing.B) {
 	}
 }
 
-// BenchmarkStringToBytes-8                	1000000000	         0.379 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkString2Bytes-8                 	1000000000	         0.375 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkStr2Bytes-8                    	1000000000	         0.301 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2B-8                          	1000000000	         0.345 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkStdStringToBytes-8             	   28250	     41335 ns/op	  262144 B/op	       1 allocs/op
+// BenchmarkS2BStringToBytes-8      	1000000000	         0.378 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkS2BString2Bytes-8       	1000000000	         0.325 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkS2BStr2Bytes-8          	1000000000	         0.334 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkS2BStrToBytes-8         	1000000000	         0.421 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkS2B-8                   	1000000000	         0.325 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkS2BStdStringToBytes-8   	   27127	     43473 ns/op	  262144 B/op	       1 allocs/op

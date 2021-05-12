@@ -12,6 +12,7 @@ import (
 var externalIPAPI = map[string][]string{
 	"ipv4": {
 		"http://api.ipify.org",
+		"http://ip.me",
 		"http://ip-api.com/line/?fields=query",
 		"http://ifconfig.me/ip",
 		"http://ident.me",
@@ -131,13 +132,27 @@ func LocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err == nil {
 		for _, addr := range addrs {
-			if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-				if ipnet.IP.To4() != nil {
-					return ipnet.IP.String()
-				}
+			if ipnet, ok := addr.(*net.IPNet); ok &&
+				!ipnet.IP.IsLinkLocalUnicast() && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
 			}
 		}
 	}
 
 	return ""
+}
+
+// 获取所有本地地址 IPv4
+func LocalIPv4s() (ips []string) {
+	addrs, err := net.InterfaceAddrs()
+	if err == nil {
+		for _, addr := range addrs {
+			if ipnet, ok := addr.(*net.IPNet); ok &&
+				!ipnet.IP.IsLinkLocalUnicast() && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
+				ips = append(ips, ipnet.IP.String())
+			}
+		}
+	}
+
+	return
 }

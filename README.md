@@ -68,7 +68,13 @@ func B64Decode(s string) []byte
 func B64Encode(b []byte) string
 func B64UrlDecode(s string) []byte
 func B64UrlEncode(b []byte) string
+func BigComma(b *big.Int) string
+func BigCommaf(v *big.Float) string
+func Bigoom(n, b *big.Int) (float64, int)
 func CallPath() string
+func Comma(v int64) string
+func Commaf(v float64) string
+func Commau(v uint64) string
 func CopyB2S(b []byte) string
 func CopyBytes(b []byte) []byte
 func CopyS2B(s string) []byte
@@ -122,12 +128,16 @@ func HmacSHA256(b, key []byte) []byte
 func HmacSHA256Hex(s, key string) string
 func HmacSHA512(b, key []byte) []byte
 func HmacSHA512Hex(s, key string) string
+func HumanBaseBytes(s uint64, base float64, sizes []string) string
+func HumanBytes(s uint64) string
+func HumanIBytes(s uint64) string
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
 func IsDir(s string) bool
 func IsExist(s string) bool
 func IsFile(s string) bool
 func JoinBytes(b ...[]byte) []byte
+func Logn(n, b float64) float64
 func MD5(b []byte) []byte
 func MD5Hex(s string) string
 func MD5Reader(r io.Reader) (string, error)
@@ -140,6 +150,7 @@ func MustJSON(v interface{}) []byte
 func MustJSONString(v interface{}) string
 func MustString(v interface{}) string
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
+func ParseHumanBytes(s string) (uint64, error)
 func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min int, max int) int
@@ -157,6 +168,7 @@ func Sha256Hex(s string) string
 func Sha512(b []byte) []byte
 func Sha512Hex(s string) string
 func Str2Bytes(s string) (b []byte)
+func StrToBytes(s string) []byte
 func String2Bytes(s string) (b []byte)
 func StringToBytes(s string) (b []byte)
 func UUID() []byte
@@ -192,6 +204,7 @@ func InternalIP(dstAddr, network string) string
 func InternalIPv4() string
 func InternalIPv6() string
 func LocalIP() string
+func LocalIPv4s() (ips []string)
 ```
 
 ### 编码解码 base58
@@ -271,6 +284,8 @@ x = utils.UUIDSimple()
 fmt.Println(x)  // 16123e98b35a4cea8e9cc127f379ff52
 x = utils.UUIDShort()
 fmt.Println(x)  // Mw4hP7t9bnMMczU2AvyorU
+x = xid.NewString()
+fmt.Println(x)  // c294bsnn5ek0ub0200fg
 
 x = base58.Encode([]byte("Test data"))
 fmt.Println(x)  // 25JnwSn7XKfNQ
@@ -296,6 +311,9 @@ fmt.Println(item)  // Item.4
 
 whoami := utils.Executable(true)
 whereami := utils.ExecutableDir(true)
+
+fmt.Println(utils.HumanBytes(1234567890)) // 1.2 GB
+fmt.Println(utils.Commaf(1234567890.123)) // 1,234,567,890.123
 ```
 
 ...

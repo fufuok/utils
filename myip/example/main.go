@@ -43,6 +43,7 @@ func main() {
 	fmt.Println("获取内网地址 (出口本地地址):", myip.InternalIP("1.1.1.1", "ip4:icmp"))
 
 	fmt.Println("获取本地地址 (第一个):", myip.LocalIP())
+	fmt.Println("获取所有本地地址 (IPv4):", myip.LocalIPv4s())
 
 	fmt.Println("MyIP:", InternalIPv4, ExternalIPv4, ExternalIP)
 }
