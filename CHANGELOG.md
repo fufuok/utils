@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.1.4
+
+**2021-05-12**
+
+- 增加 `Commai` `HumanIntBytes` `HumanIntIBytes` 方便对 `int` 操作
+
 ## v0.1.3
 
 **2021-05-12**

@@ -12,17 +12,17 @@ import (
 // 返回将 val 根据指定精度 precision (十进制小数点后数字的数目) 进行四舍五入的结果
 // precision 也可以是负数或零
 // Ref: thinkeridea/go-extend
-func Round(val float64, precision int) float64 {
+func Round(v float64, precision int) float64 {
 	if precision == 0 {
-		return math.Round(val)
+		return math.Round(v)
 	}
 
 	p := math.Pow10(precision)
 	if precision < 0 {
-		return math.Floor(val*p+0.5) * math.Pow10(-precision)
+		return math.Floor(v*p+0.5) * math.Pow10(-precision)
 	}
 
-	return math.Floor(val*p+0.5) / p
+	return math.Floor(v*p+0.5) / p
 }
 
 // 浮点数转千分位分隔字符串

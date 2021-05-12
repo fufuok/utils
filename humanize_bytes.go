@@ -67,33 +67,43 @@ func Logn(n, b float64) float64 {
 }
 
 // 数字的数量级表示
-func HumanBaseBytes(s uint64, base float64, sizes []string) string {
-	if s < 10 {
-		return fmt.Sprintf("%d B", s)
+func HumanBaseBytes(v uint64, base float64, sizes []string) string {
+	if v < 10 {
+		return fmt.Sprintf("%d B", v)
 	}
-	e := math.Floor(Logn(float64(s), base))
+	e := math.Floor(Logn(float64(v), base))
 	suffix := sizes[int(e)]
-	val := math.Floor(float64(s)/math.Pow(base, e)*10+0.5) / 10
-	f := "%.0f %s"
+	val := math.Floor(float64(v)/math.Pow(base, e)*10+0.5) / 10
+	f := "%.0f %v"
 	if val < 10 {
-		f = "%.1f %s"
+		f = "%.1f %v"
 	}
 
 	return fmt.Sprintf(f, val, suffix)
 }
 
 // 数字的数量级表示
+func HumanIntBytes(v int) string {
+	return HumanBytes(uint64(v))
+}
+
+// 数字的数量级表示
+func HumanIntIBytes(v int) string {
+	return HumanIBytes(uint64(v))
+}
+
+// 数字的数量级表示
 // e.g. HumanBytes(82854982) -> 83 MB
-func HumanBytes(s uint64) string {
+func HumanBytes(v uint64) string {
 	sizes := []string{"B", "kB", "MB", "GB", "TB", "PB", "EB"}
-	return HumanBaseBytes(s, 1000, sizes)
+	return HumanBaseBytes(v, 1000, sizes)
 }
 
 // 数字的数量级表示
 // e.g. HumanIBytes(82854982) -> 79 MiB
-func HumanIBytes(s uint64) string {
+func HumanIBytes(v uint64) string {
 	sizes := []string{"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
-	return HumanBaseBytes(s, 1024, sizes)
+	return HumanBaseBytes(v, 1024, sizes)
 }
 
 // 解析数字的数量级表示

@@ -49,6 +49,11 @@ func InInts(slice []int, n int) bool {
 }
 
 // 整数转千分位分隔字符串
+func Commai(v int) string {
+	return Comma(int64(v))
+}
+
+// 整数转千分位分隔字符串
 // Ref: dustin/go-humanize
 // e.g. Comma(834142) -> 834,142
 func Comma(v int64) string {

@@ -127,6 +127,9 @@ func TestHumanBytes(t *testing.T) {
 		{"HumanIBytes(1PB - 1T)", HumanIBytes(EiByte - PiByte), "1023 PiB"},
 
 		{"HumanIBytes(1EiB)", HumanIBytes(EiByte), "1.0 EiB"},
+
+		{"HumanIntBytes(5.5GB)", HumanIntBytes(5.5 * GByte), "5.5 GB"},
+		{"HumanIntIBytes(5.5GiB)", HumanIntIBytes(5.5 * GiByte), "5.5 GiB"},
 	} {
 		AssertEqual(t, v.expected, v.actual, v.title)
 	}

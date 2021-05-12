@@ -72,6 +72,8 @@ func TestComma(t *testing.T) {
 		{"-1,000", Comma(-1000), "-1,000"},
 		{"-100", Comma(-100), "-100"},
 		{"-10", Comma(-10), "-10"},
+
+		{"123,456,789", Commai(123456789), "123,456,789"},
 	} {
 		AssertEqual(t, v.expected, v.actual, v.title)
 	}
