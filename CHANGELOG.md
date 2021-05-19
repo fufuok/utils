@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.1.5
+
+**2021-05-19**
+
+- 增加时间点助手函数: `Get0Hour` `Get0LastWeek` `GetMonthDays` 等
+- 增加内网 IPv4 判断和取值, IP 与数值转换
+
 ## v0.1.4
 
 **2021-05-12**

@@ -74,6 +74,7 @@ func Bigoom(n, b *big.Int) (float64, int)
 func CallPath() string
 func Comma(v int64) string
 func Commaf(v float64) string
+func Commai(v int) string
 func Commau(v uint64) string
 func CopyB2S(b []byte) string
 func CopyBytes(b []byte) []byte
@@ -112,8 +113,22 @@ func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
 func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
+func Get0Hour(t time.Time) time.Time
+func Get0LastMonth(t time.Time) time.Time
+func Get0LastWeek(t time.Time) time.Time
+func Get0Minute(t time.Time) time.Time
+func Get0Month(t time.Time) time.Time
+func Get0NextMonth(t time.Time) time.Time
+func Get0NextWeek(t time.Time) time.Time
+func Get0Second(t time.Time) time.Time
+func Get0Tomorrow(t time.Time) time.Time
+func Get0Week(t time.Time) time.Time
+func Get0Yesterday(t time.Time) time.Time
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetInt(v interface{}, defaultInt ...int) int
+func GetMonthDays(t time.Time) int
+func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
+func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string
 func GetSafeB2S(b []byte, defaultVal ...string) string
 func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
@@ -128,16 +143,24 @@ func HmacSHA256(b, key []byte) []byte
 func HmacSHA256Hex(s, key string) string
 func HmacSHA512(b, key []byte) []byte
 func HmacSHA512Hex(s, key string) string
-func HumanBaseBytes(s uint64, base float64, sizes []string) string
-func HumanBytes(s uint64) string
-func HumanIBytes(s uint64) string
+func HumanBaseBytes(v uint64, base float64, sizes []string) string
+func HumanBytes(v uint64) string
+func HumanIBytes(v uint64) string
+func HumanIntBytes(v int) string
+func HumanIntIBytes(v int) string
+func IPv42Long(ip net.IP) int
+func IPv4String2Long(ip string) int
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
 func IsDir(s string) bool
 func IsExist(s string) bool
 func IsFile(s string) bool
+func IsInternalIPv4(ip net.IP) bool
+func IsInternalIPv4String(ip string) bool
 func JoinBytes(b ...[]byte) []byte
 func Logn(n, b float64) float64
+func Long2IPv4(n int) net.IP
+func Long2IPv4String(n int) string
 func MD5(b []byte) []byte
 func MD5Hex(s string) string
 func MD5Reader(r io.Reader) (string, error)
@@ -155,7 +178,7 @@ func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min int, max int) int
 func RandString(n int) string
-func Round(val float64, precision int) float64
+func Round(v float64, precision int) float64
 func RunPath() string
 func S2B(s string) []byte
 func SearchInt(slice []int, n int) int
@@ -314,6 +337,14 @@ whereami := utils.ExecutableDir(true)
 
 fmt.Println(utils.HumanBytes(1234567890)) // 1.2 GB
 fmt.Println(utils.Commaf(1234567890.123)) // 1,234,567,890.123
+
+now := time.Date(2020, 2, 18, 12, 13, 14, 123456789, time.UTC)
+fmt.Println(utils.Get0LastWeek(now).Format(time.RFC3339Nano)) // 2020-02-10T00:00:00Z
+
+fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "", true))  // 100.125.1.1
+fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "1.2.3.4")) // 1.2.3.4
+fmt.Println(utils.GetNotInternalIPv4String("192.168.1.1", "1.2.3.4")) // 1.2.3.4
+fmt.Println(utils.GetNotInternalIPv4String("119.118.7.6", "1.2.3.4")) // 119.118.7.6
 ```
 
 ...
