@@ -221,6 +221,7 @@ type TChoice struct{ ... }
 package myip // import "github.com/fufuok/utils/myip"
 
 func ExternalIP(v ...string) string
+func ExternalIPAny(retries ...int) string
 func ExternalIPv4() string
 func ExternalIPv6() string
 func InternalIP(dstAddr, network string) string

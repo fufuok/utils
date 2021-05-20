@@ -25,6 +25,28 @@ var externalIPAPI = map[string][]string{
 	},
 }
 
+// 获取外网地址
+func ExternalIPAny(retries ...int) string {
+	n := 1
+	if len(retries) > 0 && retries[0] > 0 {
+		n += retries[0]
+	}
+
+	ip := ""
+	for i := 0; i < n; i++ {
+		ip = ExternalIPv4()
+		if ip == "" {
+			ip = ExternalIPv6()
+		}
+		if ip != "" {
+			break
+		}
+	}
+
+	return ip
+
+}
+
 // 获取外网地址 (出口公网地址)
 func ExternalIP(v ...string) string {
 	if len(v) > 0 && v[0] != "ipv4" {
