@@ -2,4 +2,7 @@ module github.com/fufuok/utils
 
 go 1.15
 
-require github.com/json-iterator/go v1.1.10
+require (
+	github.com/goccy/go-json v0.5.1
+	github.com/json-iterator/go v1.1.11
+)

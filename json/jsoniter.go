@@ -1,5 +1,5 @@
-//go:build !gojson && !go_json
-// +build !gojson,!go_json
+//go:build !gojson && !stdjson
+// +build !gojson,!stdjson
 
 package json
 
@@ -13,8 +13,8 @@ func init() {
 }
 
 var (
-	json          = jsoniter.ConfigDefault
-	Std           = jsoniter.ConfigCompatibleWithStandardLibrary
+	Jsoniter      = jsoniter.ConfigDefault
+	json          = jsoniter.ConfigCompatibleWithStandardLibrary
 	Marshal       = json.Marshal
 	Unmarshal     = json.Unmarshal
 	MarshalIndent = json.MarshalIndent

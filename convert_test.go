@@ -100,15 +100,19 @@ func TestB2S(t *testing.T) {
 
 func TestMustJSONString(t *testing.T) {
 	t.Parallel()
-	actual := MustJSONString(map[string]interface{}{
+	js := map[string]interface{}{
 		"_c": "中 文",
 		"a":  true,
 		"b":  1.23,
-	})
+	}
+	actual := MustJSONString(&js)
 
 	AssertEqual(t, true, strings.Contains(actual, `"a":true`))
 	AssertEqual(t, true, strings.Contains(actual, `"b":1.23`))
 	AssertEqual(t, true, strings.Contains(actual, `"_c":"中 文"`))
+
+	actualIndent := MustJSONIndentString(&js)
+	AssertEqual(t, true, strings.Contains(actualIndent, "  "))
 }
 
 func TestMustString(t *testing.T) {

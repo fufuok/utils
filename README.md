@@ -170,6 +170,8 @@ func MinInt(a, b int) int
 func MustBool(v interface{}) bool
 func MustInt(v interface{}) int
 func MustJSON(v interface{}) []byte
+func MustJSONIndent(v interface{}) []byte
+func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
 func MustString(v interface{}) string
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
@@ -273,8 +275,8 @@ type ID [rawLen]byte
 `json` 使用 `gin` 类似的可选组织方式:
 
 - `go build .` 默认使用 `json-iterator/go`
-- `go build -tags=gojson.` 使用标准 JSON 库 `encoding/json`
-- `go build -tags=go_json .` 使用 `goccy/go-json` (暂不成熟, 观望中)
+- `go build -tags=stdjson .` 使用标准 JSON 库 `encoding/json`
+- `go build -tags=gojson .` 使用 `goccy/go-json`
 
 
 ## 使用
