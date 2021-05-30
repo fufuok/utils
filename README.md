@@ -157,6 +157,7 @@ func IsExist(s string) bool
 func IsFile(s string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
+func IsNil(i interface{}) bool
 func JoinBytes(b ...[]byte) []byte
 func Logn(n, b float64) float64
 func Long2IPv4(n int) net.IP
@@ -348,6 +349,10 @@ fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "", true))  // 100.125
 fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "1.2.3.4")) // 1.2.3.4
 fmt.Println(utils.GetNotInternalIPv4String("192.168.1.1", "1.2.3.4")) // 1.2.3.4
 fmt.Println(utils.GetNotInternalIPv4String("119.118.7.6", "1.2.3.4")) // 119.118.7.6
+
+var nilN struct{}
+var nilY *struct{}
+fmt.Println(utils.IsNil(nilN), utils.IsNil(nilY)) // false true
 ```
 
 ...

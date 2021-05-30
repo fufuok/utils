@@ -69,12 +69,11 @@ func TestIsNil(t *testing.T) {
 	AssertEqual(t, true, IsNil(eface1))
 	var eface2 = new(tester)
 	AssertEqual(t, false, IsNil(eface2))
+	var err error
+	AssertEqual(t, true, IsNil(err))
 
 	var ptr *int
 	AssertEqual(t, true, IsNil(ptr))
-
-	var err error
-	AssertEqual(t, true, IsNil(err))
 
 	var fun func(int) error
 	AssertEqual(t, true, IsNil(fun))
@@ -85,6 +84,12 @@ func TestIsNil(t *testing.T) {
 	AssertEqual(t, false, IsNil(struct2))
 	var struct3 = &TChoice{}
 	AssertEqual(t, false, IsNil(struct3))
+	var struct4 *struct{}
+	AssertEqual(t, true, IsNil(struct4))
+	var struct5 struct{}
+	AssertEqual(t, false, IsNil(struct5))
+	struct6 := struct{}{}
+	AssertEqual(t, false, IsNil(struct6))
 
 	var s string
 	AssertEqual(t, false, IsNil(s))
