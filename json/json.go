@@ -4,7 +4,7 @@
 package json
 
 import (
-	json "encoding/json"
+	"encoding/json"
 )
 
 var (

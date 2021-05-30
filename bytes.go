@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"bytes"
+)
+
 // 先转为字符串再转为 []byte, 可选指定默认值
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte {
 	switch b := v.(type) {
@@ -40,8 +44,8 @@ func CopyBytes(b []byte) []byte {
 }
 
 // Immutable, string to []byte
+// []byte(s)
 func CopyS2B(s string) []byte {
-	// []byte(s)
 	tmp := make([]byte, len(s))
 	copy(tmp, s)
 	return tmp
@@ -49,9 +53,5 @@ func CopyS2B(s string) []byte {
 
 // 拼接 []byte
 func JoinBytes(b ...[]byte) []byte {
-	var res []byte
-	for _, v := range b {
-		res = append(res, v...)
-	}
-	return res
+	return bytes.Join(b, nil)
 }

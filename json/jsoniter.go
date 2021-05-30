@@ -1,5 +1,5 @@
-//go:build !gojson && !stdjson
-// +build !gojson,!stdjson
+//go:build !go_json && !stdjson
+// +build !go_json,!stdjson
 
 package json
 

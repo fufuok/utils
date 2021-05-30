@@ -1,11 +1,18 @@
 # Go-Utils
 
+## v0.1.8
+
+**2021-05-30**
+
+- 变更 `-tags=gojson` 为 `-tags=go_json`, 与 `gin` 一致
+- 增加 `IsNil` 判断对象是否为 nil
+
 ## v0.1.7
 
 **2021-05-21**
 
 - 增加 `MustJSONIndent` `MustJSONIndentString`
-- 启用可选 JSON 库: `goccy/go-json@v0.5.1`, 编译参数: `go build -tags=gojson .`
+- 启用可选 JSON 库: `goccy/go-json@v0.5.1`, 编译参数: `go build -tags=go_json .`
 - 升级 `json-iterator/go@v1.1.11`, 默认使用: `ConfigCompatibleWithStandardLibrary`
 
 ## v0.1.6
@@ -62,7 +69,7 @@
 - `json` 使用 `gin` 类似的可选组织方式:
   - `go build .` 默认使用 `json-iterator/go`
   - `go build -tags=stdjson.` 使用标准 JSON 库 `encoding/json`
-  - `go build -tags=gojson .` 使用 `goccy/go-json`
+  - `go build -tags=go_json .` 使用 `goccy/go-json`
 
 ## v0.0.2
 

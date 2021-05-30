@@ -1,10 +1,10 @@
-//go:build gojson
-// +build gojson
+//go:build go_json
+// +build go_json
 
 package json
 
 import (
-	json "github.com/goccy/go-json"
+	"github.com/goccy/go-json"
 )
 
 var (
