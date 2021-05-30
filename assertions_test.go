@@ -2,6 +2,7 @@ package utils
 
 import (
 	"testing"
+	"unsafe"
 )
 
 // Ref: gofiber/utils
@@ -20,10 +21,6 @@ func TestAssertPanics(t *testing.T) {
 	AssertPanics(t, "should panic when index out of range", func() {
 		_ = a[1]
 	})
-}
-
-type tester interface {
-	do()
 }
 
 func TestIsNil(t *testing.T) {
@@ -65,15 +62,19 @@ func TestIsNil(t *testing.T) {
 	var iface2 interface{} = (*int)(nil)
 	AssertEqual(t, true, IsNil(iface2))
 
-	var eface1 tester
+	var eface1 error
 	AssertEqual(t, true, IsNil(eface1))
-	var eface2 = new(tester)
+	var eface2 = new(error)
 	AssertEqual(t, false, IsNil(eface2))
-	var err error
-	AssertEqual(t, true, IsNil(err))
+	var iface3 interface{} = eface1
+	AssertEqual(t, true, IsNil(iface3))
 
 	var ptr *int
 	AssertEqual(t, true, IsNil(ptr))
+
+	var iface4 interface{} = ptr
+	AssertEqual(t, true, IsNil(iface4))
+	AssertEqual(t, false, iface4 == nil) // go1.16.4
 
 	var fun func(int) error
 	AssertEqual(t, true, IsNil(fun))
@@ -93,4 +94,9 @@ func TestIsNil(t *testing.T) {
 
 	var s string
 	AssertEqual(t, false, IsNil(s))
+	var iface5 interface{} = s
+	AssertEqual(t, false, IsNil(iface5))
+
+	var nil1 = (*int)(unsafe.Pointer(uintptr(0x0)))
+	AssertEqual(t, true, IsNil(nil1))
 }

@@ -77,7 +77,7 @@ func AssertPanics(t *testing.T, title string, f func()) {
 // 判断对象(pointer, channel, func, interface, map, slice)是否为 nil
 // nil 是一个 Type 类型的变量, Type 类型是基于 int 的类型
 // var 若变量本身是指针, 占用 8 字节, 指向类型内部结构体并置 0, 仅定义了变量本身, 此时为 nil
-//     指针是非复合类型, 赋值 nil 时, 将 8 字节置 0
+//     指针是非复合类型, 赋值 nil 时, 将 8 字节置 0, 即没有指向任何值的指针 0x0
 //     map, channel: var 时仅定义了指针, 需要 make 初始化内部结构后才能使用, make 后非 nil
 // var 若变量非指针, 如 struct, int, 非 nil
 // slice:
