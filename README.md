@@ -271,7 +271,37 @@ type ID [rawLen]byte
     func NilID() ID
 ```
 
-## JSON
+### 时间轮
+
+见: `timewheel`
+
+或: https://github.com/fufuok/go-timewheel
+
+```go
+package timewheel // import "github.com/fufuok/utils/timewheel"
+
+func After(delay time.Duration) <-chan time.Time
+func Remove(task *Task) error
+func ResetDefaultTimeWheel(tw *TimeWheel)
+func Sleep(delay time.Duration)
+func Start()
+func Stop()
+func SetSyncPool(state bool) optionCall
+type Pool struct{ ... }
+    func NewTimeWheelPool(size int, tick time.Duration, bucketsNum int, options ...optionCall) (*Pool, error)
+type Task struct{ ... }
+    func Add(delay time.Duration, callback func()) *Task
+    func AddCron(delay time.Duration, callback func()) *Task
+type Ticker struct{ ... }
+    func NewTicker(delay time.Duration) *Ticker
+type TimeWheel struct{ ... }
+    func NewTimeWheel(tick time.Duration, bucketsNum int, options ...optionCall) (*TimeWheel, error)
+type Timer struct{ ... }
+    func AfterFunc(delay time.Duration, callback func()) *Timer
+    func NewTimer(delay time.Duration) *Timer
+```
+
+### JSON
 
 `json` 使用 `gin` 类似的可选组织方式:
 
