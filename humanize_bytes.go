@@ -66,7 +66,7 @@ func Logn(n, b float64) float64 {
 	return math.Log(n) / math.Log(b)
 }
 
-// 数字的数量级表示
+// HumanBaseBytes 数字的数量级表示
 func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 	if v < 10 {
 		return fmt.Sprintf("%d B", v)
@@ -82,31 +82,31 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 	return fmt.Sprintf(f, val, suffix)
 }
 
-// 数字的数量级表示
+// HumanIntBytes 数字的数量级表示
 func HumanIntBytes(v int) string {
 	return HumanBytes(uint64(v))
 }
 
-// 数字的数量级表示
+// HumanIntIBytes 数字的数量级表示
 func HumanIntIBytes(v int) string {
 	return HumanIBytes(uint64(v))
 }
 
-// 数字的数量级表示
+// HumanBytes 数字的数量级表示
 // e.g. HumanBytes(82854982) -> 83 MB
 func HumanBytes(v uint64) string {
 	sizes := []string{"B", "kB", "MB", "GB", "TB", "PB", "EB"}
 	return HumanBaseBytes(v, 1000, sizes)
 }
 
-// 数字的数量级表示
+// HumanIBytes 数字的数量级表示
 // e.g. HumanIBytes(82854982) -> 79 MiB
 func HumanIBytes(v uint64) string {
 	sizes := []string{"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
 	return HumanBaseBytes(v, 1024, sizes)
 }
 
-// 解析数字的数量级表示
+// ParseHumanBytes 解析数字的数量级表示
 // e.g. ParseBytes("42 MB") -> 42000000, nil
 // e.g. ParseBytes("42 mib") -> 44040192, nil
 func ParseHumanBytes(s string) (uint64, error) {

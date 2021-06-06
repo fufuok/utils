@@ -6,7 +6,7 @@ import (
 	"runtime"
 )
 
-// 运行时路径, 编译目录
+// CallPath 运行时路径, 编译目录
 // 假如: mklink E:\tmp\linkapp.exe D:\Fufu\Test\abc\app.exe
 // 执行: E:\tmp\linkapp.exe
 // CallPath: E:\Go\src\github.com\fufuok\utils\tmp\osext
@@ -19,7 +19,7 @@ func CallPath() string {
 	return RunPath()
 }
 
-// 实际程序所在目录
+// RunPath 实际程序所在目录
 // RunPath: E:\tmp
 func RunPath() string {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
@@ -32,7 +32,7 @@ func RunPath() string {
 	return dir
 }
 
-// 当前执行程序绝对路径
+// Executable 当前执行程序绝对路径
 // true 时返回解析符号链接后的绝对路径
 // Excutable: E:\tmp\linkapp.exe
 // Excutable(true): D:\Fufu\Test\abc\app.exe
@@ -45,7 +45,7 @@ func Executable(evalSymlinks ...bool) string {
 	return filepath.Clean(exe)
 }
 
-// 当前执行程序所在目录
+// ExecutableDir 当前执行程序所在目录
 // true 时返回解析符号链接后的目录
 // ExcutableDir: E:\tmp
 // ExcutableDir(true): D:\Fufu\Test\abc

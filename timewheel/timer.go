@@ -29,7 +29,7 @@ type Task struct {
 	// circleNum int
 }
 
-// for sync.Pool
+// Reset for sync.Pool
 func (t *Task) Reset() {
 	t.round = 0
 	t.callback = nil
@@ -383,7 +383,7 @@ func (tw *TimeWheel) Sleep(delay time.Duration) {
 	<-queue
 }
 
-// similar to golang std timer
+// Timer similar to golang std timer
 type Timer struct {
 	task   *Task
 	tw     *TimeWheel

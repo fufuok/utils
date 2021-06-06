@@ -1,6 +1,6 @@
 package utils
 
-// 获取字符串结果, 可选指定默认值
+// GetString 获取字符串结果, 可选指定默认值
 func GetString(v interface{}, defaultVal ...string) string {
 	s := MustString(v)
 	if s == "" && len(defaultVal) > 0 {
@@ -9,7 +9,7 @@ func GetString(v interface{}, defaultVal ...string) string {
 	return s
 }
 
-// Immutable, 可选指定默认值
+// GetSafeString Immutable, 可选指定默认值
 func GetSafeString(s string, defaultVal ...string) string {
 	s = CopyString(s)
 	if s == "" && len(defaultVal) > 0 {
@@ -18,7 +18,7 @@ func GetSafeString(s string, defaultVal ...string) string {
 	return s
 }
 
-// Immutable, 可选指定默认值
+// GetSafeB2S Immutable, 可选指定默认值
 func GetSafeB2S(b []byte, defaultVal ...string) string {
 	s := string(b)
 	if s == "" && len(defaultVal) > 0 {
@@ -27,20 +27,20 @@ func GetSafeB2S(b []byte, defaultVal ...string) string {
 	return s
 }
 
-// Immutable, string to string
+// CopyString Immutable, string to string
 // e.g. fiberParam := utils.CopyString(c.Params("test"))
 // e.g. utils.CopyString(s[500:1000]) // 可以让 s 被 GC 回收
 func CopyString(s string) string {
 	return B2S([]byte(s))
 }
 
-// Immutable, []byte to string
+// CopyB2S Immutable, []byte to string
 func CopyB2S(b []byte) string {
 	// string(b)
 	return B2S(CopyBytes(b))
 }
 
-// 拼接字符串, 返回 bytes from bytes.Join()
+// AddStringBytes 拼接字符串, 返回 bytes from bytes.Join()
 func AddStringBytes(s ...string) []byte {
 	switch len(s) {
 	case 0:
@@ -63,12 +63,12 @@ func AddStringBytes(s ...string) []byte {
 	return b
 }
 
-// 拼接字符串
+// AddString 拼接字符串
 func AddString(s ...string) string {
 	return B2S(AddStringBytes(s...))
 }
 
-// 搜索字符串位置(左, 第一个)
+// SearchString 搜索字符串位置(左, 第一个)
 func SearchString(ss []string, s string) int {
 	for i, v := range ss {
 		if s == v {
@@ -78,7 +78,7 @@ func SearchString(ss []string, s string) int {
 	return -1
 }
 
-// 检查字符串是否存在于 slice
+// InStrings 检查字符串是否存在于 slice
 func InStrings(ss []string, s string) bool {
 	return SearchString(ss, s) != -1
 }

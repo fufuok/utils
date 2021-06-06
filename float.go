@@ -25,7 +25,7 @@ func Round(v float64, precision int) float64 {
 	return math.Floor(v*p+0.5) / p
 }
 
-// 浮点数转千分位分隔字符串
+// Commaf 浮点数转千分位分隔字符串
 // Ref: dustin/go-humanize
 // e.g. Commaf(834142.32) -> 834,142.32
 func Commaf(v float64) string {
@@ -58,7 +58,7 @@ func Commaf(v float64) string {
 	return buf.String()
 }
 
-// big.Float 千分位分隔字符串
+// BigCommaf big.Float 千分位分隔字符串
 // Ref: dustin/go-humanize
 func BigCommaf(v *big.Float) string {
 	buf := &bytes.Buffer{}

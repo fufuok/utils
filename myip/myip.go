@@ -25,7 +25,7 @@ var externalIPAPI = map[string][]string{
 	},
 }
 
-// 获取外网地址
+// ExternalIPAny 获取外网地址
 func ExternalIPAny(retries ...int) string {
 	n := 1
 	if len(retries) > 0 && retries[0] > 0 {
@@ -47,7 +47,7 @@ func ExternalIPAny(retries ...int) string {
 
 }
 
-// 获取外网地址 (出口公网地址)
+// ExternalIP 获取外网地址 (出口公网地址)
 func ExternalIP(v ...string) string {
 	if len(v) > 0 && v[0] != "ipv4" {
 		return ExternalIPv6()
@@ -56,12 +56,12 @@ func ExternalIP(v ...string) string {
 	return ExternalIPv4()
 }
 
-// 获取外网地址 (IPv4)
+// ExternalIPv4 获取外网地址 (IPv4)
 func ExternalIPv4() string {
 	return getExternalIP("ipv4")
 }
 
-// 获取外网地址 (IPv6)
+// ExternalIPv6 获取外网地址 (IPv6)
 func ExternalIPv6() string {
 	if ip := getExternalIP("ipv6"); ip != "" && strings.Count(ip, ":") > 1 {
 		return ip
@@ -112,17 +112,17 @@ func getAPI(u string) (string, bool) {
 	return "", resp.StatusCode == http.StatusOK
 }
 
-// 获取内网地址 (IPv4)
+// InternalIPv4 获取内网地址 (IPv4)
 func InternalIPv4() string {
 	return InternalIP("", "udp4")
 }
 
-// 获取内网地址 (临时 IPv6 地址)
+// InternalIPv6 获取内网地址 (临时 IPv6 地址)
 func InternalIPv6() string {
 	return InternalIP("[2001:4860:4860::8888]:53", "udp6")
 }
 
-// 获取内网地址 (出口本地地址)
+// InternalIP 获取内网地址 (出口本地地址)
 func InternalIP(dstAddr, network string) string {
 	if dstAddr == "" {
 		dstAddr = "8.8.8.8:53"
@@ -149,7 +149,7 @@ func InternalIP(dstAddr, network string) string {
 	return ip
 }
 
-// 获取本地地址 (第一个)
+// LocalIP 获取本地地址 (第一个)
 func LocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err == nil {
@@ -164,7 +164,7 @@ func LocalIP() string {
 	return ""
 }
 
-// 获取所有本地地址 IPv4
+// LocalIPv4s 获取所有本地地址 IPv4
 func LocalIPv4s() (ips []string) {
 	addrs, err := net.InterfaceAddrs()
 	if err == nil {

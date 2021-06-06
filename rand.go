@@ -30,7 +30,7 @@ func (c *TChoice) String() string {
 	return MustJSONString(c)
 }
 
-// 加权随机, 返回选中项
+// WeightedChoice 加权随机, 返回选中项
 func WeightedChoice(choices ...TChoice) TChoice {
 	idx := WeightedChoiceIndex(choices)
 	if idx == -1 {
@@ -40,7 +40,7 @@ func WeightedChoice(choices ...TChoice) TChoice {
 	return choices[idx]
 }
 
-// 加权随机, 返回选中项的下标, -1 未选中任何项
+// WeightedChoiceIndex 加权随机, 返回选中项的下标, -1 未选中任何项
 func WeightedChoiceIndex(choices []TChoice) int {
 	if len(choices) == 0 {
 		return -1
@@ -71,7 +71,7 @@ func WeightedChoiceIndex(choices []TChoice) int {
 	return -1
 }
 
-// 加权随机, 参数为权重值列表, 返回选中项的下标, -1 未选中任何项
+// WeightedChoiceWeightsIndex 加权随机, 参数为权重值列表, 返回选中项的下标, -1 未选中任何项
 func WeightedChoiceWeightsIndex(weights []int) int {
 	if len(weights) == 0 {
 		return -1
@@ -102,7 +102,7 @@ func WeightedChoiceWeightsIndex(weights []int) int {
 	return -1
 }
 
-// 加权随机, map[object]weight
+// WeightedChoiceMap 加权随机, map[object]weight
 func WeightedChoiceMap(choices map[interface{}]int) interface{} {
 	if len(choices) == 0 {
 		return nil
@@ -130,12 +130,12 @@ func WeightedChoiceMap(choices map[interface{}]int) interface{} {
 	return nil
 }
 
-// (>=)m - (<)n 间随机整数
+// RandInt (>=)m - (<)n 间随机整数
 func RandInt(min int, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-// 随机字符串, 大小写字母数字
+// RandString 随机字符串, 大小写字母数字
 // Ref: stackoverflow.icza
 func RandString(n int) string {
 	b := make([]byte, n)
@@ -156,12 +156,12 @@ func RandString(n int) string {
 	return B2S(b)
 }
 
-// 随机 Hex 编码字符串
+// RandHex 随机 Hex 编码字符串
 func RandHex(nHalf int) string {
 	return hex.EncodeToString(RandBytes(nHalf))
 }
 
-// 随机 bytes
+// RandBytes 随机 bytes
 func RandBytes(n int) []byte {
 	if n < 1 {
 		return nil

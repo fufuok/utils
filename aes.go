@@ -9,147 +9,147 @@ import (
 	"github.com/fufuok/utils/base58"
 )
 
-// AES 加密, ZerosPadding
-func AesCBCEnStringHex(s, key string) string {
-	return hex.EncodeToString(AesCBCEncrypt(false, S2B(s), S2B(key)))
+// AesCBCEnStringHex 加密, ZerosPadding
+func AesCBCEnStringHex(s string, key []byte) string {
+	return hex.EncodeToString(AesCBCEncrypt(false, S2B(s), key))
 }
 
-// AES 加密, Pkcs7Padding
-func AesCBCEnPKCS7StringHex(s, key string) string {
-	return hex.EncodeToString(AesCBCEncrypt(true, S2B(s), S2B(key)))
+// AesCBCEnPKCS7StringHex 加密, Pkcs7Padding
+func AesCBCEnPKCS7StringHex(s string, key []byte) string {
+	return hex.EncodeToString(AesCBCEncrypt(true, S2B(s), key))
 }
 
-// AES 加密, ZerosPadding
+// AesCBCEnHex 加密, ZerosPadding
 func AesCBCEnHex(b, key []byte) string {
 	return hex.EncodeToString(AesCBCEncrypt(false, b, key))
 }
 
-// AES 加密, Pkcs7Padding
+// AesCBCEnPKCS7Hex 加密, Pkcs7Padding
 func AesCBCEnPKCS7Hex(b, key []byte) string {
 	return hex.EncodeToString(AesCBCEncrypt(true, b, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeStringHex(s, key string) string {
+// AesCBCDeStringHex 解密, ZerosPadding
+func AesCBCDeStringHex(s string, key []byte) string {
 	return B2S(AesCBCDeHex(s, key))
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7StringHex(s, key string) string {
+// AesCBCDePKCS7StringHex 解密, Pkcs7Padding
+func AesCBCDePKCS7StringHex(s string, key []byte) string {
 	return B2S(AesCBCDePKCS7Hex(s, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeHex(s, key string) []byte {
+// AesCBCDeHex 解密, ZerosPadding
+func AesCBCDeHex(s string, key []byte) []byte {
 	if data, err := hex.DecodeString(s); err == nil {
-		return AesCBCDecrypt(false, data, S2B(key))
+		return AesCBCDecrypt(false, data, key)
 	}
 
 	return nil
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7Hex(s, key string) []byte {
+// AesCBCDePKCS7Hex 解密, Pkcs7Padding
+func AesCBCDePKCS7Hex(s string, key []byte) []byte {
 	if data, err := hex.DecodeString(s); err == nil {
-		return AesCBCDecrypt(true, data, S2B(key))
+		return AesCBCDecrypt(true, data, key)
 	}
 
 	return nil
 }
 
-// AES 加密, ZerosPadding
-func AesCBCEnStringB58(s, key string) string {
-	return base58.Encode(AesCBCEncrypt(false, S2B(s), S2B(key)))
+// AesCBCEnStringB58 加密, ZerosPadding
+func AesCBCEnStringB58(s string, key []byte) string {
+	return base58.Encode(AesCBCEncrypt(false, S2B(s), key))
 }
 
-// AES 加密, Pkcs7Padding
-func AesCBCEnPKCS7StringB58(s, key string) string {
-	return base58.Encode(AesCBCEncrypt(true, S2B(s), S2B(key)))
+// AesCBCEnPKCS7StringB58 加密, Pkcs7Padding
+func AesCBCEnPKCS7StringB58(s string, key []byte) string {
+	return base58.Encode(AesCBCEncrypt(true, S2B(s), key))
 }
 
-// AES 加密, ZerosPadding
+// AesCBCEnB58 加密, ZerosPadding
 func AesCBCEnB58(b, key []byte) string {
 	return base58.Encode(AesCBCEncrypt(false, b, key))
 }
 
-// AES 加密, Pkcs7Padding
+// AesCBCEnPKCS7B58 加密, Pkcs7Padding
 func AesCBCEnPKCS7B58(b, key []byte) string {
 	return base58.Encode(AesCBCEncrypt(true, b, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeStringB58(s, key string) string {
+// AesCBCDeStringB58 解密, ZerosPadding
+func AesCBCDeStringB58(s string, key []byte) string {
 	return B2S(AesCBCDeB58(s, key))
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7StringB58(s, key string) string {
+// AesCBCDePKCS7StringB58 解密, Pkcs7Padding
+func AesCBCDePKCS7StringB58(s string, key []byte) string {
 	return B2S(AesCBCDePKCS7B58(s, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeB58(s, key string) []byte {
-	return AesCBCDecrypt(false, base58.Decode(s), S2B(key))
+// AesCBCDeB58 解密, ZerosPadding
+func AesCBCDeB58(s string, key []byte) []byte {
+	return AesCBCDecrypt(false, base58.Decode(s), key)
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7B58(s, key string) []byte {
-	return AesCBCDecrypt(true, base58.Decode(s), S2B(key))
+// AesCBCDePKCS7B58 解密, Pkcs7Padding
+func AesCBCDePKCS7B58(s string, key []byte) []byte {
+	return AesCBCDecrypt(true, base58.Decode(s), key)
 }
 
-// AES 加密, ZerosPadding
-func AesCBCEnStringB64(s, key string) string {
-	return B64UrlEncode(AesCBCEncrypt(false, S2B(s), S2B(key)))
+// AesCBCEnStringB64 加密, ZerosPadding
+func AesCBCEnStringB64(s string, key []byte) string {
+	return B64UrlEncode(AesCBCEncrypt(false, S2B(s), key))
 }
 
-// AES 加密, Pkcs7Padding
-func AesCBCEnPKCS7StringB64(s, key string) string {
-	return B64UrlEncode(AesCBCEncrypt(true, S2B(s), S2B(key)))
+// AesCBCEnPKCS7StringB64 加密, Pkcs7Padding
+func AesCBCEnPKCS7StringB64(s string, key []byte) string {
+	return B64UrlEncode(AesCBCEncrypt(true, S2B(s), key))
 }
 
-// AES 加密, ZerosPadding
+// AesCBCEnB64 加密, ZerosPadding
 func AesCBCEnB64(b, key []byte) string {
 	return B64UrlEncode(AesCBCEncrypt(false, b, key))
 }
 
-// AES 加密, Pkcs7Padding
+// AesCBCEnPKCS7B64 加密, Pkcs7Padding
 func AesCBCEnPKCS7B64(b, key []byte) string {
 	return B64UrlEncode(AesCBCEncrypt(true, b, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeStringB64(s, key string) string {
+// AesCBCDeStringB64 解密, ZerosPadding
+func AesCBCDeStringB64(s string, key []byte) string {
 	return B2S(AesCBCDeB64(s, key))
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7StringB64(s, key string) string {
+// AesCBCDePKCS7StringB64 解密, Pkcs7Padding
+func AesCBCDePKCS7StringB64(s string, key []byte) string {
 	return B2S(AesCBCDePKCS7B64(s, key))
 }
 
-// AES 解密, ZerosPadding
-func AesCBCDeB64(s, key string) []byte {
-	return AesCBCDecrypt(false, B64UrlDecode(s), S2B(key))
+// AesCBCDeB64 解密, ZerosPadding
+func AesCBCDeB64(s string, key []byte) []byte {
+	return AesCBCDecrypt(false, B64UrlDecode(s), key)
 }
 
-// AES 解密, Pkcs7Padding
-func AesCBCDePKCS7B64(s, key string) []byte {
-	return AesCBCDecrypt(true, B64UrlDecode(s), S2B(key))
+// AesCBCDePKCS7B64 解密, Pkcs7Padding
+func AesCBCDePKCS7B64(s string, key []byte) []byte {
+	return AesCBCDecrypt(true, B64UrlDecode(s), key)
 }
 
-// AES-CBC 加密
+// AesCBCEncrypt AES-CBC 加密
 func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte) {
 	ciphertext, _ = AesCBCEncryptE(asPKCS7, plaintext, key, ivs...)
 	return
 }
 
-// AES-CBC 解密
+// AesCBCDecrypt AES-CBC 解密
 func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte) {
 	plaintext, _ = AesCBCDecryptE(asPKCS7, ciphertext, key, ivs...)
 	return
 }
 
-// AES-CBC 加密, 密码分组链接模式 (Cipher Block Chaining (CBC))
+// AesCBCEncryptE AES-CBC 加密, 密码分组链接模式 (Cipher Block Chaining (CBC))
 // key 长度分别是 16 (AES-128), 24 (AES-192?), 32 (AES-256?)
 // asPKCS7: false (ZerosPadding), true (Pkcs7Padding)
 func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error) {
@@ -183,7 +183,7 @@ func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte,
 	return ciphertext, nil
 }
 
-// AES-CBC 解密, 密码分组链接模式 (Cipher Block Chaining (CBC))
+// AesCBCDecryptE AES-CBC 解密, 密码分组链接模式 (Cipher Block Chaining (CBC))
 func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -214,7 +214,7 @@ func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte
 	return plaintext, nil
 }
 
-// 填充
+// Padding 填充
 func Padding(b []byte, bSize int, pkcs7 bool) []byte {
 	if pkcs7 {
 		n := bSize - len(b)%bSize
@@ -230,7 +230,7 @@ func Padding(b []byte, bSize int, pkcs7 bool) []byte {
 	}
 }
 
-// 去除填充
+// UnPadding 去除填充
 func UnPadding(b []byte, pkcs7 bool) []byte {
 	if pkcs7 {
 		l := len(b)

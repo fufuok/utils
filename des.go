@@ -8,147 +8,147 @@ import (
 	"github.com/fufuok/utils/base58"
 )
 
-// DES 加密, ZerosPadding
-func DesCBCEnStringHex(s, key string) string {
-	return hex.EncodeToString(DesCBCEncrypt(false, S2B(s), S2B(key)))
+// DesCBCEnStringHex 加密, ZerosPadding
+func DesCBCEnStringHex(s string, key []byte) string {
+	return hex.EncodeToString(DesCBCEncrypt(false, S2B(s), key))
 }
 
-// DES 加密, Pkcs7Padding
-func DesCBCEnPKCS7StringHex(s, key string) string {
-	return hex.EncodeToString(DesCBCEncrypt(true, S2B(s), S2B(key)))
+// DesCBCEnPKCS7StringHex 加密, Pkcs7Padding
+func DesCBCEnPKCS7StringHex(s string, key []byte) string {
+	return hex.EncodeToString(DesCBCEncrypt(true, S2B(s), key))
 }
 
-// DES 加密, ZerosPadding
+// DesCBCEnHex 加密, ZerosPadding
 func DesCBCEnHex(b, key []byte) string {
 	return hex.EncodeToString(DesCBCEncrypt(false, b, key))
 }
 
-// DES 加密, Pkcs7Padding
+// DesCBCEnPKCS7Hex 加密, Pkcs7Padding
 func DesCBCEnPKCS7Hex(b, key []byte) string {
 	return hex.EncodeToString(DesCBCEncrypt(true, b, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeStringHex(s, key string) string {
+// DesCBCDeStringHex 解密, ZerosPadding
+func DesCBCDeStringHex(s string, key []byte) string {
 	return B2S(DesCBCDeHex(s, key))
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7StringHex(s, key string) string {
+// DesCBCDePKCS7StringHex 解密, Pkcs7Padding
+func DesCBCDePKCS7StringHex(s string, key []byte) string {
 	return B2S(DesCBCDePKCS7Hex(s, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeHex(s, key string) []byte {
+// DesCBCDeHex 解密, ZerosPadding
+func DesCBCDeHex(s string, key []byte) []byte {
 	if data, err := hex.DecodeString(s); err == nil {
-		return DesCBCDecrypt(false, data, S2B(key))
+		return DesCBCDecrypt(false, data, key)
 	}
 
 	return nil
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7Hex(s, key string) []byte {
+// DesCBCDePKCS7Hex 解密, Pkcs7Padding
+func DesCBCDePKCS7Hex(s string, key []byte) []byte {
 	if data, err := hex.DecodeString(s); err == nil {
-		return DesCBCDecrypt(true, data, S2B(key))
+		return DesCBCDecrypt(true, data, key)
 	}
 
 	return nil
 }
 
-// DES 加密, ZerosPadding
-func DesCBCEnStringB58(s, key string) string {
-	return base58.Encode(DesCBCEncrypt(false, S2B(s), S2B(key)))
+// DesCBCEnStringB58 加密, ZerosPadding
+func DesCBCEnStringB58(s string, key []byte) string {
+	return base58.Encode(DesCBCEncrypt(false, S2B(s), key))
 }
 
-// DES 加密, Pkcs7Padding
-func DesCBCEnPKCS7StringB58(s, key string) string {
-	return base58.Encode(DesCBCEncrypt(true, S2B(s), S2B(key)))
+// DesCBCEnPKCS7StringB58 加密, Pkcs7Padding
+func DesCBCEnPKCS7StringB58(s string, key []byte) string {
+	return base58.Encode(DesCBCEncrypt(true, S2B(s), key))
 }
 
-// DES 加密, ZerosPadding
+// DesCBCEnB58 加密, ZerosPadding
 func DesCBCEnB58(b, key []byte) string {
 	return base58.Encode(DesCBCEncrypt(false, b, key))
 }
 
-// DES 加密, Pkcs7Padding
+// DesCBCEnPKCS7B58 加密, Pkcs7Padding
 func DesCBCEnPKCS7B58(b, key []byte) string {
 	return base58.Encode(DesCBCEncrypt(true, b, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeStringB58(s, key string) string {
+// DesCBCDeStringB58 解密, ZerosPadding
+func DesCBCDeStringB58(s string, key []byte) string {
 	return B2S(DesCBCDeB58(s, key))
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7StringB58(s, key string) string {
+// DesCBCDePKCS7StringB58 解密, Pkcs7Padding
+func DesCBCDePKCS7StringB58(s string, key []byte) string {
 	return B2S(DesCBCDePKCS7B58(s, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeB58(s, key string) []byte {
-	return DesCBCDecrypt(false, base58.Decode(s), S2B(key))
+// DesCBCDeB58 解密, ZerosPadding
+func DesCBCDeB58(s string, key []byte) []byte {
+	return DesCBCDecrypt(false, base58.Decode(s), key)
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7B58(s, key string) []byte {
-	return DesCBCDecrypt(true, base58.Decode(s), S2B(key))
+// DesCBCDePKCS7B58 解密, Pkcs7Padding
+func DesCBCDePKCS7B58(s string, key []byte) []byte {
+	return DesCBCDecrypt(true, base58.Decode(s), key)
 }
 
-// DES 加密, ZerosPadding
-func DesCBCEnStringB64(s, key string) string {
-	return B64UrlEncode(DesCBCEncrypt(false, S2B(s), S2B(key)))
+// DesCBCEnStringB64 加密, ZerosPadding
+func DesCBCEnStringB64(s string, key []byte) string {
+	return B64UrlEncode(DesCBCEncrypt(false, S2B(s), key))
 }
 
-// DES 加密, Pkcs7Padding
-func DesCBCEnPKCS7StringB64(s, key string) string {
-	return B64UrlEncode(DesCBCEncrypt(true, S2B(s), S2B(key)))
+// DesCBCEnPKCS7StringB64 加密, Pkcs7Padding
+func DesCBCEnPKCS7StringB64(s string, key []byte) string {
+	return B64UrlEncode(DesCBCEncrypt(true, S2B(s), key))
 }
 
-// DES 加密, ZerosPadding
+// DesCBCEnB64 加密, ZerosPadding
 func DesCBCEnB64(b, key []byte) string {
 	return B64UrlEncode(DesCBCEncrypt(false, b, key))
 }
 
-// DES 加密, Pkcs7Padding
+// DesCBCEnPKCS7B64 加密, Pkcs7Padding
 func DesCBCEnPKCS7B64(b, key []byte) string {
 	return B64UrlEncode(DesCBCEncrypt(true, b, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeStringB64(s, key string) string {
+// DesCBCDeStringB64 解密, ZerosPadding
+func DesCBCDeStringB64(s string, key []byte) string {
 	return B2S(DesCBCDeB64(s, key))
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7StringB64(s, key string) string {
+// DesCBCDePKCS7StringB64 解密, Pkcs7Padding
+func DesCBCDePKCS7StringB64(s string, key []byte) string {
 	return B2S(DesCBCDePKCS7B64(s, key))
 }
 
-// DES 解密, ZerosPadding
-func DesCBCDeB64(s, key string) []byte {
-	return DesCBCDecrypt(false, B64UrlDecode(s), S2B(key))
+// DesCBCDeB64 解密, ZerosPadding
+func DesCBCDeB64(s string, key []byte) []byte {
+	return DesCBCDecrypt(false, B64UrlDecode(s), key)
 }
 
-// DES 解密, Pkcs7Padding
-func DesCBCDePKCS7B64(s, key string) []byte {
-	return DesCBCDecrypt(true, B64UrlDecode(s), S2B(key))
+// DesCBCDePKCS7B64 解密, Pkcs7Padding
+func DesCBCDePKCS7B64(s string, key []byte) []byte {
+	return DesCBCDecrypt(true, B64UrlDecode(s), key)
 }
 
-// AES-CBC 加密
+// DesCBCEncrypt AES-CBC 加密
 func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte) {
 	ciphertext, _ = DesCBCEncryptE(asPKCS7, plaintext, key, ivs...)
 	return
 }
 
-// AES-CBC 解密
+// DesCBCDecrypt AES-CBC 解密
 func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte) {
 	plaintext, _ = DesCBCDecryptE(asPKCS7, ciphertext, key, ivs...)
 	return
 }
 
-// DES-CBC 加密, 密码分组链接模式 (Cipher Block Chaining (CBC))
+// DesCBCEncryptE DES-CBC 加密, 密码分组链接模式 (Cipher Block Chaining (CBC))
 // key 长度固定为 8
 // asPKCS7: false (ZerosPadding), true (Pkcs7Padding)
 func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error) {
@@ -181,7 +181,7 @@ func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte,
 	return ciphertext, nil
 }
 
-// DES-CBC 解密, 密码分组链接模式 (Cipher Block Chaining (CBC))
+// DesCBCDecryptE DES-CBC 解密, 密码分组链接模式 (Cipher Block Chaining (CBC))
 func DesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {

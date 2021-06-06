@@ -10,86 +10,86 @@ import (
 
 const gcmStandardNonceSize = 12
 
-// AES 加密
-func AesGCMEnStringHex(s, key string) (string, string) {
-	return AesGCMEnHex(S2B(s), S2B(key))
+// AesGCMEnStringHex 加密
+func AesGCMEnStringHex(s string, key []byte) (string, []byte) {
+	return AesGCMEnHex(S2B(s), key)
 }
 
-// AES 加密
-func AesGCMEnHex(b, key []byte) (string, string) {
+// AesGCMEnHex 加密
+func AesGCMEnHex(b, key []byte) (string, []byte) {
 	res, nonce := AesGCMEncrypt(b, key)
-	return hex.EncodeToString(res), B2S(nonce)
+	return hex.EncodeToString(res), nonce
 }
 
-// AES 解密
-func AesGCMDeStringHex(s, key, nonce string) string {
+// AesGCMDeStringHex 解密
+func AesGCMDeStringHex(s string, key, nonce []byte) string {
 	return B2S(AesGCMDeHex(s, key, nonce))
 }
 
-// AES 解密
-func AesGCMDeHex(s, key, nonce string) []byte {
+// AesGCMDeHex 解密
+func AesGCMDeHex(s string, key, nonce []byte) []byte {
 	if data, err := hex.DecodeString(s); err == nil {
-		return AesGCMDecrypt(data, S2B(key), S2B(nonce))
+		return AesGCMDecrypt(data, key, nonce)
 	}
 
 	return nil
 }
 
-// AES 加密
-func AesGCMEnStringB58(s, key string) (string, string) {
-	return AesGCMEnB58(S2B(s), S2B(key))
+// AesGCMEnStringB58 加密
+func AesGCMEnStringB58(s string, key []byte) (string, []byte) {
+	return AesGCMEnB58(S2B(s), key)
 }
 
-// AES 加密
-func AesGCMEnB58(b, key []byte) (string, string) {
+// AesGCMEnB58 加密
+func AesGCMEnB58(b, key []byte) (string, []byte) {
 	res, nonce := AesGCMEncrypt(b, key)
-	return base58.Encode(res), B2S(nonce)
+	return base58.Encode(res), nonce
 }
 
-// AES 解密
-func AesGCMDeStringB58(s, key, nonce string) string {
+// AesGCMDeStringB58 解密
+func AesGCMDeStringB58(s string, key, nonce []byte) string {
 	return B2S(AesGCMDeB58(s, key, nonce))
 }
 
-// AES 解密
-func AesGCMDeB58(s, key, nonce string) []byte {
-	return AesGCMDecrypt(base58.Decode(s), S2B(key), S2B(nonce))
+// AesGCMDeB58 解密
+func AesGCMDeB58(s string, key, nonce []byte) []byte {
+	return AesGCMDecrypt(base58.Decode(s), key, nonce)
 }
 
-// AES 加密
-func AesGCMEnStringB64(s, key string) (string, string) {
-	return AesGCMEnB64(S2B(s), S2B(key))
+// AesGCMEnStringB64 加密
+func AesGCMEnStringB64(s string, key []byte) (string, []byte) {
+	return AesGCMEnB64(S2B(s), key)
 }
 
-// AES 加密
-func AesGCMEnB64(b, key []byte) (string, string) {
+// AesGCMEnB64 加密
+func AesGCMEnB64(b, key []byte) (string, []byte) {
 	res, nonce := AesGCMEncrypt(b, key)
-	return B64UrlEncode(res), B2S(nonce)
+	return B64UrlEncode(res), nonce
 }
 
-// AES 解密
-func AesGCMDeStringB64(s, key, nonce string) string {
+// AesGCMDeStringB64 解密
+func AesGCMDeStringB64(s string, key, nonce []byte) string {
 	return B2S(AesGCMDeB64(s, key, nonce))
 }
 
-// AES 解密
-func AesGCMDeB64(s, key, nonce string) []byte {
-	return AesGCMDecrypt(B64UrlDecode(s), S2B(key), S2B(nonce))
+// AesGCMDeB64 解密
+func AesGCMDeB64(s string, key, nonce []byte) []byte {
+	return AesGCMDecrypt(B64UrlDecode(s), key, nonce)
 }
 
-// AES-GCM 加密
+// AesGCMEncrypt AES-GCM 加密
 func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte) {
 	ciphertext, nonce, _ = AesGCMEncryptWithNonce(plaintext, key, nil, nil)
 	return
 }
 
-// AES-GCM 解密
+// AesGCMDecrypt AES-GCM 解密
 func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte) {
 	plaintext, _ = AesGCMDecryptWithNonce(ciphertext, key, nonce, nil)
 	return
 }
 
-// AES-GCM 加密, (Galois/Counter Mode (GCM))
+// AesGCMEncryptWithNonce AES-GCM 加密, (Galois/Counter Mode (GCM))
 // key 长度分别是 16 (AES-128), 32 (AES-256)
 func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byte, []byte, error) {
 	block, err := aes.NewCipher(key)
@@ -116,7 +116,7 @@ func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byt
 	return res, nonce, nil
 }
 
-// AES-GCM 解密, (Galois/Counter Mode (GCM))
+// AesGCMDecryptWithNonce AES-GCM 解密, (Galois/Counter Mode (GCM))
 func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// 整数取大值
+// MaxInt 整数取大值
 func MaxInt(a, b int) int {
 	if a > b {
 		return a
@@ -15,7 +15,7 @@ func MaxInt(a, b int) int {
 	return b
 }
 
-// 整数取小值
+// MinInt 整数取小值
 func MinInt(a, b int) int {
 	if a < b {
 		return a
@@ -23,7 +23,7 @@ func MinInt(a, b int) int {
 	return b
 }
 
-// 获取 int 结果, 可选指定默认值(若给定了默认值,则返回正整数或 0)
+// GetInt 获取 int 结果, 可选指定默认值(若给定了默认值,则返回正整数或 0)
 func GetInt(v interface{}, defaultInt ...int) int {
 	i := MustInt(v)
 	if i <= 0 && len(defaultInt) > 0 {
@@ -32,7 +32,7 @@ func GetInt(v interface{}, defaultInt ...int) int {
 	return i
 }
 
-// 搜索整数位置(左, 第一个)
+// SearchInt 搜索整数位置(左, 第一个)
 func SearchInt(slice []int, n int) int {
 	for i, v := range slice {
 		if n == v {
@@ -43,17 +43,17 @@ func SearchInt(slice []int, n int) int {
 	return -1
 }
 
-// 检查整数是否存在于 slice
+// InInts 检查整数是否存在于 slice
 func InInts(slice []int, n int) bool {
 	return SearchInt(slice, n) != -1
 }
 
-// 整数转千分位分隔字符串
+// Commai 整数转千分位分隔字符串
 func Commai(v int) string {
 	return Comma(int64(v))
 }
 
-// 整数转千分位分隔字符串
+// Comma 整数转千分位分隔字符串
 // Ref: dustin/go-humanize
 // e.g. Comma(834142) -> 834,142
 func Comma(v int64) string {
@@ -88,7 +88,7 @@ func Comma(v int64) string {
 	return sign + strings.Join(parts[j:], ",")
 }
 
-// 整数转千分位分隔字符串
+// Commau 整数转千分位分隔字符串
 // Ref: dustin/go-humanize
 func Commau(v uint64) string {
 	sign := ""
@@ -117,7 +117,7 @@ func Commau(v uint64) string {
 	return sign + strings.Join(parts[j:], ",")
 }
 
-// big.Int 千分位分隔字符串
+// BigComma big.Int 千分位分隔字符串
 // Ref: dustin/go-humanize
 func BigComma(b *big.Int) string {
 	sign := ""
@@ -148,7 +148,7 @@ func BigComma(b *big.Int) string {
 	return sign + strings.Join(parts[j:], ",")
 }
 
-// big.Int 总数量级
+// Bigoom big.Int 总数量级
 // Ref: dustin/go-humanize
 func Bigoom(n, b *big.Int) (float64, int) {
 	mag := 0

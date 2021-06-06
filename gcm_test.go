@@ -5,34 +5,34 @@ import (
 )
 
 func TestAesGCMEnStringHex(t *testing.T) {
-	actual, _ := AesGCMEnStringHex("1", "1")
+	actual, _ := AesGCMEnStringHex("1", []byte("1"))
 	AssertEqual(t, "", actual)
 
-	res, nonce := AesGCMEnStringHex("", "0123456789012345")
-	AssertEqual(t, "", AesGCMDeStringHex(res, "0123456789012345", nonce))
+	res, nonce := AesGCMEnStringHex("", tmpK)
+	AssertEqual(t, "", AesGCMDeStringHex(res, tmpK, nonce))
 
-	res, nonce = AesGCMEnStringHex("Fufu 中　文加密/解密~&#123a", "0123456789012345")
-	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", AesGCMDeStringHex(res, "0123456789012345", nonce))
+	res, nonce = AesGCMEnStringHex(tmpS, tmpK)
+	AssertEqual(t, tmpS, AesGCMDeStringHex(res, tmpK, nonce))
 }
 
 func TestAesGCMEnStringB64(t *testing.T) {
-	actual, _ := AesGCMEnStringB64("1", "1")
+	actual, _ := AesGCMEnStringB64("1", []byte("1"))
 	AssertEqual(t, "", actual)
 
-	res, nonce := AesGCMEnStringB64("", "0123456789012345")
-	AssertEqual(t, "", AesGCMDeStringB64(res, "0123456789012345", nonce))
+	res, nonce := AesGCMEnStringB64("", tmpK)
+	AssertEqual(t, "", AesGCMDeStringB64(res, tmpK, nonce))
 
-	res, nonce = AesGCMEnStringB64("Fufu 中　文加密/解密~&#123a", "0123456789012345")
-	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", AesGCMDeStringB64(res, "0123456789012345", nonce))
+	res, nonce = AesGCMEnStringB64(tmpS, tmpK)
+	AssertEqual(t, tmpS, AesGCMDeStringB64(res, tmpK, nonce))
 }
 
 func TestAesGCMEnStringB58(t *testing.T) {
-	actual, _ := AesGCMEnStringB58("1", "1")
+	actual, _ := AesGCMEnStringB58("1", []byte("1"))
 	AssertEqual(t, "", actual)
 
-	res, nonce := AesGCMEnStringB58("", "0123456789012345")
-	AssertEqual(t, "", AesGCMDeStringB58(res, "0123456789012345", nonce))
+	res, nonce := AesGCMEnStringB58("", tmpK)
+	AssertEqual(t, "", AesGCMDeStringB58(res, tmpK, nonce))
 
-	res, nonce = AesGCMEnStringB58("Fufu 中　文加密/解密~&#123a", "0123456789012345")
-	AssertEqual(t, "Fufu 中　文加密/解密~&#123a", AesGCMDeStringB58(res, "0123456789012345", nonce))
+	res, nonce = AesGCMEnStringB58(tmpS, tmpK)
+	AssertEqual(t, tmpS, AesGCMDeStringB58(res, tmpK, nonce))
 }

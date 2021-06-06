@@ -7,13 +7,13 @@ import (
 )
 
 const (
-	// 项目基础密钥 (环境变量名)
+	// BaseSecretKeyName 项目基础密钥 (环境变量名)
 	BaseSecretKeyName = "FF_PROJECT_1_BASE_SECRET_KEY"
 
-	// 用于解密基础密钥值的密钥 (编译在程序中)
+	// BaseSecretSalt 用于解密基础密钥值的密钥 (编译在程序中)
 	BaseSecretSalt = "123"
 
-	// Redis Auth 短语环境变量 Key
+	// RedisAuthKeyName Redis Auth 短语环境变量 Key
 	RedisAuthKeyName = "PROJECT_1_REDIS_AUTH"
 )
 
