@@ -1,10 +1,10 @@
-// Ref: dustin/go-humanize
 package utils
 
 import (
 	"testing"
 )
 
+// Ref: dustin/go-humanize
 func TestParseHumanBytes(t *testing.T) {
 	tests := []struct {
 		in  string
@@ -14,6 +14,7 @@ func TestParseHumanBytes(t *testing.T) {
 		{"42MB", 42000000},
 		{"42MiB", 44040192},
 		{"42mb", 42000000},
+		{"42mbps", 42000000},
 		{"42mib", 44040192},
 		{"42MIB", 44040192},
 		{"42 MB", 42000000},
@@ -24,6 +25,7 @@ func TestParseHumanBytes(t *testing.T) {
 		{"42.5MB", 42500000},
 		{"42.5MiB", 44564480},
 		{"42.5 MB", 42500000},
+		{"42.5 Mbps", 42500000},
 		{"42.5 MiB", 44564480},
 		// No need to say B
 		{"42M", 42000000},
@@ -41,9 +43,11 @@ func TestParseHumanBytes(t *testing.T) {
 		{"42.5 M", 42500000},
 		{"42.5 Mi", 44564480},
 		{"1,005.03 MB", 1005030000},
+		{"1,005.03 Mbps", 1005030000},
 		// Large testing, breaks when too much larger than this.
 		{"12.5 EB", uint64(12.5 * float64(EByte))},
 		{"12.5 E", uint64(12.5 * float64(EByte))},
+		{"12.5 Ebps", uint64(12.5 * float64(EByte))},
 		{"12.5 EiB", uint64(12.5 * float64(EiByte))},
 	}
 
@@ -85,9 +89,10 @@ func TestHumanBytes(t *testing.T) {
 		{"HumanBytes(803)", HumanBytes(803), "803 B"},
 		{"HumanBytes(999)", HumanBytes(999), "999 B"},
 
-		{"HumanBytes(1024)", HumanBytes(1024), "1.0 kB"},
-		{"HumanBytes(9999)", HumanBytes(9999), "10 kB"},
-		{"HumanBytes(1MB - 1)", HumanBytes(MByte - Byte), "1000 kB"},
+		{"HumanBytes(1023)", HumanBytes(1023), "1.0 KB"},
+		{"HumanBytes(1024)", HumanBytes(1024), "1.0 KB"},
+		{"HumanBytes(9999)", HumanBytes(9999), "10 KB"},
+		{"HumanBytes(1MB - 1)", HumanBytes(MByte - Byte), "1000 KB"},
 
 		{"HumanBytes(1MB)", HumanBytes(1024 * 1024), "1.0 MB"},
 		{"HumanBytes(1GB - 1K)", HumanBytes(GByte - KByte), "1000 MB"},
@@ -130,6 +135,10 @@ func TestHumanBytes(t *testing.T) {
 
 		{"HumanIntBytes(5.5GB)", HumanIntBytes(5.5 * GByte), "5.5 GB"},
 		{"HumanIntIBytes(5.5GiB)", HumanIntIBytes(5.5 * GiByte), "5.5 GiB"},
+
+		{"HumanKbps(1023)", HumanKbps(1023), "1.0 Kbps"},
+		{"HumanKbps(1024)", HumanKbps(1024), "1.0 Kbps"},
+		{"HumanIntKbps(5.5GB)", HumanIntKbps(5.5 * GByte), "5.5 Gbps"},
 	} {
 		AssertEqual(t, v.expected, v.actual, v.title)
 	}

@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.1.11
+
+**2021-06-12**
+
+- 增加 `HumanBigBytes` `HumanBigKbps` `HumanIntKbps` `HumanKbps`
+
 ## v0.1.10
 
 **2021-06-06**
@@ -81,9 +87,9 @@
 - 整合 `MyIP` 获取服务器内外网 IP
 - 加密小工具加密方式改为: `AesCBCEnStringB58(value, MD5Hex(secret))`
 - `json` 使用 `gin` 类似的可选组织方式:
-  - `go build .` 默认使用 `json-iterator/go`
-  - `go build -tags=stdjson.` 使用标准 JSON 库 `encoding/json`
-  - `go build -tags=go_json .` 使用 `goccy/go-json`
+    - `go build .` 默认使用 `json-iterator/go`
+    - `go build -tags=stdjson.` 使用标准 JSON 库 `encoding/json`
+    - `go build -tags=go_json .` 使用 `goccy/go-json`
 
 ## v0.0.2
 

@@ -60,6 +60,14 @@ var bytesSizeTable = map[string]uint64{
 	"p":  PByte,
 	"ei": EiByte,
 	"e":  EByte,
+	// bps
+	"bps":  IByte,
+	"kbps": KByte,
+	"mbps": MByte,
+	"gbps": GByte,
+	"tbps": TByte,
+	"pbps": PByte,
+	"ebps": EByte,
 }
 
 func Logn(n, b float64) float64 {
@@ -69,7 +77,7 @@ func Logn(n, b float64) float64 {
 // HumanBaseBytes 数字的数量级表示
 func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 	if v < 10 {
-		return fmt.Sprintf("%d B", v)
+		return fmt.Sprintf("%d %s", v, sizes[0])
 	}
 	e := math.Floor(Logn(float64(v), base))
 	suffix := sizes[int(e)]
@@ -82,28 +90,40 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 	return fmt.Sprintf(f, val, suffix)
 }
 
-// HumanIntBytes 数字的数量级表示
+// HumanIntBytes 1 KB = 1000 B
 func HumanIntBytes(v int) string {
 	return HumanBytes(uint64(v))
 }
 
-// HumanIntIBytes 数字的数量级表示
+// HumanIntIBytes 1 KiB = 1024 B
 func HumanIntIBytes(v int) string {
 	return HumanIBytes(uint64(v))
 }
 
-// HumanBytes 数字的数量级表示
+// HumanIntKbps 1 Kbps = 1000 bit
+func HumanIntKbps(v int) string {
+	return HumanKbps(uint64(v))
+}
+
+// HumanBytes 1 KB = 1000 B
 // e.g. HumanBytes(82854982) -> 83 MB
 func HumanBytes(v uint64) string {
-	sizes := []string{"B", "kB", "MB", "GB", "TB", "PB", "EB"}
+	sizes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 	return HumanBaseBytes(v, 1000, sizes)
 }
 
-// HumanIBytes 数字的数量级表示
+// HumanIBytes 1 KiB = 1024 B
 // e.g. HumanIBytes(82854982) -> 79 MiB
 func HumanIBytes(v uint64) string {
 	sizes := []string{"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
 	return HumanBaseBytes(v, 1024, sizes)
+}
+
+// HumanKbps 1 Kbps = 1000 bit, 传输速率(bit per second, 位每秒)
+// e.g. HumanKbps(82854982) -> 83 Mbps
+func HumanKbps(v uint64) string {
+	sizes := []string{"bps", "Kbps", "Mbps", "Gbps", "Tbps", "Pbps", "Ebps"}
+	return HumanBaseBytes(v, 1000, sizes)
 }
 
 // ParseHumanBytes 解析数字的数量级表示

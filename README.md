@@ -17,6 +17,8 @@ package utils // import "github.com/fufuok/utils"
 
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
+var BigByte ...
+var BigSIByte ...
 func AddString(s ...string) string
 func AddStringBytes(s ...string) []byte
 func AesCBCDeB58(s string, key []byte) []byte
@@ -147,10 +149,15 @@ func HmacSHA256Hex(s, key string) string
 func HmacSHA512(b, key []byte) []byte
 func HmacSHA512Hex(s, key string) string
 func HumanBaseBytes(v uint64, base float64, sizes []string) string
+func HumanBigBytes(s *big.Int) string
+func HumanBigIBytes(s *big.Int) string
+func HumanBigKbps(s *big.Int) string
 func HumanBytes(v uint64) string
 func HumanIBytes(v uint64) string
 func HumanIntBytes(v int) string
 func HumanIntIBytes(v int) string
+func HumanIntKbps(v int) string
+func HumanKbps(v uint64) string
 func IPv42Long(ip net.IP) int
 func IPv4String2Long(ip string) int
 func InInts(slice []int, n int) bool
@@ -179,6 +186,7 @@ func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
 func MustString(v interface{}) string
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
+func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
 func ParsePrivateKey(privateKey []byte) (priv *rsa.PrivateKey, err error)
 func ParsePublicKey(publicKey []byte) (pub *rsa.PublicKey, err error)
@@ -401,8 +409,10 @@ whoami := utils.Executable(true)
 pwd := utils.ExecutableDir(true)
 fmt.Println(whoami, pwd)
 
-fmt.Println(utils.HumanBytes(1234567890)) // 1.2 GB
-fmt.Println(utils.Commaf(1234567890.123)) // 1,234,567,890.123
+fmt.Println(utils.HumanBytes(1234567890))  // 1.2 GB
+fmt.Println(utils.HumanIBytes(1234567890)) // 1.1 GiB
+fmt.Println(utils.HumanKbps(1234567890))   // 1.2 Gbps
+fmt.Println(utils.Commaf(1234567890.123))  // 1,234,567,890.123
 
 now := time.Date(2020, 2, 18, 12, 13, 14, 123456789, time.UTC)
 fmt.Println(utils.Get0LastWeek(now).Format(time.RFC3339Nano)) // 2020-02-10T00:00:00Z
