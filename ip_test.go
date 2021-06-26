@@ -88,3 +88,30 @@ func BenchmarkGetNotInternalIPv4StringTrue(b *testing.B) {
 // BenchmarkGetNotInternalIPv4StringTrue-8   	 9055933	       145.5 ns/op	      16 B/op	       1 allocs/op
 // BenchmarkGetNotInternalIPv4StringTrue-8   	 7916724	       206.0 ns/op	      16 B/op	       1 allocs/op
 // BenchmarkGetNotInternalIPv4StringTrue-8   	 7862268	       151.3 ns/op	      16 B/op	       1 allocs/op
+
+func BenchmarkInIPNet(b *testing.B) {
+	ip := net.ParseIP("1.1.1.1")
+	_, ipNet, _ := net.ParseCIDR("1.1.1.1/24")
+	ipNets := map[*net.IPNet]struct{}{ipNet: {}}
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_ = InIPNet(ip, ipNets)
+	}
+}
+
+func BenchmarkInIPNetString(b *testing.B) {
+	ip := "1.1.1.1"
+	_, ipNet, _ := net.ParseCIDR("1.1.1.1/24")
+	ipNets := map[*net.IPNet]struct{}{ipNet: {}}
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_ = InIPNetString(ip, ipNets)
+	}
+}
+
+// BenchmarkInIPNet-8         	17226256	        63.36 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkInIPNet-8         	19683216	        62.59 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkInIPNet-8         	19325880	        63.99 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkInIPNetString-8   	 8095532	       148.9 ns/op	      16 B/op	       1 allocs/op
+// BenchmarkInIPNetString-8   	 7845603	       147.8 ns/op	      16 B/op	       1 allocs/op
+// BenchmarkInIPNetString-8   	 7447910	       148.1 ns/op	      16 B/op	       1 allocs/op
