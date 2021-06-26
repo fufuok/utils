@@ -1,10 +1,11 @@
 # Go-Utils
 
-## v0.1.13
+## v0.1.14
 
-**2021-06-18**
+**2021-06-26**
 
-- 升级 `goccy/go-json@v0.7.1`
+- 增加 IP 包含关系方法 `InIPNet` `InIPNetString`
+- 升级 `goccy/go-json@v0.7.2`
 
 ## v0.1.12
 

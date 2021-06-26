@@ -92,3 +92,19 @@ func Long2IPv4String(n int) string {
 
 	return Long2IPv4(n).String()
 }
+
+// InIPNetString 是否包含在指定 IPNet 列表中
+func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool {
+	return InIPNet(net.ParseIP(ip), ipNets)
+}
+
+// InIPNet 是否包含在指定 IPNet 列表中
+func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool {
+	for ipNet := range ipNets {
+		if ipNet.Contains(ip) {
+			return true
+		}
+	}
+
+	return false
+}

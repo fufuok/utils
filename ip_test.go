@@ -55,6 +55,15 @@ func TestIPv4AndLong(t *testing.T) {
 	AssertEqual(t, "", Long2IPv4String(4294967296))
 }
 
+func TestInIPNetString(t *testing.T) {
+	_, ipNet, _ := net.ParseCIDR("1.1.1.1/24")
+	AssertEqual(t, false, InIPNetString("0.0.0.0", map[*net.IPNet]struct{}{}))
+	AssertEqual(t, false, InIPNetString("1.1.1.1", map[*net.IPNet]struct{}{}))
+	AssertEqual(t, true, InIPNetString("1.1.1.1", map[*net.IPNet]struct{}{ipNet: {}}))
+	AssertEqual(t, false, InIPNetString("1.1.2.1", map[*net.IPNet]struct{}{}))
+	AssertEqual(t, true, InIPNetString("1.1.1.255", map[*net.IPNet]struct{}{ipNet: {}}))
+}
+
 func BenchmarkGetNotInternalIPv4String(b *testing.B) {
 	cip := "100.125.1.1"
 	fip := "1.1.1.1,2.2.2.2"

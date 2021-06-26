@@ -160,6 +160,8 @@ func HumanIntKbps(v int) string
 func HumanKbps(v uint64) string
 func IPv42Long(ip net.IP) int
 func IPv4String2Long(ip string) int
+func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
+func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
 func IsDir(s string) bool
