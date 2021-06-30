@@ -73,24 +73,24 @@ func B2S(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-// MustJSONIndent 转 Jsoniter 返回 []byte
+// MustJSONIndent 转 json 返回 []byte
 func MustJSONIndent(v interface{}) []byte {
-	js, _ := json.MarshalIndent(&v, "", "  ")
+	js, _ := json.MarshalIndent(v, "", "  ")
 	return js
 }
 
-// MustJSONIndentString 转 Jsoniter Indent 返回 string
+// MustJSONIndentString 转 json Indent 返回 string
 func MustJSONIndentString(v interface{}) string {
 	return B2S(MustJSONIndent(v))
 }
 
-// MustJSON 转 Jsoniter 返回 []byte
+// MustJSON 转 json 返回 []byte
 func MustJSON(v interface{}) []byte {
-	js, _ := json.Marshal(&v)
+	js, _ := json.Marshal(v)
 	return js
 }
 
-// MustJSONString 转 Jsoniter 返回 string
+// MustJSONString 转 json 返回 string
 func MustJSONString(v interface{}) string {
 	return B2S(MustJSON(v))
 }
