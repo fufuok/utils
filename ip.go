@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"net"
 )
 
@@ -107,4 +108,20 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool {
 	}
 
 	return false
+}
+
+// GetIPPort 返回 IP 和 端口
+func GetIPPort(addr net.Addr) (ip net.IP, port int, err error) {
+	switch v := addr.(type) {
+	case *net.UDPAddr:
+		ip = v.IP
+		port = v.Port
+	case *net.TCPAddr:
+		ip = v.IP
+		port = v.Port
+	default:
+		err = errors.New("not TCPAddr or UDPAddr")
+	}
+
+	return
 }

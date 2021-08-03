@@ -115,3 +115,26 @@ func BenchmarkInIPNetString(b *testing.B) {
 // BenchmarkInIPNetString-8   	 8095532	       148.9 ns/op	      16 B/op	       1 allocs/op
 // BenchmarkInIPNetString-8   	 7845603	       147.8 ns/op	      16 B/op	       1 allocs/op
 // BenchmarkInIPNetString-8   	 7447910	       148.1 ns/op	      16 B/op	       1 allocs/op
+
+func TestGetIPPort(t *testing.T) {
+	var (
+		IP       = "::1"
+		PORT int = 111
+	)
+	addr := net.TCPAddr{
+		IP:   net.ParseIP(IP),
+		Port: PORT,
+	}
+	ip, port, err := GetIPPort(&addr)
+	AssertEqual(t, IP, ip.String())
+	AssertEqual(t, IP, ip.To16().String())
+	AssertEqual(t, true, ip.To4() == nil)
+	AssertEqual(t, PORT, port)
+	AssertEqual(t, true, err == nil)
+
+	udpAddr := net.UDPAddr{}
+	ip, port, err = GetIPPort(&udpAddr)
+	AssertEqual(t, 0, len(ip))
+	AssertEqual(t, 0, port)
+	AssertEqual(t, true, err == nil)
+}

@@ -130,6 +130,7 @@ func Get0Tomorrow(t time.Time) time.Time
 func Get0Week(t time.Time) time.Time
 func Get0Yesterday(t time.Time) time.Time
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
+func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
 func GetMonthDays(t time.Time) int
 func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
@@ -342,6 +343,21 @@ type Timer struct{ ... }
 - `go build -tags=stdjson .` 使用标准 JSON 库 `encoding/json`
 - `go build -tags=gojson .` 使用 `goccy/go-json`
 
+### 自守护进程和后台运行
+
+见: `xdaemon`
+
+或: https://github.com/fufuok/xdaemon
+
+```go
+package xdaemon // import "github.com/fufuok/utils/xdaemon"
+
+const EnvName = "XW_DAEMON_IDX"
+func Background(logFile string, isExit bool) (*exec.Cmd, error)
+func NewSysProcAttr() *syscall.SysProcAttr
+type Daemon struct{ ... }
+    func NewDaemon(logFile string) *Daemon
+```
 
 ## 使用
 
