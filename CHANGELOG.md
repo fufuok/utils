@@ -1,5 +1,14 @@
 # Go-Utils
 
+## v0.2.0
+
+**2021-08-12**
+
+- 移出 `json`, `timewheel` 包, 消除依赖, 以下包代替:
+  - [github.com/fufuok/internal/json](https://github.com/fufuok/internal)
+  - [github.com/fufuok/timewheel](https://github.com/fufuok/timewheel)
+- `xid` 修正 JSON 解码无效 ID 崩溃问题
+
 ## v0.1.16
 
 **2021-08-02**

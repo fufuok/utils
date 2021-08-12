@@ -246,11 +246,11 @@ type TChoice struct{ ... }
 
 ### 加解密小工具
 
-见: `envtools`
+见: [envtools](envtools)
 
 ### 获取内外网 IP 小工具
 
-见: `myip`
+见: [myip](myip)
 
 或: https://github.com/fufuok/myip
 
@@ -270,7 +270,7 @@ func LocalIPv4s() (ips []string)
 
 ### 编码解码 base58
 
-见: `base58`
+见: [base58](base58)
 
 或: https://github.com/fufuok/basex
 
@@ -283,11 +283,11 @@ func Decode(b string) []byte
 func Encode(b []byte) string
 ```
 
-### 可排序全局唯一ID生成器
+### 可排序全局唯一 ID 生成器
 
 比 UUID 更快, 更短
 
-见: `xid`
+见: [xid](xid)
 
 或: http://github.com/fufuok/xid
 
@@ -305,47 +305,9 @@ type ID [rawLen]byte
     func NilID() ID
 ```
 
-### 时间轮
-
-见: `timewheel`
-
-或: https://github.com/fufuok/go-timewheel
-
-```go
-package timewheel // import "github.com/fufuok/utils/timewheel"
-
-func After(delay time.Duration) <-chan time.Time
-func Remove(task *Task) error
-func ResetDefaultTimeWheel(tw *TimeWheel)
-func Sleep(delay time.Duration)
-func Start()
-func Stop()
-func SetSyncPool(state bool) optionCall
-type Pool struct{ ... }
-    func NewTimeWheelPool(size int, tick time.Duration, bucketsNum int, options ...optionCall) (*Pool, error)
-type Task struct{ ... }
-    func Add(delay time.Duration, callback func()) *Task
-    func AddCron(delay time.Duration, callback func()) *Task
-type Ticker struct{ ... }
-    func NewTicker(delay time.Duration) *Ticker
-type TimeWheel struct{ ... }
-    func NewTimeWheel(tick time.Duration, bucketsNum int, options ...optionCall) (*TimeWheel, error)
-type Timer struct{ ... }
-    func AfterFunc(delay time.Duration, callback func()) *Timer
-    func NewTimer(delay time.Duration) *Timer
-```
-
-### JSON
-
-`json` 使用 `gin` 类似的可选组织方式:
-
-- `go build .` 默认使用 `json-iterator/go`
-- `go build -tags=stdjson .` 使用标准 JSON 库 `encoding/json`
-- `go build -tags=gojson .` 使用 `goccy/go-json`
-
 ### 自守护进程和后台运行
 
-见: `xdaemon`
+见: [xdaemon](xdaemon)
 
 或: https://github.com/fufuok/xdaemon
 

@@ -2,13 +2,12 @@ package utils
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
 	"unsafe"
-
-	"github.com/fufuok/utils/json"
 )
 
 // 更安全的 reflect.StringHeader
