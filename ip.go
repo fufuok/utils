@@ -126,6 +126,10 @@ func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool {
 
 // InIPNet 是否包含在指定 IPNet 列表中
 func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool {
+	if len(ip) == 0 {
+		return false
+	}
+
 	for ipNet := range ipNets {
 		if ipNet.Contains(ip) {
 			return true

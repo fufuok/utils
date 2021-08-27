@@ -78,11 +78,27 @@ func TestIPv4AndLong(t *testing.T) {
 
 func TestInIPNetString(t *testing.T) {
 	_, ipNet, _ := net.ParseCIDR("1.1.1.1/24")
+	ipNets := map[*net.IPNet]struct{}{ipNet: {}}
+	AssertEqual(t, false, InIPNetString("abc", map[*net.IPNet]struct{}{}))
+	AssertEqual(t, false, InIPNetString("::1", map[*net.IPNet]struct{}{}))
 	AssertEqual(t, false, InIPNetString("0.0.0.0", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, false, InIPNetString("1.1.1.1", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, true, InIPNetString("1.1.1.1", map[*net.IPNet]struct{}{ipNet: {}}))
-	AssertEqual(t, false, InIPNetString("1.1.2.1", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, true, InIPNetString("1.1.1.255", map[*net.IPNet]struct{}{ipNet: {}}))
+	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
+	AssertEqual(t, false, InIPNetString("1.1.2.1", ipNets))
+	AssertEqual(t, true, InIPNetString("1.1.1.255", ipNets))
+
+	_, ipNet, _ = net.ParseCIDR("0.0.0.0/0")
+	ipNets = map[*net.IPNet]struct{}{ipNet: {}}
+	AssertEqual(t, false, InIPNetString("abc", ipNets))
+	AssertEqual(t, false, InIPNetString("::1", ipNets))
+	AssertEqual(t, true, InIPNetString("0.0.0.0", ipNets))
+	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
+	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
+	AssertEqual(t, true, InIPNetString("1.1.2.1", ipNets))
+	AssertEqual(t, true, InIPNetString("1.1.1.255", ipNets))
+
+	_, ipNet, _ = net.ParseCIDR("2001:db8::/32")
+	ipNets = map[*net.IPNet]struct{}{ipNet: {}}
+	AssertEqual(t, true, InIPNetString("2001:db8::1", ipNets))
 }
 
 func BenchmarkGetNotInternalIPv4String(b *testing.B) {
