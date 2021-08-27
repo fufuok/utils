@@ -117,6 +117,20 @@ func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
 func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
+func GCMDeB58(s string, key []byte) []byte
+func GCMDeB64(s string, key []byte) []byte
+func GCMDeHex(s string, key []byte) []byte
+func GCMDeStringB58(s string, key []byte) string
+func GCMDeStringB64(s string, key []byte) string
+func GCMDeStringHex(s string, key []byte) string
+func GCMDecrypt(encrypted, key []byte) ([]byte, error)
+func GCMEnB58(b, key []byte) string
+func GCMEnB64(b, key []byte) string
+func GCMEnHex(b, key []byte) string
+func GCMEnStringB58(s string, key []byte) string
+func GCMEnStringB64(s string, key []byte) string
+func GCMEnStringHex(s string, key []byte) string
+func GCMEncrypt(plaintext, key []byte) ([]byte, error)
 func GenRSAKey(bits int) (publicKey, privateKey []byte)
 func Get0Hour(t time.Time) time.Time
 func Get0LastMonth(t time.Time) time.Time
@@ -171,6 +185,8 @@ func IsFile(s string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
 func IsNil(i interface{}) bool
+func IsPrivateIP(ip net.IP) bool
+func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
 func Logn(n, b float64) float64
 func Long2IPv4(n int) net.IP
@@ -354,6 +370,15 @@ fmt.Println(x) // 9dce01c049de7493ce2fae6a2707fad1
 x = utils.AesCBCEnStringB58("myData", k)
 fmt.Println(x) // 6NHTJhaW5mfeUioFLrbpRX
 
+k = []byte("1234567812345678")
+x = utils.GCMEnStringHex("myData", k)
+fmt.Println(x) // 6501bb4737c772b9a2956d87183d4793d44b0e3c233bf2c6435d70502913d5701a98
+x = utils.GCMEnStringB58("myData", k)
+fmt.Println(x) // 5H9ftJvyBesQS7yNGoW7sBCqpwedpEhkjB7k4Z8QBi8GYJo
+
+x = utils.GCMEnStringB64("myData", k)
+fmt.Println(utils.GCMDeStringB64(x, k)) // myData
+
 x = utils.UUIDString()
 fmt.Println(x) // 04a49f17-8c37-44f7-a9c5-ea291c3736d7
 x = utils.UUIDSimple()
@@ -409,6 +434,10 @@ fmt.Println(utils.IsNil(nilN), utils.IsNil(nilY)) // false true
 public, private := utils.GenRSAKey(1024)
 fmt.Println(string(public))
 fmt.Println(string(private))
+
+fmt.Println(utils.IsPrivateIPString("FC00::"))         // true
+fmt.Println(utils.IsPrivateIPString("172.17.0.0"))     // true
+fmt.Println(utils.IsInternalIPv4String("100.125.1.1")) // true
 ```
 
 ...

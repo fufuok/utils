@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.2.1
+
+**2021-08-26**
+
+- 补齐 `AES-GCM` 加解密助手函数
+- 增加 `IsPrivateIP` `IsPrivateIPString`, 判断是否为私有 IP (RFC 1918, RFC 4193)
+
 ## v0.2.0
 
 **2021-08-12**

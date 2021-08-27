@@ -164,7 +164,7 @@ func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte,
 		}
 	}()
 
-	// go1.15.6: const BlockSize = 16
+	// const BlockSize = 16
 	bSize := block.BlockSize()
 	plaintext = Padding(plaintext, bSize, asPKCS7)
 

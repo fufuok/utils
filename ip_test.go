@@ -5,6 +5,25 @@ import (
 	"testing"
 )
 
+func TestIsPrivateIPString(t *testing.T) {
+	for _, v := range []struct {
+		ip   string
+		flag bool
+	}{
+		{"::1", false},
+		{"fe80::1", false},
+		{"0.0.0.0", false},
+		{"1.2.3.4", false},
+		{"10.0.0.0", true},
+		{"172.16.0.0", true},
+		{"10.0.0.0", true},
+		{"192.168.0.0", true},
+		{"192.169.0.0", false},
+	} {
+		AssertEqual(t, v.flag, IsPrivateIPString(v.ip))
+	}
+}
+
 func TestGetNotInternalIPv4(t *testing.T) {
 	defIP4 := "7.7.7.7"
 
@@ -49,7 +68,9 @@ func TestIPv4AndLong(t *testing.T) {
 		AssertEqual(t, v.ipv4, Long2IPv4String(v.long))
 	}
 
-	AssertEqual(t, 151060737, IPv4String2Long("009.001.01.1"))
+	// go1.17 net.ParseIP("009.001.01.1") == nil
+	// Reject non-zero components with leading zeroes.
+	// AssertEqual(t, 151060737, IPv4String2Long("009.001.01.1"))
 	AssertEqual(t, -1, IPv4String2Long("ff"))
 	AssertEqual(t, -1, IPv4String2Long("255.255.255.256"))
 	AssertEqual(t, "", Long2IPv4String(4294967296))

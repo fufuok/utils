@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/hex"
+	"errors"
 
 	"github.com/fufuok/utils/base58"
 )
@@ -140,4 +141,148 @@ func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]by
 	}
 
 	return res, nil
+}
+
+// GCMEnStringHex 加密
+func GCMEnStringHex(s string, key []byte) string {
+	return GCMEnHex(S2B(s), key)
+}
+
+// GCMEnHex 加密
+func GCMEnHex(b, key []byte) string {
+	if res, err := GCMEncrypt(b, key); err == nil {
+		return hex.EncodeToString(res)
+	}
+
+	return ""
+}
+
+// GCMDeStringHex 解密
+func GCMDeStringHex(s string, key []byte) string {
+	return B2S(GCMDeHex(s, key))
+}
+
+// GCMDeHex 解密
+func GCMDeHex(s string, key []byte) []byte {
+	if data, err := hex.DecodeString(s); err == nil {
+		if res, err := GCMDecrypt(data, key); err == nil {
+			return res
+		}
+	}
+
+	return nil
+}
+
+// GCMEnStringB58 加密
+func GCMEnStringB58(s string, key []byte) string {
+	return GCMEnB58(S2B(s), key)
+}
+
+// GCMEnB58 加密
+func GCMEnB58(b, key []byte) string {
+	if res, err := GCMEncrypt(b, key); err == nil {
+		return base58.Encode(res)
+	}
+
+	return ""
+}
+
+// GCMDeStringB58 解密
+func GCMDeStringB58(s string, key []byte) string {
+	return B2S(GCMDeB58(s, key))
+}
+
+// GCMDeB58 解密
+func GCMDeB58(s string, key []byte) []byte {
+	if res, err := GCMDecrypt(base58.Decode(s), key); err == nil {
+		return res
+	}
+
+	return nil
+}
+
+// GCMEnStringB64 加密
+func GCMEnStringB64(s string, key []byte) string {
+	return GCMEnB64(S2B(s), key)
+}
+
+// GCMEnB64 加密
+func GCMEnB64(b, key []byte) string {
+	if res, err := GCMEncrypt(b, key); err == nil {
+		return B64UrlEncode(res)
+	}
+
+	return ""
+}
+
+// GCMDeStringB64 解密
+func GCMDeStringB64(s string, key []byte) string {
+	return B2S(GCMDeB64(s, key))
+}
+
+// GCMDeB64 解密
+func GCMDeB64(s string, key []byte) []byte {
+	if res, err := GCMDecrypt(B64UrlDecode(s), key); err == nil {
+		return res
+	}
+
+	return nil
+}
+
+// GCMEncrypt AES-GCM 加密
+func GCMEncrypt(plaintext, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			return
+		}
+	}()
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	nonce := RandBytes(gcm.NonceSize())
+	res := gcm.Seal(nonce, nonce, plaintext, nil)
+
+	return res, nil
+}
+
+// GCMDecrypt AES-GCM 解密
+func GCMDecrypt(encrypted, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			return
+		}
+	}()
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	nonceSize := gcm.NonceSize()
+
+	if len(encrypted) < nonceSize {
+		return nil, errors.New("encrypted value is not valid")
+	}
+
+	nonce, ciphertext := encrypted[:nonceSize], encrypted[nonceSize:]
+
+	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return plaintext, nil
 }
