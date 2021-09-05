@@ -5,6 +5,30 @@ import (
 	"testing"
 )
 
+func TestSmoothWeightedChoice(t *testing.T) {
+	choices := make([]*TChoice, 10)
+	count := make(map[*TChoice]int)
+
+	for i := 0; i < 10; i++ {
+		c := &TChoice{
+			Item:   i,
+			Weight: i * i,
+		}
+		choices[i] = c
+		count[c] = 0
+	}
+
+	for i := 0; i < 100000; i++ {
+		c := SWRR(choices)
+		count[c] += 1
+	}
+
+	for i, c := range choices[0:9] {
+		next := choices[i+1]
+		AssertEqual(t, true, count[c] < count[next])
+	}
+}
+
 func TestWeightedChoice(t *testing.T) {
 	choices := make([]TChoice, 10)
 	count := make(map[TChoice]int)
@@ -96,6 +120,22 @@ func TestRandHex(t *testing.T) {
 	AssertEqual(t, true, len(RandHex(16)) == 32)
 }
 
+func BenchmarkWeightedSWRR(b *testing.B) {
+	choices := make([]*TChoice, 20)
+	for i := 0; i < 20; i++ {
+		c := &TChoice{
+			Item:   i,
+			Weight: i,
+		}
+		choices[i] = c
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = SWRR(choices)
+	}
+}
+
 func BenchmarkWeightedChoice(b *testing.B) {
 	choices := make([]TChoice, 20)
 	for i := 0; i < 20; i++ {
@@ -138,12 +178,16 @@ func BenchmarkWeightedChoiceMap(b *testing.B) {
 	}
 }
 
-// BenchmarkWeightedChoice-8               	16799522	        74.7 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoice-8               	15464216	        79.6 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoice-8               	16557890	        71.8 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceWeightsIndex-8   	18043592	        75.4 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceWeightsIndex-8   	14749660	        71.2 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceWeightsIndex-8   	15543214	        81.1 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceMap-8            	10280749	       129 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceMap-8            	10496216	       126 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkWeightedChoiceMap-8            	10238050	       115 ns/op	       0 B/op	       0 allocs/op
+// cpu: Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
+// BenchmarkWeightedSWRR-8                         34703343                31.52 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedSWRR-8                         33457124                30.99 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedSWRR-8                         33036554                35.60 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoice-8                       16917420                62.64 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoice-8                       18377284                61.37 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoice-8                       19087338                65.40 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceWeightsIndex-8           17261392                65.01 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceWeightsIndex-8           16987060                64.32 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceWeightsIndex-8           19460616                62.02 ns/op            0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceMap-8                    10858281               112.6 ns/op             0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceMap-8                    11377042               107.2 ns/op             0 B/op          0 allocs/op
+// BenchmarkWeightedChoiceMap-8                    11249710               110.4 ns/op             0 B/op          0 allocs/op

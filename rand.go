@@ -18,8 +18,14 @@ const (
 var src = rand.NewSource(time.Now().UnixNano())
 
 type TChoice struct {
-	Item   interface{}
+	// 待选择的主体
+	Item interface{}
+
+	// 主体配置的权重, 权重为 0 时将不会被选中; 所有主体权重全为 1 时, 则为轮询
 	Weight int
+
+	// 当前权重
+	CurrentWeight int
 }
 
 func init() {
@@ -28,6 +34,32 @@ func init() {
 
 func (c *TChoice) String() string {
 	return MustJSONString(c)
+}
+
+// SWRR 平滑加权轮询
+// nginx smooth weighted round-robin balancing
+// Ref: https://github.com/phusion/nginx/commit/27e94984486058d73157038f7950a0a36ecc6e35
+func SWRR(choices []*TChoice) (choice *TChoice) {
+	allWeight := 0
+	for _, c := range choices {
+		if c == nil {
+			return nil
+		}
+
+		// 每一轮都用自己的权重增加到自己的当前权重
+		allWeight += c.Weight
+		c.CurrentWeight += c.Weight
+
+		// 尚未选择或始终选择当前权重最高的节点
+		if choice == nil || c.CurrentWeight > choice.CurrentWeight {
+			choice = c
+		}
+	}
+
+	// 已选中项的当前权重降到所有项最低
+	choice.CurrentWeight -= allWeight
+
+	return
 }
 
 // WeightedChoice 加权随机, 返回选中项
