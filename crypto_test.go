@@ -72,7 +72,7 @@ func TestMD5(t *testing.T) {
 func TestMD5Sum(t *testing.T) {
 	t.Parallel()
 	res, _ := MD5Sum("LICENSE")
-	AssertEqual(t, "9da5118f5101a96cca4e261153587a90", res)
+	AssertEqual(t, "8fad15baa71cfe5901d9ac1bbec2c56c", res)
 }
 
 func TestEncrypt(t *testing.T) {
