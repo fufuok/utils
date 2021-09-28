@@ -64,7 +64,7 @@ func TestCopyB2S(t *testing.T) {
 }
 
 func BenchmarkCopyB2S(b *testing.B) {
-	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 1000)
+	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 10)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -73,7 +73,7 @@ func BenchmarkCopyB2S(b *testing.B) {
 }
 
 func BenchmarkCopyB2SStd(b *testing.B) {
-	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 1000)
+	bs := bytes.Repeat([]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), 10)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -81,12 +81,17 @@ func BenchmarkCopyB2SStd(b *testing.B) {
 	}
 }
 
-// BenchmarkCopyB2S-8      	  394561	      6502 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyB2S-8      	  378786	      6144 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyB2S-8      	  411043	      6320 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyB2SStd-8   	  409184	      6716 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyB2SStd-8   	  428928	      5358 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyB2SStd-8   	  433293	      5687 ns/op	   27264 B/op	       1 allocs/op
+// go test -bench=^BenchmarkCopyB2S -benchtime=1s -count=3
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
+// BenchmarkCopyB2S-8              13698708                98.92 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyB2S-8              12316774                94.31 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyB2S-8              12482653                94.28 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyB2SStd-8           12525166                96.62 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyB2SStd-8           12115459                98.77 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyB2SStd-8           12572974                99.49 ns/op          288 B/op          1 allocs/op
 
 func TestAddString(t *testing.T) {
 	t.Parallel()

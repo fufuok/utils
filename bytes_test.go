@@ -71,7 +71,7 @@ func TestJoinBytes(t *testing.T) {
 }
 
 func BenchmarkCopyS2B(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 1000)
+	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -80,7 +80,7 @@ func BenchmarkCopyS2B(b *testing.B) {
 }
 
 func BenchmarkCopyS2BAppend(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 1000)
+	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -89,7 +89,7 @@ func BenchmarkCopyS2BAppend(b *testing.B) {
 }
 
 func BenchmarkCopyS2BStd(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 1000)
+	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -97,12 +97,17 @@ func BenchmarkCopyS2BStd(b *testing.B) {
 	}
 }
 
-// BenchmarkCopyS2B-8         	  476196	      5158 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2B-8         	  421264	      5207 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2B-8         	  418268	      5164 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BAppend-8   	  459279	      5188 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BAppend-8   	  419443	      5278 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BAppend-8   	  402985	      5254 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8      	  435112	      5015 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8      	  399192	      5228 ns/op	   27264 B/op	       1 allocs/op
-// BenchmarkCopyS2BStd-8      	  384286	      5386 ns/op	   27264 B/op	       1 allocs/op
+// go test -bench=^BenchmarkCopyS2B -benchtime=1s -count=3
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
+// BenchmarkCopyS2B-8              12626581               103.6 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2B-8              14006779                95.35 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyS2B-8              12378369                92.09 ns/op          288 B/op          1 allocs/op
+// BenchmarkCopyS2BAppend-8        11438037               112.0 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2BAppend-8        10170490               112.6 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2BAppend-8        10858960               109.6 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2BStd-8           11172309               108.8 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2BStd-8           11426318               105.7 ns/op           288 B/op          1 allocs/op
+// BenchmarkCopyS2BStd-8           11498592               106.4 ns/op           288 B/op          1 allocs/op
