@@ -65,13 +65,20 @@ func AddStringBytes(s ...string) []byte {
 
 // AddString 拼接字符串
 func AddString(s ...string) string {
-	return B2S(AddStringBytes(s...))
+	switch len(s) {
+	case 0:
+		return ""
+	case 1:
+		return s[0]
+	default:
+		return B2S(AddStringBytes(s...))
+	}
 }
 
 // SearchString 搜索字符串位置(左, 第一个)
 func SearchString(ss []string, s string) int {
-	for i, v := range ss {
-		if s == v {
+	for i := range ss {
+		if s == ss[i] {
 			return i
 		}
 	}
@@ -81,4 +88,14 @@ func SearchString(ss []string, s string) int {
 // InStrings 检查字符串是否存在于 slice
 func InStrings(ss []string, s string) bool {
 	return SearchString(ss, s) != -1
+}
+
+// RemoveString 删除字符串元素
+func RemoveString(ss []string, s string) ([]string, bool) {
+	for i := range ss {
+		if s == ss[i] {
+			return append(ss[:i], ss[i+1:]...), true
+		}
+	}
+	return ss, false
 }

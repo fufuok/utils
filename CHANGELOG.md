@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.3.0
+
+**2021-09-28**
+
+- 清理代码, 移除负载均衡类函数, 新包: [github.com/fufuok/balancer: Goroutine-safe, High-performance general load balancing algorithm library.](https://github.com/fufuok/balancer)
+
 ## v0.2.2
 
 **2021-08-27**

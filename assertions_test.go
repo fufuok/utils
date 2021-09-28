@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"testing"
 	"unsafe"
 )
@@ -79,11 +80,13 @@ func TestIsNil(t *testing.T) {
 	var fun func(int) error
 	AssertEqual(t, true, IsNil(fun))
 
-	var struct1 *TChoice
+	var struct0 = new(bytes.Buffer)
+	AssertEqual(t, false, IsNil(struct0))
+	var struct1 *bytes.Buffer
 	AssertEqual(t, true, IsNil(struct1))
-	var struct2 TChoice
+	var struct2 bytes.Buffer
 	AssertEqual(t, false, IsNil(struct2))
-	var struct3 = &TChoice{}
+	var struct3 = &bytes.Buffer{}
 	AssertEqual(t, false, IsNil(struct3))
 	var struct4 *struct{}
 	AssertEqual(t, true, IsNil(struct4))

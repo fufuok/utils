@@ -30,7 +30,7 @@ func String2Bytes(s string) (b []byte) {
 	bh.Data = sh.Data
 	bh.Cap = sh.Len
 	bh.Len = sh.Len
-	return b
+	return
 }
 
 // StringToBytes Ref: csdn.u010853261

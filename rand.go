@@ -15,156 +15,17 @@ const (
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
-var src = rand.NewSource(time.Now().UnixNano())
-
-type TChoice struct {
-	// 待选择的主体
-	Item interface{}
-
-	// 主体配置的权重, 权重为 0 时将不会被选中; 所有主体权重全为 1 时, 则为轮询
-	Weight int
-
-	// 当前权重
-	CurrentWeight int
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
-func (c *TChoice) String() string {
-	return MustJSONString(c)
-}
-
-// SWRR 平滑加权轮询
-// nginx smooth weighted round-robin balancing
-// Ref: https://github.com/phusion/nginx/commit/27e94984486058d73157038f7950a0a36ecc6e35
-func SWRR(choices []*TChoice) (choice *TChoice) {
-	allWeight := 0
-	for _, c := range choices {
-		if c == nil {
-			return nil
-		}
-
-		// 每一轮都用自己的权重增加到自己的当前权重
-		allWeight += c.Weight
-		c.CurrentWeight += c.Weight
-
-		// 尚未选择或始终选择当前权重最高的节点
-		if choice == nil || c.CurrentWeight > choice.CurrentWeight {
-			choice = c
-		}
-	}
-
-	// 已选中项的当前权重降到所有项最低
-	choice.CurrentWeight -= allWeight
-
-	return
-}
-
-// WeightedChoice 加权随机, 返回选中项
-func WeightedChoice(choices ...TChoice) TChoice {
-	idx := WeightedChoiceIndex(choices)
-	if idx == -1 {
-		return TChoice{}
-	}
-
-	return choices[idx]
-}
-
-// WeightedChoiceIndex 加权随机, 返回选中项的下标, -1 未选中任何项
-func WeightedChoiceIndex(choices []TChoice) int {
-	if len(choices) == 0 {
-		return -1
-	}
-
-	m := 0
-	for _, c := range choices {
-		if c.Weight > 0 {
-			m += c.Weight
-		}
-	}
-
-	if m < 1 {
-		return -1
-	}
-
-	n := rand.Intn(m)
-	for i, c := range choices {
-		if c.Weight <= 0 {
-			continue
-		}
-		n -= c.Weight
-		if n < 0 {
-			return i
-		}
-	}
-
-	return -1
-}
-
-// WeightedChoiceWeightsIndex 加权随机, 参数为权重值列表, 返回选中项的下标, -1 未选中任何项
-func WeightedChoiceWeightsIndex(weights []int) int {
-	if len(weights) == 0 {
-		return -1
-	}
-
-	m := 0
-	for _, w := range weights {
-		if w > 0 {
-			m += w
-		}
-	}
-
-	if m < 1 {
-		return -1
-	}
-
-	n := rand.Intn(m)
-	for i, w := range weights {
-		if w <= 0 {
-			continue
-		}
-		n -= w
-		if n < 0 {
-			return i
-		}
-	}
-
-	return -1
-}
-
-// WeightedChoiceMap 加权随机, map[object]weight
-func WeightedChoiceMap(choices map[interface{}]int) interface{} {
-	if len(choices) == 0 {
-		return nil
-	}
-
-	m := 0
-	for _, w := range choices {
-		if w > 0 {
-			m += w
-		}
-	}
-
-	if m < 1 {
-		return nil
-	}
-
-	n := rand.Intn(m)
-	for k, w := range choices {
-		n -= w
-		if n < 0 {
-			return k
-		}
-	}
-
-	return nil
-}
+var (
+	random = rand.New(rand.NewSource(time.Now().UnixNano()))
+)
 
 // RandInt (>=)m - (<)n 间随机整数
 func RandInt(min int, max int) int {
-	return rand.Intn(max-min) + min
+	x := max - min
+	if x <= 0 {
+		return 0
+	}
+	return random.Intn(x) + min
 }
 
 // RandString 随机字符串, 大小写字母数字
@@ -172,9 +33,9 @@ func RandInt(min int, max int) int {
 func RandString(n int) string {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := n-1, random.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
+			cache, remain = random.Int63(), letterIdxMax
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
 			// fmt.Println(idx)

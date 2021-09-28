@@ -111,6 +111,19 @@ func TestInStrings(t *testing.T) {
 	AssertEqual(t, false, InStrings(val, "d"))
 }
 
+func TestRemoveString(t *testing.T) {
+	t.Parallel()
+	ok := false
+	val := []string{"a", "b", "c"}
+	val, ok = RemoveString(val, "b")
+	AssertEqual(t, true, ok)
+	AssertEqual(t, []string{"a", "c"}, val)
+
+	val, ok = RemoveString(val, "b")
+	AssertEqual(t, false, ok)
+	AssertEqual(t, []string{"a", "c"}, val)
+}
+
 func BenchmarkStringPlusBig(b *testing.B) {
 	b.ReportAllocs()
 	a := "apiname"
