@@ -115,6 +115,8 @@ func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (cipherte
 func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
 func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
+func EqualFold(b, s string) (equals bool)
+func EqualFoldBytes(b, s []byte) (equals bool)
 func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
 func GCMDeB58(s string, key []byte) []byte
@@ -217,6 +219,8 @@ func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min int, max int) int
 func RandString(n int) string
+func RemoveString(ss []string, s string) ([]string, bool)
+func ReplaceHost(a, b string) string
 func Round(v float64, precision int) float64
 func RunPath() string
 func S2B(s string) []byte
@@ -229,19 +233,28 @@ func Sha256(b []byte) []byte
 func Sha256Hex(s string) string
 func Sha512(b []byte) []byte
 func Sha512Hex(s string) string
+func SplitHostPort(hostPort string) (host, port string)
 func Str2Bytes(s string) (b []byte)
 func StrToBytes(s string) []byte
 func String2Bytes(s string) (b []byte)
 func StringToBytes(s string) (b []byte)
+func ToLower(b string) string
+func ToLowerBytes(b []byte) []byte
+func ToUpper(b string) string
+func ToUpperBytes(b []byte) []byte
+func Trim(s string, cutset byte) string
+func TrimBytes(b []byte, cutset byte) []byte
+func TrimLeft(s string, cutset byte) string
+func TrimLeftBytes(b []byte, cutset byte) []byte
+func TrimRight(s string, cutset byte) string
+func TrimRightBytes(b []byte, cutset byte) []byte
 func UUID() []byte
 func UUIDShort() string
 func UUIDSimple() string
 func UUIDString() string
 func UnPadding(b []byte, pkcs7 bool) []byte
+func ValidOptionalPort(port string) bool
 func WaitNextMinute()
-func WeightedChoiceIndex(choices []TChoice) int
-func WeightedChoiceMap(choices map[interface{}]int) interface{}
-func WeightedChoiceWeightsIndex(weights []int) int
 func XOR(src, key []byte) []byte
 func XORDeB58(s string, key []byte) []byte
 func XORDeB64(s string, key []byte) []byte
@@ -256,8 +269,6 @@ func XOREnHex(b, key []byte) string
 func XOREnStringB58(s string, key []byte) string
 func XOREnStringB64(s string, key []byte) string
 func XOREnStringHex(s string, key []byte) string
-type TChoice struct{ ... }
-    func WeightedChoice(choices ...TChoice) TChoice
 ```
 
 ### 加解密小工具
@@ -337,6 +348,43 @@ type Daemon struct{ ... }
     func NewDaemon(logFile string) *Daemon
 ```
 
+### 高性能并发安全同步扩展库
+
+见: [xsync](xsync)
+
+或: https://github.com/fufuok/xsync
+
+```go
+package xsync // import "github.com/fufuok/utils/xsync"
+
+type Counter struct{ ... }
+    func (c *Counter) Add(delta int64)
+    func (c *Counter) Dec()
+    func (c *Counter) Inc()
+    func (c *Counter) Reset()
+    func (c *Counter) Value() int64
+type MPMCQueue struct{ ... }
+    func NewMPMCQueue(capacity int) *MPMCQueue
+    func (q *MPMCQueue) Dequeue() interface{}
+    func (q *MPMCQueue) Enqueue(item interface{})
+    func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
+    func (q *MPMCQueue) TryEnqueue(item interface{}) bool
+type Map struct{ ... }
+    func NewMap() *Map
+    func (m *Map) Delete(key string)
+    func (m *Map) Load(key string) (value interface{}, ok bool)
+    func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
+    func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
+    func (m *Map) Range(f func(key string, value interface{}) bool)
+    func (m *Map) Store(key string, value interface{})
+type RBMutex struct{ ... }
+    func (m *RBMutex) Lock()
+    func (m *RBMutex) RLock() *RToken
+    func (m *RBMutex) RUnlock(t *RToken)
+    func (m *RBMutex) Unlock()
+type RToken struct{ ... }
+```
+
 ## 使用
 
 ```go
@@ -393,23 +441,6 @@ fmt.Println(x) // 25JnwSn7XKfNQ
 x = utils.B2S(base58.Decode("25JnwSn7XKfNQ"))
 fmt.Println(x) // Test data
 
-choice := utils.WeightedChoice([]utils.TChoice{
-    {"A", 5},
-    {"B", 3},
-    {"C", 2},
-    {"D", 0},
-}...)
-fmt.Println(choice.String()) // {"Item":"B","Weight":3}
-
-items := []interface{}{"Item.1", "Item.2", "Item.3", "Item.4"}
-weights := []int{1, 2, 3, 100}
-idx := utils.WeightedChoiceWeightsIndex(weights)
-fmt.Println(items[idx]) // Item.4
-
-itemMap := map[interface{}]int{"Item.1": 1, "Item.2": 2, "Item.3": 3, "Item.4": 100}
-item := utils.WeightedChoiceMap(itemMap)
-fmt.Println(item) // Item.4
-
 whoami := utils.Executable(true)
 pwd := utils.ExecutableDir(true)
 fmt.Println(whoami, pwd)
@@ -438,9 +469,16 @@ fmt.Println(string(private))
 fmt.Println(utils.IsPrivateIPString("FC00::"))         // true
 fmt.Println(utils.IsPrivateIPString("172.17.0.0"))     // true
 fmt.Println(utils.IsInternalIPv4String("100.125.1.1")) // true
+
+fmt.Println(utils.ToLower("TesT"))                                             // test
+fmt.Println(utils.EqualFold(utils.Trim("/TesT/", '/'), utils.ToUpper("Test"))) // true
+
+host, port := utils.SplitHostPort("demo.com:77")
+fmt.Println(host) // demo.com
+fmt.Println(port) // 77
 ```
 
-...
+
 
 
 

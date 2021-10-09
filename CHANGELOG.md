@@ -1,5 +1,13 @@
 # Go-Utils
 
+## v0.3.2
+
+**2021-09-30**
+
+- 增加高性能的 `Trim` 类函数和大小写转换函数
+- 增加 `ReplaceHost`, 替换 URL 主机名
+- 增加 `sync` 扩展包, 提供: `Counter` `Map` `MPMCQueue` `RBMutex`, 来自: `puzpuzpuz/xsync`
+
 ## v0.3.0
 
 **2021-09-28**
