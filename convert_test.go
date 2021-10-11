@@ -15,7 +15,7 @@ func TestStringToBytes(t *testing.T) {
 		AssertEqual(t, len(expected), len(actual))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := StringToBytes(expected)
 
 	AssertEqual(t, []byte(expected), actual)
@@ -31,7 +31,7 @@ func TestString2Bytes(t *testing.T) {
 		AssertEqual(t, len(expected), len(actual))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := String2Bytes(expected)
 
 	AssertEqual(t, []byte(expected), actual)
@@ -47,7 +47,7 @@ func TestStr2Bytes(t *testing.T) {
 		AssertEqual(t, len(expected), len(actual))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := Str2Bytes(expected)
 
 	AssertEqual(t, []byte(expected), actual)
@@ -63,7 +63,7 @@ func TestStrToBytes(t *testing.T) {
 		AssertEqual(t, len(expected), len(actual))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := StrToBytes(expected)
 
 	AssertEqual(t, []byte(expected), actual)
@@ -79,7 +79,7 @@ func TestS2B(t *testing.T) {
 		AssertEqual(t, len(expected), len(actual))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := S2B(expected)
 
 	AssertEqual(t, []byte(expected), actual)
@@ -92,7 +92,7 @@ func TestB2S(t *testing.T) {
 		AssertEqual(t, string(b), B2S(b))
 	}
 
-	expected := "Fufu 中　文\u2728->?\n*\U0001F63A"
+	expected := testString
 	actual := B2S([]byte(expected))
 
 	AssertEqual(t, expected, actual)
@@ -126,7 +126,7 @@ func TestMustString(t *testing.T) {
 		{nil, ""},
 		{true, "true"},
 		{false, "false"},
-		{[]byte("Fufu 中　文\u2728->?\n*\U0001F63A"), "Fufu 中　文\u2728->?\n*\U0001F63A"},
+		{[]byte(testString), testString},
 		{[]int{0, 2, 1}, "[0 2 1]"},
 		{map[string]interface{}{"a": 0, "b": true, "C": []byte("c")}, "map[C:[99] a:0 b:true]"},
 	} {
@@ -215,7 +215,7 @@ func TestB64UrlDecode(t *testing.T) {
 }
 
 func BenchmarkS2BStringToBytes(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -224,7 +224,7 @@ func BenchmarkS2BStringToBytes(b *testing.B) {
 }
 
 func BenchmarkS2BString2Bytes(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -233,7 +233,7 @@ func BenchmarkS2BString2Bytes(b *testing.B) {
 }
 
 func BenchmarkS2BStr2Bytes(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -242,7 +242,7 @@ func BenchmarkS2BStr2Bytes(b *testing.B) {
 }
 
 func BenchmarkS2BStrToBytes(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -251,7 +251,7 @@ func BenchmarkS2BStrToBytes(b *testing.B) {
 }
 
 func BenchmarkS2B(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -260,7 +260,7 @@ func BenchmarkS2B(b *testing.B) {
 }
 
 func BenchmarkS2BStdStringToBytes(b *testing.B) {
-	s := strings.Repeat("Fufu 中　文\u2728->?\n*\U0001F63A", 10000)
+	s := strings.Repeat(testString, 10000)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
