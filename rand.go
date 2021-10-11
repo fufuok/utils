@@ -16,7 +16,8 @@ const (
 )
 
 var (
-	random = rand.New(rand.NewSource(time.Now().UnixNano()))
+	Random = rand.New(rand.NewSource(time.Now().UnixNano()))
+	Seed   = FastRand()
 )
 
 // RandInt (>=)m - (<)n 间随机整数
@@ -25,7 +26,7 @@ func RandInt(min int, max int) int {
 	if x <= 0 {
 		return 0
 	}
-	return random.Intn(x) + min
+	return Random.Intn(x) + min
 }
 
 // RandString 随机字符串, 大小写字母数字
@@ -33,9 +34,9 @@ func RandInt(min int, max int) int {
 func RandString(n int) string {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, random.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := n-1, Random.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
-			cache, remain = random.Int63(), letterIdxMax
+			cache, remain = Random.Int63(), letterIdxMax
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
 			// fmt.Println(idx)
@@ -66,4 +67,9 @@ func RandBytes(n int) []byte {
 	}
 
 	return b
+}
+
+// FastRandBytes 随机 bytes, 更快
+func FastRandBytes(n int) []byte {
+	return S2B(RandString(n))
 }
