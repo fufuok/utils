@@ -23,6 +23,15 @@ func MinInt(a, b int) int {
 	return b
 }
 
+// SumInt 整数和
+func SumInt(v ...int) int {
+	x := 0
+	for _, n := range v {
+		x += n
+	}
+	return x
+}
+
 // GetInt 获取 int 结果, 可选指定默认值(若给定了默认值,则返回正整数或 0)
 func GetInt(v interface{}, defaultInt ...int) int {
 	i := MustInt(v)
