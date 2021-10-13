@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"unsafe"
 )
 
 // CallPath 运行时路径, 编译目录
@@ -52,3 +53,19 @@ func Executable(evalSymlinks ...bool) string {
 func ExecutableDir(evalSymlinks ...bool) string {
 	return filepath.Dir(Executable(evalSymlinks...))
 }
+
+// FastRand 随机数
+//go:linkname FastRand runtime.fastrand
+func FastRand() uint32
+
+// CPUTicks CPU 时钟周期, 更高精度 (云服务器做伪随机数种子时慎用)
+//go:linkname CPUTicks runtime.cputicks
+func CPUTicks() int64
+
+// NanoTime 返回当前时间 (以纳秒为单位)
+//go:linkname NanoTime runtime.nanotime
+func NanoTime() int64
+
+//go:noescape
+//go:linkname memhash runtime.memhash
+func memhash(p unsafe.Pointer, h, s uintptr) uintptr
