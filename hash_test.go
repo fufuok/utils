@@ -59,7 +59,13 @@ func TestMD5Hex(t *testing.T) {
 func TestMD5Sum(t *testing.T) {
 	t.Parallel()
 	res, _ := MD5Sum("LICENSE")
-	AssertEqual(t, "8fad15baa71cfe5901d9ac1bbec2c56c", res)
+	expected := []string{
+		// Real result
+		"8fad15baa71cfe5901d9ac1bbec2c56c",
+		// Result on github windows (LF would be replaced by CRLF, Maybe core.autocrlf is true)
+		"cd5c4d3bd8efa894619c1f3eab8a9174",
+	}
+	AssertEqual(t, true, InStrings(expected, res))
 }
 
 func TestHashStringToInt(t *testing.T) {
