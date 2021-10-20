@@ -17,7 +17,6 @@ func TestStringToBytes(t *testing.T) {
 
 	expected := testString
 	actual := StringToBytes(expected)
-
 	AssertEqual(t, []byte(expected), actual)
 }
 
@@ -33,7 +32,6 @@ func TestString2Bytes(t *testing.T) {
 
 	expected := testString
 	actual := String2Bytes(expected)
-
 	AssertEqual(t, []byte(expected), actual)
 }
 
@@ -49,7 +47,6 @@ func TestStr2Bytes(t *testing.T) {
 
 	expected := testString
 	actual := Str2Bytes(expected)
-
 	AssertEqual(t, []byte(expected), actual)
 }
 
@@ -65,7 +62,6 @@ func TestStrToBytes(t *testing.T) {
 
 	expected := testString
 	actual := StrToBytes(expected)
-
 	AssertEqual(t, []byte(expected), actual)
 }
 
@@ -81,8 +77,10 @@ func TestS2B(t *testing.T) {
 
 	expected := testString
 	actual := S2B(expected)
-
 	AssertEqual(t, []byte(expected), actual)
+
+	AssertEqual(t, true, S2B("") == nil)
+	AssertEqual(t, testBytes, S2B(testString))
 }
 
 func TestB2S(t *testing.T) {
@@ -94,8 +92,10 @@ func TestB2S(t *testing.T) {
 
 	expected := testString
 	actual := B2S([]byte(expected))
-
 	AssertEqual(t, expected, actual)
+
+	AssertEqual(t, true, B2S(nil) == "")
+	AssertEqual(t, testString, B2S(testBytes))
 }
 
 func TestMustJSONString(t *testing.T) {

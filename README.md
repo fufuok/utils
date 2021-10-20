@@ -19,6 +19,8 @@ const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
 var BigByte ...
 var BigSIByte ...
+var Rand = NewRand()
+var Seed = FastRand()
 func AddString(s ...string) string
 func AddStringBytes(s ...string) []byte
 func AesCBCDeB58(s string, key []byte) []byte
@@ -75,6 +77,7 @@ func B64UrlEncode(b []byte) string
 func BigComma(b *big.Int) string
 func BigCommaf(v *big.Float) string
 func Bigoom(n, b *big.Int) (float64, int)
+func CPUTicks() int64
 func CallPath() string
 func Comma(v int64) string
 func Commaf(v float64) string
@@ -113,12 +116,19 @@ func DesCBCEnStringB64(s string, key []byte) string
 func DesCBCEnStringHex(s string, key []byte) string
 func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
 func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func Djb33(s string) uint32
 func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
 func EqualFold(b, s string) (equals bool)
 func EqualFoldBytes(b, s []byte) (equals bool)
 func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
+func FastIntn(n int) int
+func FastRand() uint32
+func FastRandBytes(n int) []byte
+func FastRandn(n uint32) uint32
+func FnvHash(s string) uint64
+func FnvHash32(s string) uint32
 func GCMDeB58(s string, key []byte) []byte
 func GCMDeB64(s string, key []byte) []byte
 func GCMDeHex(s string, key []byte) []byte
@@ -198,6 +208,10 @@ func MD5Hex(s string) string
 func MD5Reader(r io.Reader) (string, error)
 func MD5Sum(filename string) (string, error)
 func MaxInt(a, b int) int
+func MemHash(s string) uint64
+func MemHash32(s string) uint32
+func MemHashb(b []byte) uint64
+func MemHashb32(b []byte) uint32
 func MinInt(a, b int) int
 func MustBool(v interface{}) bool
 func MustInt(v interface{}) int
@@ -206,6 +220,8 @@ func MustJSONIndent(v interface{}) []byte
 func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
 func MustString(v interface{}) string
+func NanoTime() int64
+func NewRand(seed ...int64) *rand.Rand
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
 func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
@@ -217,8 +233,9 @@ func RSASign(data, privateKey []byte) ([]byte, error)
 func RSASignVerify(data, publicKey, sig []byte) error
 func RandBytes(n int) []byte
 func RandHex(nHalf int) string
-func RandInt(min int, max int) int
+func RandInt(min, max int) int
 func RandString(n int) string
+func RandUint32(min, max uint32) uint32
 func RemoveString(ss []string, s string) ([]string, bool)
 func ReplaceHost(a, b string) string
 func Round(v float64, precision int) float64
@@ -238,6 +255,9 @@ func Str2Bytes(s string) (b []byte)
 func StrToBytes(s string) []byte
 func String2Bytes(s string) (b []byte)
 func StringToBytes(s string) (b []byte)
+func Sum32(s string) uint32
+func Sum64(s string) uint64
+func SumInt(v ...int) int
 func ToLower(b string) string
 func ToLowerBytes(b []byte) []byte
 func ToUpper(b string) string
@@ -476,6 +496,8 @@ fmt.Println(utils.EqualFold(utils.Trim("/TesT/", '/'), utils.ToUpper("Test"))) /
 host, port := utils.SplitHostPort("demo.com:77")
 fmt.Println(host) // demo.com
 fmt.Println(port) // 77
+
+fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
 ```
 
 

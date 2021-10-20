@@ -58,6 +58,11 @@ func ExecutableDir(evalSymlinks ...bool) string {
 //go:linkname FastRand runtime.fastrand
 func FastRand() uint32
 
+// FastRandn 等同于 FastRand() % n, 但更快
+// See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+//go:linkname FastRandn runtime.fastrandn
+func FastRandn(n uint32) uint32
+
 // CPUTicks CPU 时钟周期, 更高精度 (云服务器做伪随机数种子时慎用)
 //go:linkname CPUTicks runtime.cputicks
 func CPUTicks() int64

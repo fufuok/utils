@@ -26,6 +26,8 @@ const (
 	prime64  = 1099511628211
 )
 
+var Seed = FastRand()
+
 func Sha256Hex(s string) string {
 	return hex.EncodeToString(Sha256(S2B(s)))
 }

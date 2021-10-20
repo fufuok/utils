@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.3.3
+
+**2021-10-20**
+
+- 优化随机数, 并发安全且性能好. 参考新包: [github.com/fufuok/random](https://github.com/fufuok/random)
+
 ## v0.3.2
 
 **2021-09-30**
