@@ -39,23 +39,31 @@ func GetSafeString(s string, defaultVal ...string) string {
 
 // GetSafeB2S Immutable, 可选指定默认值
 func GetSafeB2S(b []byte, defaultVal ...string) string {
-	s := string(b)
-	if s == "" && len(defaultVal) > 0 {
-		return defaultVal[0]
+	if len(b) == 0 {
+		if len(defaultVal) > 0 {
+			return defaultVal[0]
+		}
+		return ""
 	}
-	return s
+	return string(b)
 }
 
 // CopyString Immutable, string to string
 // e.g. fiberParam := utils.CopyString(c.Params("test"))
 // e.g. utils.CopyString(s[500:1000]) // 可以让 s 被 GC 回收
 func CopyString(s string) string {
+	if s == "" {
+		return ""
+	}
 	return string(S2B(s))
 }
 
 // CopyB2S Immutable, []byte to string
+// string(b)
 func CopyB2S(b []byte) string {
-	// string(b)
+	if len(b) == 0 {
+		return ""
+	}
 	return B2S(CopyBytes(b))
 }
 

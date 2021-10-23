@@ -273,6 +273,7 @@ func UUIDShort() string
 func UUIDSimple() string
 func UUIDString() string
 func UnPadding(b []byte, pkcs7 bool) []byte
+func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
 func WaitNextMinute()
 func XOR(src, key []byte) []byte
@@ -289,6 +290,7 @@ func XOREnHex(b, key []byte) string
 func XOREnStringB58(s string, key []byte) string
 func XOREnStringB64(s string, key []byte) string
 func XOREnStringHex(s string, key []byte) string
+func Zip(data []byte) (dst []byte, err error)
 ```
 
 ### 加解密小工具
@@ -498,6 +500,10 @@ fmt.Println(host) // demo.com
 fmt.Println(port) // 77
 
 fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
+
+dec, _ := utils.Zip(utils.FastRandBytes(3000))
+src, _ := utils.Unzip(dec)
+fmt.Println(len(dec), len(src)) // 2288 3000
 ```
 
 
