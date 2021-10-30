@@ -1,10 +1,10 @@
 # Go-Utils
 
-## v0.3.5
+## v0.3.6
 
-**2021-10-28**
+**2021-10-30**
 
-- 增加了几个简单的池: `reader` `timer` `ticker`
+- 增加了几个简单的池: `readerpool` `timerpool` `tickerpool`
 
 ## v0.3.4
 

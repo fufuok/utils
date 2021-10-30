@@ -1,8 +1,8 @@
 # Go-Utils
 
-常用的助手函数
+Go 常用的助手函数, 性能至上.
 
-若有直接引用的, 会在函数定义或目录 README 中注明来源, 保留 LICENSE, 感谢之!
+若有直接引用的, 会在函数定义或目录 README 中注明来源, 并保留 LICENSE, 感谢之!
 
 ## 安装
 
@@ -405,6 +405,29 @@ type RBMutex struct{ ... }
     func (m *RBMutex) RUnlock(t *RToken)
     func (m *RBMutex) Unlock()
 type RToken struct{ ... }
+```
+
+### 常用的池
+
+`[]byte` 字节切片池化见: [github.com/fufuok/bytespool](https://github.com/fufuok/bytespool)
+
+见: [pools](pools)
+
+```go
+package readerpool // import "github.com/fufuok/utils/pools/readerpool"
+
+func New(b []byte) *bytes.Reader
+func Release(r *bytes.Reader)
+
+package timerpool // import "github.com/fufuok/utils/pools/timerpool"
+
+func New(d time.Duration) *time.Timer
+func Release(t *time.Timer)
+
+package tickerpool // import "github.com/fufuok/utils/pools/tickerpool"
+
+func New(d time.Duration) *time.Ticker
+func Release(t *time.Ticker)
 ```
 
 ## 使用
