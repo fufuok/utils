@@ -55,7 +55,9 @@ func CopyString(s string) string {
 	if s == "" {
 		return ""
 	}
-	return string(S2B(s))
+	tmp := make([]byte, len(s))
+	copy(tmp, s)
+	return B2S(tmp)
 }
 
 // CopyB2S Immutable, []byte to string
