@@ -6,22 +6,22 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	"unsafe"
 )
 
 var externalIPAPI = map[string][]string{
 	"ipv4": {
-		"http://api.ipify.org",
+		"https://ipv4.ipw.cn/api/ip/myip",
+		"https://api.ipify.org",
 		"http://ip.me",
 		"http://ip-api.com/line/?fields=query",
 		"http://ifconfig.me/ip",
 		"http://ident.me",
-		"http://ip.cip.cc",
 		"http://myexternalip.com/raw",
 		"http://ip.42.pl/short",
 	},
 	"ipv6": {
-		"http://api64.ipify.org",
+		"https://ipv6.ipw.cn/api/ip/myip",
+		"https://api64.ipify.org",
 	},
 }
 
@@ -104,7 +104,7 @@ func getAPI(u string) (string, bool) {
 		return "", false
 	}
 
-	ip := net.ParseIP(strings.TrimSpace(*(*string)(unsafe.Pointer(&b))))
+	ip := net.ParseIP(strings.TrimSpace(string(b)))
 	if ip != nil {
 		return ip.String(), true
 	}

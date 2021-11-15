@@ -7,9 +7,11 @@ import (
 )
 
 var (
-	// 服务器 IP
+	// InternalIPv4 服务器 IP
 	InternalIPv4  string
+	InternalIPv6  string
 	ExternalIPv4  string
+	ExternalIPv6  string
 	ExternalIPAny string
 )
 
@@ -19,7 +21,13 @@ func init() {
 		InternalIPv4 = myip.InternalIPv4()
 	}()
 	go func() {
+		InternalIPv6 = myip.InternalIPv6()
+	}()
+	go func() {
 		ExternalIPv4 = myip.ExternalIPv4()
+	}()
+	go func() {
+		ExternalIPv6 = myip.ExternalIPv6()
 	}()
 	go func() {
 		ExternalIPAny = myip.ExternalIPAny(5)
@@ -27,11 +35,11 @@ func init() {
 }
 
 func main() {
-	fmt.Println("MyIP(可能为空, 但不阻塞)", InternalIPv4, ExternalIPv4, ExternalIPAny)
+	fmt.Println("MyIP(可能为空, 但不阻塞)", InternalIPv4, InternalIPv6, ExternalIPv4, ExternalIPv6, ExternalIPAny)
 
 	fmt.Println("获取外网地址 (IPv4):", myip.ExternalIPv4())
 	fmt.Println("获取外网地址 (IPv6):", myip.ExternalIPv6())
-	fmt.Println("获取外网地址 (出口公网地址, 优先获取 IPv6):", myip.ExternalIP())
+	fmt.Println("获取外网地址 (出口公网地址, 优先获取 IPv4):", myip.ExternalIP())
 	fmt.Println("获取外网地址 (出口公网地址 IPv4):", myip.ExternalIP("ipv4"))
 	fmt.Println("获取外网地址 (出口公网地址 IPv6):", myip.ExternalIP("ipv6"))
 
@@ -45,5 +53,5 @@ func main() {
 	fmt.Println("获取本地地址 (第一个):", myip.LocalIP())
 	fmt.Println("获取所有本地地址 (IPv4):", myip.LocalIPv4s())
 
-	fmt.Println("MyIP:", InternalIPv4, ExternalIPv4, ExternalIPAny)
+	fmt.Println("MyIP:", InternalIPv4, InternalIPv6, ExternalIPv4, ExternalIPv6, ExternalIPAny)
 }
