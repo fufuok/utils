@@ -414,6 +414,14 @@ type RToken struct{ ... }
 见: [pools](pools)
 
 ```go
+package bufferpool // import "github.com/fufuok/utils/pools/bufferpool"
+
+func Get() *bytes.Buffer
+func New(bs []byte) *bytes.Buffer
+func NewString(s string) *bytes.Buffer
+func Put(buf *bytes.Buffer)
+func Release(buf *bytes.Buffer) bool
+
 package readerpool // import "github.com/fufuok/utils/pools/readerpool"
 
 func New(b []byte) *bytes.Reader
@@ -527,6 +535,23 @@ fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
 dec, _ := utils.Zip(utils.FastRandBytes(3000))
 src, _ := utils.Unzip(dec)
 fmt.Println(len(dec), len(src)) // 2288 3000
+
+type T struct {
+    Name string `json:"name"`
+}
+t1 := T{"ff"}
+buf := bufferpool.Get()
+_ = json.NewEncoder(buf).Encode(&t1)
+fmt.Println("json:", buf.String()) // json: {"name":"ff"}
+bufferpool.Put(buf)
+
+var t2 T
+buf = bufferpool.Get()
+buf.WriteString(`{"name":"ff"}`)
+_ = json.NewDecoder(buf).Decode(&t2)
+fmt.Printf("struct: %+v\n", t2)      // struct: {Name:ff}
+fmt.Println("empty:", buf.Len() == 0) // empty: true
+bufferpool.Put(buf)
 ```
 
 
