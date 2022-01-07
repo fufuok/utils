@@ -10,7 +10,7 @@ const defaultMaxSize = 8 << 20
 
 var bufferPool = sync.Pool{
 	New: func() interface{} {
-		return new(bytes.Buffer)
+		return bytes.NewBuffer(nil)
 	},
 }
 
@@ -20,9 +20,21 @@ func New(bs []byte) *bytes.Buffer {
 	return buf
 }
 
+func NewByte(c byte) *bytes.Buffer {
+	buf := Get()
+	buf.WriteByte(c)
+	return buf
+}
+
 func NewString(s string) *bytes.Buffer {
 	buf := Get()
 	buf.WriteString(s)
+	return buf
+}
+
+func NewRune(r rune) *bytes.Buffer {
+	buf := Get()
+	buf.WriteRune(r)
 	return buf
 }
 

@@ -14,22 +14,32 @@ func TestBufferPool(t *testing.T) {
 		buf.WriteString("test")
 		buf.WriteString(strconv.Itoa(i))
 		if buf.String() != want {
-			t.Fatalf("Unexpected result: %q. Expecting %q", buf.String(), want)
+			t.Fatalf("Unexpected result: %q, Expecting %q", buf.String(), want)
 		}
 		Put(buf)
 
 		buf = New([]byte(want))
 		if buf.String() != want {
-			t.Fatalf("Unexpected result: %q. Expecting %q", buf.String(), want)
+			t.Fatalf("Unexpected result: %q, Expecting %q", buf.String(), want)
 		}
 		Put(buf)
 
 		buf = NewString(want)
 		if buf.String() != want {
-			t.Fatalf("Unexpected result: %q. Expecting %q", buf.String(), want)
+			t.Fatalf("Unexpected result: %q, Expecting %q", buf.String(), want)
 		}
 		if !Release(buf) {
-			t.Fatal("Unexpected result: false. Expecting true")
+			t.Fatal("Unexpected result: false, Expecting true")
+		}
+
+		buf = NewByte(65)
+		if buf.String() != "A" {
+			t.Fatalf("Unexpected result: %s, Expecting 'A'", buf.String())
+		}
+
+		buf = NewRune(20013)
+		if buf.String() != "中" {
+			t.Fatalf("Unexpected result: '中', Expecting %q", buf.String())
 		}
 	}
 }

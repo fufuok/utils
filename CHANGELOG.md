@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.3.10
+
+**2022-01-06**
+
+- 增加 `bufferpool.NewByte()` `bufferpool.NewRune()`
+
 ## v0.3.9
 
 **2022-01-05**
