@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.3.11
+
+**2022-01-14**
+
+- 增加字符串哈希助手函数, 生成数字字符串, 比 Md5 快(会有重复, 注意使用场景, 比如简单的 Token 校验)
+  - `HashString` `HashStringUint64` `HashBytes` `HashBytesUint64`
+
 ## v0.3.10
 
 **2022-01-06**

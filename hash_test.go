@@ -68,6 +68,20 @@ func TestMD5Sum(t *testing.T) {
 	AssertEqual(t, true, InStrings(expected, res))
 }
 
+func TestHashString(t *testing.T) {
+	for _, v := range []struct {
+		in, out string
+	}{
+		{"", "14695981039346656037"},
+		{"12345", "16534377278781491704"},
+		{testString, "13467076781014605639"},
+		{"Fufu 中　文", "1485575821508720008"},
+	} {
+		AssertEqual(t, v.out, HashString(v.in))
+		AssertEqual(t, v.out, HashBytes([]byte(v.in)))
+	}
+}
+
 func TestHashStringToInt(t *testing.T) {
 	AssertEqual(t, uint64(offset64), Sum64(""))
 	AssertEqual(t, uint32(offset32), Sum32(""))
@@ -98,6 +112,33 @@ func TestHashStringToInt(t *testing.T) {
 		AssertEqual(t, v32, Djb33(testString))
 	}
 }
+
+func BenchmarkHashString(b *testing.B) {
+	str := RandString(20)
+	b.ResetTimer()
+	b.Run("MD5Hex", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = MD5Hex(str)
+		}
+	})
+	b.Run("HashString", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = HashString(str)
+		}
+	})
+}
+
+// go test -run=^$ -benchmem -benchtime=1s -count=3 -bench=BenchmarkHashString
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
+// BenchmarkHashString/MD5Hex-8             5115880               226.1 ns/op            64 B/op          2 allocs/op
+// BenchmarkHashString/MD5Hex-8             5377476               230.3 ns/op            64 B/op          2 allocs/op
+// BenchmarkHashString/MD5Hex-8             5227404               226.4 ns/op            64 B/op          2 allocs/op
+// BenchmarkHashString/HashString-8        11307057               102.8 ns/op            24 B/op          1 allocs/op
+// BenchmarkHashString/HashString-8        12567037               96.83 ns/op            24 B/op          1 allocs/op
+// BenchmarkHashString/HashString-8        12295094               101.1 ns/op            24 B/op          1 allocs/op
 
 func BenchmarkHash(b *testing.B) {
 	buf := RandBytes(20)
@@ -167,18 +208,18 @@ func BenchmarkHash(b *testing.B) {
 // BenchmarkHash/FnvHash32-8       35083820                32.14 ns/op            0 B/op          0 allocs/op
 // BenchmarkHash/FnvHash32-8       47042220                28.03 ns/op            0 B/op          0 allocs/op
 // BenchmarkHash/FnvHash32-8       46833836                28.16 ns/op            0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb-8        153161814                9.470 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb-8        152563350                8.079 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb-8        142128412                7.964 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHash-8         125632875                8.775 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHash-8         150410337                8.372 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHash-8         135773145                9.427 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb32-8      146760392                7.950 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb32-8      146271644                7.759 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHashb32-8      154832995                8.686 ns/op           0 B/op          0 allocs/op
-// BenchmarkHash/MemHash32-8       100000000               10.13 ns/op            0 B/op          0 allocs/op
-// BenchmarkHash/MemHash32-8       100000000               10.30 ns/op            0 B/op          0 allocs/op
-// BenchmarkHash/MemHash32-8       143592832                8.360 ns/op           0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb-8       153161814                9.470 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb-8       152563350                8.079 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb-8       142128412                7.964 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash-8        125632875                8.775 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash-8        150410337                8.372 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash-8        135773145                9.427 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb32-8     146760392                7.950 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb32-8     146271644                7.759 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHashb32-8     154832995                8.686 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash32-8      100000000                10.13 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash32-8      100000000                10.30 ns/op            0 B/op          0 allocs/op
+// BenchmarkHash/MemHash32-8      143592832                8.360 ns/op            0 B/op          0 allocs/op
 // BenchmarkHash/Djb33-8           60568434                18.17 ns/op            0 B/op          0 allocs/op
 // BenchmarkHash/Djb33-8           75151240                18.17 ns/op            0 B/op          0 allocs/op
 // BenchmarkHash/Djb33-8           68428705                19.79 ns/op            0 B/op          0 allocs/op

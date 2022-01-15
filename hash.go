@@ -13,6 +13,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"strconv"
 	"unsafe"
 )
 
@@ -235,4 +236,22 @@ func Djb33(s string) uint32 {
 		d = (d * 33) ^ uint32(s[i+2])
 	}
 	return d ^ (d >> 16)
+}
+
+// HashString 合并一串文本, 得到字符串哈希
+func HashString(s ...string) string {
+	return strconv.FormatUint(HashStringUint64(s...), 10)
+}
+
+func HashStringUint64(s ...string) uint64 {
+	return Sum64(AddString(s...))
+}
+
+// HashBytes 合并 Bytes, 得到字符串哈希
+func HashBytes(b ...[]byte) string {
+	return strconv.FormatUint(HashBytesUint64(b...), 10)
+}
+
+func HashBytesUint64(b ...[]byte) uint64 {
+	return Sum64(B2S(JoinBytes(b...)))
 }
