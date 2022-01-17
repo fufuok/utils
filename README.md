@@ -418,9 +418,12 @@ package bufferpool // import "github.com/fufuok/utils/pools/bufferpool"
 
 func Get() *bytes.Buffer
 func New(bs []byte) *bytes.Buffer
+func NewByte(c byte) *bytes.Buffer
+func NewRune(r rune) *bytes.Buffer
 func NewString(s string) *bytes.Buffer
 func Put(buf *bytes.Buffer)
 func Release(buf *bytes.Buffer) bool
+func SetMaxSize(size int) bool
 
 package readerpool // import "github.com/fufuok/utils/pools/readerpool"
 
