@@ -5,13 +5,27 @@ import (
 	"sync"
 )
 
-// 8 MiB
-const defaultMaxSize = 8 << 20
+var (
+	// 8 MiB
+	defaultMaxSize = 8 << 20
 
-var bufferPool = sync.Pool{
-	New: func() interface{} {
-		return bytes.NewBuffer(nil)
-	},
+	bufferPool = sync.Pool{
+		New: func() interface{} {
+			return bytes.NewBuffer(nil)
+		},
+	}
+)
+
+// SetMaxSize 设置回收时允许的最大字节
+// smallBufferSize is an initial allocation minimal capacity.
+// const smallBufferSize = 64
+func SetMaxSize(size int) bool {
+	// 64 <= size <= 2GiB
+	if size >= 64 && size <= 2<<30 {
+		defaultMaxSize = size
+		return true
+	}
+	return false
 }
 
 func New(bs []byte) *bytes.Buffer {

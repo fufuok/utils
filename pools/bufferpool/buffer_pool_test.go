@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+
+	"github.com/fufuok/utils"
 )
 
 func TestBufferPool(t *testing.T) {
@@ -29,7 +31,7 @@ func TestBufferPool(t *testing.T) {
 			t.Fatalf("Unexpected result: %q, Expecting %q", buf.String(), want)
 		}
 		if !Release(buf) {
-			t.Fatal("Unexpected result: false, Expecting true")
+			t.Fatal("Unexpected result: true, Expecting false")
 		}
 
 		buf = NewByte(65)
@@ -41,6 +43,24 @@ func TestBufferPool(t *testing.T) {
 		if buf.String() != "中" {
 			t.Fatalf("Unexpected result: '中', Expecting %q", buf.String())
 		}
+
+		if SetMaxSize(32) {
+			t.Fatalf("Unexpected result: false, Expecting true")
+		}
+		if !SetMaxSize(64) {
+			t.Fatalf("Unexpected result: true, Expecting false")
+		}
+		buf = Get()
+		buf.WriteString(utils.RandString(64))
+		if !Release(buf) {
+			t.Fatalf("Unexpected result: true, Expecting false")
+		}
+		buf = Get()
+		buf.WriteString(utils.RandString(65))
+		if Release(buf) {
+			t.Fatal("Unexpected result: false, Expecting true")
+		}
+		SetMaxSize(defaultMaxSize)
 	}
 }
 
