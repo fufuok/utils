@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.3.13
+
+**2022-01-21**
+
+- 增加 `MustParseHumanBytes` `MustParseHumanBigBytes`
+
 ## v0.3.12
 
 **2022-01-18**
