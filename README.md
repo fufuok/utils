@@ -168,6 +168,10 @@ func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
 func GetenvDecrypt(key string, secret string) string
 func Hash(b []byte, h hash.Hash) []byte
+func HashBytes(b ...[]byte) string
+func HashBytesUint64(b ...[]byte) uint64
+func HashString(s ...string) string
+func HashStringUint64(s ...string) uint64
 func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
 func HmacSHA1(b, key []byte) []byte
 func HmacSHA1Hex(s, key string) string
@@ -219,6 +223,8 @@ func MustJSON(v interface{}) []byte
 func MustJSONIndent(v interface{}) []byte
 func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
+func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
+func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 func MustString(v interface{}) string
 func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
@@ -290,7 +296,8 @@ func XOREnHex(b, key []byte) string
 func XOREnStringB58(s string, key []byte) string
 func XOREnStringB64(s string, key []byte) string
 func XOREnStringHex(s string, key []byte) string
-func Zip(data []byte) (dst []byte, err error)
+func Zip(data []byte) ([]byte, error)
+func ZipLevel(data []byte, level int) (dst []byte, err error)
 ```
 
 ### 加解密小工具
