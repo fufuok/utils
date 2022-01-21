@@ -64,6 +64,11 @@ func TestHumanBigByteParsing(t *testing.T) {
 	}
 }
 
+func TestMustParseHumanBigBytes(t *testing.T) {
+	AssertEqual(t, uint64(44564480), MustParseHumanBigBytes("42.5Mi").Uint64())
+	AssertEqual(t, (&big.Int{}).SetUint64(123), MustParseHumanBigBytes("-42.5Mi", (&big.Int{}).SetUint64(123)))
+}
+
 func TestHumanBigByteErrors(t *testing.T) {
 	got, err := ParseHumanBigBytes("84 JB")
 	if err == nil {

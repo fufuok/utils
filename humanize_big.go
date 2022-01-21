@@ -174,6 +174,17 @@ func ParseHumanBigBytes(s string) (*big.Int, error) {
 	return nil, fmt.Errorf("unhandled size name: %v", extra)
 }
 
+// MustParseHumanBigBytes 解析数字的数量级表示
+// e.g. MustParseHumanBigBytes("42 MB") -> 42000000
+// e.g. MustParseHumanBigBytes("-42 mib", 123) -> 123
+func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int {
+	num, err := ParseHumanBigBytes(s)
+	if err != nil && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return num
+}
+
 func humanateBigBytes(s, base *big.Int, sizes []string) string {
 	if s.Cmp(ten) < 0 {
 		return fmt.Sprintf("%d B", s)

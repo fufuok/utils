@@ -127,8 +127,8 @@ func HumanKbps(v uint64) string {
 }
 
 // ParseHumanBytes 解析数字的数量级表示
-// e.g. ParseBytes("42 MB") -> 42000000, nil
-// e.g. ParseBytes("42 mib") -> 44040192, nil
+// e.g. ParseHumanBytes("42 MB") -> 42000000, nil
+// e.g. ParseHumanBytes("42 mib") -> 44040192, nil
 func ParseHumanBytes(s string) (uint64, error) {
 	lastDigit := 0
 	hasComma := false
@@ -162,4 +162,15 @@ func ParseHumanBytes(s string) (uint64, error) {
 	}
 
 	return 0, fmt.Errorf("unhandled size name: %v", extra)
+}
+
+// MustParseHumanBytes 解析数字的数量级表示
+// e.g. MustParseHumanBytes("42 MB") -> 42000000
+// e.g. MustParseHumanBytes("-42 mib", 123) -> 123
+func MustParseHumanBytes(s string, defaultVal ...uint64) uint64 {
+	num, err := ParseHumanBytes(s)
+	if err != nil && len(defaultVal) > 0 {
+		return defaultVal[0]
+	}
+	return num
 }
