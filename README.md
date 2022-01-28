@@ -414,6 +414,24 @@ type RBMutex struct{ ... }
 type RToken struct{ ... }
 ```
 
+### 高效的 JSON 字符串生成器
+
+见: [jsongen](jsongen)
+
+或: [https://github.com/fufuok/jsongen](https://github.com/fufuok/jsongen)
+
+```go
+package jsongen // import "github.com/fufuok/utils/jsongen"
+
+type Array []Value
+    func NewArray() *Array
+type Map struct{ ... }
+    func NewMap() *Map
+type QuotedValue string
+type UnquotedValue string
+type Value interface{ ... }
+```
+
 ### 常用的池
 
 `[]byte` 字节切片池化见: [github.com/fufuok/bytespool](https://github.com/fufuok/bytespool)
@@ -562,6 +580,16 @@ _ = json.NewDecoder(buf).Decode(&t2)
 fmt.Printf("struct: %+v\n", t2)      // struct: {Name:ff}
 fmt.Println("empty:", buf.Len() == 0) // empty: true
 bufferpool.Put(buf)
+
+js := jsongen.NewMap()
+js.PutString("s", `a"b"\c`)
+js.PutFloat("f", 3.14)
+js.PutBool("b", false)
+jsArr := jsongen.NewArray()
+jsArr.AppendInt(7)
+jsArr.AppendStringArray([]string{"A", "B"})
+js.PutArray("sub", jsArr)
+fmt.Printf("%s\n", js.Serialize(nil)) // {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]]}
 ```
 
 
