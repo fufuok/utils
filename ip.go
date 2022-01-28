@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-// IsPrivate reports whether ip is a private address, according to
+// IsPrivateIP reports whether ip is a private address, according to
 // RFC 1918 (IPv4 addresses) and RFC 4193 (IPv6 addresses).
 // Ref: go1.17+ func (ip IP) IsPrivate() bool
 func IsPrivateIP(ip net.IP) bool {
