@@ -287,6 +287,9 @@ func TestTrimLeft(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, "test/////", TrimLeft("/////test/////", '/'))
 	AssertEqual(t, "test/", TrimLeft("/test/", '/'))
+	AssertEqual(t, "", TrimLeft(" ", ' '))
+	AssertEqual(t, "", TrimLeft("  ", ' '))
+	AssertEqual(t, "", TrimLeft("", ' '))
 	AssertEqual(t, strings.TrimLeft(testString, " "), TrimLeft(testString, ' '))
 }
 
@@ -319,6 +322,9 @@ func TestTrimRight(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, "/////test", TrimRight("/////test/////", '/'))
 	AssertEqual(t, "/test", TrimRight("/test/", '/'))
+	AssertEqual(t, "", TrimRight(" ", ' '))
+	AssertEqual(t, "", TrimRight("  ", ' '))
+	AssertEqual(t, "", TrimRight("", ' '))
 	AssertEqual(t, strings.TrimRight(testString, " "), TrimRight(testString, ' '))
 }
 
@@ -352,6 +358,9 @@ func TestTrim(t *testing.T) {
 	AssertEqual(t, "test", Trim("/////test/////", '/'))
 	AssertEqual(t, "test", Trim("/test/", '/'))
 	AssertEqual(t, "test", Trim("test", '/'))
+	AssertEqual(t, "", Trim(" ", ' '))
+	AssertEqual(t, "", Trim("  ", ' '))
+	AssertEqual(t, "", Trim("", ' '))
 	AssertEqual(t, strings.Trim(testString, " "), Trim(testString, ' '))
 }
 
