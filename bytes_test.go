@@ -177,6 +177,9 @@ func TestTrimLeftBytes(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, []byte("test/////"), TrimLeftBytes([]byte("/////test/////"), '/'))
 	AssertEqual(t, []byte("test/"), TrimLeftBytes([]byte("/test/"), '/'))
+	AssertEqual(t, 0, len(TrimLeftBytes([]byte(" "), ' ')))
+	AssertEqual(t, 0, len(TrimLeftBytes([]byte("  "), ' ')))
+	AssertEqual(t, 0, len(TrimLeftBytes([]byte(""), ' ')))
 	AssertEqual(t, bytes.TrimLeft([]byte("  TesT  "), " "), TrimLeftBytes([]byte("  TesT  "), ' '))
 }
 
@@ -209,6 +212,9 @@ func TestTrimRightBytes(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, []byte("/////test"), TrimRightBytes([]byte("/////test/////"), '/'))
 	AssertEqual(t, []byte("/test"), TrimRightBytes([]byte("/test/"), '/'))
+	AssertEqual(t, 0, len(TrimRightBytes([]byte(" "), ' ')))
+	AssertEqual(t, 0, len(TrimRightBytes([]byte("  "), ' ')))
+	AssertEqual(t, 0, len(TrimRightBytes([]byte(""), ' ')))
 	AssertEqual(t, bytes.TrimRight([]byte("  TesT  "), " "), TrimRightBytes([]byte("  TesT  "), ' '))
 }
 
@@ -241,6 +247,9 @@ func TestTrimBytes(t *testing.T) {
 	AssertEqual(t, []byte("test"), TrimBytes([]byte("/////test/////"), '/'))
 	AssertEqual(t, []byte("test"), TrimBytes([]byte("/test/"), '/'))
 	AssertEqual(t, []byte("test"), TrimBytes([]byte("test"), '/'))
+	AssertEqual(t, 0, len(TrimBytes([]byte(" "), ' ')))
+	AssertEqual(t, 0, len(TrimBytes([]byte("  "), ' ')))
+	AssertEqual(t, 0, len(TrimBytes([]byte(""), ' ')))
 	AssertEqual(t, bytes.Trim([]byte("  TesT  "), " "), TrimBytes([]byte("  TesT  "), ' '))
 }
 

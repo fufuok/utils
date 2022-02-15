@@ -98,7 +98,7 @@ func TrimRightBytes(b []byte, cutset byte) []byte {
 // Ref: fiber
 func TrimBytes(b []byte, cutset byte) []byte {
 	i, j := 0, len(b)-1
-	for ; i < j; i++ {
+	for ; i <= j; i++ {
 		if b[i] != cutset {
 			break
 		}
