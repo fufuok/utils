@@ -74,6 +74,18 @@ func B64Decode(s string) []byte
 func B64Encode(b []byte) string
 func B64UrlDecode(s string) []byte
 func B64UrlEncode(b []byte) string
+func BeginOfDay(t time.Time) time.Time
+func BeginOfHour(t time.Time) time.Time
+func BeginOfLastMonth(t time.Time) time.Time
+func BeginOfLastWeek(t time.Time) time.Time
+func BeginOfMinute(t time.Time) time.Time
+func BeginOfMonth(t time.Time) time.Time
+func BeginOfNextMonth(t time.Time) time.Time
+func BeginOfNextWeek(t time.Time) time.Time
+func BeginOfTomorrow(t time.Time) time.Time
+func BeginOfWeek(t time.Time) time.Time
+func BeginOfYear(t time.Time) time.Time
+func BeginOfYesterday(t time.Time) time.Time
 func BigComma(b *big.Int) string
 func BigCommaf(v *big.Float) string
 func Bigoom(n, b *big.Int) (float64, int)
@@ -119,6 +131,18 @@ func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte,
 func Djb33(s string) uint32
 func EncodeUUID(id []byte) []byte
 func Encrypt(value, secret string) string
+func EndOfDay(t time.Time) time.Time
+func EndOfHour(t time.Time) time.Time
+func EndOfLastMonth(t time.Time) time.Time
+func EndOfLastWeek(t time.Time) time.Time
+func EndOfMinute(t time.Time) time.Time
+func EndOfMonth(t time.Time) time.Time
+func EndOfNextMonth(t time.Time) time.Time
+func EndOfNextWeek(t time.Time) time.Time
+func EndOfTomorrow(t time.Time) time.Time
+func EndOfWeek(t time.Time) time.Time
+func EndOfYear(t time.Time) time.Time
+func EndOfYesterday(t time.Time) time.Time
 func EqualFold(b, s string) (equals bool)
 func EqualFoldBytes(b, s []byte) (equals bool)
 func Executable(evalSymlinks ...bool) string
@@ -144,17 +168,6 @@ func GCMEnStringB64(s string, key []byte) string
 func GCMEnStringHex(s string, key []byte) string
 func GCMEncrypt(plaintext, key []byte) ([]byte, error)
 func GenRSAKey(bits int) (publicKey, privateKey []byte)
-func Get0Hour(t time.Time) time.Time
-func Get0LastMonth(t time.Time) time.Time
-func Get0LastWeek(t time.Time) time.Time
-func Get0Minute(t time.Time) time.Time
-func Get0Month(t time.Time) time.Time
-func Get0NextMonth(t time.Time) time.Time
-func Get0NextWeek(t time.Time) time.Time
-func Get0Second(t time.Time) time.Time
-func Get0Tomorrow(t time.Time) time.Time
-func Get0Week(t time.Time) time.Time
-func Get0Yesterday(t time.Time) time.Time
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
@@ -204,6 +217,8 @@ func IsNil(i interface{}) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
+func LeftPad(s, pad string, n int) string
+func LeftPadBytes(b, pad []byte, n int) []byte
 func Logn(n, b float64) float64
 func Long2IPv4(n int) net.IP
 func Long2IPv4String(n int) string
@@ -228,6 +243,8 @@ func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 func MustString(v interface{}) string
 func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
+func Pad(s, pad string, n int) string
+func PadBytes(s, pad []byte, n int) []byte
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
 func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
@@ -244,6 +261,8 @@ func RandString(n int) string
 func RandUint32(min, max uint32) uint32
 func RemoveString(ss []string, s string) ([]string, bool)
 func ReplaceHost(a, b string) string
+func RightPad(s, pad string, n int) string
+func RightPadBytes(b, pad []byte, n int) []byte
 func Round(v float64, precision int) float64
 func RunPath() string
 func S2B(s string) []byte
