@@ -7,70 +7,138 @@ import (
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitNextMinute() {
 	now := time.Now()
-	<-time.After(Get0Second(now.Add(time.Minute)).Sub(now))
+	<-time.After(BeginOfMinute(now.Add(time.Minute)).Sub(now))
 }
 
-// Get0Hour 当天 0 点
-func Get0Hour(t time.Time) time.Time {
-	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+// BeginOfDay 当天 0 点
+func BeginOfDay(t time.Time) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, 0, 0, 0, 0, t.Location())
 }
 
-// Get0Yesterday 昨天 0 点
-func Get0Yesterday(t time.Time) time.Time {
-	return Get0Hour(t.AddDate(0, 0, -1))
+// EndOfDay 当天最后时刻
+func EndOfDay(t time.Time) time.Time {
+	return BeginOfTomorrow(t).Add(-time.Nanosecond)
 }
 
-// Get0Tomorrow 明天 0 点
-func Get0Tomorrow(t time.Time) time.Time {
-	return Get0Hour(t.AddDate(0, 0, 1))
+// BeginOfYesterday 昨天 0 点
+func BeginOfYesterday(t time.Time) time.Time {
+	return BeginOfDay(t.AddDate(0, 0, -1))
 }
 
-// Get0Minute 0 分
-func Get0Minute(t time.Time) time.Time {
-	return t.Truncate(time.Hour)
+// EndOfYesterday 昨天最后时刻
+func EndOfYesterday(t time.Time) time.Time {
+	return EndOfDay(t.AddDate(0, 0, -1))
 }
 
-// Get0Second 0 秒
-func Get0Second(t time.Time) time.Time {
-	return t.Truncate(time.Minute)
+// BeginOfTomorrow 明天 0 点
+func BeginOfTomorrow(t time.Time) time.Time {
+	return BeginOfDay(t.AddDate(0, 0, 1))
 }
 
-// Get0Week 本周一 0 点
-func Get0Week(t time.Time) time.Time {
+// EndOfTomorrow 明天 0 点
+func EndOfTomorrow(t time.Time) time.Time {
+	return EndOfDay(t.AddDate(0, 0, 1))
+}
+
+// BeginOfMinute 0 秒
+func BeginOfMinute(t time.Time) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, t.Hour(), t.Minute(), 0, 0, t.Location())
+}
+
+// EndOfMinute 最后一秒
+func EndOfMinute(t time.Time) time.Time {
+	return BeginOfMinute(t).Add(time.Minute - time.Nanosecond)
+}
+
+// BeginOfHour 0 分
+func BeginOfHour(t time.Time) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, t.Hour(), 0, 0, 0, t.Location())
+}
+
+// EndOfHour 最后一分
+func EndOfHour(t time.Time) time.Time {
+	return BeginOfHour(t).Add(time.Hour - time.Nanosecond)
+}
+
+// BeginOfWeek 本周一 0 点
+func BeginOfWeek(t time.Time) time.Time {
 	offset := int(time.Monday - t.Weekday())
 	if offset > 0 {
 		offset = -6
 	}
-
-	return Get0Hour(t).AddDate(0, 0, offset)
+	return BeginOfDay(t).AddDate(0, 0, offset)
 }
 
-// Get0LastWeek 上周一 0 点
-func Get0LastWeek(t time.Time) time.Time {
-	return Get0Week(t.AddDate(0, 0, -7))
+// EndOfWeek 本周末最后一刻
+func EndOfWeek(t time.Time) time.Time {
+	return BeginOfNextWeek(t).Add(-time.Nanosecond)
 }
 
-// Get0NextWeek 下周一 0 点
-func Get0NextWeek(t time.Time) time.Time {
-	return Get0Week(t.AddDate(0, 0, 7))
+// BeginOfLastWeek 上周一 0 点
+func BeginOfLastWeek(t time.Time) time.Time {
+	return BeginOfWeek(t.AddDate(0, 0, -7))
 }
 
-// Get0Month 当月第一天 0 点
-func Get0Month(t time.Time) time.Time {
-	return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, t.Location())
+// EndOfLastWeek 上周一最后一刻
+func EndOfLastWeek(t time.Time) time.Time {
+	return EndOfWeek(t.AddDate(0, 0, -7))
 }
 
-// Get0LastMonth 上月第一天 0 点
-func Get0LastMonth(t time.Time) time.Time {
-	return Get0Month(t.AddDate(0, -1, 0))
+// BeginOfNextWeek 下周一 0 点
+func BeginOfNextWeek(t time.Time) time.Time {
+	return BeginOfWeek(t.AddDate(0, 0, 7))
 }
 
-// Get0NextMonth 下月第一天 0 点
-func Get0NextMonth(t time.Time) time.Time {
-	return Get0Month(t.AddDate(0, 1, 0))
+// EndOfNextWeek 下周一最后一刻
+func EndOfNextWeek(t time.Time) time.Time {
+	return EndOfWeek(t.AddDate(0, 0, 7))
+}
+
+// BeginOfMonth 当月第一天 0 点
+func BeginOfMonth(t time.Time) time.Time {
+	y, m, _ := t.Date()
+	return time.Date(y, m, 1, 0, 0, 0, 0, t.Location())
+}
+
+// EndOfMonth 当月最后一刻
+func EndOfMonth(t time.Time) time.Time {
+	return BeginOfNextMonth(t).Add(-time.Nanosecond)
+}
+
+// BeginOfLastMonth 上月第一天 0 点
+func BeginOfLastMonth(t time.Time) time.Time {
+	return BeginOfMonth(t.AddDate(0, -1, 0))
+}
+
+// EndOfLastMonth 上月最后一刻
+func EndOfLastMonth(t time.Time) time.Time {
+	return EndOfMonth(t.AddDate(0, -1, 0))
+}
+
+// BeginOfNextMonth 下月第一天 0 点
+func BeginOfNextMonth(t time.Time) time.Time {
+	return BeginOfMonth(t.AddDate(0, 1, 0))
+}
+
+// EndOfNextMonth 上月最后一刻
+func EndOfNextMonth(t time.Time) time.Time {
+	return EndOfMonth(t.AddDate(0, 1, 0))
 }
 
 // GetMonthDays 当月天数
 func GetMonthDays(t time.Time) int {
-	return int(Get0NextMonth(t).Sub(Get0Month(t)).Hours() / 24)
+	return int(BeginOfNextMonth(t).Sub(BeginOfMonth(t)).Hours() / 24)
+}
+
+// BeginOfYear 本年第一天 0 点
+func BeginOfYear(t time.Time) time.Time {
+	return time.Date(t.Year(), 1, 1, 0, 0, 0, 0, t.Location())
+}
+
+// EndOfYear 本年最后一刻
+func EndOfYear(t time.Time) time.Time {
+	return BeginOfYear(t).AddDate(1, 0, 0).Add(-time.Nanosecond)
 }
