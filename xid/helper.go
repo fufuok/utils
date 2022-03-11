@@ -1,11 +1,11 @@
 package xid
 
-// New().String()
+// NewString New().String()
 func NewString() string {
 	return New().String()
 }
 
-// New().Bytes()
+// NewBytes New().Bytes()
 func NewBytes() []byte {
 	return New().Bytes()
 }
