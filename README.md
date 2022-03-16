@@ -197,6 +197,7 @@ func HumanBigBytes(s *big.Int) string
 func HumanBigIBytes(s *big.Int) string
 func HumanBigKbps(s *big.Int) string
 func HumanBytes(v uint64) string
+func HumanGBMB(v uint64) string
 func HumanIBytes(v uint64) string
 func HumanIntBytes(v int) string
 func HumanIntIBytes(v int) string
