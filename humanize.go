@@ -80,6 +80,10 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 		return fmt.Sprintf("%d %s", v, sizes[0])
 	}
 	e := math.Floor(Logn(float64(v), base))
+	n := float64(len(sizes) - 1)
+	if e > n {
+		e = n
+	}
 	suffix := sizes[int(e)]
 	val := math.Floor(float64(v)/math.Pow(base, e)*10+0.5) / 10
 	f := "%.0f %v"
@@ -88,6 +92,19 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string {
 	}
 
 	return fmt.Sprintf(f, val, suffix)
+}
+
+// HumanGBMB 转为 ** GB ** MB
+// 1 GB = 1024 MB
+func HumanGBMB(v uint64) string {
+	sizes := []string{"B", "KB", "MB"}
+	g := v / GiByte
+	if g == 0 {
+		return HumanBaseBytes(v, 1024, sizes)
+	}
+
+	m := v - g*GiByte
+	return fmt.Sprintf("%d GB %s", g, HumanBaseBytes(m, 1024, sizes))
 }
 
 // HumanIntBytes 1 KB = 1000 B

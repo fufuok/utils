@@ -4,6 +4,46 @@ import (
 	"testing"
 )
 
+func TestHumanBaseBytes(t *testing.T) {
+	sizes := []string{"B", "KB", "MB"}
+	tests := []struct {
+		in   uint64
+		base float64
+		want string
+	}{
+		{0, 1000, "0 B"},
+		{42, 1000, "42 B"},
+		{42000000, 1000, "42 MB"},
+		{44040192, 1024, "42 MB"},
+		{44040192123, 1024, "42000 MB"},
+	}
+	for _, v := range tests {
+		got := HumanBaseBytes(v.in, v.base, sizes)
+		if got != v.want {
+			t.Errorf("%s != %s", got, v.want)
+		}
+	}
+}
+
+func TestHumanGBMB(t *testing.T) {
+	tests := []struct {
+		in   uint64
+		want string
+	}{
+		{0, "0 B"},
+		{42, "42 B"},
+		{42000000, "40 MB"},
+		{44040192, "42 MB"},
+		{44040192123, "41 GB 16 MB"},
+	}
+	for _, v := range tests {
+		got := HumanGBMB(v.in)
+		if got != v.want {
+			t.Errorf("%s != %s", got, v.want)
+		}
+	}
+}
+
 // Ref: dustin/go-humanize
 func TestParseHumanBytes(t *testing.T) {
 	tests := []struct {
