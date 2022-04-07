@@ -83,6 +83,11 @@ func MD5Hex(s string) string {
 	return hex.EncodeToString(b[:])
 }
 
+func MD5BytesHex(bs []byte) string {
+	b := md5.Sum(bs)
+	return hex.EncodeToString(b[:])
+}
+
 func MD5(b []byte) []byte {
 	return Hash(b, nil)
 }

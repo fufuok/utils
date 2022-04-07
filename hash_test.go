@@ -52,6 +52,7 @@ func TestMD5Hex(t *testing.T) {
 		{"Fufu 中　文", "0ab5820207b25880bc0a1d09ed64f10c"},
 	} {
 		AssertEqual(t, v.out, MD5Hex(v.in))
+		AssertEqual(t, v.out, MD5BytesHex([]byte(v.in)))
 		AssertEqual(t, v.out, hex.EncodeToString(MD5([]byte(v.in))))
 	}
 }
