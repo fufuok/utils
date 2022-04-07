@@ -4,12 +4,6 @@ Go 常用的助手函数, 性能至上.
 
 若有直接引用的, 会在函数定义或目录 README 中注明来源, 并保留 LICENSE, 感谢之!
 
-## 注意
-
-- `go1.17.x` 及更低版本可以使用: `v0.x.x` 版本, 对应 `go1.17` 分支
-- `go1.18` 及以上版本使用: `v1.x.x` 版本, 对应 `master` 分支
-- 两个版本同步更新
-
 ## 安装
 
 ```shell
@@ -230,6 +224,7 @@ func Logn(n, b float64) float64
 func Long2IPv4(n int) net.IP
 func Long2IPv4String(n int) string
 func MD5(b []byte) []byte
+func MD5BytesHex(bs []byte) string
 func MD5Hex(s string) string
 func MD5Reader(r io.Reader) (string, error)
 func MD5Sum(filename string) (string, error)
