@@ -1,6 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*github.com/puzpuzpuz/xsync v20211001*
+*github.com/puzpuzpuz/xsync v20220407*
 
 **注意: 仅 64 位构建通过了官方认证, 若要使用 32 位, 注意自己测试**
 
@@ -50,6 +50,14 @@ v, ok := m.Load("foo")
 CLHT is built around idea to organize the hash table in cache-line-sized buckets, so that on all modern CPUs update operations complete with at most one cache-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios Map outperforms sync.Map.
 
 One important difference with sync.Map is that only string keys are supported. That's because Golang standard library does not expose the built-in hash functions for `interface{}` values.
+
+`MapOf[V]` is an implementation with parametrized value type. It is available for Go 1.18 or later.
+
+```go
+m := xsync.NewMapOf[string]()
+m.Store("foo", "bar")
+v, ok := m.Load("foo")
+```
 
 ## MPMCQueue
 
