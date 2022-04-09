@@ -240,6 +240,7 @@ func MustJSON(v interface{}) []byte
 func MustJSONIndent(v interface{}) []byte
 func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
+func MustMD5Sum(filename string) string
 func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 func MustString(v interface{}) string
