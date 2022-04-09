@@ -112,6 +112,11 @@ func Hash(b []byte, h hash.Hash) []byte {
 	return h.Sum(nil)
 }
 
+func MustMD5Sum(filename string) string {
+	s, _ := MD5Sum(filename)
+	return s
+}
+
 // MD5Sum 文件 MD5
 func MD5Sum(filename string) (string, error) {
 	if info, err := os.Stat(filename); err != nil {

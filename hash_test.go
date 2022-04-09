@@ -67,6 +67,7 @@ func TestMD5Sum(t *testing.T) {
 		"cd5c4d3bd8efa894619c1f3eab8a9174",
 	}
 	AssertEqual(t, true, InStrings(expected, res))
+	AssertEqual(t, true, InStrings(expected, MustMD5Sum("LICENSE")))
 }
 
 func TestHashString(t *testing.T) {
