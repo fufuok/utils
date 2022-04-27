@@ -110,22 +110,22 @@ func EndOfMonth(t time.Time) time.Time {
 
 // BeginOfLastMonth 上月第一天 0 点
 func BeginOfLastMonth(t time.Time) time.Time {
-	return BeginOfMonth(t.AddDate(0, -1, 0))
+	return BeginOfMonth(BeginOfMonth(t).AddDate(0, 0, -1))
 }
 
 // EndOfLastMonth 上月最后一刻
 func EndOfLastMonth(t time.Time) time.Time {
-	return EndOfMonth(t.AddDate(0, -1, 0))
+	return BeginOfMonth(t).Add(-time.Nanosecond)
 }
 
 // BeginOfNextMonth 下月第一天 0 点
 func BeginOfNextMonth(t time.Time) time.Time {
-	return BeginOfMonth(t.AddDate(0, 1, 0))
+	return BeginOfMonth(BeginOfMonth(t).AddDate(0, 0, 31))
 }
 
-// EndOfNextMonth 上月最后一刻
+// EndOfNextMonth 下月最后一刻
 func EndOfNextMonth(t time.Time) time.Time {
-	return EndOfMonth(t.AddDate(0, 1, 0))
+	return BeginOfMonth(BeginOfMonth(t).AddDate(0, 0, 62)).Add(-time.Nanosecond)
 }
 
 // GetMonthDays 当月天数

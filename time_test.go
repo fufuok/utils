@@ -35,4 +35,10 @@ func TestGet0DataTime(t *testing.T) {
 
 	AssertEqual(t, "2020-01-01T00:00:00Z", BeginOfYear(now).Format(time.RFC3339Nano))
 	AssertEqual(t, "2020-12-31T23:59:59.999999999Z", EndOfYear(now).Format(time.RFC3339Nano))
+
+	now = time.Date(2019, 1, 31, 0, 0, 0, 0, time.UTC)
+	AssertEqual(t, "2018-12-01T00:00:00Z", BeginOfLastMonth(now).Format(time.RFC3339Nano))
+	AssertEqual(t, "2018-12-31T23:59:59.999999999Z", EndOfLastMonth(now).Format(time.RFC3339Nano))
+	AssertEqual(t, "2019-02-01T00:00:00Z", BeginOfNextMonth(now).Format(time.RFC3339Nano))
+	AssertEqual(t, "2019-02-28T23:59:59.999999999Z", EndOfNextMonth(now).Format(time.RFC3339Nano))
 }
