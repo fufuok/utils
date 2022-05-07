@@ -162,7 +162,7 @@ func ParseHumanBigBytes(s string) (*big.Int, error) {
 		return nil, err
 	}
 
-	extra := strings.ToLower(strings.TrimSpace(s[lastDigit:]))
+	extra := ToLower(strings.TrimSpace(s[lastDigit:]))
 	if m, ok := bigBytesSizeTable[extra]; ok {
 		mv := (&big.Rat{}).SetInt(m)
 		val.Mul(val, mv)

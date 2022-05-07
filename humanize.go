@@ -169,7 +169,7 @@ func ParseHumanBytes(s string) (uint64, error) {
 		return 0, err
 	}
 
-	extra := strings.ToLower(strings.TrimSpace(s[lastDigit:]))
+	extra := ToLower(strings.TrimSpace(s[lastDigit:]))
 	if m, ok := bytesSizeTable[extra]; ok {
 		f *= float64(m)
 		if f >= math.MaxUint64 {
