@@ -322,3 +322,11 @@ func BenchmarkEqualFoldBytes(b *testing.B) {
 // BenchmarkEqualFoldBytes/default-8                5822217               209.0 ns/op             0 B/op          0 allocs/op
 // BenchmarkEqualFoldBytes/default-8                6151662               197.9 ns/op             0 B/op          0 allocs/op
 // BenchmarkEqualFoldBytes/default-8                5932452               199.1 ns/op             0 B/op          0 allocs/op
+
+func TestCutBytes(t *testing.T) {
+	for _, tt := range cutTests {
+		if before, after, found := CutBytes([]byte(tt.s), []byte(tt.sep)); string(before) != tt.before || string(after) != tt.after || found != tt.found {
+			t.Errorf("Cut(%q, %q) = %q, %q, %v, want %q, %q, %v", tt.s, tt.sep, before, after, found, tt.before, tt.after, tt.found)
+		}
+	}
+}

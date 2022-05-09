@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"strings"
+)
+
 const (
 	toLowerTable = "\x00\x01\x02\x03\x04\x05\x06\a\b\t\n\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18" +
 		"\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\\]^_`" +
@@ -51,6 +55,7 @@ func GetSafeB2S(b []byte, defaultVal ...string) string {
 // CopyString Immutable, string to string
 // e.g. fiberParam := utils.CopyString(c.Params("test"))
 // e.g. utils.CopyString(s[500:1000]) // 可以让 s 被 GC 回收
+// strings.Clone(s) // go1.18
 func CopyString(s string) string {
 	if s == "" {
 		return ""
@@ -204,4 +209,16 @@ func EqualFold(b, s string) (equals bool) {
 		}
 	}
 	return
+}
+
+// CutString slices s around the first instance of sep,
+// returning the text before and after sep.
+// The found result reports whether sep appears in s.
+// If sep does not appear in s, cut returns s, "", false.
+// Ref: go1.18
+func CutString(s, sep string) (before, after string, found bool) {
+	if i := strings.Index(s, sep); i >= 0 {
+		return s[:i], s[i+len(sep):], true
+	}
+	return s, "", false
 }
