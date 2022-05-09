@@ -1,10 +1,20 @@
 # Go-Utils
 
+## v0.5.0
+
+**2022-05-09**
+
+- 增加 `sched` `deepcopy` 来自 `poly.red`, 感谢
+- 增加运行时自增 ID
+- 增加 `CutString` `CutBytes`, 同 go1.18
+- 增加 `golang.org/x/exp` 的 `maps` `slices` `constraints` 到本地
+- 加解密函数迁入 `xcrypto` 包, Hash 签名函数不迁移
+
 ## v0.4.6
 
 **2022-05-07**
 
-- 加入 `golang.org/x/sync` 到本地
+- 增加 `golang.org/x/sync` 到本地
 
 ## v0.4.5
 
