@@ -19,54 +19,9 @@ const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
 var BigByte ...
 var BigSIByte ...
-var Rand = NewRand()
-var Seed = FastRand()
+var Rand = NewRand() ...
 func AddString(s ...string) string
 func AddStringBytes(s ...string) []byte
-func AesCBCDeB58(s string, key []byte) []byte
-func AesCBCDeB64(s string, key []byte) []byte
-func AesCBCDeHex(s string, key []byte) []byte
-func AesCBCDePKCS7B58(s string, key []byte) []byte
-func AesCBCDePKCS7B64(s string, key []byte) []byte
-func AesCBCDePKCS7Hex(s string, key []byte) []byte
-func AesCBCDePKCS7StringB58(s string, key []byte) string
-func AesCBCDePKCS7StringB64(s string, key []byte) string
-func AesCBCDePKCS7StringHex(s string, key []byte) string
-func AesCBCDeStringB58(s string, key []byte) string
-func AesCBCDeStringB64(s string, key []byte) string
-func AesCBCDeStringHex(s string, key []byte) string
-func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
-func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
-func AesCBCEnB58(b, key []byte) string
-func AesCBCEnB64(b, key []byte) string
-func AesCBCEnHex(b, key []byte) string
-func AesCBCEnPKCS7B58(b, key []byte) string
-func AesCBCEnPKCS7B64(b, key []byte) string
-func AesCBCEnPKCS7Hex(b, key []byte) string
-func AesCBCEnPKCS7StringB58(s string, key []byte) string
-func AesCBCEnPKCS7StringB64(s string, key []byte) string
-func AesCBCEnPKCS7StringHex(s string, key []byte) string
-func AesCBCEnStringB58(s string, key []byte) string
-func AesCBCEnStringB64(s string, key []byte) string
-func AesCBCEnStringHex(s string, key []byte) string
-func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
-func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
-func AesGCMDeB58(s string, key, nonce []byte) []byte
-func AesGCMDeB64(s string, key, nonce []byte) []byte
-func AesGCMDeHex(s string, key, nonce []byte) []byte
-func AesGCMDeStringB58(s string, key, nonce []byte) string
-func AesGCMDeStringB64(s string, key, nonce []byte) string
-func AesGCMDeStringHex(s string, key, nonce []byte) string
-func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte)
-func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]byte, error)
-func AesGCMEnB58(b, key []byte) (string, []byte)
-func AesGCMEnB64(b, key []byte) (string, []byte)
-func AesGCMEnHex(b, key []byte) (string, []byte)
-func AesGCMEnStringB58(s string, key []byte) (string, []byte)
-func AesGCMEnStringB64(s string, key []byte) (string, []byte)
-func AesGCMEnStringHex(s string, key []byte) (string, []byte)
-func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte)
-func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byte, []byte, error)
 func AssertEqual(t testing.TB, expected, actual interface{}, description ...string)
 func AssertPanics(t *testing.T, title string, f func())
 func B2S(b []byte) string
@@ -99,38 +54,10 @@ func CopyB2S(b []byte) string
 func CopyBytes(b []byte) []byte
 func CopyS2B(s string) []byte
 func CopyString(s string) string
-func Decrypt(value, secret string) string
-func DesCBCDeB58(s string, key []byte) []byte
-func DesCBCDeB64(s string, key []byte) []byte
-func DesCBCDeHex(s string, key []byte) []byte
-func DesCBCDePKCS7B58(s string, key []byte) []byte
-func DesCBCDePKCS7B64(s string, key []byte) []byte
-func DesCBCDePKCS7Hex(s string, key []byte) []byte
-func DesCBCDePKCS7StringB58(s string, key []byte) string
-func DesCBCDePKCS7StringB64(s string, key []byte) string
-func DesCBCDePKCS7StringHex(s string, key []byte) string
-func DesCBCDeStringB58(s string, key []byte) string
-func DesCBCDeStringB64(s string, key []byte) string
-func DesCBCDeStringHex(s string, key []byte) string
-func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
-func DesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
-func DesCBCEnB58(b, key []byte) string
-func DesCBCEnB64(b, key []byte) string
-func DesCBCEnHex(b, key []byte) string
-func DesCBCEnPKCS7B58(b, key []byte) string
-func DesCBCEnPKCS7B64(b, key []byte) string
-func DesCBCEnPKCS7Hex(b, key []byte) string
-func DesCBCEnPKCS7StringB58(s string, key []byte) string
-func DesCBCEnPKCS7StringB64(s string, key []byte) string
-func DesCBCEnPKCS7StringHex(s string, key []byte) string
-func DesCBCEnStringB58(s string, key []byte) string
-func DesCBCEnStringB64(s string, key []byte) string
-func DesCBCEnStringHex(s string, key []byte) string
-func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
-func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func CutBytes(s, sep []byte) (before, after []byte, found bool)
+func CutString(s, sep string) (before, after string, found bool)
 func Djb33(s string) uint32
 func EncodeUUID(id []byte) []byte
-func Encrypt(value, secret string) string
 func EndOfDay(t time.Time) time.Time
 func EndOfHour(t time.Time) time.Time
 func EndOfLastMonth(t time.Time) time.Time
@@ -153,21 +80,6 @@ func FastRandBytes(n int) []byte
 func FastRandn(n uint32) uint32
 func FnvHash(s string) uint64
 func FnvHash32(s string) uint32
-func GCMDeB58(s string, key []byte) []byte
-func GCMDeB64(s string, key []byte) []byte
-func GCMDeHex(s string, key []byte) []byte
-func GCMDeStringB58(s string, key []byte) string
-func GCMDeStringB64(s string, key []byte) string
-func GCMDeStringHex(s string, key []byte) string
-func GCMDecrypt(encrypted, key []byte) ([]byte, error)
-func GCMEnB58(b, key []byte) string
-func GCMEnB64(b, key []byte) string
-func GCMEnHex(b, key []byte) string
-func GCMEnStringB58(s string, key []byte) string
-func GCMEnStringB64(s string, key []byte) string
-func GCMEnStringHex(s string, key []byte) string
-func GCMEncrypt(plaintext, key []byte) ([]byte, error)
-func GenRSAKey(bits int) (publicKey, privateKey []byte)
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
@@ -179,7 +91,6 @@ func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
-func GetenvDecrypt(key string, secret string) string
 func Hash(b []byte, h hash.Hash) []byte
 func HashBytes(b ...[]byte) string
 func HashBytesUint64(b ...[]byte) uint64
@@ -203,6 +114,7 @@ func HumanIntBytes(v int) string
 func HumanIntIBytes(v int) string
 func HumanIntKbps(v int) string
 func HumanKbps(v uint64) string
+func ID() uint64
 func IPv42Long(ip net.IP) int
 func IPv4String2Long(ip string) int
 func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
@@ -248,15 +160,8 @@ func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
 func Pad(s, pad string, n int) string
 func PadBytes(s, pad []byte, n int) []byte
-func Padding(b []byte, bSize int, pkcs7 bool) []byte
 func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
-func ParsePrivateKey(privateKey []byte) (priv *rsa.PrivateKey, err error)
-func ParsePublicKey(publicKey []byte) (pub *rsa.PublicKey, err error)
-func RSADecrypt(ciphertext, privateKey []byte) ([]byte, error)
-func RSAEncrypt(plaintext, publicKey []byte) ([]byte, error)
-func RSASign(data, privateKey []byte) ([]byte, error)
-func RSASignVerify(data, publicKey, sig []byte) error
 func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min, max int) int
@@ -271,7 +176,6 @@ func RunPath() string
 func S2B(s string) []byte
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
-func SetenvEncrypt(key, value, secret string) (string, error)
 func Sha1(b []byte) []byte
 func Sha1Hex(s string) string
 func Sha256(b []byte) []byte
@@ -300,10 +204,123 @@ func UUID() []byte
 func UUIDShort() string
 func UUIDSimple() string
 func UUIDString() string
-func UnPadding(b []byte, pkcs7 bool) []byte
 func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
 func WaitNextMinute()
+func Zip(data []byte) ([]byte, error)
+func ZipLevel(data []byte, level int) (dst []byte, err error)
+```
+
+### 加解密小工具
+
+见: [envtools](envtools)
+
+### 常用对称加解密函数
+
+见: [xcrypto](xcrypto)
+
+```go
+package xcrypto // import "github.com/fufuok/utils/xcrypto"
+
+func AesCBCDeB58(s string, key []byte) []byte
+func AesCBCDeB64(s string, key []byte) []byte
+func AesCBCDeHex(s string, key []byte) []byte
+func AesCBCDePKCS7B58(s string, key []byte) []byte
+func AesCBCDePKCS7B64(s string, key []byte) []byte
+func AesCBCDePKCS7Hex(s string, key []byte) []byte
+func AesCBCDePKCS7StringB58(s string, key []byte) string
+func AesCBCDePKCS7StringB64(s string, key []byte) string
+func AesCBCDePKCS7StringHex(s string, key []byte) string
+func AesCBCDeStringB58(s string, key []byte) string
+func AesCBCDeStringB64(s string, key []byte) string
+func AesCBCDeStringHex(s string, key []byte) string
+func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
+func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
+func AesCBCEnB58(b, key []byte) string
+func AesCBCEnB64(b, key []byte) string
+func AesCBCEnHex(b, key []byte) string
+func AesCBCEnPKCS7B58(b, key []byte) string
+func AesCBCEnPKCS7B64(b, key []byte) string
+func AesCBCEnPKCS7Hex(b, key []byte) string
+func AesCBCEnPKCS7StringB58(s string, key []byte) string
+func AesCBCEnPKCS7StringB64(s string, key []byte) string
+func AesCBCEnPKCS7StringHex(s string, key []byte) string
+func AesCBCEnStringB58(s string, key []byte) string
+func AesCBCEnStringB64(s string, key []byte) string
+func AesCBCEnStringHex(s string, key []byte) string
+func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
+func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func AesGCMDeB58(s string, key, nonce []byte) []byte
+func AesGCMDeB64(s string, key, nonce []byte) []byte
+func AesGCMDeHex(s string, key, nonce []byte) []byte
+func AesGCMDeStringB58(s string, key, nonce []byte) string
+func AesGCMDeStringB64(s string, key, nonce []byte) string
+func AesGCMDeStringHex(s string, key, nonce []byte) string
+func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte)
+func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]byte, error)
+func AesGCMEnB58(b, key []byte) (string, []byte)
+func AesGCMEnB64(b, key []byte) (string, []byte)
+func AesGCMEnHex(b, key []byte) (string, []byte)
+func AesGCMEnStringB58(s string, key []byte) (string, []byte)
+func AesGCMEnStringB64(s string, key []byte) (string, []byte)
+func AesGCMEnStringHex(s string, key []byte) (string, []byte)
+func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte)
+func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byte, []byte, error)
+func Decrypt(value, secret string) string
+func DesCBCDeB58(s string, key []byte) []byte
+func DesCBCDeB64(s string, key []byte) []byte
+func DesCBCDeHex(s string, key []byte) []byte
+func DesCBCDePKCS7B58(s string, key []byte) []byte
+func DesCBCDePKCS7B64(s string, key []byte) []byte
+func DesCBCDePKCS7Hex(s string, key []byte) []byte
+func DesCBCDePKCS7StringB58(s string, key []byte) string
+func DesCBCDePKCS7StringB64(s string, key []byte) string
+func DesCBCDePKCS7StringHex(s string, key []byte) string
+func DesCBCDeStringB58(s string, key []byte) string
+func DesCBCDeStringB64(s string, key []byte) string
+func DesCBCDeStringHex(s string, key []byte) string
+func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
+func DesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
+func DesCBCEnB58(b, key []byte) string
+func DesCBCEnB64(b, key []byte) string
+func DesCBCEnHex(b, key []byte) string
+func DesCBCEnPKCS7B58(b, key []byte) string
+func DesCBCEnPKCS7B64(b, key []byte) string
+func DesCBCEnPKCS7Hex(b, key []byte) string
+func DesCBCEnPKCS7StringB58(s string, key []byte) string
+func DesCBCEnPKCS7StringB64(s string, key []byte) string
+func DesCBCEnPKCS7StringHex(s string, key []byte) string
+func DesCBCEnStringB58(s string, key []byte) string
+func DesCBCEnStringB64(s string, key []byte) string
+func DesCBCEnStringHex(s string, key []byte) string
+func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
+func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
+func Encrypt(value, secret string) string
+func GCMDeB58(s string, key []byte) []byte
+func GCMDeB64(s string, key []byte) []byte
+func GCMDeHex(s string, key []byte) []byte
+func GCMDeStringB58(s string, key []byte) string
+func GCMDeStringB64(s string, key []byte) string
+func GCMDeStringHex(s string, key []byte) string
+func GCMDecrypt(encrypted, key []byte) ([]byte, error)
+func GCMEnB58(b, key []byte) string
+func GCMEnB64(b, key []byte) string
+func GCMEnHex(b, key []byte) string
+func GCMEnStringB58(s string, key []byte) string
+func GCMEnStringB64(s string, key []byte) string
+func GCMEnStringHex(s string, key []byte) string
+func GCMEncrypt(plaintext, key []byte) ([]byte, error)
+func GenRSAKey(bits int) (publicKey, privateKey []byte)
+func GetenvDecrypt(key string, secret string) string
+func Padding(b []byte, bSize int, pkcs7 bool) []byte
+func ParsePrivateKey(privateKey []byte) (priv *rsa.PrivateKey, err error)
+func ParsePublicKey(publicKey []byte) (pub *rsa.PublicKey, err error)
+func RSADecrypt(ciphertext, privateKey []byte) ([]byte, error)
+func RSAEncrypt(plaintext, publicKey []byte) ([]byte, error)
+func RSASign(data, privateKey []byte) ([]byte, error)
+func RSASignVerify(data, publicKey, sig []byte) error
+func SetenvEncrypt(key, value, secret string) (string, error)
+func UnPadding(b []byte, pkcs7 bool) []byte
 func XOR(src, key []byte) []byte
 func XORDeB58(s string, key []byte) []byte
 func XORDeB64(s string, key []byte) []byte
@@ -318,13 +335,7 @@ func XOREnHex(b, key []byte) string
 func XOREnStringB58(s string, key []byte) string
 func XOREnStringB64(s string, key []byte) string
 func XOREnStringHex(s string, key []byte) string
-func Zip(data []byte) ([]byte, error)
-func ZipLevel(data []byte, level int) (dst []byte, err error)
 ```
-
-### 加解密小工具
-
-见: [envtools](envtools)
 
 ### 获取内外网 IP 小工具
 
@@ -364,6 +375,10 @@ func Encode(b []byte) string
 ### 可排序全局唯一 ID 生成器
 
 比 UUID 更快, 更短
+
+- 要使用 UUIDv4 可以使用 `utils.UUID()`
+
+- 要使用程序运行时自增 ID 可以使用 `utils.ID()`
 
 见: [xid](xid)
 
@@ -436,6 +451,14 @@ type RBMutex struct{ ... }
 type RToken struct{ ... }
 ```
 
+### Go 同步扩展库
+
+方便引用, 克隆自 [golang/sync: mirror concurrency primitives (github.com)](https://github.com/golang/sync)
+
+- github.com/fufuok/utils/sync/errgroup
+- github.com/fufuok/utils/sync/semaphore
+- github.com/fufuok/utils/sync/singleflight
+
 ### 高效的 JSON 字符串生成器
 
 见: [jsongen](jsongen)
@@ -488,130 +511,271 @@ func New(d time.Duration) *time.Ticker
 func Release(t *time.Ticker)
 ```
 
+### 深拷贝
+
+见: [deepcopy](deepcopy)
+
+```go
+package deepcopy // import "github.com/fufuok/utils/deepcopy"
+
+Package deepcopy implements the proposal https://go.dev/issue/51520.
+
+func Value[T any](src T) (dst T)
+```
+
+浅拷贝及示例:
+
+```go
+//go:build go1.18
+// +build go1.18
+
+package main
+
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/fufuok/utils/deepcopy"
+	"github.com/fufuok/utils/maps"
+	"github.com/fufuok/utils/slices"
+)
+
+func main() {
+	type tFN struct {
+		fn func() int
+	}
+	type tMap map[bool][]tFN
+	m1 := tMap{true: []tFN{{func() int { return 1 }}}}
+
+	// 深拷贝
+	m2 := deepcopy.Value(m1)
+	// equal: false 1
+	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m2), m2[true][0].fn())
+
+	// 浅拷贝
+	m3 := maps.Clone[tMap](m1)
+	// equal: true 1
+	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m3), m3[true][0].fn())
+
+	// 改变 m1 后
+	m1[true][0] = tFN{func() int { return 0 }}
+	// m1: 0, m2: 1, m3: 0
+	fmt.Printf("m1: %d, m2: %d, m3: %d\n", m1[true][0].fn(), m2[true][0].fn(), m3[true][0].fn())
+
+	s1 := []tMap{m1}
+	s2 := deepcopy.Value(s1)
+	s3 := slices.Clone(s1)
+	m1[true][0] = tFN{func() int { return 2 }}
+	// s1: 2, s2: 0, s3: 2
+	fmt.Printf("s1: %d, s2: %d, s3: %d\n", s1[0][true][0].fn(), s2[0][true][0].fn(), s3[0][true][0].fn())
+}
+```
+
+### 并发任务调度库
+
+见: [sched](sched)
+
+或: https://github.com/fufuok/sched
+
+简洁, 高效, 并发限制, 复用 goroutine
+
+```go
+package sched // import "github.com/fufuok/utils/sched"
+
+type Option func(w *Pool)
+    func Randomizer(f func(min, max int) int) Option
+    func Workers(limit int) Option
+type Pool struct{ ... }
+    func New(opts ...Option) *Pool
+```
+
+### go1.18 实验库
+
+同 `golang.org/x/exp`
+
+- github.com/fufuok/utils/constraints
+- github.com/fufuok/utils/slices
+- github.com/fufuok/utils/maps
+
 ## 使用
 
 ```go
-var s string
-s = utils.GetString(123.45)         // "123.45"
-s = utils.GetString(nil)            // ""
-s = utils.GetString(nil, "default") // "default"
-s = utils.GetString([]byte("ff"))   // "ff"
-s = utils.GetString(true)           // "true"
+package main
 
-x := utils.AddString(s, "OK") // "trueOK"
+import (
+	"encoding/json"
+	"fmt"
+	"time"
 
-b := []byte("trueOK")
-s = utils.B2S(b[0:1])                                     // "t"
-safeS1 := utils.B2S([]byte(s[0:1]))                       // 转换为不可变字符串, CopyString 的实现
-safeS2 := utils.CopyString(s[0:1])                        // 不可变字符串, s 可以被 GC 回收
-safeS3 := utils.GetSafeString(s[0:1], "optional default") // 不可变字符串
-safeS4 := utils.GetSafeB2S(b[0:1], "optional default")    // 转换为不可变字符串
-safeS5 := string(b[0:1])                                  // 标准转换
-b[0] = 70                                                 // 注意: 底层数组变化会引起字符串 s 发生改变
-fmt.Println(s, safeS1, safeS2, safeS3, safeS4, safeS5)    // F t t t t t
+	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/base58"
+	"github.com/fufuok/utils/jsongen"
+	"github.com/fufuok/utils/pools/bufferpool"
+	"github.com/fufuok/utils/sched"
+	"github.com/fufuok/utils/xcrypto"
+	"github.com/fufuok/utils/xid"
+	"github.com/fufuok/utils/xsync"
+)
 
-x = utils.Encrypt("myData", "myKey")
-fmt.Println(x) // Csi64LeQLmVhuZTh1xkCKM
-x = utils.Decrypt("Csi64LeQLmVhuZTh1xkCKM", "myKey")
-fmt.Println(x) // myData
+func main() {
+	var s string
+	s = utils.GetString(123.45)         // "123.45"
+	s = utils.GetString(nil)            // ""
+	s = utils.GetString(nil, "default") // "default"
+	s = utils.GetString([]byte("ff"))   // "ff"
+	s = utils.GetString(true)           // "true"
 
-k := utils.RandBytes(16)
-x = utils.AesCBCEnPKCS7StringHex("myData", k)
-fmt.Println(x) // 9dce01c049de7493ce2fae6a2707fad1
-x = utils.AesCBCEnStringB58("myData", k)
-fmt.Println(x) // 6NHTJhaW5mfeUioFLrbpRX
+	x := utils.AddString(s, "OK") // "trueOK"
 
-k = []byte("1234567812345678")
-x = utils.GCMEnStringHex("myData", k)
-fmt.Println(x) // 6501bb4737c772b9a2956d87183d4793d44b0e3c233bf2c6435d70502913d5701a98
-x = utils.GCMEnStringB58("myData", k)
-fmt.Println(x) // 5H9ftJvyBesQS7yNGoW7sBCqpwedpEhkjB7k4Z8QBi8GYJo
+	b := []byte("trueOK")
+	s = utils.B2S(b[0:1])                                     // "t"
+	safeS1 := utils.B2S([]byte(s[0:1]))                       // 转换为不可变字符串, CopyString 的实现
+	safeS2 := utils.CopyString(s[0:1])                        // 不可变字符串, s 可以被 GC 回收
+	safeS3 := utils.GetSafeString(s[0:1], "optional default") // 不可变字符串
+	safeS4 := utils.GetSafeB2S(b[0:1], "optional default")    // 转换为不可变字符串
+	safeS5 := string(b[0:1])                                  // 标准转换
+	b[0] = 70                                                 // 注意: 底层数组变化会引起字符串 s 发生改变
+	fmt.Println(s, safeS1, safeS2, safeS3, safeS4, safeS5)    // F t t t t t
 
-x = utils.GCMEnStringB64("myData", k)
-fmt.Println(utils.GCMDeStringB64(x, k)) // myData
+	x = xcrypto.Encrypt("myData", "myKey")
+	fmt.Println(x) // Csi64LeQLmVhuZTh1xkCKM
+	x = xcrypto.Decrypt("Csi64LeQLmVhuZTh1xkCKM", "myKey")
+	fmt.Println(x) // myData
 
-x = utils.UUIDString()
-fmt.Println(x) // 04a49f17-8c37-44f7-a9c5-ea291c3736d7
-x = utils.UUIDSimple()
-fmt.Println(x) // 16123e98b35a4cea8e9cc127f379ff52
-x = utils.UUIDShort()
-fmt.Println(x) // Mw4hP7t9bnMMczU2AvyorU
-x = xid.NewString()
-fmt.Println(x) // c294bsnn5ek0ub0200fg
+	k := utils.RandBytes(16)
+	x = xcrypto.AesCBCEnPKCS7StringHex("myData", k)
+	fmt.Println(x) // 9dce01c049de7493ce2fae6a2707fad1
+	x = xcrypto.AesCBCEnStringB58("myData", k)
+	fmt.Println(x) // 6NHTJhaW5mfeUioFLrbpRX
 
-x = base58.Encode([]byte("Test data"))
-fmt.Println(x) // 25JnwSn7XKfNQ
-x = utils.B2S(base58.Decode("25JnwSn7XKfNQ"))
-fmt.Println(x) // Test data
+	k = []byte("1234567812345678")
+	x = xcrypto.GCMEnStringHex("myData", k)
+	fmt.Println(x) // 6501bb4737c772b9a2956d87183d4793d44b0e3c233bf2c6435d70502913d5701a98
+	x = xcrypto.GCMEnStringB58("myData", k)
+	fmt.Println(x) // 5H9ftJvyBesQS7yNGoW7sBCqpwedpEhkjB7k4Z8QBi8GYJo
 
-whoami := utils.Executable(true)
-pwd := utils.ExecutableDir(true)
-fmt.Println(whoami, pwd)
+	x = xcrypto.GCMEnStringB64("myData", k)
+	fmt.Println(xcrypto.GCMDeStringB64(x, k)) // myData
 
-fmt.Println(utils.HumanBytes(1234567890))  // 1.2 GB
-fmt.Println(utils.HumanIBytes(1234567890)) // 1.1 GiB
-fmt.Println(utils.HumanKbps(1234567890))   // 1.2 Gbps
-fmt.Println(utils.Commaf(1234567890.123))  // 1,234,567,890.123
+	x = utils.UUIDString()
+	fmt.Println(x) // 04a49f17-8c37-44f7-a9c5-ea291c3736d7
+	x = utils.UUIDSimple()
+	fmt.Println(x) // 16123e98b35a4cea8e9cc127f379ff52
+	x = utils.UUIDShort()
+	fmt.Println(x) // Mw4hP7t9bnMMczU2AvyorU
+	x = xid.NewString()
+	fmt.Println(x) // c294bsnn5ek0ub0200fg
 
-now := time.Date(2020, 2, 18, 12, 13, 14, 123456789, time.UTC)
-fmt.Println(utils.Get0LastWeek(now).Format(time.RFC3339Nano)) // 2020-02-10T00:00:00Z
+	x = base58.Encode([]byte("Test data"))
+	fmt.Println(x) // 25JnwSn7XKfNQ
+	x = utils.B2S(base58.Decode("25JnwSn7XKfNQ"))
+	fmt.Println(x) // Test data
 
-fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "", true))  // 100.125.1.1
-fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "1.2.3.4")) // 1.2.3.4
-fmt.Println(utils.GetNotInternalIPv4String("192.168.1.1", "1.2.3.4")) // 1.2.3.4
-fmt.Println(utils.GetNotInternalIPv4String("119.118.7.6", "1.2.3.4")) // 119.118.7.6
+	whoami := utils.Executable(true)
+	pwd := utils.ExecutableDir(true)
+	fmt.Println(whoami, pwd)
 
-var nilN struct{}
-var nilY *struct{}
-fmt.Println(utils.IsNil(nilN), utils.IsNil(nilY)) // false true
+	fmt.Println(utils.HumanBytes(1234567890))  // 1.2 GB
+	fmt.Println(utils.HumanIBytes(1234567890)) // 1.1 GiB
+	fmt.Println(utils.HumanKbps(1234567890))   // 1.2 Gbps
+	fmt.Println(utils.Commaf(1234567890.123))  // 1,234,567,890.123
 
-public, private := utils.GenRSAKey(1024)
-fmt.Println(string(public))
-fmt.Println(string(private))
+	now := time.Date(2020, 2, 18, 12, 13, 14, 123456789, time.UTC)
+	fmt.Println(utils.BeginOfLastWeek(now).Format(time.RFC3339Nano)) // 2020-02-10T00:00:00Z
 
-fmt.Println(utils.IsPrivateIPString("FC00::"))         // true
-fmt.Println(utils.IsPrivateIPString("172.17.0.0"))     // true
-fmt.Println(utils.IsInternalIPv4String("100.125.1.1")) // true
+	fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "", true))  // 100.125.1.1
+	fmt.Println(utils.GetNotInternalIPv4String("100.125.1.1", "1.2.3.4")) // 1.2.3.4
+	fmt.Println(utils.GetNotInternalIPv4String("192.168.1.1", "1.2.3.4")) // 1.2.3.4
+	fmt.Println(utils.GetNotInternalIPv4String("119.118.7.6", "1.2.3.4")) // 119.118.7.6
 
-fmt.Println(utils.ToLower("TesT"))                                             // test
-fmt.Println(utils.EqualFold(utils.Trim("/TesT/", '/'), utils.ToUpper("Test"))) // true
+	var nilN struct{}
+	var nilY *struct{}
+	fmt.Println(utils.IsNil(nilN), utils.IsNil(nilY)) // false true
 
-host, port := utils.SplitHostPort("demo.com:77")
-fmt.Println(host) // demo.com
-fmt.Println(port) // 77
+	public, private := xcrypto.GenRSAKey(1024)
+	fmt.Println(string(public))
+	fmt.Println(string(private))
 
-fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
+	fmt.Println(utils.IsPrivateIPString("FC00::"))         // true
+	fmt.Println(utils.IsPrivateIPString("172.17.0.0"))     // true
+	fmt.Println(utils.IsInternalIPv4String("100.125.1.1")) // true
 
-dec, _ := utils.Zip(utils.FastRandBytes(3000))
-src, _ := utils.Unzip(dec)
-fmt.Println(len(dec), len(src)) // 2288 3000
+	fmt.Println(utils.ToLower("TesT"))                                             // test
+	fmt.Println(utils.EqualFold(utils.Trim("/TesT/", '/'), utils.ToUpper("Test"))) // true
 
-type T struct {
-    Name string `json:"name"`
+	host, port := utils.SplitHostPort("demo.com:77")
+	fmt.Println(host) // demo.com
+	fmt.Println(port) // 77
+
+	fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
+
+	dec, _ := utils.Zip(utils.FastRandBytes(3000))
+	src, _ := utils.Unzip(dec)
+	fmt.Println(len(dec), len(src)) // 2288 3000
+
+	type T struct {
+		Name string `json:"name"`
+	}
+	t1 := T{"ff"}
+	buf := bufferpool.Get()
+	_ = json.NewEncoder(buf).Encode(&t1)
+	fmt.Println("json:", buf.String()) // json: {"name":"ff"}
+	bufferpool.Put(buf)
+
+	var t2 T
+	buf = bufferpool.Get()
+	buf.WriteString(`{"name":"ff"}`)
+	_ = json.NewDecoder(buf).Decode(&t2)
+	fmt.Printf("struct: %+v\n", t2)       // struct: {Name:ff}
+	fmt.Println("empty:", buf.Len() == 0) // empty: true
+	bufferpool.Put(buf)
+
+	js := jsongen.NewMap()
+	js.PutString("s", `a"b"\c`)
+	js.PutFloat("f", 3.14)
+	js.PutBool("b", false)
+	jsArr := jsongen.NewArray()
+	jsArr.AppendInt(7)
+	jsArr.AppendStringArray([]string{"A", "B"})
+	js.PutArray("sub", jsArr)
+	jsBytes := js.Serialize(nil)
+	fmt.Printf("%s\n", jsBytes) // {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]]}
+
+	fmt.Println(utils.ID(), utils.ID()) // 1, 2
+
+	var count xsync.Counter
+	bus := sched.New() // 默认并发数: runtime.NumCPU()
+	for i := 0; i < 30; i++ {
+		bus.Add(1)
+		bus.RunWithArgs(func(n interface{}) {
+			count.Add(int64(n.(int)))
+		}, i)
+	}
+	bus.Wait()
+	fmt.Println("count:", count.Value()) // count: 435
+
+	fmt.Println(utils.CutString("test@fufuok.com", "@")) // test fufuok.com true
+
+	// 继续下一批任务
+	bus.Add(1)
+	bus.Run(func() {
+		fmt.Println("is running:", bus.IsRunning(), bus.Running())
+	})
+	bus.Wait()
+	bus.Release()
+
+	// 指定并发数
+	bus = sched.New(sched.Workers(2))
+	bus.Add(5)
+	for i := 0; i < 5; i++ {
+		bus.Run(func() {
+			fmt.Println(time.Now())
+			time.Sleep(time.Second)
+		})
+	}
+	bus.WaitAndRelease()
+	fmt.Println("is running:", bus.IsRunning())
 }
-t1 := T{"ff"}
-buf := bufferpool.Get()
-_ = json.NewEncoder(buf).Encode(&t1)
-fmt.Println("json:", buf.String()) // json: {"name":"ff"}
-bufferpool.Put(buf)
-
-var t2 T
-buf = bufferpool.Get()
-buf.WriteString(`{"name":"ff"}`)
-_ = json.NewDecoder(buf).Decode(&t2)
-fmt.Printf("struct: %+v\n", t2)      // struct: {Name:ff}
-fmt.Println("empty:", buf.Len() == 0) // empty: true
-bufferpool.Put(buf)
-
-js := jsongen.NewMap()
-js.PutString("s", `a"b"\c`)
-js.PutFloat("f", 3.14)
-js.PutBool("b", false)
-jsArr := jsongen.NewArray()
-jsArr.AppendInt(7)
-jsArr.AppendStringArray([]string{"A", "B"})
-js.PutArray("sub", jsArr)
-fmt.Printf("%s\n", js.Serialize(nil)) // {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]]}
 ```
 
 
