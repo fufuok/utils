@@ -23,13 +23,12 @@ type sliceHeader struct {
 	cap  int
 }
 
-// String2Bytes Ref: fasthttp
-func String2Bytes(s string) (b []byte) {
-	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
-	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+func String2Bytes(s string) (bs []byte) {
+	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))
 	bh.Data = sh.Data
-	bh.Cap = sh.Len
 	bh.Len = sh.Len
+	bh.Cap = sh.Len
 	return
 }
 

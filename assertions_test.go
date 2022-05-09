@@ -3,7 +3,6 @@ package utils
 import (
 	"bytes"
 	"testing"
-	"unsafe"
 )
 
 // Ref: gofiber/utils
@@ -100,6 +99,6 @@ func TestIsNil(t *testing.T) {
 	var iface5 interface{} = s
 	AssertEqual(t, false, IsNil(iface5))
 
-	var nil1 = (*int)(unsafe.Pointer(uintptr(0x0)))
-	AssertEqual(t, true, IsNil(nil1))
+	// var nil1 = (*int)(unsafe.Pointer(uintptr(0x0)))
+	// AssertEqual(t, true, IsNil(nil1))
 }
