@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // Package semaphore provides a weighted semaphore implementation.
-package semaphore // import "golang.org/x/sync/semaphore"
+package semaphore // import "github.com/fufuok/utils/sync/semaphore"
 
 import (
 	"container/list"

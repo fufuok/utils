@@ -12,7 +12,7 @@ import (
 	"os"
 	"testing"
 
-	"golang.org/x/sync/errgroup"
+	"github.com/fufuok/utils/sync/errgroup"
 )
 
 var (

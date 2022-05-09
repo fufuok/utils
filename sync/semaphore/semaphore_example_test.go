@@ -10,7 +10,7 @@ import (
 	"log"
 	"runtime"
 
-	"golang.org/x/sync/semaphore"
+	"github.com/fufuok/utils/sync/semaphore"
 )
 
 // Example_workerPool demonstrates how to use a semaphore to limit the number of

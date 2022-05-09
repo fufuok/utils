@@ -13,7 +13,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"golang.org/x/sync/errgroup"
+	"github.com/fufuok/utils/sync/errgroup"
 )
 
 // Pipeline demonstrates the use of a Group to implement a multi-stage
