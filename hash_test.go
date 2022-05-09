@@ -5,6 +5,12 @@ import (
 	"testing"
 )
 
+var (
+	tmpS = "Fufu 中　文加密/解密~&#123a"
+	tmpK = []byte("0123456789012345")
+	tmpB = []byte("Fufu 中　文\u2728->?\n*\U0001F63A0123456789012345")
+)
+
 func TestSha256Hex(t *testing.T) {
 	t.Parallel()
 	AssertEqual(t, "ed3772cefd8991edac6d198df7b62c224b92038e2d435a9a1e2734211e5b5e0b",

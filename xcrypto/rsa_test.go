@@ -1,7 +1,9 @@
-package utils
+package xcrypto
 
 import (
 	"testing"
+
+	"github.com/fufuok/utils"
 )
 
 func TestRSABase(t *testing.T) {
@@ -11,13 +13,13 @@ func TestRSABase(t *testing.T) {
 		t.Fatal(err)
 	}
 	decrypted, _ := RSADecrypt(encrypted, priv)
-	AssertEqual(t, tmpB, decrypted)
+	utils.AssertEqual(t, tmpB, decrypted)
 
 	sig, err := RSASign(tmpB, priv)
 	if err != nil {
 		t.Fatal(err)
 	}
-	AssertEqual(t, nil, RSASignVerify(tmpB, pub, sig))
+	utils.AssertEqual(t, nil, RSASignVerify(tmpB, pub, sig))
 
 	privateKey := `-----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQDJIaZyj/Ikk8zEK6SkoPV2UXkhv7LkXuIyAnWivREd88WNaoI/
@@ -45,5 +47,5 @@ mPPpoW3klbQf0q83CwIDAQAB
 		t.Fatal(err)
 	}
 	plaintext, _ := RSADecrypt(chipertext, []byte(privateKey))
-	AssertEqual(t, tmpB, plaintext)
+	utils.AssertEqual(t, tmpB, plaintext)
 }

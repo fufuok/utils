@@ -1,15 +1,16 @@
-package utils
+package xcrypto
 
 import (
 	"crypto/rc4"
 	"encoding/hex"
 
+	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
 )
 
 // XOREnStringHex 加密
 func XOREnStringHex(s string, key []byte) string {
-	return XOREnHex(S2B(s), key)
+	return XOREnHex(utils.S2B(s), key)
 }
 
 // XOREnHex 加密
@@ -19,7 +20,7 @@ func XOREnHex(b, key []byte) string {
 
 // XORDeStringHex 解密
 func XORDeStringHex(s string, key []byte) string {
-	return B2S(XORDeHex(s, key))
+	return utils.B2S(XORDeHex(s, key))
 }
 
 // XORDeHex 解密
@@ -33,7 +34,7 @@ func XORDeHex(s string, key []byte) []byte {
 
 // XOREnStringB58 加密
 func XOREnStringB58(s string, key []byte) string {
-	return XOREnB58(S2B(s), key)
+	return XOREnB58(utils.S2B(s), key)
 }
 
 // XOREnB58 加密
@@ -43,7 +44,7 @@ func XOREnB58(b, key []byte) string {
 
 // XORDeStringB58 解密
 func XORDeStringB58(s string, key []byte) string {
-	return B2S(XORDeB58(s, key))
+	return utils.B2S(XORDeB58(s, key))
 }
 
 // XORDeB58 解密
@@ -53,22 +54,22 @@ func XORDeB58(s string, key []byte) []byte {
 
 // XOREnStringB64 加密
 func XOREnStringB64(s string, key []byte) string {
-	return XOREnB64(S2B(s), key)
+	return XOREnB64(utils.S2B(s), key)
 }
 
 // XOREnB64 加密
 func XOREnB64(b, key []byte) string {
-	return B64UrlEncode(XOR(b, key))
+	return utils.B64UrlEncode(XOR(b, key))
 }
 
 // XORDeStringB64 解密
 func XORDeStringB64(s string, key []byte) string {
-	return B2S(XORDeB64(s, key))
+	return utils.B2S(XORDeB64(s, key))
 }
 
 // XORDeB64 解密
 func XORDeB64(s string, key []byte) []byte {
-	return XOR(B64UrlDecode(s), key)
+	return XOR(utils.B64UrlDecode(s), key)
 }
 
 // XOR 异或加解密

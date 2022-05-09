@@ -1,4 +1,4 @@
-package utils
+package xcrypto
 
 import (
 	"crypto/aes"
@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 
+	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
 )
 
@@ -13,7 +14,7 @@ const gcmStandardNonceSize = 12
 
 // AesGCMEnStringHex 加密
 func AesGCMEnStringHex(s string, key []byte) (string, []byte) {
-	return AesGCMEnHex(S2B(s), key)
+	return AesGCMEnHex(utils.S2B(s), key)
 }
 
 // AesGCMEnHex 加密
@@ -24,7 +25,7 @@ func AesGCMEnHex(b, key []byte) (string, []byte) {
 
 // AesGCMDeStringHex 解密
 func AesGCMDeStringHex(s string, key, nonce []byte) string {
-	return B2S(AesGCMDeHex(s, key, nonce))
+	return utils.B2S(AesGCMDeHex(s, key, nonce))
 }
 
 // AesGCMDeHex 解密
@@ -38,7 +39,7 @@ func AesGCMDeHex(s string, key, nonce []byte) []byte {
 
 // AesGCMEnStringB58 加密
 func AesGCMEnStringB58(s string, key []byte) (string, []byte) {
-	return AesGCMEnB58(S2B(s), key)
+	return AesGCMEnB58(utils.S2B(s), key)
 }
 
 // AesGCMEnB58 加密
@@ -49,7 +50,7 @@ func AesGCMEnB58(b, key []byte) (string, []byte) {
 
 // AesGCMDeStringB58 解密
 func AesGCMDeStringB58(s string, key, nonce []byte) string {
-	return B2S(AesGCMDeB58(s, key, nonce))
+	return utils.B2S(AesGCMDeB58(s, key, nonce))
 }
 
 // AesGCMDeB58 解密
@@ -59,23 +60,23 @@ func AesGCMDeB58(s string, key, nonce []byte) []byte {
 
 // AesGCMEnStringB64 加密
 func AesGCMEnStringB64(s string, key []byte) (string, []byte) {
-	return AesGCMEnB64(S2B(s), key)
+	return AesGCMEnB64(utils.S2B(s), key)
 }
 
 // AesGCMEnB64 加密
 func AesGCMEnB64(b, key []byte) (string, []byte) {
 	res, nonce := AesGCMEncrypt(b, key)
-	return B64UrlEncode(res), nonce
+	return utils.B64UrlEncode(res), nonce
 }
 
 // AesGCMDeStringB64 解密
 func AesGCMDeStringB64(s string, key, nonce []byte) string {
-	return B2S(AesGCMDeB64(s, key, nonce))
+	return utils.B2S(AesGCMDeB64(s, key, nonce))
 }
 
 // AesGCMDeB64 解密
 func AesGCMDeB64(s string, key, nonce []byte) []byte {
-	return AesGCMDecrypt(B64UrlDecode(s), key, nonce)
+	return AesGCMDecrypt(utils.B64UrlDecode(s), key, nonce)
 }
 
 // AesGCMEncrypt AES-GCM 加密
@@ -110,7 +111,7 @@ func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byt
 	}
 
 	if len(nonce) == 0 {
-		nonce = S2B(RandString(gcmStandardNonceSize))
+		nonce = utils.S2B(utils.RandString(gcmStandardNonceSize))
 	}
 	res := gcm.Seal(nil, nonce, plaintext, additionalData)
 
@@ -145,7 +146,7 @@ func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]by
 
 // GCMEnStringHex 加密
 func GCMEnStringHex(s string, key []byte) string {
-	return GCMEnHex(S2B(s), key)
+	return GCMEnHex(utils.S2B(s), key)
 }
 
 // GCMEnHex 加密
@@ -159,7 +160,7 @@ func GCMEnHex(b, key []byte) string {
 
 // GCMDeStringHex 解密
 func GCMDeStringHex(s string, key []byte) string {
-	return B2S(GCMDeHex(s, key))
+	return utils.B2S(GCMDeHex(s, key))
 }
 
 // GCMDeHex 解密
@@ -175,7 +176,7 @@ func GCMDeHex(s string, key []byte) []byte {
 
 // GCMEnStringB58 加密
 func GCMEnStringB58(s string, key []byte) string {
-	return GCMEnB58(S2B(s), key)
+	return GCMEnB58(utils.S2B(s), key)
 }
 
 // GCMEnB58 加密
@@ -189,7 +190,7 @@ func GCMEnB58(b, key []byte) string {
 
 // GCMDeStringB58 解密
 func GCMDeStringB58(s string, key []byte) string {
-	return B2S(GCMDeB58(s, key))
+	return utils.B2S(GCMDeB58(s, key))
 }
 
 // GCMDeB58 解密
@@ -203,13 +204,13 @@ func GCMDeB58(s string, key []byte) []byte {
 
 // GCMEnStringB64 加密
 func GCMEnStringB64(s string, key []byte) string {
-	return GCMEnB64(S2B(s), key)
+	return GCMEnB64(utils.S2B(s), key)
 }
 
 // GCMEnB64 加密
 func GCMEnB64(b, key []byte) string {
 	if res, err := GCMEncrypt(b, key); err == nil {
-		return B64UrlEncode(res)
+		return utils.B64UrlEncode(res)
 	}
 
 	return ""
@@ -217,12 +218,12 @@ func GCMEnB64(b, key []byte) string {
 
 // GCMDeStringB64 解密
 func GCMDeStringB64(s string, key []byte) string {
-	return B2S(GCMDeB64(s, key))
+	return utils.B2S(GCMDeB64(s, key))
 }
 
 // GCMDeB64 解密
 func GCMDeB64(s string, key []byte) []byte {
-	if res, err := GCMDecrypt(B64UrlDecode(s), key); err == nil {
+	if res, err := GCMDecrypt(utils.B64UrlDecode(s), key); err == nil {
 		return res
 	}
 
@@ -247,7 +248,7 @@ func GCMEncrypt(plaintext, key []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	nonce := RandBytes(gcm.NonceSize())
+	nonce := utils.RandBytes(gcm.NonceSize())
 	res := gcm.Seal(nonce, nonce, plaintext, nil)
 
 	return res, nil

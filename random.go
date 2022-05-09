@@ -14,8 +14,11 @@ const (
 	letterIdxMax  = 31 / letterIdxBits   // # of letter indices fitting in 31 bits
 )
 
-// Rand goroutine-safe, use Rand.xxx instead of rand.xxx
-var Rand = NewRand()
+var (
+	// Rand goroutine-safe, use Rand.xxx instead of rand.xxx
+	Rand = NewRand()
+	Seed = FastRand()
+)
 
 // RandInt (>=)min - (<)max
 func RandInt(min, max int) int {

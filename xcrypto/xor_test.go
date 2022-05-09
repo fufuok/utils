@@ -1,47 +1,43 @@
-package utils
+package xcrypto
 
 import (
 	"bytes"
 	"testing"
-)
 
-var (
-	tmpS = "Fufu 中　文加密/解密~&#123a"
-	tmpK = []byte("0123456789012345")
-	tmpB = []byte("Fufu 中　文\u2728->?\n*\U0001F63A0123456789012345")
+	"github.com/fufuok/utils"
 )
 
 func TestXOREnStringHex(t *testing.T) {
 	actual := XOREnStringHex("1", []byte("1"))
-	AssertEqual(t, "51", actual)
+	utils.AssertEqual(t, "51", actual)
 
 	res := XOREnStringHex("", tmpK)
-	AssertEqual(t, "", XORDeStringHex(res, tmpK))
+	utils.AssertEqual(t, "", XORDeStringHex(res, tmpK))
 
 	res = XOREnStringHex(tmpS, tmpK)
-	AssertEqual(t, tmpS, XORDeStringHex(res, tmpK))
+	utils.AssertEqual(t, tmpS, XORDeStringHex(res, tmpK))
 }
 
 func TestXOREnStringB64(t *testing.T) {
 	actual := XOREnStringB64("1", []byte("1"))
-	AssertEqual(t, "UQ==", actual)
+	utils.AssertEqual(t, "UQ==", actual)
 
 	res := XOREnStringB64("", tmpK)
-	AssertEqual(t, "", XORDeStringB64(res, tmpK))
+	utils.AssertEqual(t, "", XORDeStringB64(res, tmpK))
 
 	res = XOREnStringB64(tmpS, tmpK)
-	AssertEqual(t, tmpS, XORDeStringB64(res, tmpK))
+	utils.AssertEqual(t, tmpS, XORDeStringB64(res, tmpK))
 }
 
 func TestXOREnStringB58(t *testing.T) {
 	actual := XOREnStringB58("1", []byte("1"))
-	AssertEqual(t, "2Q", actual)
+	utils.AssertEqual(t, "2Q", actual)
 
 	res := XOREnStringB58("", tmpK)
-	AssertEqual(t, "", XORDeStringB58(res, tmpK))
+	utils.AssertEqual(t, "", XORDeStringB58(res, tmpK))
 
 	res = XOREnStringB58(tmpS, tmpK)
-	AssertEqual(t, tmpS, XORDeStringB58(res, tmpK))
+	utils.AssertEqual(t, tmpS, XORDeStringB58(res, tmpK))
 }
 
 func BenchmarkEnDeXOR(b *testing.B) {

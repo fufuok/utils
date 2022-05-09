@@ -1,7 +1,9 @@
-package utils
+package xcrypto
 
 import (
 	"os"
+
+	"github.com/fufuok/utils"
 )
 
 // SetenvEncrypt 加密并设置环境变量(string)
@@ -22,7 +24,7 @@ func GetenvDecrypt(key string, secret string) string {
 // Encrypt 加密 (密钥取 32 位 MD5, AES-CBC, base58)
 func Encrypt(value, secret string) string {
 	if secret != "" {
-		value = AesCBCEnStringB58(value, S2B(MD5Hex(secret)))
+		value = AesCBCEnStringB58(value, utils.S2B(utils.MD5Hex(secret)))
 	}
 
 	return value
@@ -31,7 +33,7 @@ func Encrypt(value, secret string) string {
 // Decrypt 解密
 func Decrypt(value, secret string) string {
 	if secret != "" {
-		value = AesCBCDeStringB58(value, S2B(MD5Hex(secret)))
+		value = AesCBCDeStringB58(value, utils.S2B(utils.MD5Hex(secret)))
 	}
 
 	return value

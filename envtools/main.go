@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/xcrypto"
 )
 
 var (
@@ -27,12 +27,12 @@ var (
 
 func init() {
 	// 基础密钥环境变量名称
-	baseSecretKeyName = utils.GetenvDecrypt("ENV_TOOLS_NAME", "")
+	baseSecretKeyName = xcrypto.GetenvDecrypt("ENV_TOOLS_NAME", "")
 	if baseSecretKeyName == "" {
 		log.Fatalln("基础密钥的名称不存在\n请设置: export ENV_TOOLS_NAME=你的项目基础密钥环境变量名称")
 	}
 	// 基础密钥
-	baseSecretKey = utils.GetenvDecrypt(baseSecretKeyName, "")
+	baseSecretKey = xcrypto.GetenvDecrypt(baseSecretKeyName, "")
 	if baseSecretKey == "" {
 		log.Fatalf("基础密钥不能为空\n请设置: export %s=你的项目基础密钥", baseSecretKeyName)
 	}
@@ -46,7 +46,7 @@ func main() {
 
 	if value != "" {
 		// 加密
-		result, err := utils.SetenvEncrypt(key, value, baseSecretKey)
+		result, err := xcrypto.SetenvEncrypt(key, value, baseSecretKey)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -55,6 +55,6 @@ func main() {
 	}
 
 	// 解密
-	result := utils.GetenvDecrypt(key, baseSecretKey)
+	result := xcrypto.GetenvDecrypt(key, baseSecretKey)
 	fmt.Printf("\ntestGetenv: %s = %s\n\n", key, result)
 }

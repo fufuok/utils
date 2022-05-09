@@ -1,21 +1,22 @@
-package utils
+package xcrypto
 
 import (
 	"crypto/cipher"
 	"crypto/des"
 	"encoding/hex"
 
+	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
 )
 
 // DesCBCEnStringHex 加密, ZerosPadding
 func DesCBCEnStringHex(s string, key []byte) string {
-	return hex.EncodeToString(DesCBCEncrypt(false, S2B(s), key))
+	return hex.EncodeToString(DesCBCEncrypt(false, utils.S2B(s), key))
 }
 
 // DesCBCEnPKCS7StringHex 加密, Pkcs7Padding
 func DesCBCEnPKCS7StringHex(s string, key []byte) string {
-	return hex.EncodeToString(DesCBCEncrypt(true, S2B(s), key))
+	return hex.EncodeToString(DesCBCEncrypt(true, utils.S2B(s), key))
 }
 
 // DesCBCEnHex 加密, ZerosPadding
@@ -30,12 +31,12 @@ func DesCBCEnPKCS7Hex(b, key []byte) string {
 
 // DesCBCDeStringHex 解密, ZerosPadding
 func DesCBCDeStringHex(s string, key []byte) string {
-	return B2S(DesCBCDeHex(s, key))
+	return utils.B2S(DesCBCDeHex(s, key))
 }
 
 // DesCBCDePKCS7StringHex 解密, Pkcs7Padding
 func DesCBCDePKCS7StringHex(s string, key []byte) string {
-	return B2S(DesCBCDePKCS7Hex(s, key))
+	return utils.B2S(DesCBCDePKCS7Hex(s, key))
 }
 
 // DesCBCDeHex 解密, ZerosPadding
@@ -58,12 +59,12 @@ func DesCBCDePKCS7Hex(s string, key []byte) []byte {
 
 // DesCBCEnStringB58 加密, ZerosPadding
 func DesCBCEnStringB58(s string, key []byte) string {
-	return base58.Encode(DesCBCEncrypt(false, S2B(s), key))
+	return base58.Encode(DesCBCEncrypt(false, utils.S2B(s), key))
 }
 
 // DesCBCEnPKCS7StringB58 加密, Pkcs7Padding
 func DesCBCEnPKCS7StringB58(s string, key []byte) string {
-	return base58.Encode(DesCBCEncrypt(true, S2B(s), key))
+	return base58.Encode(DesCBCEncrypt(true, utils.S2B(s), key))
 }
 
 // DesCBCEnB58 加密, ZerosPadding
@@ -78,12 +79,12 @@ func DesCBCEnPKCS7B58(b, key []byte) string {
 
 // DesCBCDeStringB58 解密, ZerosPadding
 func DesCBCDeStringB58(s string, key []byte) string {
-	return B2S(DesCBCDeB58(s, key))
+	return utils.B2S(DesCBCDeB58(s, key))
 }
 
 // DesCBCDePKCS7StringB58 解密, Pkcs7Padding
 func DesCBCDePKCS7StringB58(s string, key []byte) string {
-	return B2S(DesCBCDePKCS7B58(s, key))
+	return utils.B2S(DesCBCDePKCS7B58(s, key))
 }
 
 // DesCBCDeB58 解密, ZerosPadding
@@ -98,42 +99,42 @@ func DesCBCDePKCS7B58(s string, key []byte) []byte {
 
 // DesCBCEnStringB64 加密, ZerosPadding
 func DesCBCEnStringB64(s string, key []byte) string {
-	return B64UrlEncode(DesCBCEncrypt(false, S2B(s), key))
+	return utils.B64UrlEncode(DesCBCEncrypt(false, utils.S2B(s), key))
 }
 
 // DesCBCEnPKCS7StringB64 加密, Pkcs7Padding
 func DesCBCEnPKCS7StringB64(s string, key []byte) string {
-	return B64UrlEncode(DesCBCEncrypt(true, S2B(s), key))
+	return utils.B64UrlEncode(DesCBCEncrypt(true, utils.S2B(s), key))
 }
 
 // DesCBCEnB64 加密, ZerosPadding
 func DesCBCEnB64(b, key []byte) string {
-	return B64UrlEncode(DesCBCEncrypt(false, b, key))
+	return utils.B64UrlEncode(DesCBCEncrypt(false, b, key))
 }
 
 // DesCBCEnPKCS7B64 加密, Pkcs7Padding
 func DesCBCEnPKCS7B64(b, key []byte) string {
-	return B64UrlEncode(DesCBCEncrypt(true, b, key))
+	return utils.B64UrlEncode(DesCBCEncrypt(true, b, key))
 }
 
 // DesCBCDeStringB64 解密, ZerosPadding
 func DesCBCDeStringB64(s string, key []byte) string {
-	return B2S(DesCBCDeB64(s, key))
+	return utils.B2S(DesCBCDeB64(s, key))
 }
 
 // DesCBCDePKCS7StringB64 解密, Pkcs7Padding
 func DesCBCDePKCS7StringB64(s string, key []byte) string {
-	return B2S(DesCBCDePKCS7B64(s, key))
+	return utils.B2S(DesCBCDePKCS7B64(s, key))
 }
 
 // DesCBCDeB64 解密, ZerosPadding
 func DesCBCDeB64(s string, key []byte) []byte {
-	return DesCBCDecrypt(false, B64UrlDecode(s), key)
+	return DesCBCDecrypt(false, utils.B64UrlDecode(s), key)
 }
 
 // DesCBCDePKCS7B64 解密, Pkcs7Padding
 func DesCBCDePKCS7B64(s string, key []byte) []byte {
-	return DesCBCDecrypt(true, B64UrlDecode(s), key)
+	return DesCBCDecrypt(true, utils.B64UrlDecode(s), key)
 }
 
 // DesCBCEncrypt AES-CBC 加密
