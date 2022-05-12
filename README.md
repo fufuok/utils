@@ -15,6 +15,7 @@ go get github.com/fufuok/utils
 ```go
 package utils // import "github.com/fufuok/utils"
 
+const False = 0 ...
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
 var BigByte ...
@@ -185,7 +186,7 @@ func Sha512Hex(s string) string
 func SplitHostPort(hostPort string) (host, port string)
 func Str2Bytes(s string) (b []byte)
 func StrToBytes(s string) []byte
-func String2Bytes(s string) (b []byte)
+func String2Bytes(s string) (bs []byte)
 func StringToBytes(s string) (b []byte)
 func Sum32(s string) uint32
 func Sum64(s string) uint64
@@ -209,6 +210,10 @@ func ValidOptionalPort(port string) bool
 func WaitNextMinute()
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
+type Bool uint32
+    func NewBool(v bool) Bool
+    func NewFalse() Bool
+    func NewTrue() Bool
 ```
 
 ### 加解密小工具
@@ -759,7 +764,7 @@ func main() {
 	// 继续下一批任务
 	bus.Add(1)
 	bus.Run(func() {
-		fmt.Println("is running:", bus.IsRunning(), bus.Running())
+		fmt.Println("is running:", bus.IsRunning(), bus.Running()) // is running: true 1
 	})
 	bus.Wait()
 	bus.Release()
@@ -774,7 +779,14 @@ func main() {
 		})
 	}
 	bus.WaitAndRelease()
-	fmt.Println("is running:", bus.IsRunning())
+	fmt.Println("is running:", bus.IsRunning()) // is running: false
+
+	// 原子操作的安全布尔值
+	var atomicBool utils.Bool
+	atomicBool.StoreTrue()
+	fmt.Println("is running:", atomicBool.Load()) // is running: true
+	atomicBool.Toggle()
+	fmt.Println("is running:", atomicBool.String()) // is running: false
 }
 ```
 
