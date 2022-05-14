@@ -21,17 +21,11 @@
 package utils
 
 import (
-	"bytes"
-	"io/ioutil"
-	"os"
-	"os/exec"
-	"path/filepath"
 	"reflect"
-	"strings"
 	"testing"
 )
 
-func TestNocmpComparability(t *testing.T) {
+func TestNoCmpComparability(t *testing.T) {
 	tests := []struct {
 		desc       string
 		give       interface{}
@@ -65,7 +59,7 @@ func TestNocmpComparability(t *testing.T) {
 }
 
 // NoCmp must not add to the size of a struct in-memory.
-func TestNocmpSize(t *testing.T) {
+func TestNoCmpSize(t *testing.T) {
 	type x struct{ _ int }
 
 	before := reflect.TypeOf(x{}).Size()
@@ -87,7 +81,7 @@ func TestNocmpSize(t *testing.T) {
 //
 //   var x atomic.Int32
 //   x = atomic.NewInt32(1)
-func TestNocmpCopy(t *testing.T) {
+func TestNoCmpCopy(t *testing.T) {
 	type foo struct{ _ NoCmp }
 
 	t.Run("struct copy", func(t *testing.T) {
@@ -101,49 +95,4 @@ func TestNocmpCopy(t *testing.T) {
 		b := *a
 		_ = b // unused
 	})
-}
-
-// Fake go.mod with no dependencies.
-const _exampleGoMod = `module example.com/nocmp`
-
-const _badFile = `package utils 
-import "fmt"
-type Int64 struct {
-	_ NoCmp
-	v int64
-}
-func shouldNotCompile() {
-	var x, y Int64
-	fmt.Println(x == y)
-}
-`
-
-func TestNocmpIntegration(t *testing.T) {
-	tempdir, err := ioutil.TempDir("", "nocmp")
-	AssertEqual(t, true, err == nil, "unable to set up temporary directory")
-	defer os.RemoveAll(tempdir)
-
-	Nocmp, err := ioutil.ReadFile("nocmp.go")
-	AssertEqual(t, true, err == nil, "unable to read nocmp.go")
-
-	err = ioutil.WriteFile(filepath.Join(tempdir, "go.mod"), []byte(_exampleGoMod), 0644)
-	AssertEqual(t, true, err == nil, "unable to write go.mod")
-
-	err = ioutil.WriteFile(filepath.Join(tempdir, "nocmp.go"), Nocmp, 0644)
-	AssertEqual(t, true, err == nil, "unable to write NoCmp.go")
-
-	err = ioutil.WriteFile(filepath.Join(tempdir, "bad.go"), []byte(_badFile), 0644)
-	AssertEqual(t, true, err == nil, "unable to write bad.go")
-
-	var stderr bytes.Buffer
-	cmd := exec.Command("go", "build")
-	cmd.Dir = tempdir
-	// Create a minimal build enviroment with only HOME set so that "go
-	// build" has somewhere to put the cache and other Go files in.
-	cmd.Env = []string{"HOME=" + filepath.Join(tempdir, "home")}
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-	AssertEqual(t, true, err != nil, "bad.go must not compile")
-	ok := strings.Contains(stderr.String(), "struct containing NoCmp cannot be compared")
-	AssertEqual(t, true, ok, stderr.String())
 }
