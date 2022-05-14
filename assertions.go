@@ -11,19 +11,23 @@ import (
 	"text/tabwriter"
 )
 
-func AssertEqualf(t testing.TB, expected, actual interface{}, description string, a ...interface{}) {
-	AssertEqual(t, expected, actual, fmt.Sprintf(description, a...))
+func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{}) {
+	AssertEqual(tb, expected, actual, fmt.Sprintf(description, a...))
 }
 
 // AssertEqual checks if values are equal
 // Ref: gofiber/utils
-func AssertEqual(t testing.TB, expected, actual interface{}, description ...string) {
+func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string) {
+	if tb != nil {
+		tb.Helper()
+	}
+
 	if reflect.DeepEqual(expected, actual) {
 		return
 	}
 
-	var aType = "<nil>"
-	var bType = "<nil>"
+	aType := "<nil>"
+	bType := "<nil>"
 
 	if expected != nil {
 		aType = reflect.TypeOf(expected).String()
@@ -33,8 +37,8 @@ func AssertEqual(t testing.TB, expected, actual interface{}, description ...stri
 	}
 
 	testName := "AssertEqual"
-	if t != nil {
-		testName = t.Name()
+	if tb != nil {
+		testName = tb.Name()
 	}
 
 	_, file, line, _ := runtime.Caller(1)
@@ -56,8 +60,8 @@ func AssertEqual(t testing.TB, expected, actual interface{}, description ...stri
 		result = buf.String()
 	}
 
-	if t != nil {
-		t.Fatal(result)
+	if tb != nil {
+		tb.Fatal(result)
 	} else {
 		log.Fatal(result)
 	}
