@@ -6,7 +6,7 @@ import (
 )
 
 func TestBool_NewBool(t *testing.T) {
-	var v Bool
+	v := new(Bool)
 	AssertEqual(t, false, v.Load())
 	v.Toggle()
 	AssertEqual(t, true, v.Load())

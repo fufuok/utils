@@ -6,90 +6,95 @@ import (
 	"sync/atomic"
 )
 
-const (
-	False = 0
-	True  = 1
-)
-
-// Bool is an atomic type-safe wrapper for bool values
-type Bool uint32
-
-func NewBool(v bool) Bool {
-	var b Bool
-	b.Store(v)
-	return b
+// A Bool is an atomic boolean value.
+// The zero value is false.
+type Bool struct {
+	_ NoCopy
+	_ NoCmp
+	v uint32
 }
 
-func NewTrue() Bool {
-	var b Bool
-	b.StoreTrue()
-	return b
+func NewBool(val bool) *Bool {
+	x := &Bool{}
+	x.Store(val)
+	return x
 }
 
-func NewFalse() Bool {
-	var b Bool
-	b.StoreFalse()
-	return b
+func NewTrue() *Bool {
+	x := &Bool{}
+	x.StoreTrue()
+	return x
 }
 
-func (a *Bool) Store(v bool) {
-	atomic.StoreUint32(a.ptr(), b2i(v))
+func NewFalse() *Bool {
+	x := &Bool{}
+	x.StoreFalse()
+	return x
 }
 
-func (a *Bool) StoreTrue() {
-	atomic.StoreUint32(a.ptr(), True)
+// Load atomically loads and returns the value stored in x.
+func (x *Bool) Load() bool {
+	return atomic.LoadUint32(&x.v) != 0
 }
 
-func (a *Bool) StoreFalse() {
-	atomic.StoreUint32(a.ptr(), False)
+// Store atomically stores val into x.
+func (x *Bool) Store(val bool) {
+	atomic.StoreUint32(&x.v, b32(val))
 }
 
-func (a *Bool) Load() bool {
-	return atomic.LoadUint32(a.ptr()) == True
+func (x *Bool) StoreTrue() {
+	x.Store(true)
 }
 
-func (a *Bool) Swap(v bool) (old bool) {
-	return atomic.SwapUint32(a.ptr(), b2i(v)) == True
+func (x *Bool) StoreFalse() {
+	x.Store(false)
 }
 
-func (a *Bool) CAS(old, v bool) bool {
-	return atomic.CompareAndSwapUint32(a.ptr(), b2i(old), b2i(v))
+// Swap atomically stores new into x and returns the previous value.
+func (x *Bool) Swap(new bool) (old bool) {
+	return atomic.SwapUint32(&x.v, b32(new)) != 0
+}
+
+// CompareAndSwap executes the compare-and-swap operation for the boolean value x.
+func (x *Bool) CompareAndSwap(old, new bool) (swapped bool) {
+	return atomic.CompareAndSwapUint32(&x.v, b32(old), b32(new))
+}
+
+func (x *Bool) CAS(old, new bool) bool {
+	return x.CompareAndSwap(old, new)
 }
 
 // Toggle atomically negates the Boolean and returns the previous value
-func (a *Bool) Toggle() (old bool) {
+func (x *Bool) Toggle() (old bool) {
 	for {
-		old := a.Load()
-		if a.CAS(old, !old) {
+		old := x.Load()
+		if x.CompareAndSwap(old, !old) {
 			return old
 		}
 	}
 }
 
-func (a *Bool) String() string {
-	return strconv.FormatBool(a.Load())
+func (x *Bool) String() string {
+	return strconv.FormatBool(x.Load())
 }
 
-func (a *Bool) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a.Load())
+func (x *Bool) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.Load())
 }
 
-func (a *Bool) UnmarshalJSON(b []byte) error {
+func (x *Bool) UnmarshalJSON(b []byte) error {
 	var v bool
 	if err := json.Unmarshal(b, &v); err != nil {
 		return err
 	}
-	a.Store(v)
+	x.Store(v)
 	return nil
 }
 
-func (a *Bool) ptr() *uint32 {
-	return (*uint32)(a)
-}
-
-func b2i(v bool) uint32 {
-	if v {
-		return True
+// b32 returns a uint32 0 or 1 representing b.
+func b32(b bool) uint32 {
+	if b {
+		return 1
 	}
-	return False
+	return 0
 }
