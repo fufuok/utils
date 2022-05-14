@@ -11,6 +11,10 @@ import (
 	"text/tabwriter"
 )
 
+func AssertEqualf(t testing.TB, expected, actual interface{}, description string, a ...interface{}) {
+	AssertEqual(t, expected, actual, fmt.Sprintf(description, a...))
+}
+
 // AssertEqual checks if values are equal
 // Ref: gofiber/utils
 func AssertEqual(t testing.TB, expected, actual interface{}, description ...string) {
