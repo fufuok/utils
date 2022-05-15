@@ -291,6 +291,7 @@ func TestEqualFoldBytes(t *testing.T) {
 	AssertEqual(t, true, EqualFoldBytes(res, ToUpperBytes([]byte("  TesT  "))))
 	AssertEqual(t, true, EqualFoldBytes(ToLowerBytes(res), ToUpperBytes([]byte("  TesT  "))))
 	AssertEqual(t, false, EqualFoldBytes(res, TrimBytes([]byte("  TesT  "), ' ')))
+	AssertEqual(t, false, EqualFoldBytes([]byte("\na"), []byte("*A")))
 }
 
 func BenchmarkEqualFoldBytes(b *testing.B) {

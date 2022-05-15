@@ -56,7 +56,7 @@ func JoinBytes(b ...[]byte) []byte {
 	return bytes.Join(b, nil)
 }
 
-// ToLowerBytes is the equivalent of bytes.ToLower
+// ToLowerBytes converts ascii slice to lower-case
 // Ref: fiber
 func ToLowerBytes(b []byte) []byte {
 	for i := 0; i < len(b); i++ {
@@ -65,7 +65,7 @@ func ToLowerBytes(b []byte) []byte {
 	return b
 }
 
-// ToUpperBytes is the equivalent of bytes.ToUpper
+// ToUpperBytes converts ascii slice to upper-case
 // Ref: fiber
 func ToUpperBytes(b []byte) []byte {
 	for i := 0; i < len(b); i++ {
@@ -112,19 +112,18 @@ func TrimBytes(b []byte, cutset byte) []byte {
 	return b[i : j+1]
 }
 
-// EqualFoldBytes the equivalent of bytes.EqualFold
+// EqualFoldBytes tests ascii slices for equality case-insensitively
 // Ref: fiber
-func EqualFoldBytes(b, s []byte) (equals bool) {
-	n := len(b)
-	equals = n == len(s)
-	if equals {
-		for i := 0; i < n; i++ {
-			if equals = b[i]|0x20 == s[i]|0x20; !equals {
-				break
-			}
+func EqualFoldBytes(b, s []byte) bool {
+	if len(b) != len(s) {
+		return false
+	}
+	for i := len(b) - 1; i >= 0; i-- {
+		if toUpperTable[b[i]] != toUpperTable[s[i]] {
+			return false
 		}
 	}
-	return
+	return true
 }
 
 // CutBytes slices s around the first instance of sep,

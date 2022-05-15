@@ -402,6 +402,7 @@ func TestEqualFold(t *testing.T) {
 	AssertEqual(t, true, EqualFold(res, ToUpper(testString)))
 	AssertEqual(t, true, EqualFold(ToLower(res), ToUpper(testString)))
 	AssertEqual(t, false, EqualFold(res, Trim(testString, ' ')))
+	AssertEqual(t, false, EqualFold("\na", "*A"))
 }
 
 func BenchmarkEqualFold(b *testing.B) {

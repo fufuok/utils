@@ -134,7 +134,7 @@ func RemoveString(ss []string, s string) ([]string, bool) {
 	return ss, false
 }
 
-// ToLower is the equivalent of strings.ToLower
+// ToLower converts ascii string to lower-case
 // Ref: fiber
 func ToLower(b string) string {
 	var res = make([]byte, len(b))
@@ -146,7 +146,7 @@ func ToLower(b string) string {
 	return B2S(res)
 }
 
-// ToUpper is the equivalent of strings.ToUpper
+// ToUpper converts ascii string to upper-case
 // Ref: fiber
 func ToUpper(b string) string {
 	var res = make([]byte, len(b))
@@ -196,19 +196,18 @@ func Trim(s string, cutset byte) string {
 	return s[i : j+1]
 }
 
-// EqualFold the equivalent of strings.EqualFold
+// EqualFold tests ascii strings for equality case-insensitively
 // Ref: fiber
-func EqualFold(b, s string) (equals bool) {
-	n := len(b)
-	equals = n == len(s)
-	if equals {
-		for i := 0; i < n; i++ {
-			if equals = b[i]|0x20 == s[i]|0x20; !equals {
-				break
-			}
+func EqualFold(b, s string) bool {
+	if len(b) != len(s) {
+		return false
+	}
+	for i := len(b) - 1; i >= 0; i-- {
+		if toUpperTable[b[i]] != toUpperTable[s[i]] {
+			return false
 		}
 	}
-	return
+	return true
 }
 
 // CutString slices s around the first instance of sep,
