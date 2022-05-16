@@ -7,6 +7,40 @@ import (
 	"testing"
 )
 
+var jsStr = `{"a":3,"b":[4,true]}`
+
+func TestRawString(t *testing.T) {
+	testCases := []struct {
+		value    RawString
+		expected string
+	}{
+		{"1234", "1234"},
+		{"12.34", "12.34"},
+	}
+
+	for _, c := range testCases {
+		if string(c.value.Serialize(nil)) != c.expected {
+			t.Errorf("actual(%s) != expected(%s)", string(c.value.Serialize(nil)), c.expected)
+		}
+	}
+}
+
+func TestRawBytes(t *testing.T) {
+	testCases := []struct {
+		value    RawBytes
+		expected string
+	}{
+		{[]byte("1234"), "1234"},
+		{[]byte("12.34"), "12.34"},
+	}
+
+	for _, c := range testCases {
+		if string(c.value.Serialize(nil)) != c.expected {
+			t.Errorf("actual(%s) != expected(%s)", string(c.value.Serialize(nil)), c.expected)
+		}
+	}
+}
+
 func TestUnquotedValue(t *testing.T) {
 	testCases := []struct {
 		value    UnquotedValue
@@ -49,7 +83,13 @@ func array1() (*Array, string) {
 	a1.AppendString("test string")
 	a1.AppendString(`string with \`)
 	a1.AppendString(`string with "`)
-	expected1 := `[123,-45,12.34,true,"test string","string with \\","string with \""]`
+	a1.AppendRawString(jsStr)
+	a1.AppendRawBytes([]byte(jsStr))
+	a1.AppendRawStringArray([]string{jsStr, jsStr})
+	a1.AppendRawBytesArray([][]byte{[]byte(jsStr), []byte(jsStr)})
+	expected1 := `[123,-45,12.34,true,"test string","string with \\","string with \"",` +
+		`{"a":3,"b":[4,true]},{"a":3,"b":[4,true]},` +
+		`[{"a":3,"b":[4,true]},{"a":3,"b":[4,true]}],[{"a":3,"b":[4,true]},{"a":3,"b":[4,true]}]]`
 
 	return a1, expected1
 }
@@ -89,7 +129,6 @@ func array3() (*Array, string) {
 
 func array4() (*Array, string) {
 	a4 := NewArray()
-
 	a1, expected1 := array1()
 	a2, expected2 := array2()
 	a3, expected3 := array3()
@@ -103,11 +142,8 @@ func array4() (*Array, string) {
 
 func TestArrayValue(t *testing.T) {
 	a1, expected1 := array1()
-
 	a2, expected2 := array2()
-
 	a3, expected3 := array3()
-
 	a4, expected4 := array4()
 
 	testCases := []struct {
@@ -134,8 +170,6 @@ func TestArrayValue(t *testing.T) {
 		var obj []interface{}
 		if err := json.Unmarshal(data, &obj); err != nil {
 			t.Errorf("array name:%s unmarshal error:%v", c.name, err)
-		} else {
-			t.Logf("array name:%s unmarshal: %v", c.name, obj)
 		}
 	}
 }
@@ -149,7 +183,14 @@ func map1() (*Map, string) {
 	m1.PutString("stringkey1", "teststring")
 	m1.PutString("stringkey2", `string with \`)
 	m1.PutString("stringkey3", `string with "`)
-	expected1 := `{"uintkey":123,"intkey":-45,"floatkey":12.34,"boolkey":true,"stringkey1":"teststring","stringkey2":"string with \\","stringkey3":"string with \""}`
+	m1.PutRawString("raw_string", jsStr)
+	m1.PutRawBytes("raw_bytes", []byte(jsStr))
+	m1.PutRawStringArray("raw_sarr", []string{jsStr, jsStr})
+	m1.PutRawBytesArray("raw_barr", [][]byte{[]byte(jsStr), []byte(jsStr)})
+	expected1 := `{"uintkey":123,"intkey":-45,"floatkey":12.34,"boolkey":true,"stringkey1":"teststring",` +
+		`"stringkey2":"string with \\","stringkey3":"string with \"",` +
+		`"raw_string":{"a":3,"b":[4,true]},"raw_bytes":{"a":3,"b":[4,true]},` +
+		`"raw_sarr":[{"a":3,"b":[4,true]},{"a":3,"b":[4,true]}],"raw_barr":[{"a":3,"b":[4,true]},{"a":3,"b":[4,true]}]}`
 
 	return m1, expected1
 }
@@ -230,8 +271,6 @@ func TestMapValue(t *testing.T) {
 		var obj map[string]interface{}
 		if err := json.Unmarshal(data, &obj); err != nil {
 			t.Errorf("map name:%s unmarshal error:%v", c.name, err)
-		} else {
-			t.Logf("map name:%s unmarshal: %v", c.name, obj)
 		}
 	}
 }
