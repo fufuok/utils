@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func BenchmarkStandardJson(b *testing.B) {
+func BenchmarkGenJsonStandard(b *testing.B) {
 	b.StopTimer()
 	m := make(map[string]interface{})
 
@@ -89,7 +89,7 @@ func BenchmarkStandardJson(b *testing.B) {
 	}
 }
 
-func BenchmarkGen(b *testing.B) {
+func BenchmarkGenJson(b *testing.B) {
 	b.StopTimer()
 	m, _ := map4()
 	b.ReportAllocs()
@@ -99,3 +99,13 @@ func BenchmarkGen(b *testing.B) {
 		m.Serialize(nil)
 	}
 }
+
+// go test -run=^$ -benchmem -count=2 -bench=^BenchmarkGenJson
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/jsongen
+// cpu: Intel(R) Xeon(R) Gold 6151 CPU @ 3.00GHz
+// BenchmarkGenJsonStandard-4         40786             29439 ns/op           10257 B/op        195 allocs/op
+// BenchmarkGenJsonStandard-4         40789             29188 ns/op           10257 B/op        195 allocs/op
+// BenchmarkGenJson-4                588708              2026 ns/op            1792 B/op          1 allocs/op
+// BenchmarkGenJson-4                585769              2026 ns/op            1792 B/op          1 allocs/op

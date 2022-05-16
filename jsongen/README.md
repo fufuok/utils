@@ -10,8 +10,8 @@
 
 - 增加使用 `buffer_pool`
 - 增加添加原始 JSON 数据方法: `RawString` `RawBytes`
-    - map: `m.PutRawString` `m.PutRawBytes` `m.PutRawStringArray` `m.PutRawBytesArray`
-    - array: `a.AppendRawString` `a.AppendRawBytes` `a.AppendRawStringArray` `a.AppendRawBytesArray`
+  - map: `m.PutRawString` `m.PutRawBytes` `m.PutRawStringArray` `m.PutRawBytesArray`
+  - array: `a.AppendRawString` `a.AppendRawBytes` `a.AppendRawStringArray` `a.AppendRawBytesArray`
 - 减少一些不必要的转换
 - 增加 `go mod`
 
