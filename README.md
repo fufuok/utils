@@ -15,7 +15,6 @@ go get github.com/fufuok/utils
 ```go
 package utils // import "github.com/fufuok/utils"
 
-const False = 0 ...
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
 var BigByte ...
@@ -23,7 +22,8 @@ var BigSIByte ...
 var Rand = NewRand() ...
 func AddString(s ...string) string
 func AddStringBytes(s ...string) []byte
-func AssertEqual(t testing.TB, expected, actual interface{}, description ...string)
+func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
+func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, ...)
 func AssertPanics(t *testing.T, title string, f func())
 func B2S(b []byte) string
 func B64Decode(s string) []byte
@@ -71,8 +71,8 @@ func EndOfTomorrow(t time.Time) time.Time
 func EndOfWeek(t time.Time) time.Time
 func EndOfYear(t time.Time) time.Time
 func EndOfYesterday(t time.Time) time.Time
-func EqualFold(b, s string) (equals bool)
-func EqualFoldBytes(b, s []byte) (equals bool)
+func EqualFold(b, s string) bool
+func EqualFoldBytes(b, s []byte) bool
 func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
 func FastIntn(n int) int
@@ -156,7 +156,7 @@ func MustJSONString(v interface{}) string
 func MustMD5Sum(filename string) string
 func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
-func MustString(v interface{}) string
+func MustString(v interface{}, timeLayout ...string) string
 func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
 func Pad(s, pad string, n int) string
@@ -210,10 +210,12 @@ func ValidOptionalPort(port string) bool
 func WaitNextMinute()
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
-type Bool uint32
-    func NewBool(v bool) Bool
-    func NewFalse() Bool
-    func NewTrue() Bool
+type Bool struct{ ... }
+    func NewBool(val bool) *Bool
+    func NewFalse() *Bool
+    func NewTrue() *Bool
+type NoCmp [0]func()
+type NoCopy struct{}
 ```
 
 ### 加解密小工具
@@ -478,6 +480,8 @@ type Array []Value
 type Map struct{ ... }
     func NewMap() *Map
 type QuotedValue string
+type RawBytes []byte
+type RawString string
 type UnquotedValue string
 type Value interface{ ... }
 ```

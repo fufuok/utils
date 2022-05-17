@@ -1,5 +1,15 @@
 # Go-Utils
 
+## v0.5.2
+
+**2022-05-15**
+
+- 修正 `EqualFold`
+- 增加 `AssertEqualf`
+- 增加 2 个特殊的类型: `NoCopy` `NoCmp`
+- 优化 `jsongen`: 增加插入原始 JSON 的方法 `RawString` `RawBytes`
+- `MustString` 增加更多类型转换: `time.Time` `reflect.Value` `fmt.Stringer`
+
 ## v0.5.1
 
 **2022-05-11**
