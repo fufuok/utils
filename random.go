@@ -58,23 +58,7 @@ func FastIntn(n int) int {
 // RandString a random string, which may contain uppercase letters, lowercase letters and numbers.
 // Ref: stackoverflow.icza
 func RandString(n int) string {
-	if n < 1 {
-		return ""
-	}
-	b := make([]byte, n)
-	for i, cache, remain := n-1, FastRand(), letterIdxMax; i >= 0; {
-		if remain == 0 {
-			cache, remain = FastRand(), letterIdxMax
-		}
-		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
-			i--
-		}
-		cache >>= letterIdxBits
-		remain--
-	}
-
-	return B2S(b)
+	return B2S(FastRandBytes(n))
 }
 
 // RandHex a random string containing only the following characters: 0123456789abcdef
@@ -98,5 +82,20 @@ func RandBytes(n int) []byte {
 
 // FastRandBytes random bytes, but faster.
 func FastRandBytes(n int) []byte {
-	return S2B(RandString(n))
+	if n < 1 {
+		return nil
+	}
+	b := make([]byte, n)
+	for i, cache, remain := n-1, FastRand(), letterIdxMax; i >= 0; {
+		if remain == 0 {
+			cache, remain = FastRand(), letterIdxMax
+		}
+		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
+			b[i] = letterBytes[idx]
+			i--
+		}
+		cache >>= letterIdxBits
+		remain--
+	}
+	return b
 }

@@ -106,6 +106,8 @@ func TestParseHumanBytes(t *testing.T) {
 func TestMustParseHumanBytes(t *testing.T) {
 	AssertEqual(t, uint64(44564480), MustParseHumanBytes("42.5Mi"))
 	AssertEqual(t, uint64(123), MustParseHumanBytes("-42.5Mi", 123))
+	AssertEqual(t, uint64(0), MustParseHumanBytes("x"))
+	AssertEqual(t, uint64(0), MustParseHumanBytes(""))
 }
 
 func TestParseHumanBytesErrors(t *testing.T) {
