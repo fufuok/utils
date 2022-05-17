@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 	"unsafe"
 )
 
@@ -94,14 +95,14 @@ func MustJSONString(v interface{}) string {
 }
 
 // MustString 强制转为字符串
-func MustString(v interface{}) string {
+func MustString(v interface{}, timeLayout ...string) string {
 	switch s := v.(type) {
 	default:
 		return fmt.Sprint(v)
 	case string:
 		return s
 	case []byte:
-		return B2S(s)
+		return string(s)
 	case error:
 		return s.Error()
 	case nil:
@@ -132,6 +133,15 @@ func MustString(v interface{}) string {
 		return strconv.FormatFloat(float64(s), 'f', -1, 32)
 	case float64:
 		return strconv.FormatFloat(s, 'f', -1, 64)
+	case time.Time:
+		if len(timeLayout) > 0 {
+			return s.Format(timeLayout[0])
+		}
+		return s.Format("2006-01-02 15:04:05")
+	case reflect.Value:
+		return MustString(s.Interface(), timeLayout...)
+	case fmt.Stringer:
+		return s.String()
 	}
 }
 

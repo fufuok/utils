@@ -3,6 +3,7 @@ package utils
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestStringToBytes(t *testing.T) {
@@ -116,6 +117,7 @@ func TestMustJSONString(t *testing.T) {
 }
 
 func TestMustString(t *testing.T) {
+	now := time.Date(2022, 1, 2, 3, 4, 5, 0, time.UTC)
 	for _, v := range []struct {
 		in  interface{}
 		out string
@@ -129,9 +131,12 @@ func TestMustString(t *testing.T) {
 		{[]byte(testString), testString},
 		{[]int{0, 2, 1}, "[0 2 1]"},
 		{map[string]interface{}{"a": 0, "b": true, "C": []byte("c")}, "map[C:[99] a:0 b:true]"},
+		{now, "2022-01-02 03:04:05"},
+		{&Bool{}, "false"},
 	} {
 		AssertEqual(t, v.out, MustString(v.in))
 	}
+	AssertEqual(t, "2022-01-02T03:04:05Z", MustString(now, time.RFC3339))
 }
 
 func TestMustInt(t *testing.T) {
