@@ -484,6 +484,7 @@ type RawBytes []byte
 type RawString string
 type UnquotedValue string
 type Value interface{ ... }
+    func EscapeString(s string) Value
 ```
 
 ### 常用的池
@@ -743,12 +744,15 @@ func main() {
 	js.PutString("s", `a"b"\c`)
 	js.PutFloat("f", 3.14)
 	js.PutBool("b", false)
+	js.PutRawString("raw", `{"a":3,"b":[4,true]}`)
+	js.PutString("multiline", fmt.Sprintf("y  \n   \t\n  "))
 	jsArr := jsongen.NewArray()
 	jsArr.AppendInt(7)
 	jsArr.AppendStringArray([]string{"A", "B"})
 	js.PutArray("sub", jsArr)
 	jsBytes := js.Serialize(nil)
-	fmt.Printf("%s\n", jsBytes) // {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]]}
+	// {"s":"a\"b\"\\c","f":3.14,"b":false,"raw":{"a":3,"b":[4,true]},"multiline":"y  \n   \t\n  ","sub":[7,["A","B"]]}
+	fmt.Printf("%s\n", jsBytes)
 
 	fmt.Println(utils.ID(), utils.ID()) // 1, 2
 
