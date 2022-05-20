@@ -2,9 +2,9 @@
 package jsongen
 
 import (
+	"encoding/json"
 	"strconv"
-
-	"github.com/fufuok/utils/pools/bufferpool"
+	"unsafe"
 )
 
 // Value 表示将要序列化到`json`字符串中的值
@@ -156,7 +156,7 @@ func (a *Array) AppendBool(b bool) {
 
 // AppendString 将`string`类型的值`s`追加到数组`a`后
 func (a *Array) AppendString(value string) {
-	*a = append(*a, QuotedValue(escapeString(value)))
+	*a = append(*a, EscapeString(value))
 }
 
 // AppendMap 将`Map`类型的值`m`追加到数组`a`后
@@ -204,7 +204,7 @@ func (a *Array) AppendBoolArray(b []bool) {
 func (a *Array) AppendStringArray(s []string) {
 	value := make([]Value, 0, len(s))
 	for _, v := range s {
-		value = append(value, QuotedValue(escapeString(v)))
+		value = append(value, EscapeString(v))
 	}
 	*a = append(*a, Array(value))
 }
@@ -324,7 +324,7 @@ func (m *Map) PutBool(key string, b bool) {
 
 // PutString 将`string`类型的值`value`与键`key`关联
 func (m *Map) PutString(key, value string) {
-	m.put(key, QuotedValue(escapeString(value)))
+	m.put(key, EscapeString(value))
 }
 
 // PutUintArray 将`uint64`数组类型的值`u`与键`key`关联
@@ -367,7 +367,7 @@ func (m *Map) PutBoolArray(key string, b []bool) {
 func (m *Map) PutStringArray(key string, s []string) {
 	value := make([]Value, 0, len(s))
 	for _, v := range s {
-		value = append(value, QuotedValue(escapeString(v)))
+		value = append(value, EscapeString(v))
 	}
 	m.put(key, Array(value))
 }
@@ -390,15 +390,12 @@ func NewMap() *Map {
 	}
 }
 
-func escapeString(s string) string {
-	buf := bufferpool.Get()
-	defer bufferpool.Put(buf)
-
-	for _, r := range s {
-		if r == '\\' || r == '"' {
-			buf.WriteByte('\\')
+func EscapeString(s string) Value {
+	for i := 0; i < len(s); i++ {
+		if s[i] == '"' || s[i] == '\\' || s[i] < ' ' || s[i] > 0x7f {
+			b, _ := json.Marshal(s)
+			return UnquotedValue(*(*string)(unsafe.Pointer(&b)))
 		}
-		buf.WriteRune(r)
 	}
-	return buf.String()
+	return QuotedValue(s)
 }

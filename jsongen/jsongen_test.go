@@ -74,6 +74,17 @@ func TestQuotedValue(t *testing.T) {
 	}
 }
 
+func TestGenJSON(t *testing.T) {
+	js := NewMap()
+	js.PutRawString("raw", jsStr)
+	js.PutString("multiline", fmt.Sprintf("x  \n  y  \n   \t\n  "))
+	bs := js.Serialize(nil)
+	var v map[string]interface{}
+	if err := json.Unmarshal(bs, &v); err != nil {
+		t.Fatal("Invalid JSON")
+	}
+}
+
 func array1() (*Array, string) {
 	a1 := NewArray()
 	a1.AppendUint(123)
