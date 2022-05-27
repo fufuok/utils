@@ -1,5 +1,16 @@
 # Go-Utils
 
+## v0.6.0
+
+**2022-05-27**
+
+- 增加 `xjson` 包, 包含常用到的 JSON 字符串操作库
+  - `github.com/fufuok/utils/xjson/jsongen` JSON 字符串生成
+  - `github.com/fufuok/utils/xjson/gjson` JSON 字符串搜索
+  - `github.com/fufuok/utils/xjson/sjson` JSON 字符串字段修改
+  - `github.com/fufuok/utils/xjson/pretty` JSON 字符串校验和格式化
+  - `github.com/fufuok/utils/xjson/match` 字符串通配符匹配
+
 ## v0.5.3
 
 **2022-05-20**
