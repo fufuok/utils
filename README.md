@@ -707,7 +707,7 @@ func main() {
 package sched // import "github.com/fufuok/utils/sched"
 
 type Option func(w *Pool)
-    func Randomizer(f func(min, max int) int) Option
+    func Queues(limit int) Option
     func Workers(limit int) Option
 type Pool struct{ ... }
     func New(opts ...Option) *Pool
@@ -733,11 +733,11 @@ import (
 
 	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
-	"github.com/fufuok/utils/jsongen"
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xcrypto"
 	"github.com/fufuok/utils/xid"
+	"github.com/fufuok/utils/xjson/jsongen"
 	"github.com/fufuok/utils/xsync"
 )
 
@@ -891,8 +891,8 @@ func main() {
 	bus.Wait()
 	bus.Release()
 
-	// 指定并发数
-	bus = sched.New(sched.Workers(2))
+	// 指定并发数, 指定队列缓冲数
+	bus = sched.New(sched.Workers(2), sched.Queues(1))
 	bus.Add(5)
 	for i := 0; i < 5; i++ {
 		bus.Run(func() {
