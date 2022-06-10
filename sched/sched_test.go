@@ -8,7 +8,6 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/sched"
 )
 
@@ -44,9 +43,7 @@ func TestSched(t *testing.T) {
 	}
 	s.Release()
 
-	s = sched.New(sched.Workers(4), sched.Randomizer(func(min, max int) int {
-		return utils.RandInt(min, max)
-	}))
+	s = sched.New(sched.Workers(4), sched.Queues(2))
 	s.Add(10)
 	sum = uint32(0)
 	for i := 0; i < 10; i++ {

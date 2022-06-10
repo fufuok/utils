@@ -7,17 +7,15 @@ package sched
 import (
 	"runtime"
 	"sync/atomic"
-
-	"github.com/fufuok/utils"
 )
 
 // Pool is a worker pool.
 type Pool struct {
 	running    uint64
 	numWorkers int
-	randomizer func(int, int) int
+	numQueues  int
+	tasks      chan funcdata
 	done       chan struct{}
-	workers    []chan funcdata
 }
 
 type funcdata struct {
@@ -29,29 +27,31 @@ type funcdata struct {
 // Option is a scheduler option.
 type Option func(w *Pool)
 
+// Workers is number of workers that can execute tasks concurrently.
 func Workers(limit int) Option {
 	return func(w *Pool) {
-		w.numWorkers = limit
+		if limit > 0 {
+			w.numWorkers = limit
+		}
 	}
 }
 
-func Randomizer(f func(min, max int) int) Option {
+// Queues is buffer capacity of the tasks channel.
+func Queues(limit int) Option {
 	return func(w *Pool) {
-		w.randomizer = f
+		if limit >= 0 {
+			w.numQueues = limit
+		}
 	}
 }
-
-// TODO: figure out if we can optimize cache misses?
 
 // New creates a new task scheduler and returns a pool of workers.
-//
 func New(opts ...Option) *Pool {
+	n := runtime.NumCPU()
 	p := &Pool{
-		randomizer: func(min, max int) int {
-			return utils.FastIntn(max)
-		},
 		running:    0,
-		numWorkers: runtime.NumCPU(),
+		numWorkers: n,
+		numQueues:  n * 100,
 		done:       make(chan struct{}),
 	}
 
@@ -59,15 +59,12 @@ func New(opts ...Option) *Pool {
 		opt(p)
 	}
 
-	p.workers = make([]chan funcdata, p.numWorkers)
-	for i := 0; i < p.numWorkers; i++ {
-		p.workers[i] = make(chan funcdata, 128)
-	}
+	p.tasks = make(chan funcdata, p.numQueues)
 
 	// Start workers
 	for i := 0; i < p.numWorkers; i++ {
-		go func(workerId int) {
-			for d := range p.workers[workerId] {
+		go func() {
+			for d := range p.tasks {
 				if d.fn != nil {
 					d.fn()
 				} else {
@@ -75,7 +72,7 @@ func New(opts ...Option) *Pool {
 				}
 				p.complete()
 			}
-		}(i)
+		}()
 	}
 
 	return p
@@ -84,14 +81,12 @@ func New(opts ...Option) *Pool {
 // Run runs f in the current pool.
 func (p *Pool) Run(f ...func()) {
 	for i := range f {
-		ii := p.randomizer(0, p.numWorkers)
-		p.workers[ii] <- funcdata{fn: f[i]}
+		p.tasks <- funcdata{fn: f[i]}
 	}
 }
 
 func (p *Pool) RunWithArgs(f func(args interface{}), args interface{}) {
-	ii := p.randomizer(0, p.numWorkers)
-	p.workers[ii] <- funcdata{fg: f, ar: args}
+	p.tasks <- funcdata{fg: f, ar: args}
 }
 
 func (p *Pool) Add(numTasks int) int {
@@ -111,9 +106,8 @@ func (p *Pool) Wait() {
 }
 
 func (p *Pool) Release() {
-	for i := range p.workers {
-		close(p.workers[i])
-	}
+	close(p.tasks)
+	close(p.done)
 }
 
 func (p *Pool) WaitAndRelease() {
