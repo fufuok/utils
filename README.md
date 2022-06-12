@@ -20,8 +20,14 @@ const IByte = 1 ...
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
+func AddBytes32(h uint32, b []byte) uint32
+func AddBytes64(h uint64, b []byte) uint64
 func AddString(s ...string) string
+func AddString32(h uint32, s string) uint32
+func AddString64(h uint64, s string) uint64
 func AddStringBytes(s ...string) []byte
+func AddUint32(h, u uint32) uint32
+func AddUint64(h uint64, u uint64) uint64
 func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
 func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, ...)
 func AssertPanics(t *testing.T, title string, f func())
@@ -94,9 +100,13 @@ func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
 func Hash(b []byte, h hash.Hash) []byte
 func HashBytes(b ...[]byte) string
-func HashBytesUint64(b ...[]byte) uint64
+func HashBytes32(b ...[]byte) uint32
+func HashBytes64(b ...[]byte) uint64
 func HashString(s ...string) string
-func HashStringUint64(s ...string) uint64
+func HashString32(s ...string) uint32
+func HashString64(s ...string) uint64
+func HashUint32(u uint32) uint32
+func HashUint64(u uint64) uint64
 func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
 func HmacSHA1(b, key []byte) []byte
 func HmacSHA1Hex(s, key string) string
@@ -190,6 +200,8 @@ func String2Bytes(s string) (bs []byte)
 func StringToBytes(s string) (b []byte)
 func Sum32(s string) uint32
 func Sum64(s string) uint64
+func SumBytes32(bs []byte) uint32
+func SumBytes64(bs []byte) uint64
 func SumInt(v ...int) int
 func ToLower(b string) string
 func ToLowerBytes(b []byte) []byte
@@ -217,6 +229,29 @@ type Bool struct{ ... }
 type NoCmp [0]func()
 type NoCopy struct{}
 ```
+
+### 泛型方法集
+
+具体使用见各目录下的文档或测试
+
+- [deepcopy][generic/deepcopy] 任意对象深拷贝
+- [constraints][generic/constraints] golang exp 的 constraints
+- [slices][generic/slices] golang exp 的 slices
+- [maps][generic/maps] golang exp 的 maps
+- [avl](generic/avl): an AVL tree.
+- [btree](generic/btree): a B-tree.
+- [cache](generic/cache): a wrapper around `map[K]V` that uses a maximum size and evicts elements using LRU when full.
+- [hashmap](generic/hashmap): a hashmap with linear probing. The main feature is that the hashmap can be efficiently copied, using copy-on-write under the hood.
+- [hashset](generic/hashset): a hashset that uses the hashmap as the underlying storage.
+- [mapset](generic/mapset): a set that uses Go's built-in map as the underlying storage.
+- [multimap](generic/multimap): an associative container that permits multiple entries with the same key.
+- [interval](generic/interval): an interval tree, implemented as an augmented AVL tree.
+- [list](generic/list): a doubly-linked list.
+- [rope](generic/rope): a generic rope, which is similar to an array but supports efficient insertion and deletion from anywhere in the array. Ropes are typically used for arrays of bytes, but this rope is generic.
+- [stack](generic/stack): a LIFO stack.
+- [trie](generic/trie): a ternary search trie.
+- [queue](generic/queue): a First In First Out (FIFO) queue.
+- [heap](generic/heap): a binary heap.
 
 ### 加解密小工具
 
@@ -466,7 +501,7 @@ type RToken struct{ ... }
 - github.com/fufuok/utils/sync/semaphore
 - github.com/fufuok/utils/sync/singleflight
 
-### 各类高效的 JSON 字符串操作库
+### 高效的 JSON 字符串操作库集
 
 1. **只有 `1` 次内存分配的 JSON 字符串生成器**
 
@@ -635,66 +670,6 @@ func New(d time.Duration) *time.Ticker
 func Release(t *time.Ticker)
 ```
 
-### 深拷贝
-
-见: [deepcopy](deepcopy)
-
-```go
-package deepcopy // import "github.com/fufuok/utils/deepcopy"
-
-Package deepcopy implements the proposal https://go.dev/issue/51520.
-
-func Value[T any](src T) (dst T)
-```
-
-浅拷贝及示例:
-
-```go
-//go:build go1.18
-// +build go1.18
-
-package main
-
-import (
-	"fmt"
-	"reflect"
-
-	"github.com/fufuok/utils/deepcopy"
-	"github.com/fufuok/utils/maps"
-	"github.com/fufuok/utils/slices"
-)
-
-func main() {
-	type tFN struct {
-		fn func() int
-	}
-	type tMap map[bool][]tFN
-	m1 := tMap{true: []tFN{{func() int { return 1 }}}}
-
-	// 深拷贝
-	m2 := deepcopy.Value(m1)
-	// equal: false 1
-	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m2), m2[true][0].fn())
-
-	// 浅拷贝
-	m3 := maps.Clone[tMap](m1)
-	// equal: true 1
-	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m3), m3[true][0].fn())
-
-	// 改变 m1 后
-	m1[true][0] = tFN{func() int { return 0 }}
-	// m1: 0, m2: 1, m3: 0
-	fmt.Printf("m1: %d, m2: %d, m3: %d\n", m1[true][0].fn(), m2[true][0].fn(), m3[true][0].fn())
-
-	s1 := []tMap{m1}
-	s2 := deepcopy.Value(s1)
-	s3 := slices.Clone(s1)
-	m1[true][0] = tFN{func() int { return 2 }}
-	// s1: 2, s2: 0, s3: 2
-	fmt.Printf("s1: %d, s2: %d, s3: %d\n", s1[0][true][0].fn(), s2[0][true][0].fn(), s3[0][true][0].fn())
-}
-```
-
 ### 并发任务调度库
 
 见: [sched](sched)
@@ -713,15 +688,7 @@ type Pool struct{ ... }
     func New(opts ...Option) *Pool
 ```
 
-### go1.18 实验库
-
-同 `golang.org/x/exp`
-
-- github.com/fufuok/utils/constraints
-- github.com/fufuok/utils/slices
-- github.com/fufuok/utils/maps
-
-## 使用
+## 使用示例
 
 ```go
 package main
@@ -733,11 +700,11 @@ import (
 
 	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
+	"github.com/fufuok/utils/jsongen"
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xcrypto"
 	"github.com/fufuok/utils/xid"
-	"github.com/fufuok/utils/xjson/jsongen"
 	"github.com/fufuok/utils/xsync"
 )
 
@@ -858,17 +825,16 @@ func main() {
 	js.PutString("s", `a"b"\c`)
 	js.PutFloat("f", 3.14)
 	js.PutBool("b", false)
-	js.PutRawString("raw", `{"a":3,"b":[4,true]}`)
-	js.PutString("multiline", fmt.Sprintf("y  \n   \t\n  "))
 	jsArr := jsongen.NewArray()
 	jsArr.AppendInt(7)
 	jsArr.AppendStringArray([]string{"A", "B"})
 	js.PutArray("sub", jsArr)
 	jsBytes := js.Serialize(nil)
-	// {"s":"a\"b\"\\c","f":3.14,"b":false,"raw":{"a":3,"b":[4,true]},"multiline":"y  \n   \t\n  ","sub":[7,["A","B"]]}
-	fmt.Printf("%s\n", jsBytes)
+	fmt.Printf("%s\n", jsBytes) // {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]]}
 
 	fmt.Println(utils.ID(), utils.ID()) // 1, 2
+
+	fmt.Println(utils.CutString("test@fufuok.com", "@")) // test fufuok.com true
 
 	var count xsync.Counter
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
@@ -881,8 +847,6 @@ func main() {
 	bus.Wait()
 	fmt.Println("count:", count.Value()) // count: 435
 
-	fmt.Println(utils.CutString("test@fufuok.com", "@")) // test fufuok.com true
-
 	// 继续下一批任务
 	bus.Add(1)
 	bus.Run(func() {
@@ -891,8 +855,8 @@ func main() {
 	bus.Wait()
 	bus.Release()
 
-	// 指定并发数, 指定队列缓冲数
-	bus = sched.New(sched.Workers(2), sched.Queues(1))
+	// 指定并发数
+	bus = sched.New(sched.Workers(2))
 	bus.Add(5)
 	for i := 0; i < 5; i++ {
 		bus.Run(func() {
