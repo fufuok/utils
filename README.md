@@ -234,10 +234,10 @@ type NoCopy struct{}
 
 具体使用见各目录下的文档或测试
 
-- [deepcopy][generic/deepcopy] 任意对象深拷贝
-- [constraints][generic/constraints] golang exp 的 constraints
-- [slices][generic/slices] golang exp 的 slices
-- [maps][generic/maps] golang exp 的 maps
+- [deepcopy](generic/deepcopy) 任意对象深拷贝
+- [constraints](generic/constraints) golang exp 的 constraints
+- [slices](generic/slices) golang exp 的 slices
+- [maps](generic/maps) golang exp 的 maps
 - [avl](generic/avl): an AVL tree.
 - [btree](generic/btree): a B-tree.
 - [cache](generic/cache): a wrapper around `map[K]V` that uses a maximum size and evicts elements using LRU when full.
