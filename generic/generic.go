@@ -5,7 +5,7 @@ package generic
 
 import (
 	"github.com/fufuok/utils"
-	"github.com/fufuok/utils/constraints"
+	"github.com/fufuok/utils/generic/constraints"
 )
 
 // EqualsFn is a function that returns whether 'a' and 'b' are equal.

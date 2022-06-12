@@ -5,7 +5,7 @@ package multimap
 
 import (
 	"github.com/fufuok/utils/generic/avl"
-	"github.com/fufuok/utils/slices"
+	"github.com/fufuok/utils/generic/slices"
 )
 
 type valuesContainer[V any] interface {

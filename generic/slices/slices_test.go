@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fufuok/utils/constraints"
+	"github.com/fufuok/utils/generic/constraints"
 )
 
 var equalIntTests = []struct {

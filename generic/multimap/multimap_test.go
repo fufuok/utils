@@ -8,7 +8,7 @@ import (
 
 	g "github.com/fufuok/utils/generic"
 	"github.com/fufuok/utils/generic/multimap"
-	"github.com/fufuok/utils/slices"
+	"github.com/fufuok/utils/generic/slices"
 )
 
 type entry struct {

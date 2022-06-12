@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/fufuok/utils/slices"
+	"github.com/fufuok/utils/generic/slices"
 )
 
 var m1 = map[int]int{1: 2, 2: 4, 4: 8, 8: 16}

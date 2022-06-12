@@ -16,10 +16,10 @@
 package slices
 
 import (
-	"github.com/fufuok/utils/constraints"
+	"github.com/fufuok/utils/generic/constraints"
 )
 
-// import "github.com/fufuok/utils/constraints"
+// import "github.com/fufuok/utils/generic/constraints"
 
 // Equal reports whether two slices are equal: the same length and all
 // elements equal. If the lengths are different, Equal returns false.

@@ -22,9 +22,8 @@ package interval
 import (
 	"fmt"
 
-	"github.com/fufuok/utils/constraints"
-
 	"github.com/fufuok/utils/generic"
+	"github.com/fufuok/utils/generic/constraints"
 )
 
 type KV[I constraints.Ordered, V any] struct {

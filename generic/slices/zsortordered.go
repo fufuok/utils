@@ -9,7 +9,9 @@
 
 package slices
 
-import "github.com/fufuok/utils/constraints"
+import (
+	"github.com/fufuok/utils/generic/constraints"
+)
 
 // insertionSortOrdered sorts data[a:b] using insertion sort.
 func insertionSortOrdered[E constraints.Ordered](data []E, a, b int) {

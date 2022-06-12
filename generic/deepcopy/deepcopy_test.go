@@ -12,7 +12,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fufuok/utils/deepcopy"
+	"github.com/fufuok/utils/generic/deepcopy"
+	"github.com/fufuok/utils/generic/maps"
+	"github.com/fufuok/utils/generic/slices"
 )
 
 func ExampleValue() {
@@ -121,4 +123,40 @@ func TestSpecialKind(t *testing.T) {
 	if reflect.DeepEqual(c, d) {
 		t.Fatalf("copied value is equal")
 	}
+}
+
+func Example() {
+	type tFN struct {
+		fn func() int
+	}
+	type tMap map[bool][]tFN
+	m1 := tMap{true: []tFN{{func() int { return 1 }}}}
+
+	// 深拷贝
+	m2 := deepcopy.Value(m1)
+	// equal: false 1
+	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m2), m2[true][0].fn())
+
+	// 浅拷贝
+	m3 := maps.Clone[tMap](m1)
+	// equal: true 1
+	fmt.Printf("equal: %v %+v\n", reflect.DeepEqual(m1, m3), m3[true][0].fn())
+
+	// 改变 m1 后
+	m1[true][0] = tFN{func() int { return 0 }}
+	// m1: 0, m2: 1, m3: 0
+	fmt.Printf("m1: %d, m2: %d, m3: %d\n", m1[true][0].fn(), m2[true][0].fn(), m3[true][0].fn())
+
+	s1 := []tMap{m1}
+	s2 := deepcopy.Value(s1)
+	s3 := slices.Clone(s1)
+	m1[true][0] = tFN{func() int { return 2 }}
+	// s1: 2, s2: 0, s3: 2
+	fmt.Printf("s1: %d, s2: %d, s3: %d\n", s1[0][true][0].fn(), s2[0][true][0].fn(), s3[0][true][0].fn())
+
+	// Output:
+	// equal: false 1
+	// equal: true 1
+	// m1: 0, m2: 1, m3: 0
+	// s1: 2, s2: 0, s3: 2
 }

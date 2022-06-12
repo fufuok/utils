@@ -10,7 +10,7 @@ package slices
 import (
 	"math/bits"
 
-	"github.com/fufuok/utils/constraints"
+	"github.com/fufuok/utils/generic/constraints"
 )
 
 // Sort sorts a slice of any ordered type in ascending order.
