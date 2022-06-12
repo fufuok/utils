@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/hex"
+	"math"
 	"testing"
 )
 
@@ -88,6 +89,46 @@ func TestHashString(t *testing.T) {
 		AssertEqual(t, v.out, HashString(v.in))
 		AssertEqual(t, v.out, HashBytes([]byte(v.in)))
 	}
+
+	for _, v := range []struct {
+		in  string
+		out uint32
+	}{
+		{"", 2166136261},
+		{"12345", 1136836824},
+		{testString, 475021159},
+		{"Fufu 中　文", 2300112168},
+	} {
+		AssertEqual(t, v.out, HashString32(v.in))
+		AssertEqual(t, v.out, HashBytes32([]byte(v.in)))
+	}
+}
+
+func TestHashUint(t *testing.T) {
+	for _, v := range []struct {
+		in, out uint64
+	}{
+		{0, 12161962213042174405},
+		{1, 12161961113530546194},
+		{offset64, 5063649278745802162},
+		{prime64, 14714463944532698764},
+		{math.MaxUint64, 10157053723145373757},
+	} {
+		AssertEqual(t, v.out, HashUint64(v.in))
+	}
+
+	for _, v := range []struct {
+		in, out uint32
+	}{
+		{0, 1268118805},
+		{1, 1251341186},
+		{offset32, 2870680790},
+		{prime32, 2389395716},
+		{math.MaxUint32, 3809873841},
+	} {
+		AssertEqual(t, v.out, HashUint32(v.in))
+	}
+
 }
 
 func TestHashStringToInt(t *testing.T) {

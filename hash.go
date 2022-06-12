@@ -156,22 +156,22 @@ func MD5Reader(r io.Reader) (string, error) {
 
 // Sum64 获取字符串的哈希值
 func Sum64(s string) uint64 {
-	var h uint64 = offset64
-	for i := 0; i < len(s); i++ {
-		h ^= uint64(s[i])
-		h *= prime64
-	}
-	return h
+	return AddString64(offset64, s)
+}
+
+// SumBytes64 获取 bytes 的哈希值
+func SumBytes64(bs []byte) uint64 {
+	return AddBytes64(offset64, bs)
 }
 
 // Sum32 获取字符串的哈希值
 func Sum32(s string) uint32 {
-	var h uint32 = offset32
-	for i := 0; i < len(s); i++ {
-		h ^= uint32(s[i])
-		h *= prime32
-	}
-	return h
+	return AddString32(offset32, s)
+}
+
+// SumBytes32 获取 bytes 的哈希值
+func SumBytes32(bs []byte) uint32 {
+	return AddBytes32(offset32, bs)
 }
 
 // FnvHash 获取字符串的哈希值
@@ -248,18 +248,215 @@ func Djb33(s string) uint32 {
 
 // HashString 合并一串文本, 得到字符串哈希
 func HashString(s ...string) string {
-	return strconv.FormatUint(HashStringUint64(s...), 10)
+	return strconv.FormatUint(HashString64(s...), 10)
 }
 
-func HashStringUint64(s ...string) uint64 {
+func HashString64(s ...string) uint64 {
 	return Sum64(AddString(s...))
+}
+
+func HashString32(s ...string) uint32 {
+	return Sum32(AddString(s...))
 }
 
 // HashBytes 合并 Bytes, 得到字符串哈希
 func HashBytes(b ...[]byte) string {
-	return strconv.FormatUint(HashBytesUint64(b...), 10)
+	return strconv.FormatUint(HashBytes64(b...), 10)
 }
 
-func HashBytesUint64(b ...[]byte) uint64 {
-	return Sum64(B2S(JoinBytes(b...)))
+func HashBytes64(b ...[]byte) uint64 {
+	return SumBytes64(JoinBytes(b...))
+}
+
+func HashBytes32(b ...[]byte) uint32 {
+	return SumBytes32(JoinBytes(b...))
+}
+
+// HashUint64 returns the hash of u.
+// Ref: segmentio/fasthash
+func HashUint64(u uint64) uint64 {
+	return AddUint64(offset64, u)
+}
+
+// HashUint32 returns the hash of u.
+// Ref: segmentio/fasthash
+func HashUint32(u uint32) uint32 {
+	return AddUint32(offset32, u)
+}
+
+// AddString64 adds the hash of s to the precomputed hash value h.
+// Ref: segmentio/fasthash
+func AddString64(h uint64, s string) uint64 {
+	/*
+		This is an unrolled version of this algorithm:
+		for _, c := range s {
+			h = (h ^ uint64(c)) * prime64
+		}
+		It seems to be ~1.5x faster than the simple loop in BenchmarkHash64:
+		- BenchmarkHash64/hash_function-4   30000000   56.1 ns/op   642.15 MB/s   0 B/op   0 allocs/op
+		- BenchmarkHash64/hash_function-4   50000000   38.6 ns/op   932.35 MB/s   0 B/op   0 allocs/op
+	*/
+	for len(s) >= 8 {
+		h = (h ^ uint64(s[0])) * prime64
+		h = (h ^ uint64(s[1])) * prime64
+		h = (h ^ uint64(s[2])) * prime64
+		h = (h ^ uint64(s[3])) * prime64
+		h = (h ^ uint64(s[4])) * prime64
+		h = (h ^ uint64(s[5])) * prime64
+		h = (h ^ uint64(s[6])) * prime64
+		h = (h ^ uint64(s[7])) * prime64
+		s = s[8:]
+	}
+
+	if len(s) >= 4 {
+		h = (h ^ uint64(s[0])) * prime64
+		h = (h ^ uint64(s[1])) * prime64
+		h = (h ^ uint64(s[2])) * prime64
+		h = (h ^ uint64(s[3])) * prime64
+		s = s[4:]
+	}
+
+	if len(s) >= 2 {
+		h = (h ^ uint64(s[0])) * prime64
+		h = (h ^ uint64(s[1])) * prime64
+		s = s[2:]
+	}
+
+	if len(s) > 0 {
+		h = (h ^ uint64(s[0])) * prime64
+	}
+
+	return h
+}
+
+// AddBytes64 adds the hash of b to the precomputed hash value h.
+// Ref: segmentio/fasthash
+func AddBytes64(h uint64, b []byte) uint64 {
+	for len(b) >= 8 {
+		h = (h ^ uint64(b[0])) * prime64
+		h = (h ^ uint64(b[1])) * prime64
+		h = (h ^ uint64(b[2])) * prime64
+		h = (h ^ uint64(b[3])) * prime64
+		h = (h ^ uint64(b[4])) * prime64
+		h = (h ^ uint64(b[5])) * prime64
+		h = (h ^ uint64(b[6])) * prime64
+		h = (h ^ uint64(b[7])) * prime64
+		b = b[8:]
+	}
+
+	if len(b) >= 4 {
+		h = (h ^ uint64(b[0])) * prime64
+		h = (h ^ uint64(b[1])) * prime64
+		h = (h ^ uint64(b[2])) * prime64
+		h = (h ^ uint64(b[3])) * prime64
+		b = b[4:]
+	}
+
+	if len(b) >= 2 {
+		h = (h ^ uint64(b[0])) * prime64
+		h = (h ^ uint64(b[1])) * prime64
+		b = b[2:]
+	}
+
+	if len(b) > 0 {
+		h = (h ^ uint64(b[0])) * prime64
+	}
+
+	return h
+}
+
+// AddUint64 adds the hash value of the 8 bytes of u to h.
+// Ref: segmentio/fasthash
+func AddUint64(h uint64, u uint64) uint64 {
+	h = (h ^ ((u >> 56) & 0xFF)) * prime64
+	h = (h ^ ((u >> 48) & 0xFF)) * prime64
+	h = (h ^ ((u >> 40) & 0xFF)) * prime64
+	h = (h ^ ((u >> 32) & 0xFF)) * prime64
+	h = (h ^ ((u >> 24) & 0xFF)) * prime64
+	h = (h ^ ((u >> 16) & 0xFF)) * prime64
+	h = (h ^ ((u >> 8) & 0xFF)) * prime64
+	h = (h ^ ((u >> 0) & 0xFF)) * prime64
+	return h
+}
+
+// AddString32 adds the hash of s to the precomputed hash value h.
+// Ref: segmentio/fasthash
+func AddString32(h uint32, s string) uint32 {
+	for len(s) >= 8 {
+		h = (h ^ uint32(s[0])) * prime32
+		h = (h ^ uint32(s[1])) * prime32
+		h = (h ^ uint32(s[2])) * prime32
+		h = (h ^ uint32(s[3])) * prime32
+		h = (h ^ uint32(s[4])) * prime32
+		h = (h ^ uint32(s[5])) * prime32
+		h = (h ^ uint32(s[6])) * prime32
+		h = (h ^ uint32(s[7])) * prime32
+		s = s[8:]
+	}
+
+	if len(s) >= 4 {
+		h = (h ^ uint32(s[0])) * prime32
+		h = (h ^ uint32(s[1])) * prime32
+		h = (h ^ uint32(s[2])) * prime32
+		h = (h ^ uint32(s[3])) * prime32
+		s = s[4:]
+	}
+
+	if len(s) >= 2 {
+		h = (h ^ uint32(s[0])) * prime32
+		h = (h ^ uint32(s[1])) * prime32
+		s = s[2:]
+	}
+
+	if len(s) > 0 {
+		h = (h ^ uint32(s[0])) * prime32
+	}
+
+	return h
+}
+
+// AddBytes32 adds the hash of b to the precomputed hash value h.
+// Ref: segmentio/fasthash
+func AddBytes32(h uint32, b []byte) uint32 {
+	for len(b) >= 8 {
+		h = (h ^ uint32(b[0])) * prime32
+		h = (h ^ uint32(b[1])) * prime32
+		h = (h ^ uint32(b[2])) * prime32
+		h = (h ^ uint32(b[3])) * prime32
+		h = (h ^ uint32(b[4])) * prime32
+		h = (h ^ uint32(b[5])) * prime32
+		h = (h ^ uint32(b[6])) * prime32
+		h = (h ^ uint32(b[7])) * prime32
+		b = b[8:]
+	}
+
+	if len(b) >= 4 {
+		h = (h ^ uint32(b[0])) * prime32
+		h = (h ^ uint32(b[1])) * prime32
+		h = (h ^ uint32(b[2])) * prime32
+		h = (h ^ uint32(b[3])) * prime32
+		b = b[4:]
+	}
+
+	if len(b) >= 2 {
+		h = (h ^ uint32(b[0])) * prime32
+		h = (h ^ uint32(b[1])) * prime32
+		b = b[2:]
+	}
+
+	if len(b) > 0 {
+		h = (h ^ uint32(b[0])) * prime32
+	}
+
+	return h
+}
+
+// AddUint32 adds the hash value of the 8 bytes of u to h.
+// Ref: segmentio/fasthash
+func AddUint32(h, u uint32) uint32 {
+	h = (h ^ ((u >> 24) & 0xFF)) * prime32
+	h = (h ^ ((u >> 16) & 0xFF)) * prime32
+	h = (h ^ ((u >> 8) & 0xFF)) * prime32
+	h = (h ^ ((u >> 0) & 0xFF)) * prime32
+	return h
 }
