@@ -1,5 +1,13 @@
 # Go-Utils
 
+## v0.7.0
+
+**2022-06-12**
+
+- 增加 `generic` 包, 包含常用的泛型实现, 大多来自: `zyedidia/generic`, 感谢!
+- 移动 `deepcopy` `maps` `slices` `constraints` 到 `generic`
+- 优化文本 Hash 算法
+
 ## v0.6.1
 
 **2022-06-10**
