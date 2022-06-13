@@ -28,6 +28,8 @@ jobs:
           go env
           go get -t -v ./...
           git rev-parse --short HEAD
+      - name: Run Vet
+        run: go vet ./...
       - name: Run Test
         run: go test -v -cover -covermode=atomic ./...
   bench:
@@ -37,7 +39,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.18
       - name: Fetch Repository
         uses: actions/checkout@v2
       - name: Run Benchmark
