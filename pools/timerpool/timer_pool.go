@@ -14,8 +14,6 @@ func New(d time.Duration) *time.Timer {
 	}
 	t := v.(*time.Timer)
 	if t.Reset(d) {
-		// active timer trapped to the pool?
-		// t.Stop()
 		return time.NewTimer(d)
 	}
 	return t
@@ -23,7 +21,10 @@ func New(d time.Duration) *time.Timer {
 
 func Release(t *time.Timer) {
 	if !t.Stop() {
-		return
+		select {
+		case <-t.C:
+		default:
+		}
 	}
 	timerPool.Put(t)
 }
