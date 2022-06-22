@@ -12,6 +12,7 @@ import "github.com/fufuok/utils/myip"
 - [func ExternalIPAny(retries ...int) string](<#func-externalipany>)
 - [func ExternalIPv4() string](<#func-externalipv4>)
 - [func ExternalIPv6() string](<#func-externalipv6>)
+- [func InterfaceAddrs(v ...string) (map[string][]net.IP, error)](<#func-interfaceaddrs>)
 - [func InternalIP(dstAddr, network string) string](<#func-internalip>)
 - [func InternalIPv4() string](<#func-internalipv4>)
 - [func InternalIPv6() string](<#func-internalipv6>)
@@ -19,7 +20,7 @@ import "github.com/fufuok/utils/myip"
 - [func LocalIPv4s() (ips []string)](<#func-localipv4s>)
 
 
-## func [ExternalIP](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L52>)
+## func ExternalIP
 
 ```go
 func ExternalIP(v ...string) string
@@ -27,7 +28,7 @@ func ExternalIP(v ...string) string
 
 ExternalIP 获取外网地址 \(出口公网地址\)
 
-## func [ExternalIPAny](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L30>)
+## func ExternalIPAny
 
 ```go
 func ExternalIPAny(retries ...int) string
@@ -35,7 +36,7 @@ func ExternalIPAny(retries ...int) string
 
 ExternalIPAny 获取外网地址
 
-## func [ExternalIPv4](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L61>)
+## func ExternalIPv4
 
 ```go
 func ExternalIPv4() string
@@ -43,7 +44,7 @@ func ExternalIPv4() string
 
 ExternalIPv4 获取外网地址 \(IPv4\)
 
-## func [ExternalIPv6](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L66>)
+## func ExternalIPv6
 
 ```go
 func ExternalIPv6() string
@@ -51,7 +52,15 @@ func ExternalIPv6() string
 
 ExternalIPv6 获取外网地址 \(IPv6\)
 
-## func [InternalIP](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L127>)
+## func InterfaceAddrs
+
+```go
+func InterfaceAddrs(v ...string) (map[string][]net.IP, error)
+```
+
+InterfaceAddrs 获取所有带 IP 的接口和对应的所有 IP
+
+## func InternalIP
 
 ```go
 func InternalIP(dstAddr, network string) string
@@ -59,7 +68,7 @@ func InternalIP(dstAddr, network string) string
 
 InternalIP 获取内网地址 \(出口本地地址\)
 
-## func [InternalIPv4](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L117>)
+## func InternalIPv4
 
 ```go
 func InternalIPv4() string
@@ -67,7 +76,7 @@ func InternalIPv4() string
 
 InternalIPv4 获取内网地址 \(IPv4\)
 
-## func [InternalIPv6](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L122>)
+## func InternalIPv6
 
 ```go
 func InternalIPv6() string
@@ -75,7 +84,7 @@ func InternalIPv6() string
 
 InternalIPv6 获取内网地址 \(临时 IPv6 地址\)
 
-## func [LocalIP](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L154>)
+## func LocalIP
 
 ```go
 func LocalIP() string
@@ -83,7 +92,7 @@ func LocalIP() string
 
 LocalIP 获取本地地址 \(第一个\)
 
-## func [LocalIPv4s](<https://gitee.com/fufuok/utils/blob/master/myip/myip.go#L169>)
+## func LocalIPv4s
 
 ```go
 func LocalIPv4s() (ips []string)

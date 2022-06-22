@@ -54,4 +54,9 @@ func main() {
 	fmt.Println("获取所有本地地址 (IPv4):", myip.LocalIPv4s())
 
 	fmt.Println("MyIP:", InternalIPv4, InternalIPv6, ExternalIPv4, ExternalIPv6, ExternalIPAny)
+
+	ifAddrs, _ := myip.InterfaceAddrs()
+	fmt.Println("所有网络接口地址:", ifAddrs)
+	fmt.Println(myip.InterfaceAddrs("ipv4"))
+	fmt.Println(myip.InterfaceAddrs("ipv6"))
 }

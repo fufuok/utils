@@ -179,3 +179,53 @@ func LocalIPv4s() (ips []string) {
 
 	return
 }
+
+// InterfaceAddrs 获取所有带 IP 的接口和对应的所有 IP
+// 排除本地链路地址和环回地址
+func InterfaceAddrs(v ...string) (map[string][]net.IP, error) {
+	ifAddrs := make(map[string][]net.IP)
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return ifAddrs, err
+	}
+
+	var (
+		ip net.IP
+		t  string
+	)
+	if len(v) > 0 {
+		t = strings.ToLower(v[0])
+	}
+
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			return ifAddrs, err
+		}
+		for _, addr := range addrs {
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			default:
+				ip = net.IPv4zero
+			}
+			if ip.IsLinkLocalUnicast() || ip.IsLoopback() {
+				continue
+			}
+			switch t {
+			case "ipv6":
+				if ip.To4() != nil {
+					continue
+				}
+			case "ipv4":
+				if ip.To4() == nil {
+					continue
+				}
+			}
+			ifAddrs[i.Name] = append(ifAddrs[i.Name], ip)
+		}
+	}
+	return ifAddrs, nil
+}
