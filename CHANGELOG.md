@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.7.2
+
+**2022-06-22**
+
+- 增加 `IsIP` `IsIPv4` `IsIPv6` `ParseIPv4` `ParseIPv6` `myip.InterfaceAddrs`
+
 ## v0.7.1
 
 **2022-06-16**

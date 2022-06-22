@@ -135,6 +135,9 @@ func InStrings(ss []string, s string) bool
 func IsDir(s string) bool
 func IsExist(s string) bool
 func IsFile(s string) bool
+func IsIP(ip string) bool
+func IsIPv4(ip string) bool
+func IsIPv6(ip string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
 func IsNil(i interface{}) bool
@@ -173,6 +176,8 @@ func Pad(s, pad string, n int) string
 func PadBytes(s, pad []byte, n int) []byte
 func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
+func ParseIPv4(ip string) net.IP
+func ParseIPv6(ip string) net.IP
 func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min, max int) int
@@ -392,6 +397,7 @@ func ExternalIP(v ...string) string
 func ExternalIPAny(retries ...int) string
 func ExternalIPv4() string
 func ExternalIPv6() string
+func InterfaceAddrs(v ...string) (map[string][]net.IP, error)
 func InternalIP(dstAddr, network string) string
 func InternalIPv4() string
 func InternalIPv6() string

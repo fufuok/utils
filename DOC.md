@@ -125,6 +125,9 @@ import "github.com/fufuok/utils"
 - [func IsDir(s string) bool](<#func-isdir>)
 - [func IsExist(s string) bool](<#func-isexist>)
 - [func IsFile(s string) bool](<#func-isfile>)
+- [func IsIP(ip string) bool](<#func-isip>)
+- [func IsIPv4(ip string) bool](<#func-isipv4>)
+- [func IsIPv6(ip string) bool](<#func-isipv6>)
 - [func IsInternalIPv4(ip net.IP) bool](<#func-isinternalipv4>)
 - [func IsInternalIPv4String(ip string) bool](<#func-isinternalipv4string>)
 - [func IsNil(i interface{}) bool](<#func-isnil>)
@@ -163,6 +166,8 @@ import "github.com/fufuok/utils"
 - [func PadBytes(s, pad []byte, n int) []byte](<#func-padbytes>)
 - [func ParseHumanBigBytes(s string) (*big.Int, error)](<#func-parsehumanbigbytes>)
 - [func ParseHumanBytes(s string) (uint64, error)](<#func-parsehumanbytes>)
+- [func ParseIPv4(ip string) net.IP](<#func-parseipv4>)
+- [func ParseIPv6(ip string) net.IP](<#func-parseipv6>)
 - [func RandBytes(n int) []byte](<#func-randbytes>)
 - [func RandHex(nHalf int) string](<#func-randhex>)
 - [func RandInt(min, max int) int](<#func-randint>)
@@ -323,7 +328,7 @@ var (
 )
 ```
 
-## func [AddBytes32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L420>)
+## func AddBytes32
 
 ```go
 func AddBytes32(h uint32, b []byte) uint32
@@ -331,7 +336,7 @@ func AddBytes32(h uint32, b []byte) uint32
 
 AddBytes32 adds the hash of b to the precomputed hash value h\. Ref: segmentio/fasthash
 
-## func [AddBytes64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L334>)
+## func AddBytes64
 
 ```go
 func AddBytes64(h uint64, b []byte) uint64
@@ -339,7 +344,7 @@ func AddBytes64(h uint64, b []byte) uint64
 
 AddBytes64 adds the hash of b to the precomputed hash value h\. Ref: segmentio/fasthash
 
-## func [AddString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L101>)
+## func AddString
 
 ```go
 func AddString(s ...string) string
@@ -347,7 +352,7 @@ func AddString(s ...string) string
 
 AddString 拼接字符串
 
-## func [AddString32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L384>)
+## func AddString32
 
 ```go
 func AddString32(h uint32, s string) uint32
@@ -355,7 +360,7 @@ func AddString32(h uint32, s string) uint32
 
 AddString32 adds the hash of s to the precomputed hash value h\. Ref: segmentio/fasthash
 
-## func [AddString64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L289>)
+## func AddString64
 
 ```go
 func AddString64(h uint64, s string) uint64
@@ -363,7 +368,7 @@ func AddString64(h uint64, s string) uint64
 
 AddString64 adds the hash of s to the precomputed hash value h\. Ref: segmentio/fasthash
 
-## func [AddStringBytes](<https://gitee.com/fufuok/utils/blob/master/strings.go#L78>)
+## func AddStringBytes
 
 ```go
 func AddStringBytes(s ...string) []byte
@@ -371,7 +376,7 @@ func AddStringBytes(s ...string) []byte
 
 AddStringBytes 拼接字符串\, 返回 bytes from bytes\.Join\(\)
 
-## func [AddUint32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L456>)
+## func AddUint32
 
 ```go
 func AddUint32(h, u uint32) uint32
@@ -379,7 +384,7 @@ func AddUint32(h, u uint32) uint32
 
 AddUint32 adds the hash value of the 8 bytes of u to h\. Ref: segmentio/fasthash
 
-## func [AddUint64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L370>)
+## func AddUint64
 
 ```go
 func AddUint64(h uint64, u uint64) uint64
@@ -387,7 +392,7 @@ func AddUint64(h uint64, u uint64) uint64
 
 AddUint64 adds the hash value of the 8 bytes of u to h\. Ref: segmentio/fasthash
 
-## func [AssertEqual](<https://gitee.com/fufuok/utils/blob/master/assertions.go#L20>)
+## func AssertEqual
 
 ```go
 func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
@@ -395,13 +400,13 @@ func AssertEqual(tb testing.TB, expected, actual interface{}, description ...str
 
 AssertEqual checks if values are equal Ref: gofiber/utils
 
-## func [AssertEqualf](<https://gitee.com/fufuok/utils/blob/master/assertions.go#L14>)
+## func AssertEqualf
 
 ```go
 func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{})
 ```
 
-## func [AssertPanics](<https://gitee.com/fufuok/utils/blob/master/assertions.go#L71>)
+## func AssertPanics
 
 ```go
 func AssertPanics(t *testing.T, title string, f func())
@@ -409,7 +414,7 @@ func AssertPanics(t *testing.T, title string, f func())
 
 AssertPanics 断言 panic
 
-## func [B2S](<https://gitee.com/fufuok/utils/blob/master/convert.go#L71>)
+## func B2S
 
 ```go
 func B2S(b []byte) string
@@ -417,7 +422,7 @@ func B2S(b []byte) string
 
 B2S BytesToString
 
-## func [B64Decode](<https://gitee.com/fufuok/utils/blob/master/convert.go#L222>)
+## func B64Decode
 
 ```go
 func B64Decode(s string) []byte
@@ -425,7 +430,7 @@ func B64Decode(s string) []byte
 
 B64Decode Base64 解码
 
-## func [B64Encode](<https://gitee.com/fufuok/utils/blob/master/convert.go#L217>)
+## func B64Encode
 
 ```go
 func B64Encode(b []byte) string
@@ -433,7 +438,7 @@ func B64Encode(b []byte) string
 
 B64Encode Base64 编码
 
-## func [B64UrlDecode](<https://gitee.com/fufuok/utils/blob/master/convert.go#L236>)
+## func B64UrlDecode
 
 ```go
 func B64UrlDecode(s string) []byte
@@ -441,7 +446,7 @@ func B64UrlDecode(s string) []byte
 
 B64UrlDecode Base64 解码
 
-## func [B64UrlEncode](<https://gitee.com/fufuok/utils/blob/master/convert.go#L231>)
+## func B64UrlEncode
 
 ```go
 func B64UrlEncode(b []byte) string
@@ -449,7 +454,7 @@ func B64UrlEncode(b []byte) string
 
 B64UrlEncode Base64 解码\, 安全 URL\, 替换: "\+/" 为 "\-\_"
 
-## func [BeginOfDay](<https://gitee.com/fufuok/utils/blob/master/time.go#L14>)
+## func BeginOfDay
 
 ```go
 func BeginOfDay(t time.Time) time.Time
@@ -457,7 +462,7 @@ func BeginOfDay(t time.Time) time.Time
 
 BeginOfDay 当天 0 点
 
-## func [BeginOfHour](<https://gitee.com/fufuok/utils/blob/master/time.go#L56>)
+## func BeginOfHour
 
 ```go
 func BeginOfHour(t time.Time) time.Time
@@ -465,7 +470,7 @@ func BeginOfHour(t time.Time) time.Time
 
 BeginOfHour 0 分
 
-## func [BeginOfLastMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L112>)
+## func BeginOfLastMonth
 
 ```go
 func BeginOfLastMonth(t time.Time) time.Time
@@ -473,7 +478,7 @@ func BeginOfLastMonth(t time.Time) time.Time
 
 BeginOfLastMonth 上月第一天 0 点
 
-## func [BeginOfLastWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L81>)
+## func BeginOfLastWeek
 
 ```go
 func BeginOfLastWeek(t time.Time) time.Time
@@ -481,7 +486,7 @@ func BeginOfLastWeek(t time.Time) time.Time
 
 BeginOfLastWeek 上周一 0 点
 
-## func [BeginOfMinute](<https://gitee.com/fufuok/utils/blob/master/time.go#L45>)
+## func BeginOfMinute
 
 ```go
 func BeginOfMinute(t time.Time) time.Time
@@ -489,7 +494,7 @@ func BeginOfMinute(t time.Time) time.Time
 
 BeginOfMinute 0 秒
 
-## func [BeginOfMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L101>)
+## func BeginOfMonth
 
 ```go
 func BeginOfMonth(t time.Time) time.Time
@@ -497,7 +502,7 @@ func BeginOfMonth(t time.Time) time.Time
 
 BeginOfMonth 当月第一天 0 点
 
-## func [BeginOfNextMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L122>)
+## func BeginOfNextMonth
 
 ```go
 func BeginOfNextMonth(t time.Time) time.Time
@@ -505,7 +510,7 @@ func BeginOfNextMonth(t time.Time) time.Time
 
 BeginOfNextMonth 下月第一天 0 点
 
-## func [BeginOfNextWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L91>)
+## func BeginOfNextWeek
 
 ```go
 func BeginOfNextWeek(t time.Time) time.Time
@@ -513,7 +518,7 @@ func BeginOfNextWeek(t time.Time) time.Time
 
 BeginOfNextWeek 下周一 0 点
 
-## func [BeginOfTomorrow](<https://gitee.com/fufuok/utils/blob/master/time.go#L35>)
+## func BeginOfTomorrow
 
 ```go
 func BeginOfTomorrow(t time.Time) time.Time
@@ -521,7 +526,7 @@ func BeginOfTomorrow(t time.Time) time.Time
 
 BeginOfTomorrow 明天 0 点
 
-## func [BeginOfWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L67>)
+## func BeginOfWeek
 
 ```go
 func BeginOfWeek(t time.Time) time.Time
@@ -529,7 +534,7 @@ func BeginOfWeek(t time.Time) time.Time
 
 BeginOfWeek 本周一 0 点
 
-## func [BeginOfYear](<https://gitee.com/fufuok/utils/blob/master/time.go#L137>)
+## func BeginOfYear
 
 ```go
 func BeginOfYear(t time.Time) time.Time
@@ -537,7 +542,7 @@ func BeginOfYear(t time.Time) time.Time
 
 BeginOfYear 本年第一天 0 点
 
-## func [BeginOfYesterday](<https://gitee.com/fufuok/utils/blob/master/time.go#L25>)
+## func BeginOfYesterday
 
 ```go
 func BeginOfYesterday(t time.Time) time.Time
@@ -545,7 +550,7 @@ func BeginOfYesterday(t time.Time) time.Time
 
 BeginOfYesterday 昨天 0 点
 
-## func [BigComma](<https://gitee.com/fufuok/utils/blob/master/integer.go#L131>)
+## func BigComma
 
 ```go
 func BigComma(b *big.Int) string
@@ -553,7 +558,7 @@ func BigComma(b *big.Int) string
 
 BigComma big\.Int 千分位分隔字符串 Ref: dustin/go\-humanize
 
-## func [BigCommaf](<https://gitee.com/fufuok/utils/blob/master/float.go#L63>)
+## func BigCommaf
 
 ```go
 func BigCommaf(v *big.Float) string
@@ -561,7 +566,7 @@ func BigCommaf(v *big.Float) string
 
 BigCommaf big\.Float 千分位分隔字符串 Ref: dustin/go\-humanize
 
-## func [Bigoom](<https://gitee.com/fufuok/utils/blob/master/integer.go#L162>)
+## func Bigoom
 
 ```go
 func Bigoom(n, b *big.Int) (float64, int)
@@ -569,7 +574,7 @@ func Bigoom(n, b *big.Int) (float64, int)
 
 Bigoom big\.Int 总数量级 Ref: dustin/go\-humanize
 
-## func [CPUTicks](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L68>)
+## func CPUTicks
 
 ```go
 func CPUTicks() int64
@@ -577,7 +582,7 @@ func CPUTicks() int64
 
 CPUTicks CPU 时钟周期\, 更高精度 \(云服务器做伪随机数种子时慎用\)
 
-## func [CallPath](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L14>)
+## func CallPath
 
 ```go
 func CallPath() string
@@ -585,7 +590,7 @@ func CallPath() string
 
 CallPath 运行时路径\, 编译目录 假如: mklink E:\\tmp\\linkapp\.exe D:\\Fufu\\Test\\abc\\app\.exe 执行: E:\\tmp\\linkapp\.exe CallPath: E:\\Go\\src\\github\.com\\fufuok\\utils\\tmp\\osext
 
-## func [Comma](<https://gitee.com/fufuok/utils/blob/master/integer.go#L68>)
+## func Comma
 
 ```go
 func Comma(v int64) string
@@ -593,7 +598,7 @@ func Comma(v int64) string
 
 Comma 整数转千分位分隔字符串 Ref: dustin/go\-humanize e\.g\. Comma\(834142\) \-\> 834\,142
 
-## func [Commaf](<https://gitee.com/fufuok/utils/blob/master/float.go#L31>)
+## func Commaf
 
 ```go
 func Commaf(v float64) string
@@ -601,7 +606,7 @@ func Commaf(v float64) string
 
 Commaf 浮点数转千分位分隔字符串 Ref: dustin/go\-humanize e\.g\. Commaf\(834142\.32\) \-\> 834\,142\.32
 
-## func [Commai](<https://gitee.com/fufuok/utils/blob/master/integer.go#L61>)
+## func Commai
 
 ```go
 func Commai(v int) string
@@ -609,7 +614,7 @@ func Commai(v int) string
 
 Commai 整数转千分位分隔字符串
 
-## func [Commau](<https://gitee.com/fufuok/utils/blob/master/integer.go#L102>)
+## func Commau
 
 ```go
 func Commau(v uint64) string
@@ -617,7 +622,7 @@ func Commau(v uint64) string
 
 Commau 整数转千分位分隔字符串 Ref: dustin/go\-humanize
 
-## func [CopyB2S](<https://gitee.com/fufuok/utils/blob/master/strings.go#L70>)
+## func CopyB2S
 
 ```go
 func CopyB2S(b []byte) string
@@ -625,7 +630,7 @@ func CopyB2S(b []byte) string
 
 CopyB2S Immutable\, \[\]byte to string string\(b\)
 
-## func [CopyBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L40>)
+## func CopyBytes
 
 ```go
 func CopyBytes(b []byte) []byte
@@ -633,7 +638,7 @@ func CopyBytes(b []byte) []byte
 
 CopyBytes Immutable\, \[\]byte to \[\]byte
 
-## func [CopyS2B](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L48>)
+## func CopyS2B
 
 ```go
 func CopyS2B(s string) []byte
@@ -641,7 +646,7 @@ func CopyS2B(s string) []byte
 
 CopyS2B Immutable\, string to \[\]byte \[\]byte\(s\)
 
-## func [CopyString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L59>)
+## func CopyString
 
 ```go
 func CopyString(s string) string
@@ -649,7 +654,7 @@ func CopyString(s string) string
 
 CopyString Immutable\, string to string e\.g\. fiberParam := utils\.CopyString\(c\.Params\("test"\)\) e\.g\. utils\.CopyString\(s\[500:1000\]\) // 可以让 s 被 GC 回收 strings\.Clone\(s\) // go1\.18
 
-## func [CutBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L136>)
+## func CutBytes
 
 ```go
 func CutBytes(s, sep []byte) (before, after []byte, found bool)
@@ -659,7 +664,7 @@ CutBytes slices s around the first instance of sep\, returning the text before a
 
 Cut returns slices of the original slice s\, not copies\. Ref: go1\.18
 
-## func [CutString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L218>)
+## func CutString
 
 ```go
 func CutString(s, sep string) (before, after string, found bool)
@@ -667,7 +672,7 @@ func CutString(s, sep string) (before, after string, found bool)
 
 CutString slices s around the first instance of sep\, returning the text before and after sep\. The found result reports whether sep appears in s\. If sep does not appear in s\, cut returns s\, ""\, false\. Ref: go1\.18
 
-## func [Djb33](<https://gitee.com/fufuok/utils/blob/master/hash.go#L218>)
+## func Djb33
 
 ```go
 func Djb33(s string) uint32
@@ -675,7 +680,7 @@ func Djb33(s string) uint32
 
 Djb33 比 FnvHash32 更快的获取字符串哈希值 djb2 with better shuffling\. 5x faster than FNV with the hash\.Hash overhead\. Ref: patrickmn/go\-cache
 
-## func [EncodeUUID](<https://gitee.com/fufuok/utils/blob/master/uuid.go#L34>)
+## func EncodeUUID
 
 ```go
 func EncodeUUID(id []byte) []byte
@@ -683,7 +688,7 @@ func EncodeUUID(id []byte) []byte
 
 EncodeUUID 编码 UUID
 
-## func [EndOfDay](<https://gitee.com/fufuok/utils/blob/master/time.go#L20>)
+## func EndOfDay
 
 ```go
 func EndOfDay(t time.Time) time.Time
@@ -691,7 +696,7 @@ func EndOfDay(t time.Time) time.Time
 
 EndOfDay 当天最后时刻
 
-## func [EndOfHour](<https://gitee.com/fufuok/utils/blob/master/time.go#L62>)
+## func EndOfHour
 
 ```go
 func EndOfHour(t time.Time) time.Time
@@ -699,7 +704,7 @@ func EndOfHour(t time.Time) time.Time
 
 EndOfHour 最后一分
 
-## func [EndOfLastMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L117>)
+## func EndOfLastMonth
 
 ```go
 func EndOfLastMonth(t time.Time) time.Time
@@ -707,7 +712,7 @@ func EndOfLastMonth(t time.Time) time.Time
 
 EndOfLastMonth 上月最后一刻
 
-## func [EndOfLastWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L86>)
+## func EndOfLastWeek
 
 ```go
 func EndOfLastWeek(t time.Time) time.Time
@@ -715,7 +720,7 @@ func EndOfLastWeek(t time.Time) time.Time
 
 EndOfLastWeek 上周一最后一刻
 
-## func [EndOfMinute](<https://gitee.com/fufuok/utils/blob/master/time.go#L51>)
+## func EndOfMinute
 
 ```go
 func EndOfMinute(t time.Time) time.Time
@@ -723,7 +728,7 @@ func EndOfMinute(t time.Time) time.Time
 
 EndOfMinute 最后一秒
 
-## func [EndOfMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L107>)
+## func EndOfMonth
 
 ```go
 func EndOfMonth(t time.Time) time.Time
@@ -731,7 +736,7 @@ func EndOfMonth(t time.Time) time.Time
 
 EndOfMonth 当月最后一刻
 
-## func [EndOfNextMonth](<https://gitee.com/fufuok/utils/blob/master/time.go#L127>)
+## func EndOfNextMonth
 
 ```go
 func EndOfNextMonth(t time.Time) time.Time
@@ -739,7 +744,7 @@ func EndOfNextMonth(t time.Time) time.Time
 
 EndOfNextMonth 下月最后一刻
 
-## func [EndOfNextWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L96>)
+## func EndOfNextWeek
 
 ```go
 func EndOfNextWeek(t time.Time) time.Time
@@ -747,7 +752,7 @@ func EndOfNextWeek(t time.Time) time.Time
 
 EndOfNextWeek 下周一最后一刻
 
-## func [EndOfTomorrow](<https://gitee.com/fufuok/utils/blob/master/time.go#L40>)
+## func EndOfTomorrow
 
 ```go
 func EndOfTomorrow(t time.Time) time.Time
@@ -755,7 +760,7 @@ func EndOfTomorrow(t time.Time) time.Time
 
 EndOfTomorrow 明天 0 点
 
-## func [EndOfWeek](<https://gitee.com/fufuok/utils/blob/master/time.go#L76>)
+## func EndOfWeek
 
 ```go
 func EndOfWeek(t time.Time) time.Time
@@ -763,7 +768,7 @@ func EndOfWeek(t time.Time) time.Time
 
 EndOfWeek 本周末最后一刻
 
-## func [EndOfYear](<https://gitee.com/fufuok/utils/blob/master/time.go#L142>)
+## func EndOfYear
 
 ```go
 func EndOfYear(t time.Time) time.Time
@@ -771,7 +776,7 @@ func EndOfYear(t time.Time) time.Time
 
 EndOfYear 本年最后一刻
 
-## func [EndOfYesterday](<https://gitee.com/fufuok/utils/blob/master/time.go#L30>)
+## func EndOfYesterday
 
 ```go
 func EndOfYesterday(t time.Time) time.Time
@@ -779,7 +784,7 @@ func EndOfYesterday(t time.Time) time.Time
 
 EndOfYesterday 昨天最后时刻
 
-## func [EqualFold](<https://gitee.com/fufuok/utils/blob/master/strings.go#L201>)
+## func EqualFold
 
 ```go
 func EqualFold(b, s string) bool
@@ -787,7 +792,7 @@ func EqualFold(b, s string) bool
 
 EqualFold tests ascii strings for equality case\-insensitively Ref: fiber
 
-## func [EqualFoldBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L117>)
+## func EqualFoldBytes
 
 ```go
 func EqualFoldBytes(b, s []byte) bool
@@ -795,7 +800,7 @@ func EqualFoldBytes(b, s []byte) bool
 
 EqualFoldBytes tests ascii slices for equality case\-insensitively Ref: fiber
 
-## func [Executable](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L40>)
+## func Executable
 
 ```go
 func Executable(evalSymlinks ...bool) string
@@ -803,7 +808,7 @@ func Executable(evalSymlinks ...bool) string
 
 Executable 当前执行程序绝对路径 true 时返回解析符号链接后的绝对路径 Excutable: E:\\tmp\\linkapp\.exe Excutable\(true\): D:\\Fufu\\Test\\abc\\app\.exe
 
-## func [ExecutableDir](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L53>)
+## func ExecutableDir
 
 ```go
 func ExecutableDir(evalSymlinks ...bool) string
@@ -811,7 +816,7 @@ func ExecutableDir(evalSymlinks ...bool) string
 
 ExecutableDir 当前执行程序所在目录 true 时返回解析符号链接后的目录 ExcutableDir: E:\\tmp ExcutableDir\(true\): D:\\Fufu\\Test\\abc
 
-## func [FastIntn](<https://gitee.com/fufuok/utils/blob/master/random.go#L48>)
+## func FastIntn
 
 ```go
 func FastIntn(n int) int
@@ -819,7 +824,7 @@ func FastIntn(n int) int
 
 FastIntn this is similar to rand\.Intn\, but faster\. A non\-negative pseudo\-random number in the half\-open interval \[0\,n\)\. Return 0 if n \<= 0\.
 
-## func [FastRand](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L59>)
+## func FastRand
 
 ```go
 func FastRand() uint32
@@ -827,7 +832,7 @@ func FastRand() uint32
 
 FastRand 随机数
 
-## func [FastRandBytes](<https://gitee.com/fufuok/utils/blob/master/random.go#L84>)
+## func FastRandBytes
 
 ```go
 func FastRandBytes(n int) []byte
@@ -835,7 +840,7 @@ func FastRandBytes(n int) []byte
 
 FastRandBytes random bytes\, but faster\.
 
-## func [FastRandn](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L64>)
+## func FastRandn
 
 ```go
 func FastRandn(n uint32) uint32
@@ -843,7 +848,7 @@ func FastRandn(n uint32) uint32
 
 FastRandn 等同于 FastRand\(\) % n\, 但更快 See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
 
-## func [FnvHash](<https://gitee.com/fufuok/utils/blob/master/hash.go#L178>)
+## func FnvHash
 
 ```go
 func FnvHash(s string) uint64
@@ -851,7 +856,7 @@ func FnvHash(s string) uint64
 
 FnvHash 获取字符串的哈希值
 
-## func [FnvHash32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L185>)
+## func FnvHash32
 
 ```go
 func FnvHash32(s string) uint32
@@ -859,7 +864,7 @@ func FnvHash32(s string) uint32
 
 FnvHash32 获取字符串的哈希值
 
-## func [GetBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L8>)
+## func GetBytes
 
 ```go
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
@@ -867,7 +872,7 @@ func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 
 GetBytes 先转为字符串再转为 \[\]byte\, 可选指定默认值
 
-## func [GetIPPort](<https://gitee.com/fufuok/utils/blob/master/ip.go#L143>)
+## func GetIPPort
 
 ```go
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
@@ -875,7 +880,7 @@ func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 
 GetIPPort 返回 IP 和 端口
 
-## func [GetInt](<https://gitee.com/fufuok/utils/blob/master/integer.go#L36>)
+## func GetInt
 
 ```go
 func GetInt(v interface{}, defaultInt ...int) int
@@ -883,7 +888,7 @@ func GetInt(v interface{}, defaultInt ...int) int
 
 GetInt 获取 int 结果\, 可选指定默认值\(若给定了默认值\,则返回正整数或 0\)
 
-## func [GetMonthDays](<https://gitee.com/fufuok/utils/blob/master/time.go#L132>)
+## func GetMonthDays
 
 ```go
 func GetMonthDays(t time.Time) int
@@ -891,7 +896,7 @@ func GetMonthDays(t time.Time) int
 
 GetMonthDays 当月天数
 
-## func [GetNotInternalIPv4](<https://gitee.com/fufuok/utils/blob/master/ip.go#L52>)
+## func GetNotInternalIPv4
 
 ```go
 func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
@@ -899,7 +904,7 @@ func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
 
 GetNotInternalIPv4 如果是内网 IPv4 则使用默认值\, flag 为真是必定返回一个 IP
 
-## func [GetNotInternalIPv4String](<https://gitee.com/fufuok/utils/blob/master/ip.go#L70>)
+## func GetNotInternalIPv4String
 
 ```go
 func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string
@@ -907,7 +912,7 @@ func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string
 
 GetNotInternalIPv4String 如果是内网 IPv4 则使用默认值
 
-## func [GetSafeB2S](<https://gitee.com/fufuok/utils/blob/master/strings.go#L45>)
+## func GetSafeB2S
 
 ```go
 func GetSafeB2S(b []byte, defaultVal ...string) string
@@ -915,7 +920,7 @@ func GetSafeB2S(b []byte, defaultVal ...string) string
 
 GetSafeB2S Immutable\, 可选指定默认值
 
-## func [GetSafeBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L22>)
+## func GetSafeBytes
 
 ```go
 func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
@@ -923,7 +928,7 @@ func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 
 GetSafeBytes Immutable\, 可选指定默认值
 
-## func [GetSafeS2B](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L31>)
+## func GetSafeS2B
 
 ```go
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
@@ -931,7 +936,7 @@ func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 
 GetSafeS2B Immutable\, 可选指定默认值
 
-## func [GetSafeString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L36>)
+## func GetSafeString
 
 ```go
 func GetSafeString(s string, defaultVal ...string) string
@@ -939,7 +944,7 @@ func GetSafeString(s string, defaultVal ...string) string
 
 GetSafeString Immutable\, 可选指定默认值
 
-## func [GetString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L27>)
+## func GetString
 
 ```go
 func GetString(v interface{}, defaultVal ...string) string
@@ -947,13 +952,13 @@ func GetString(v interface{}, defaultVal ...string) string
 
 GetString 获取字符串结果\, 可选指定默认值
 
-## func [Hash](<https://gitee.com/fufuok/utils/blob/master/hash.go#L103>)
+## func Hash
 
 ```go
 func Hash(b []byte, h hash.Hash) []byte
 ```
 
-## func [HashBytes](<https://gitee.com/fufuok/utils/blob/master/hash.go#L263>)
+## func HashBytes
 
 ```go
 func HashBytes(b ...[]byte) string
@@ -961,19 +966,19 @@ func HashBytes(b ...[]byte) string
 
 HashBytes 合并 Bytes\, 得到字符串哈希
 
-## func [HashBytes32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L271>)
+## func HashBytes32
 
 ```go
 func HashBytes32(b ...[]byte) uint32
 ```
 
-## func [HashBytes64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L267>)
+## func HashBytes64
 
 ```go
 func HashBytes64(b ...[]byte) uint64
 ```
 
-## func [HashString](<https://gitee.com/fufuok/utils/blob/master/hash.go#L250>)
+## func HashString
 
 ```go
 func HashString(s ...string) string
@@ -981,19 +986,19 @@ func HashString(s ...string) string
 
 HashString 合并一串文本\, 得到字符串哈希
 
-## func [HashString32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L258>)
+## func HashString32
 
 ```go
 func HashString32(s ...string) uint32
 ```
 
-## func [HashString64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L254>)
+## func HashString64
 
 ```go
 func HashString64(s ...string) uint64
 ```
 
-## func [HashUint32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L283>)
+## func HashUint32
 
 ```go
 func HashUint32(u uint32) uint32
@@ -1001,7 +1006,7 @@ func HashUint32(u uint32) uint32
 
 HashUint32 returns the hash of u\. Ref: segmentio/fasthash
 
-## func [HashUint64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L277>)
+## func HashUint64
 
 ```go
 func HashUint64(u uint64) uint64
@@ -1009,49 +1014,49 @@ func HashUint64(u uint64) uint64
 
 HashUint64 returns the hash of u\. Ref: segmentio/fasthash
 
-## func [Hmac](<https://gitee.com/fufuok/utils/blob/master/hash.go#L93>)
+## func Hmac
 
 ```go
 func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
 ```
 
-## func [HmacSHA1](<https://gitee.com/fufuok/utils/blob/master/hash.go#L74>)
+## func HmacSHA1
 
 ```go
 func HmacSHA1(b, key []byte) []byte
 ```
 
-## func [HmacSHA1Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L70>)
+## func HmacSHA1Hex
 
 ```go
 func HmacSHA1Hex(s, key string) string
 ```
 
-## func [HmacSHA256](<https://gitee.com/fufuok/utils/blob/master/hash.go#L58>)
+## func HmacSHA256
 
 ```go
 func HmacSHA256(b, key []byte) []byte
 ```
 
-## func [HmacSHA256Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L54>)
+## func HmacSHA256Hex
 
 ```go
 func HmacSHA256Hex(s, key string) string
 ```
 
-## func [HmacSHA512](<https://gitee.com/fufuok/utils/blob/master/hash.go#L66>)
+## func HmacSHA512
 
 ```go
 func HmacSHA512(b, key []byte) []byte
 ```
 
-## func [HmacSHA512Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L62>)
+## func HmacSHA512Hex
 
 ```go
 func HmacSHA512Hex(s, key string) string
 ```
 
-## func [HumanBaseBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L78>)
+## func HumanBaseBytes
 
 ```go
 func HumanBaseBytes(v uint64, base float64, sizes []string) string
@@ -1059,7 +1064,7 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string
 
 HumanBaseBytes 数字的数量级表示
 
-## func [HumanBigBytes](<https://gitee.com/fufuok/utils/blob/master/humanize_big.go#L112>)
+## func HumanBigBytes
 
 ```go
 func HumanBigBytes(s *big.Int) string
@@ -1071,7 +1076,7 @@ See also: ParseHumanBigBytes\.
 
 HumanBigBytes\(82854982\) \-\> 83 MB
 
-## func [HumanBigIBytes](<https://gitee.com/fufuok/utils/blob/master/humanize_big.go#L122>)
+## func HumanBigIBytes
 
 ```go
 func HumanBigIBytes(s *big.Int) string
@@ -1083,7 +1088,7 @@ See also: ParseHumanBigBytes\.
 
 HumanBigIBytes\(82854982\) \-\> 79 MiB
 
-## func [HumanBigKbps](<https://gitee.com/fufuok/utils/blob/master/humanize_big.go#L129>)
+## func HumanBigKbps
 
 ```go
 func HumanBigKbps(s *big.Int) string
@@ -1091,7 +1096,7 @@ func HumanBigKbps(s *big.Int) string
 
 HumanBigKbps 1 Kbps = 1000 bit\, 传输速率\(bit per second\, 位每秒\) e\.g\. HumanBigKbps\(82854982\) \-\> 83 Mbps
 
-## func [HumanBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L127>)
+## func HumanBytes
 
 ```go
 func HumanBytes(v uint64) string
@@ -1099,7 +1104,7 @@ func HumanBytes(v uint64) string
 
 HumanBytes 1 KB = 1000 B e\.g\. HumanBytes\(82854982\) \-\> 83 MB
 
-## func [HumanGBMB](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L99>)
+## func HumanGBMB
 
 ```go
 func HumanGBMB(v uint64) string
@@ -1107,7 +1112,7 @@ func HumanGBMB(v uint64) string
 
 HumanGBMB 转为 \*\* GB \*\* MB 1 GB = 1024 MB
 
-## func [HumanIBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L134>)
+## func HumanIBytes
 
 ```go
 func HumanIBytes(v uint64) string
@@ -1115,7 +1120,7 @@ func HumanIBytes(v uint64) string
 
 HumanIBytes 1 KiB = 1024 B e\.g\. HumanIBytes\(82854982\) \-\> 79 MiB
 
-## func [HumanIntBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L111>)
+## func HumanIntBytes
 
 ```go
 func HumanIntBytes(v int) string
@@ -1123,7 +1128,7 @@ func HumanIntBytes(v int) string
 
 HumanIntBytes 1 KB = 1000 B
 
-## func [HumanIntIBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L116>)
+## func HumanIntIBytes
 
 ```go
 func HumanIntIBytes(v int) string
@@ -1131,7 +1136,7 @@ func HumanIntIBytes(v int) string
 
 HumanIntIBytes 1 KiB = 1024 B
 
-## func [HumanIntKbps](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L121>)
+## func HumanIntKbps
 
 ```go
 func HumanIntKbps(v int) string
@@ -1139,7 +1144,7 @@ func HumanIntKbps(v int) string
 
 HumanIntKbps 1 Kbps = 1000 bit
 
-## func [HumanKbps](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L141>)
+## func HumanKbps
 
 ```go
 func HumanKbps(v uint64) string
@@ -1147,7 +1152,7 @@ func HumanKbps(v uint64) string
 
 HumanKbps 1 Kbps = 1000 bit\, 传输速率\(bit per second\, 位每秒\) e\.g\. HumanKbps\(82854982\) \-\> 83 Mbps
 
-## func [ID](<https://gitee.com/fufuok/utils/blob/master/id.go#L10>)
+## func ID
 
 ```go
 func ID() uint64
@@ -1155,7 +1160,7 @@ func ID() uint64
 
 ID 运行时自增 ID \(每次程序启动从 1 开始\)
 
-## func [IPv42Long](<https://gitee.com/fufuok/utils/blob/master/ip.go#L83>)
+## func IPv42Long
 
 ```go
 func IPv42Long(ip net.IP) int
@@ -1163,7 +1168,7 @@ func IPv42Long(ip net.IP) int
 
 IPv42Long IPv4 转数值
 
-## func [IPv4String2Long](<https://gitee.com/fufuok/utils/blob/master/ip.go#L108>)
+## func IPv4String2Long
 
 ```go
 func IPv4String2Long(ip string) int
@@ -1171,7 +1176,7 @@ func IPv4String2Long(ip string) int
 
 IPv4String2Long IPv4 字符串转数值
 
-## func [InIPNet](<https://gitee.com/fufuok/utils/blob/master/ip.go#L128>)
+## func InIPNet
 
 ```go
 func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
@@ -1179,7 +1184,7 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 
 InIPNet 是否包含在指定 IPNet 列表中
 
-## func [InIPNetString](<https://gitee.com/fufuok/utils/blob/master/ip.go#L123>)
+## func InIPNetString
 
 ```go
 func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
@@ -1187,7 +1192,7 @@ func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 
 InIPNetString 是否包含在指定 IPNet 列表中
 
-## func [InInts](<https://gitee.com/fufuok/utils/blob/master/integer.go#L56>)
+## func InInts
 
 ```go
 func InInts(slice []int, n int) bool
@@ -1195,7 +1200,7 @@ func InInts(slice []int, n int) bool
 
 InInts 检查整数是否存在于 slice
 
-## func [InStrings](<https://gitee.com/fufuok/utils/blob/master/strings.go#L123>)
+## func InStrings
 
 ```go
 func InStrings(ss []string, s string) bool
@@ -1203,7 +1208,7 @@ func InStrings(ss []string, s string) bool
 
 InStrings 检查字符串是否存在于 slice
 
-## func [IsDir](<https://gitee.com/fufuok/utils/blob/master/file.go#L23>)
+## func IsDir
 
 ```go
 func IsDir(s string) bool
@@ -1211,7 +1216,7 @@ func IsDir(s string) bool
 
 IsDir 目录是否存在
 
-## func [IsExist](<https://gitee.com/fufuok/utils/blob/master/file.go#L8>)
+## func IsExist
 
 ```go
 func IsExist(s string) bool
@@ -1219,7 +1224,7 @@ func IsExist(s string) bool
 
 IsExist 文件或目录是否存在
 
-## func [IsFile](<https://gitee.com/fufuok/utils/blob/master/file.go#L14>)
+## func IsFile
 
 ```go
 func IsFile(s string) bool
@@ -1227,7 +1232,31 @@ func IsFile(s string) bool
 
 IsFile 文件是否存在
 
-## func [IsInternalIPv4](<https://gitee.com/fufuok/utils/blob/master/ip.go#L34>)
+## func IsIP
+
+```go
+func IsIP(ip string) bool
+```
+
+IsIP 判断是否为合法 IPv4 / IPv6
+
+## func IsIPv4
+
+```go
+func IsIPv4(ip string) bool
+```
+
+IsIPv4 判断是否为合法 IPv4
+
+## func IsIPv6
+
+```go
+func IsIPv6(ip string) bool
+```
+
+IsIPv6 判断是否为合法 IPv6
+
+## func IsInternalIPv4
 
 ```go
 func IsInternalIPv4(ip net.IP) bool
@@ -1235,7 +1264,7 @@ func IsInternalIPv4(ip net.IP) bool
 
 IsInternalIPv4 是否为内网 IPv4\, 包含 NAT 专用网段 RFC6598\, 比如华为云 ELB 的 100\.125\.0\.0/16
 
-## func [IsInternalIPv4String](<https://gitee.com/fufuok/utils/blob/master/ip.go#L65>)
+## func IsInternalIPv4String
 
 ```go
 func IsInternalIPv4String(ip string) bool
@@ -1243,7 +1272,7 @@ func IsInternalIPv4String(ip string) bool
 
 IsInternalIPv4String 是否为内网 IPv4
 
-## func [IsNil](<https://gitee.com/fufuok/utils/blob/master/assertions.go#L97>)
+## func IsNil
 
 ```go
 func IsNil(i interface{}) bool
@@ -1251,7 +1280,7 @@ func IsNil(i interface{}) bool
 
 IsNil 判断对象\(pointer\, channel\, func\, interface\, map\, slice\)是否为 nil nil 是一个 Type 类型的变量\, Type 类型是基于 int 的类型 var 若变量本身是指针\, 占用 8 字节\, 指向类型内部结构体并置 0\, 仅定义了变量本身\, 此时为 nil 指针是非复合类型\, 赋值 nil 时\, 将 8 字节置 0\, 即没有指向任何值的指针 0x0 map\, channel: var 时仅定义了指针\, 需要 make 初始化内部结构后才能使用\, make 后非 nil var 若变量非指针\, 如 struct\, int\, 非 nil slice: type slice struct\, 占用 24 字节\, 1 指针\(array unsafe\.Pointer\) 2 个整型字段\(len\, cap int\) var 定义后即可使用\, 置 0 并分配\, 此时 array 指针为 0 即没有实际数据时为 nil interface: type iface struct\(interface 类型\)\, type eface struct\(空接口\)\, 占用 16 字节 判断 data 指针为 0 即为 nil\, 初始化后即非 0
 
-## func [IsPrivateIP](<https://gitee.com/fufuok/utils/blob/master/ip.go#L11>)
+## func IsPrivateIP
 
 ```go
 func IsPrivateIP(ip net.IP) bool
@@ -1259,7 +1288,7 @@ func IsPrivateIP(ip net.IP) bool
 
 IsPrivateIP reports whether ip is a private address\, according to RFC 1918 \(IPv4 addresses\) and RFC 4193 \(IPv6 addresses\)\. Ref: go1\.17\+ func \(ip IP\) IsPrivate\(\) bool
 
-## func [IsPrivateIPString](<https://gitee.com/fufuok/utils/blob/master/ip.go#L29>)
+## func IsPrivateIPString
 
 ```go
 func IsPrivateIPString(ip string) bool
@@ -1267,7 +1296,7 @@ func IsPrivateIPString(ip string) bool
 
 IsPrivateIPString 是否为私有 IP
 
-## func [JoinBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L55>)
+## func JoinBytes
 
 ```go
 func JoinBytes(b ...[]byte) []byte
@@ -1275,7 +1304,7 @@ func JoinBytes(b ...[]byte) []byte
 
 JoinBytes 拼接 \[\]byte
 
-## func [LeftPad](<https://gitee.com/fufuok/utils/blob/master/pad.go#L27>)
+## func LeftPad
 
 ```go
 func LeftPad(s, pad string, n int) string
@@ -1283,7 +1312,7 @@ func LeftPad(s, pad string, n int) string
 
 LeftPad 从左填充字符串到指定长度
 
-## func [LeftPadBytes](<https://gitee.com/fufuok/utils/blob/master/pad.go#L78>)
+## func LeftPadBytes
 
 ```go
 func LeftPadBytes(b, pad []byte, n int) []byte
@@ -1291,13 +1320,13 @@ func LeftPadBytes(b, pad []byte, n int) []byte
 
 LeftPadBytes 从左填充到指定长度
 
-## func [Logn](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L73>)
+## func Logn
 
 ```go
 func Logn(n, b float64) float64
 ```
 
-## func [Long2IPv4](<https://gitee.com/fufuok/utils/blob/master/ip.go#L93>)
+## func Long2IPv4
 
 ```go
 func Long2IPv4(n int) net.IP
@@ -1305,7 +1334,7 @@ func Long2IPv4(n int) net.IP
 
 Long2IPv4 数值转 IPv4
 
-## func [Long2IPv4String](<https://gitee.com/fufuok/utils/blob/master/ip.go#L113>)
+## func Long2IPv4String
 
 ```go
 func Long2IPv4String(n int) string
@@ -1313,19 +1342,19 @@ func Long2IPv4String(n int) string
 
 Long2IPv4String 数值转 IPv4 字符串
 
-## func [MD5](<https://gitee.com/fufuok/utils/blob/master/hash.go#L89>)
+## func MD5
 
 ```go
 func MD5(b []byte) []byte
 ```
 
-## func [MD5BytesHex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L84>)
+## func MD5BytesHex
 
 ```go
 func MD5BytesHex(bs []byte) string
 ```
 
-## func [MD5Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L79>)
+## func MD5Hex
 
 ```go
 func MD5Hex(s string) string
@@ -1333,7 +1362,7 @@ func MD5Hex(s string) string
 
 MD5Hex 字符串 MD5
 
-## func [MD5Reader](<https://gitee.com/fufuok/utils/blob/master/hash.go#L139>)
+## func MD5Reader
 
 ```go
 func MD5Reader(r io.Reader) (string, error)
@@ -1341,7 +1370,7 @@ func MD5Reader(r io.Reader) (string, error)
 
 MD5Reader 计算 MD5
 
-## func [MD5Sum](<https://gitee.com/fufuok/utils/blob/master/hash.go#L119>)
+## func MD5Sum
 
 ```go
 func MD5Sum(filename string) (string, error)
@@ -1349,7 +1378,7 @@ func MD5Sum(filename string) (string, error)
 
 MD5Sum 文件 MD5
 
-## func [MaxInt](<https://gitee.com/fufuok/utils/blob/master/integer.go#L11>)
+## func MaxInt
 
 ```go
 func MaxInt(a, b int) int
@@ -1357,7 +1386,7 @@ func MaxInt(a, b int) int
 
 MaxInt 整数取大值
 
-## func [MemHash](<https://gitee.com/fufuok/utils/blob/master/hash.go#L198>)
+## func MemHash
 
 ```go
 func MemHash(s string) uint64
@@ -1365,7 +1394,7 @@ func MemHash(s string) uint64
 
 MemHash 使用内置的 memhash 获取字符串哈希值
 
-## func [MemHash32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L210>)
+## func MemHash32
 
 ```go
 func MemHash32(s string) uint32
@@ -1373,7 +1402,7 @@ func MemHash32(s string) uint32
 
 MemHash32 使用内置的 memhash 获取字符串哈希值
 
-## func [MemHashb](<https://gitee.com/fufuok/utils/blob/master/hash.go#L192>)
+## func MemHashb
 
 ```go
 func MemHashb(b []byte) uint64
@@ -1381,7 +1410,7 @@ func MemHashb(b []byte) uint64
 
 MemHashb 使用内置的 memhash 获取哈希值
 
-## func [MemHashb32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L204>)
+## func MemHashb32
 
 ```go
 func MemHashb32(b []byte) uint32
@@ -1389,7 +1418,7 @@ func MemHashb32(b []byte) uint32
 
 MemHashb32 使用内置的 memhash 获取哈希值
 
-## func [MinInt](<https://gitee.com/fufuok/utils/blob/master/integer.go#L19>)
+## func MinInt
 
 ```go
 func MinInt(a, b int) int
@@ -1397,7 +1426,7 @@ func MinInt(a, b int) int
 
 MinInt 整数取小值
 
-## func [MustBool](<https://gitee.com/fufuok/utils/blob/master/convert.go#L198>)
+## func MustBool
 
 ```go
 func MustBool(v interface{}) bool
@@ -1405,7 +1434,7 @@ func MustBool(v interface{}) bool
 
 MustBool 强制转为 bool
 
-## func [MustInt](<https://gitee.com/fufuok/utils/blob/master/convert.go#L149>)
+## func MustInt
 
 ```go
 func MustInt(v interface{}) int
@@ -1413,7 +1442,7 @@ func MustInt(v interface{}) int
 
 MustInt 强制转为整数 \(int\)
 
-## func [MustJSON](<https://gitee.com/fufuok/utils/blob/master/convert.go#L87>)
+## func MustJSON
 
 ```go
 func MustJSON(v interface{}) []byte
@@ -1421,7 +1450,7 @@ func MustJSON(v interface{}) []byte
 
 MustJSON 转 json 返回 \[\]byte
 
-## func [MustJSONIndent](<https://gitee.com/fufuok/utils/blob/master/convert.go#L76>)
+## func MustJSONIndent
 
 ```go
 func MustJSONIndent(v interface{}) []byte
@@ -1429,7 +1458,7 @@ func MustJSONIndent(v interface{}) []byte
 
 MustJSONIndent 转 json 返回 \[\]byte
 
-## func [MustJSONIndentString](<https://gitee.com/fufuok/utils/blob/master/convert.go#L82>)
+## func MustJSONIndentString
 
 ```go
 func MustJSONIndentString(v interface{}) string
@@ -1437,7 +1466,7 @@ func MustJSONIndentString(v interface{}) string
 
 MustJSONIndentString 转 json Indent 返回 string
 
-## func [MustJSONString](<https://gitee.com/fufuok/utils/blob/master/convert.go#L93>)
+## func MustJSONString
 
 ```go
 func MustJSONString(v interface{}) string
@@ -1445,13 +1474,13 @@ func MustJSONString(v interface{}) string
 
 MustJSONString 转 json 返回 string
 
-## func [MustMD5Sum](<https://gitee.com/fufuok/utils/blob/master/hash.go#L113>)
+## func MustMD5Sum
 
 ```go
 func MustMD5Sum(filename string) string
 ```
 
-## func [MustParseHumanBigBytes](<https://gitee.com/fufuok/utils/blob/master/humanize_big.go#L180>)
+## func MustParseHumanBigBytes
 
 ```go
 func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
@@ -1459,7 +1488,7 @@ func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 
 MustParseHumanBigBytes 解析数字的数量级表示 e\.g\. MustParseHumanBigBytes\("42 MB"\) \-\> 42000000 e\.g\. MustParseHumanBigBytes\("\-42 mib"\, 123\) \-\> 123
 
-## func [MustParseHumanBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L187>)
+## func MustParseHumanBytes
 
 ```go
 func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
@@ -1467,7 +1496,7 @@ func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 
 MustParseHumanBytes 解析数字的数量级表示 e\.g\. MustParseHumanBytes\("42 MB"\) \-\> 42000000 e\.g\. MustParseHumanBytes\("\-42 mib"\, 123\) \-\> 123
 
-## func [MustString](<https://gitee.com/fufuok/utils/blob/master/convert.go#L98>)
+## func MustString
 
 ```go
 func MustString(v interface{}, timeLayout ...string) string
@@ -1475,7 +1504,7 @@ func MustString(v interface{}, timeLayout ...string) string
 
 MustString 强制转为字符串
 
-## func [NanoTime](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L72>)
+## func NanoTime
 
 ```go
 func NanoTime() int64
@@ -1483,7 +1512,7 @@ func NanoTime() int64
 
 NanoTime 返回当前时间 \(以纳秒为单位\)
 
-## func [NewRand](<https://gitee.com/fufuok/utils/blob/master/fastrand.go#L32>)
+## func NewRand
 
 ```go
 func NewRand(seed ...int64) *rand.Rand
@@ -1491,7 +1520,7 @@ func NewRand(seed ...int64) *rand.Rand
 
 NewRand goroutine\-safe rand\.Rand\, optional seed value
 
-## func [Pad](<https://gitee.com/fufuok/utils/blob/master/pad.go#L4>)
+## func Pad
 
 ```go
 func Pad(s, pad string, n int) string
@@ -1499,7 +1528,7 @@ func Pad(s, pad string, n int) string
 
 Pad 填充字符串到指定长度\, 同 Python3: 'str'\.center\(\)
 
-## func [PadBytes](<https://gitee.com/fufuok/utils/blob/master/pad.go#L55>)
+## func PadBytes
 
 ```go
 func PadBytes(s, pad []byte, n int) []byte
@@ -1507,7 +1536,7 @@ func PadBytes(s, pad []byte, n int) []byte
 
 PadBytes 填充到指定长度
 
-## func [ParseHumanBigBytes](<https://gitee.com/fufuok/utils/blob/master/humanize_big.go#L141>)
+## func ParseHumanBigBytes
 
 ```go
 func ParseHumanBigBytes(s string) (*big.Int, error)
@@ -1519,7 +1548,7 @@ See also: HumanBigBytes\, HumanBigIBytes\.
 
 ParseHumanBigBytes\("42 MB"\) \-\> 42000000\, nil ParseHumanBigBytes\("42 mib"\) \-\> 44040192\, nil
 
-## func [ParseHumanBytes](<https://gitee.com/fufuok/utils/blob/master/humanize.go#L149>)
+## func ParseHumanBytes
 
 ```go
 func ParseHumanBytes(s string) (uint64, error)
@@ -1527,7 +1556,23 @@ func ParseHumanBytes(s string) (uint64, error)
 
 ParseHumanBytes 解析数字的数量级表示 e\.g\. ParseHumanBytes\("42 MB"\) \-\> 42000000\, nil e\.g\. ParseHumanBytes\("42 mib"\) \-\> 44040192\, nil
 
-## func [RandBytes](<https://gitee.com/fufuok/utils/blob/master/random.go#L70>)
+## func ParseIPv4
+
+```go
+func ParseIPv4(ip string) net.IP
+```
+
+ParseIPv4 判断是否为合法 IPv4 并解析
+
+## func ParseIPv6
+
+```go
+func ParseIPv6(ip string) net.IP
+```
+
+ParseIPv6 判断是否为合法 IPv6 并解析
+
+## func RandBytes
 
 ```go
 func RandBytes(n int) []byte
@@ -1535,7 +1580,7 @@ func RandBytes(n int) []byte
 
 RandBytes random bytes
 
-## func [RandHex](<https://gitee.com/fufuok/utils/blob/master/random.go#L65>)
+## func RandHex
 
 ```go
 func RandHex(nHalf int) string
@@ -1543,7 +1588,7 @@ func RandHex(nHalf int) string
 
 RandHex a random string containing only the following characters: 0123456789abcdef
 
-## func [RandInt](<https://gitee.com/fufuok/utils/blob/master/random.go#L24>)
+## func RandInt
 
 ```go
 func RandInt(min, max int) int
@@ -1551,7 +1596,7 @@ func RandInt(min, max int) int
 
 RandInt \(\>=\)min \- \(\<\)max
 
-## func [RandString](<https://gitee.com/fufuok/utils/blob/master/random.go#L60>)
+## func RandString
 
 ```go
 func RandString(n int) string
@@ -1559,7 +1604,7 @@ func RandString(n int) string
 
 RandString a random string\, which may contain uppercase letters\, lowercase letters and numbers\. Ref: stackoverflow\.icza
 
-## func [RandUint32](<https://gitee.com/fufuok/utils/blob/master/random.go#L35>)
+## func RandUint32
 
 ```go
 func RandUint32(min, max uint32) uint32
@@ -1567,7 +1612,7 @@ func RandUint32(min, max uint32) uint32
 
 RandUint32 \(\>=\)min \- \(\<\)max
 
-## func [RemoveString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L128>)
+## func RemoveString
 
 ```go
 func RemoveString(ss []string, s string) ([]string, bool)
@@ -1575,7 +1620,7 @@ func RemoveString(ss []string, s string) ([]string, bool)
 
 RemoveString 删除字符串元素
 
-## func [ReplaceHost](<https://gitee.com/fufuok/utils/blob/master/url.go#L44>)
+## func ReplaceHost
 
 ```go
 func ReplaceHost(a, b string) string
@@ -1583,7 +1628,7 @@ func ReplaceHost(a, b string) string
 
 ReplaceHost 返回 b 的主机名 \+ a 的端口 e\.g\. ReplaceHost\("a\.cn:77"\, "b\.cn:88"\) == "b\.cn:77"
 
-## func [RightPad](<https://gitee.com/fufuok/utils/blob/master/pad.go#L41>)
+## func RightPad
 
 ```go
 func RightPad(s, pad string, n int) string
@@ -1591,7 +1636,7 @@ func RightPad(s, pad string, n int) string
 
 RightPad 从右填充字符串到指定长度
 
-## func [RightPadBytes](<https://gitee.com/fufuok/utils/blob/master/pad.go#L92>)
+## func RightPadBytes
 
 ```go
 func RightPadBytes(b, pad []byte, n int) []byte
@@ -1599,7 +1644,7 @@ func RightPadBytes(b, pad []byte, n int) []byte
 
 RightPadBytes 从右填充到指定长度
 
-## func [Round](<https://gitee.com/fufuok/utils/blob/master/float.go#L15>)
+## func Round
 
 ```go
 func Round(v float64, precision int) float64
@@ -1607,7 +1652,7 @@ func Round(v float64, precision int) float64
 
 Round 四舍五入\, ROUND\_HALF\_UP 模式实现 返回将 val 根据指定精度 precision \(十进制小数点后数字的数目\) 进行四舍五入的结果 precision 也可以是负数或零 Ref: thinkeridea/go\-extend
 
-## func [RunPath](<https://gitee.com/fufuok/utils/blob/master/runtime.go#L25>)
+## func RunPath
 
 ```go
 func RunPath() string
@@ -1615,7 +1660,7 @@ func RunPath() string
 
 RunPath 实际程序所在目录 RunPath: E:\\tmp
 
-## func [S2B](<https://gitee.com/fufuok/utils/blob/master/convert.go#L61>)
+## func S2B
 
 ```go
 func S2B(s string) []byte
@@ -1623,7 +1668,7 @@ func S2B(s string) []byte
 
 S2B StringToBytes converts string to byte slice without a memory allocation\. Ref: gin
 
-## func [SearchInt](<https://gitee.com/fufuok/utils/blob/master/integer.go#L45>)
+## func SearchInt
 
 ```go
 func SearchInt(slice []int, n int) int
@@ -1631,7 +1676,7 @@ func SearchInt(slice []int, n int) int
 
 SearchInt 搜索整数位置\(左\, 第一个\)
 
-## func [SearchString](<https://gitee.com/fufuok/utils/blob/master/strings.go#L113>)
+## func SearchString
 
 ```go
 func SearchString(ss []string, s string) int
@@ -1639,43 +1684,43 @@ func SearchString(ss []string, s string) int
 
 SearchString 搜索字符串位置\(左\, 第一个\)
 
-## func [Sha1](<https://gitee.com/fufuok/utils/blob/master/hash.go#L50>)
+## func Sha1
 
 ```go
 func Sha1(b []byte) []byte
 ```
 
-## func [Sha1Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L46>)
+## func Sha1Hex
 
 ```go
 func Sha1Hex(s string) string
 ```
 
-## func [Sha256](<https://gitee.com/fufuok/utils/blob/master/hash.go#L34>)
+## func Sha256
 
 ```go
 func Sha256(b []byte) []byte
 ```
 
-## func [Sha256Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L30>)
+## func Sha256Hex
 
 ```go
 func Sha256Hex(s string) string
 ```
 
-## func [Sha512](<https://gitee.com/fufuok/utils/blob/master/hash.go#L42>)
+## func Sha512
 
 ```go
 func Sha512(b []byte) []byte
 ```
 
-## func [Sha512Hex](<https://gitee.com/fufuok/utils/blob/master/hash.go#L38>)
+## func Sha512Hex
 
 ```go
 func Sha512Hex(s string) string
 ```
 
-## func [SplitHostPort](<https://gitee.com/fufuok/utils/blob/master/url.go#L27>)
+## func SplitHostPort
 
 ```go
 func SplitHostPort(hostPort string) (host, port string)
@@ -1683,7 +1728,7 @@ func SplitHostPort(hostPort string) (host, port string)
 
 SplitHostPort separates host and port\. If the port is not valid\, it returns the entire input as host\, and it doesn't check the validity of the host\. Unlike net\.SplitHostPort\, but per RFC 3986\, it requires ports to be numeric\.
 
-## func [Str2Bytes](<https://gitee.com/fufuok/utils/blob/master/convert.go#L46>)
+## func Str2Bytes
 
 ```go
 func Str2Bytes(s string) (b []byte)
@@ -1691,7 +1736,7 @@ func Str2Bytes(s string) (b []byte)
 
 Str2Bytes Ref: csdn\.weixin\_43705457
 
-## func [StrToBytes](<https://gitee.com/fufuok/utils/blob/master/convert.go#L53>)
+## func StrToBytes
 
 ```go
 func StrToBytes(s string) []byte
@@ -1699,13 +1744,13 @@ func StrToBytes(s string) []byte
 
 StrToBytes Ref: Allenxuxu / toolkit
 
-## func [String2Bytes](<https://gitee.com/fufuok/utils/blob/master/convert.go#L27>)
+## func String2Bytes
 
 ```go
 func String2Bytes(s string) (bs []byte)
 ```
 
-## func [StringToBytes](<https://gitee.com/fufuok/utils/blob/master/convert.go#L37>)
+## func StringToBytes
 
 ```go
 func StringToBytes(s string) (b []byte)
@@ -1713,7 +1758,7 @@ func StringToBytes(s string) (b []byte)
 
 StringToBytes Ref: csdn\.u010853261
 
-## func [Sum32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L168>)
+## func Sum32
 
 ```go
 func Sum32(s string) uint32
@@ -1721,7 +1766,7 @@ func Sum32(s string) uint32
 
 Sum32 获取字符串的哈希值
 
-## func [Sum64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L158>)
+## func Sum64
 
 ```go
 func Sum64(s string) uint64
@@ -1729,7 +1774,7 @@ func Sum64(s string) uint64
 
 Sum64 获取字符串的哈希值
 
-## func [SumBytes32](<https://gitee.com/fufuok/utils/blob/master/hash.go#L173>)
+## func SumBytes32
 
 ```go
 func SumBytes32(bs []byte) uint32
@@ -1737,7 +1782,7 @@ func SumBytes32(bs []byte) uint32
 
 SumBytes32 获取 bytes 的哈希值
 
-## func [SumBytes64](<https://gitee.com/fufuok/utils/blob/master/hash.go#L163>)
+## func SumBytes64
 
 ```go
 func SumBytes64(bs []byte) uint64
@@ -1745,7 +1790,7 @@ func SumBytes64(bs []byte) uint64
 
 SumBytes64 获取 bytes 的哈希值
 
-## func [SumInt](<https://gitee.com/fufuok/utils/blob/master/integer.go#L27>)
+## func SumInt
 
 ```go
 func SumInt(v ...int) int
@@ -1753,7 +1798,7 @@ func SumInt(v ...int) int
 
 SumInt 整数和
 
-## func [ToLower](<https://gitee.com/fufuok/utils/blob/master/strings.go#L139>)
+## func ToLower
 
 ```go
 func ToLower(b string) string
@@ -1761,7 +1806,7 @@ func ToLower(b string) string
 
 ToLower converts ascii string to lower\-case Ref: fiber
 
-## func [ToLowerBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L61>)
+## func ToLowerBytes
 
 ```go
 func ToLowerBytes(b []byte) []byte
@@ -1769,7 +1814,7 @@ func ToLowerBytes(b []byte) []byte
 
 ToLowerBytes converts ascii slice to lower\-case Ref: fiber
 
-## func [ToUpper](<https://gitee.com/fufuok/utils/blob/master/strings.go#L151>)
+## func ToUpper
 
 ```go
 func ToUpper(b string) string
@@ -1777,7 +1822,7 @@ func ToUpper(b string) string
 
 ToUpper converts ascii string to upper\-case Ref: fiber
 
-## func [ToUpperBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L70>)
+## func ToUpperBytes
 
 ```go
 func ToUpperBytes(b []byte) []byte
@@ -1785,7 +1830,7 @@ func ToUpperBytes(b []byte) []byte
 
 ToUpperBytes converts ascii slice to upper\-case Ref: fiber
 
-## func [Trim](<https://gitee.com/fufuok/utils/blob/master/strings.go#L183>)
+## func Trim
 
 ```go
 func Trim(s string, cutset byte) string
@@ -1793,7 +1838,7 @@ func Trim(s string, cutset byte) string
 
 Trim is the equivalent of strings\.Trim Ref: fiber
 
-## func [TrimBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L99>)
+## func TrimBytes
 
 ```go
 func TrimBytes(b []byte, cutset byte) []byte
@@ -1801,7 +1846,7 @@ func TrimBytes(b []byte, cutset byte) []byte
 
 TrimBytes is the equivalent of bytes\.Trim Ref: fiber
 
-## func [TrimLeft](<https://gitee.com/fufuok/utils/blob/master/strings.go#L163>)
+## func TrimLeft
 
 ```go
 func TrimLeft(s string, cutset byte) string
@@ -1809,7 +1854,7 @@ func TrimLeft(s string, cutset byte) string
 
 TrimLeft is the equivalent of strings\.TrimLeft Ref: fiber
 
-## func [TrimLeftBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L79>)
+## func TrimLeftBytes
 
 ```go
 func TrimLeftBytes(b []byte, cutset byte) []byte
@@ -1817,7 +1862,7 @@ func TrimLeftBytes(b []byte, cutset byte) []byte
 
 TrimLeftBytes is the equivalent of bytes\.TrimLeft Ref: fiber
 
-## func [TrimRight](<https://gitee.com/fufuok/utils/blob/master/strings.go#L173>)
+## func TrimRight
 
 ```go
 func TrimRight(s string, cutset byte) string
@@ -1825,7 +1870,7 @@ func TrimRight(s string, cutset byte) string
 
 TrimRight is the equivalent of strings\.TrimRight Ref: fiber
 
-## func [TrimRightBytes](<https://gitee.com/fufuok/utils/blob/master/bytes.go#L89>)
+## func TrimRightBytes
 
 ```go
 func TrimRightBytes(b []byte, cutset byte) []byte
@@ -1833,7 +1878,7 @@ func TrimRightBytes(b []byte, cutset byte) []byte
 
 TrimRightBytes is the equivalent of bytes\.TrimRight Ref: fiber
 
-## func [UUID](<https://gitee.com/fufuok/utils/blob/master/uuid.go#L25>)
+## func UUID
 
 ```go
 func UUID() []byte
@@ -1841,7 +1886,7 @@ func UUID() []byte
 
 UUID 随机 UUID\, RFC4122\, Version 4
 
-## func [UUIDShort](<https://gitee.com/fufuok/utils/blob/master/uuid.go#L20>)
+## func UUIDShort
 
 ```go
 func UUIDShort() string
@@ -1849,7 +1894,7 @@ func UUIDShort() string
 
 UUIDShort 随机 UUID\, 短版\, base58
 
-## func [UUIDSimple](<https://gitee.com/fufuok/utils/blob/master/uuid.go#L15>)
+## func UUIDSimple
 
 ```go
 func UUIDSimple() string
@@ -1857,7 +1902,7 @@ func UUIDSimple() string
 
 UUIDSimple 随机 UUID\, 无短横线
 
-## func [UUIDString](<https://gitee.com/fufuok/utils/blob/master/uuid.go#L10>)
+## func UUIDString
 
 ```go
 func UUIDString() string
@@ -1865,13 +1910,13 @@ func UUIDString() string
 
 UUIDString 随机 UUID
 
-## func [Unzip](<https://gitee.com/fufuok/utils/blob/master/compress.go#L56>)
+## func Unzip
 
 ```go
 func Unzip(data []byte) (src []byte, err error)
 ```
 
-## func [ValidOptionalPort](<https://gitee.com/fufuok/utils/blob/master/url.go#L9>)
+## func ValidOptionalPort
 
 ```go
 func ValidOptionalPort(port string) bool
@@ -1879,7 +1924,7 @@ func ValidOptionalPort(port string) bool
 
 ValidOptionalPort reports whether port is either an empty string or matches /^:\\d\*$/
 
-## func [WaitNextMinute](<https://gitee.com/fufuok/utils/blob/master/time.go#L8>)
+## func WaitNextMinute
 
 ```go
 func WaitNextMinute()
@@ -1887,19 +1932,19 @@ func WaitNextMinute()
 
 WaitNextMinute 下一分钟\, 对齐时间\, 0 秒
 
-## func [Zip](<https://gitee.com/fufuok/utils/blob/master/compress.go#L24>)
+## func Zip
 
 ```go
 func Zip(data []byte) ([]byte, error)
 ```
 
-## func [ZipLevel](<https://gitee.com/fufuok/utils/blob/master/compress.go#L28>)
+## func ZipLevel
 
 ```go
 func ZipLevel(data []byte, level int) (dst []byte, err error)
 ```
 
-## type [Bool](<https://gitee.com/fufuok/utils/blob/master/bool.go#L11-L15>)
+## type Bool
 
 A Bool is an atomic boolean value\. The zero value is false\.
 
@@ -1909,31 +1954,31 @@ type Bool struct {
 }
 ```
 
-### func [NewBool](<https://gitee.com/fufuok/utils/blob/master/bool.go#L17>)
+### func NewBool
 
 ```go
 func NewBool(val bool) *Bool
 ```
 
-### func [NewFalse](<https://gitee.com/fufuok/utils/blob/master/bool.go#L29>)
+### func NewFalse
 
 ```go
 func NewFalse() *Bool
 ```
 
-### func [NewTrue](<https://gitee.com/fufuok/utils/blob/master/bool.go#L23>)
+### func NewTrue
 
 ```go
 func NewTrue() *Bool
 ```
 
-### func \(\*Bool\) [CAS](<https://gitee.com/fufuok/utils/blob/master/bool.go#L63>)
+### func \(\*Bool\) CAS
 
 ```go
 func (x *Bool) CAS(old, new bool) bool
 ```
 
-### func \(\*Bool\) [CompareAndSwap](<https://gitee.com/fufuok/utils/blob/master/bool.go#L59>)
+### func \(\*Bool\) CompareAndSwap
 
 ```go
 func (x *Bool) CompareAndSwap(old, new bool) (swapped bool)
@@ -1941,7 +1986,7 @@ func (x *Bool) CompareAndSwap(old, new bool) (swapped bool)
 
 CompareAndSwap executes the compare\-and\-swap operation for the boolean value x\.
 
-### func \(\*Bool\) [Load](<https://gitee.com/fufuok/utils/blob/master/bool.go#L36>)
+### func \(\*Bool\) Load
 
 ```go
 func (x *Bool) Load() bool
@@ -1949,13 +1994,13 @@ func (x *Bool) Load() bool
 
 Load atomically loads and returns the value stored in x\.
 
-### func \(\*Bool\) [MarshalJSON](<https://gitee.com/fufuok/utils/blob/master/bool.go#L81>)
+### func \(\*Bool\) MarshalJSON
 
 ```go
 func (x *Bool) MarshalJSON() ([]byte, error)
 ```
 
-### func \(\*Bool\) [Store](<https://gitee.com/fufuok/utils/blob/master/bool.go#L41>)
+### func \(\*Bool\) Store
 
 ```go
 func (x *Bool) Store(val bool)
@@ -1963,25 +2008,25 @@ func (x *Bool) Store(val bool)
 
 Store atomically stores val into x\.
 
-### func \(\*Bool\) [StoreFalse](<https://gitee.com/fufuok/utils/blob/master/bool.go#L49>)
+### func \(\*Bool\) StoreFalse
 
 ```go
 func (x *Bool) StoreFalse()
 ```
 
-### func \(\*Bool\) [StoreTrue](<https://gitee.com/fufuok/utils/blob/master/bool.go#L45>)
+### func \(\*Bool\) StoreTrue
 
 ```go
 func (x *Bool) StoreTrue()
 ```
 
-### func \(\*Bool\) [String](<https://gitee.com/fufuok/utils/blob/master/bool.go#L77>)
+### func \(\*Bool\) String
 
 ```go
 func (x *Bool) String() string
 ```
 
-### func \(\*Bool\) [Swap](<https://gitee.com/fufuok/utils/blob/master/bool.go#L54>)
+### func \(\*Bool\) Swap
 
 ```go
 func (x *Bool) Swap(new bool) (old bool)
@@ -1989,7 +2034,7 @@ func (x *Bool) Swap(new bool) (old bool)
 
 Swap atomically stores new into x and returns the previous value\.
 
-### func \(\*Bool\) [Toggle](<https://gitee.com/fufuok/utils/blob/master/bool.go#L68>)
+### func \(\*Bool\) Toggle
 
 ```go
 func (x *Bool) Toggle() (old bool)
@@ -1997,13 +2042,13 @@ func (x *Bool) Toggle() (old bool)
 
 Toggle atomically negates the Boolean and returns the previous value
 
-### func \(\*Bool\) [UnmarshalJSON](<https://gitee.com/fufuok/utils/blob/master/bool.go#L85>)
+### func \(\*Bool\) UnmarshalJSON
 
 ```go
 func (x *Bool) UnmarshalJSON(b []byte) error
 ```
 
-## type [NoCmp](<https://gitee.com/fufuok/utils/blob/master/nocmp.go#L35>)
+## type NoCmp
 
 NoCmp is an uncomparable struct\. Embed this inside another struct to make it uncomparable\.
 
@@ -2017,19 +2062,19 @@ This DOES NOT:
 type NoCmp [0]func()
 ```
 
-## type [NoCopy](<https://gitee.com/fufuok/utils/blob/master/nocopy.go#L10>)
+## type NoCopy
 
 NoCopy may be added to structs which must not be copied after the first use\.
 
-See https://golang.org/issues/8005#issuecomment-190753527 for details\.
+See https://github.com/golang/go/issues/8005#issuecomment-190753527 for details\. and also: https://stackoverflow.com/questions/52494458/nocopy-minimal-example
 
 Note that it must not be embedded\, due to the Lock and Unlock methods\.
 
 ```go
-type NoCopy struct{}
+type NoCopy struct{} //nolint:unused
 ```
 
-### func \(\*NoCopy\) [Lock](<https://gitee.com/fufuok/utils/blob/master/nocopy.go#L13>)
+### func \(\*NoCopy\) Lock
 
 ```go
 func (*NoCopy) Lock()
@@ -2037,7 +2082,7 @@ func (*NoCopy) Lock()
 
 Lock is a no\-op used by \-copylocks checker from \`go vet\`\.
 
-### func \(\*NoCopy\) [Unlock](<https://gitee.com/fufuok/utils/blob/master/nocopy.go#L14>)
+### func \(\*NoCopy\) Unlock
 
 ```go
 func (*NoCopy) Unlock()
