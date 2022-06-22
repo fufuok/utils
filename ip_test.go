@@ -175,3 +175,23 @@ func TestGetIPPort(t *testing.T) {
 	AssertEqual(t, 0, port)
 	AssertEqual(t, true, err == nil)
 }
+
+func TestIsIP(t *testing.T) {
+	tests := []struct {
+		ip string
+		v4 bool
+	}{
+		{"0.0.0.0", true},
+		{"255.255.255.255", true},
+		{"::1", false},
+		{"::ffff:0.0.0.0", false},
+		{"2001:4860:4860::8888", false},
+	}
+	for _, v := range tests {
+		AssertEqual(t, v.v4, IsIPv4(v.ip), v.ip)
+		AssertEqual(t, !v.v4, IsIPv6(v.ip), v.ip)
+		AssertEqual(t, true, IsIP(v.ip), v.ip)
+	}
+	AssertEqual(t, false, IsIPv4("123"))
+	AssertEqual(t, false, IsIPv6("123"))
+}

@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"net"
+	"strings"
 )
 
 // IsPrivateIP reports whether ip is a private address, according to
@@ -153,4 +154,35 @@ func GetIPPort(addr net.Addr) (ip net.IP, port int, err error) {
 	}
 
 	return
+}
+
+// IsIP 判断是否为合法 IPv4 / IPv6
+func IsIP(ip string) bool {
+	return net.ParseIP(ip) != nil
+}
+
+// IsIPv4 判断是否为合法 IPv4
+func IsIPv4(ip string) bool {
+	return ParseIPv4(ip) != nil
+}
+
+// IsIPv6 判断是否为合法 IPv6
+func IsIPv6(ip string) bool {
+	return ParseIPv6(ip) != nil
+}
+
+// ParseIPv4 判断是否为合法 IPv4 并解析
+func ParseIPv4(ip string) net.IP {
+	if strings.Contains(ip, ".") && !strings.Contains(ip, ":") {
+		return net.ParseIP(ip)
+	}
+	return nil
+}
+
+// ParseIPv6 判断是否为合法 IPv6 并解析
+func ParseIPv6(ip string) net.IP {
+	if strings.Contains(ip, ":") {
+		return net.ParseIP(ip)
+	}
+	return nil
 }
