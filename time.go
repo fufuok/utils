@@ -7,7 +7,7 @@ import (
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitNextMinute() {
 	now := time.Now()
-	<-time.After(BeginOfMinute(now.Add(time.Minute)).Sub(now))
+	<-time.After(BeginOfMinute(now.Add(time.Minute).Add(100 * time.Microsecond)).Sub(now))
 }
 
 // BeginOfDay 当天 0 点
