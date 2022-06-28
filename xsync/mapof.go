@@ -91,6 +91,18 @@ func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool) {
 	return m.doStore(key, value, true)
 }
 
+// LoadAndStore returns the existing value for the key if present.
+// Otherwise, returns the given value.
+// The loaded result is true if the value was loaded, false if stored.
+// Store the given value.
+func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool) {
+	actual, loaded = m.LoadOrStore(key, value)
+	if loaded {
+		m.Store(key, value)
+	}
+	return
+}
+
 func (m *MapOf[V]) doStore(key string, value V, loadIfExists bool) (V, bool) {
 	// Read-only path.
 	if loadIfExists {

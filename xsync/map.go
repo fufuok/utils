@@ -160,6 +160,18 @@ func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, lo
 	return m.doStore(key, value, true)
 }
 
+// LoadAndStore returns the existing value for the key if present.
+// Otherwise, returns the given value.
+// The loaded result is true if the value was loaded, false if stored.
+// Store the given value.
+func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool) {
+	actual, loaded = m.LoadOrStore(key, value)
+	if loaded {
+		m.Store(key, value)
+	}
+	return
+}
+
 func (m *Map) doStore(key string, value interface{}, loadIfExists bool) (interface{}, bool) {
 	if value == nil {
 		value = nilVal

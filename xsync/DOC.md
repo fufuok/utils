@@ -25,6 +25,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *Map) Delete(key string)](<#func-map-delete>)
   - [func (m *Map) Load(key string) (value interface{}, ok bool)](<#func-map-load>)
   - [func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)](<#func-map-loadanddelete>)
+  - [func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadandstore>)
   - [func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadorstore>)
   - [func (m *Map) Range(f func(key string, value interface{}) bool)](<#func-map-range>)
   - [func (m *Map) Store(key string, value interface{})](<#func-map-store>)
@@ -33,6 +34,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *MapOf[V]) Delete(key string)](<#func-mapofv-delete>)
   - [func (m *MapOf[V]) Load(key string) (value V, ok bool)](<#func-mapofv-load>)
   - [func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)](<#func-mapofv-loadanddelete>)
+  - [func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)](<#func-mapofv-loadandstore>)
   - [func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)](<#func-mapofv-loadorstore>)
   - [func (m *MapOf[V]) Range(f func(key string, value V) bool)](<#func-mapofv-range>)
   - [func (m *MapOf[V]) Store(key string, value V)](<#func-mapofv-store>)
@@ -44,7 +46,7 @@ import "github.com/fufuok/utils/xsync"
 - [type RToken](<#type-rtoken>)
 
 
-## type [Counter](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L31-L33>)
+## type Counter
 
 A Counter is a striped int64 counter\.
 
@@ -58,7 +60,7 @@ type Counter struct {
 }
 ```
 
-### func \(\*Counter\) [Add](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L52>)
+### func \(\*Counter\) Add
 
 ```go
 func (c *Counter) Add(delta int64)
@@ -66,7 +68,7 @@ func (c *Counter) Add(delta int64)
 
 Add adds the delta to the counter\.
 
-### func \(\*Counter\) [Dec](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L47>)
+### func \(\*Counter\) Dec
 
 ```go
 func (c *Counter) Dec()
@@ -74,7 +76,7 @@ func (c *Counter) Dec()
 
 Dec decrements the counter by 1\.
 
-### func \(\*Counter\) [Inc](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L42>)
+### func \(\*Counter\) Inc
 
 ```go
 func (c *Counter) Inc()
@@ -82,7 +84,7 @@ func (c *Counter) Inc()
 
 Inc increments the counter by 1\.
 
-### func \(\*Counter\) [Reset](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L79>)
+### func \(\*Counter\) Reset
 
 ```go
 func (c *Counter) Reset()
@@ -90,7 +92,7 @@ func (c *Counter) Reset()
 
 Reset resets the counter to zero\. This method should only be used when it is known that there are no concurrent modifications of the counter\.
 
-### func \(\*Counter\) [Value](<https://gitee.com/fufuok/utils/blob/master/xsync/counter.go#L67>)
+### func \(\*Counter\) Value
 
 ```go
 func (c *Counter) Value() int64
@@ -98,7 +100,7 @@ func (c *Counter) Value() int64
 
 Value returns the current counter value\. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter\.
 
-## type [MPMCQueue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L17-L26>)
+## type MPMCQueue
 
 A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue\.
 
@@ -112,7 +114,7 @@ type MPMCQueue struct {
 }
 ```
 
-### func [NewMPMCQueue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L41>)
+### func NewMPMCQueue
 
 ```go
 func NewMPMCQueue(capacity int) *MPMCQueue
@@ -120,7 +122,7 @@ func NewMPMCQueue(capacity int) *MPMCQueue
 
 NewMPMCQueue creates a new MPMCQueue instance with the given capacity\.
 
-### func \(\*MPMCQueue\) [Dequeue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L66>)
+### func \(\*MPMCQueue\) Dequeue
 
 ```go
 func (q *MPMCQueue) Dequeue() interface{}
@@ -128,7 +130,7 @@ func (q *MPMCQueue) Dequeue() interface{}
 
 Dequeue retrieves and removes the item from the head of the queue\. Blocks\, if the queue is empty\.
 
-### func \(\*MPMCQueue\) [Enqueue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L53>)
+### func \(\*MPMCQueue\) Enqueue
 
 ```go
 func (q *MPMCQueue) Enqueue(item interface{})
@@ -136,7 +138,7 @@ func (q *MPMCQueue) Enqueue(item interface{})
 
 Enqueue inserts the given item into the queue\. Blocks\, if the queue is full\.
 
-### func \(\*MPMCQueue\) [TryDequeue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L107>)
+### func \(\*MPMCQueue\) TryDequeue
 
 ```go
 func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
@@ -144,7 +146,7 @@ func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
 
 TryDequeue retrieves and removes the item from the head of the queue\. Does not block and returns immediately\. The ok result indicates that the queue isn't empty and an item was retrieved\.
 
-### func \(\*MPMCQueue\) [TryEnqueue](<https://gitee.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L82>)
+### func \(\*MPMCQueue\) TryEnqueue
 
 ```go
 func (q *MPMCQueue) TryEnqueue(item interface{}) bool
@@ -152,7 +154,7 @@ func (q *MPMCQueue) TryEnqueue(item interface{}) bool
 
 TryEnqueue inserts the given item into the queue\. Does not block and returns immediately\. The result indicates that the queue isn't full and the item was inserted\.
 
-## type [Map](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L51-L58>)
+## type Map
 
 Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map\.
 
@@ -170,7 +172,7 @@ type Map struct {
 }
 ```
 
-### func [NewMap](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L96>)
+### func NewMap
 
 ```go
 func NewMap() *Map
@@ -178,7 +180,7 @@ func NewMap() *Map
 
 NewMap creates a new Map instance\.
 
-### func \(\*Map\) [Delete](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L396>)
+### func \(\*Map\) Delete
 
 ```go
 func (m *Map) Delete(key string)
@@ -186,7 +188,7 @@ func (m *Map) Delete(key string)
 
 Delete deletes the value for a key\.
 
-### func \(\*Map\) [Load](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L123>)
+### func \(\*Map\) Load
 
 ```go
 func (m *Map) Load(key string) (value interface{}, ok bool)
@@ -194,7 +196,7 @@ func (m *Map) Load(key string) (value interface{}, ok bool)
 
 Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
 
-### func \(\*Map\) [LoadAndDelete](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L346>)
+### func \(\*Map\) LoadAndDelete
 
 ```go
 func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
@@ -202,7 +204,15 @@ func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
 
 LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
 
-### func \(\*Map\) [LoadOrStore](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L159>)
+### func \(\*Map\) LoadAndStore
+
+```go
+func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
+```
+
+LoadAndStore returns the existing value for the key if present\. Otherwise\, returns the given value\. The loaded result is true if the value was loaded\, false if stored\. Store the given value\.
+
+### func \(\*Map\) LoadOrStore
 
 ```go
 func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
@@ -210,7 +220,7 @@ func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, lo
 
 LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*Map\) [Range](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L421>)
+### func \(\*Map\) Range
 
 ```go
 func (m *Map) Range(f func(key string, value interface{}) bool)
@@ -222,7 +232,7 @@ Range does not necessarily correspond to any consistent snapshot of the Map's co
 
 It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
 
-### func \(\*Map\) [Store](<https://gitee.com/fufuok/utils/blob/master/xsync/map.go#L152>)
+### func \(\*Map\) Store
 
 ```go
 func (m *Map) Store(key string, value interface{})
@@ -230,7 +240,7 @@ func (m *Map) Store(key string, value interface{})
 
 Store sets the value for a key\.
 
-## type [MapOf](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L33-L40>)
+## type MapOf
 
 MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map\.
 
@@ -248,7 +258,7 @@ type MapOf[V any] struct {
 }
 ```
 
-### func [NewMapOf](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L43>)
+### func NewMapOf
 
 ```go
 func NewMapOf[V any]() *MapOf[V]
@@ -256,7 +266,7 @@ func NewMapOf[V any]() *MapOf[V]
 
 NewMapOf creates a new MapOf instance\.
 
-### func \(\*MapOf\[V\]\) [Delete](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L292>)
+### func \(\*MapOf\[V\]\) Delete
 
 ```go
 func (m *MapOf[V]) Delete(key string)
@@ -264,7 +274,7 @@ func (m *MapOf[V]) Delete(key string)
 
 Delete deletes the value for a key\.
 
-### func \(\*MapOf\[V\]\) [Load](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L54>)
+### func \(\*MapOf\[V\]\) Load
 
 ```go
 func (m *MapOf[V]) Load(key string) (value V, ok bool)
@@ -272,7 +282,7 @@ func (m *MapOf[V]) Load(key string) (value V, ok bool)
 
 Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
 
-### func \(\*MapOf\[V\]\) [LoadAndDelete](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L242>)
+### func \(\*MapOf\[V\]\) LoadAndDelete
 
 ```go
 func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)
@@ -280,7 +290,15 @@ func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)
 
 LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
 
-### func \(\*MapOf\[V\]\) [LoadOrStore](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L90>)
+### func \(\*MapOf\[V\]\) LoadAndStore
+
+```go
+func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)
+```
+
+LoadAndStore returns the existing value for the key if present\. Otherwise\, returns the given value\. The loaded result is true if the value was loaded\, false if stored\. Store the given value\.
+
+### func \(\*MapOf\[V\]\) LoadOrStore
 
 ```go
 func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)
@@ -288,7 +306,7 @@ func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)
 
 LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*MapOf\[V\]\) [Range](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L308>)
+### func \(\*MapOf\[V\]\) Range
 
 ```go
 func (m *MapOf[V]) Range(f func(key string, value V) bool)
@@ -300,7 +318,7 @@ Range does not necessarily correspond to any consistent snapshot of the Map's co
 
 It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
 
-### func \(\*MapOf\[V\]\) [Store](<https://gitee.com/fufuok/utils/blob/master/xsync/mapof.go#L83>)
+### func \(\*MapOf\[V\]\) Store
 
 ```go
 func (m *MapOf[V]) Store(key string, value V)
@@ -308,7 +326,7 @@ func (m *MapOf[V]) Store(key string, value V)
 
 Store sets the value for a key\.
 
-## type [RBMutex](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L44-L49>)
+## type RBMutex
 
 A RBMutex is a reader biased reader/writer mutual exclusion lock\. The lock can be held by an many readers or a single writer\. The zero value for a RBMutex is an unlocked mutex\.
 
@@ -326,7 +344,7 @@ type RBMutex struct {
 }
 ```
 
-### func \(\*RBMutex\) [Lock](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L96>)
+### func \(\*RBMutex\) Lock
 
 ```go
 func (m *RBMutex) Lock()
@@ -334,7 +352,7 @@ func (m *RBMutex) Lock()
 
 Lock locks m for writing\. If the lock is already locked for reading or writing\, Lock blocks until the lock is available\.
 
-### func \(\*RBMutex\) [RLock](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L56>)
+### func \(\*RBMutex\) RLock
 
 ```go
 func (m *RBMutex) RLock() *RToken
@@ -344,7 +362,7 @@ RLock locks m for reading and returns a reader token\. The token must be used in
 
 Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock\.
 
-### func \(\*RBMutex\) [RUnlock](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L83>)
+### func \(\*RBMutex\) RUnlock
 
 ```go
 func (m *RBMutex) RUnlock(t *RToken)
@@ -352,7 +370,7 @@ func (m *RBMutex) RUnlock(t *RToken)
 
 RUnlock undoes a single RLock call\. A reader token obtained from the RLock call must be provided\. RUnlock does not affect other simultaneous readers\. A panic is raised if m is not locked for reading on entry to RUnlock\.
 
-### func \(\*RBMutex\) [Unlock](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L116>)
+### func \(\*RBMutex\) Unlock
 
 ```go
 func (m *RBMutex) Unlock()
@@ -362,7 +380,7 @@ Unlock unlocks m for writing\. A panic is raised if m is not locked for writing 
 
 As with RWMutex\, a locked RBMutex is not associated with a particular goroutine\. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it\.
 
-## type [RToken](<https://gitee.com/fufuok/utils/blob/master/xsync/rbmutex.go#L22-L24>)
+## type RToken
 
 RToken is a reader lock token\.
 
