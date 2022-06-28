@@ -471,32 +471,47 @@ type Daemon struct{ ... }
 ```go
 package xsync // import "github.com/fufuok/utils/xsync"
 
-type Counter struct{ ... }
+type Counter struct { ... }
     func (c *Counter) Add(delta int64)
     func (c *Counter) Dec()
     func (c *Counter) Inc()
     func (c *Counter) Reset()
     func (c *Counter) Value() int64
-type MPMCQueue struct{ ... }
+
+type MPMCQueue struct { ... }
     func NewMPMCQueue(capacity int) *MPMCQueue
     func (q *MPMCQueue) Dequeue() interface{}
     func (q *MPMCQueue) Enqueue(item interface{})
     func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
     func (q *MPMCQueue) TryEnqueue(item interface{}) bool
-type Map struct{ ... }
+
+type Map struct { ... }
     func NewMap() *Map
     func (m *Map) Delete(key string)
     func (m *Map) Load(key string) (value interface{}, ok bool)
     func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
+    func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
     func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
     func (m *Map) Range(f func(key string, value interface{}) bool)
     func (m *Map) Store(key string, value interface{})
-type RBMutex struct{ ... }
+
+type MapOf[V any] struct { ... }
+    func NewMapOf[V any]() *MapOf[V]
+    func (m *MapOf[V]) Delete(key string)
+    func (m *MapOf[V]) Load(key string) (value V, ok bool)
+    func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)
+    func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)
+    func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)
+    func (m *MapOf[V]) Range(f func(key string, value V) bool)
+    func (m *MapOf[V]) Store(key string, value V)
+
+type RBMutex struct { ... }
     func (m *RBMutex) Lock()
     func (m *RBMutex) RLock() *RToken
     func (m *RBMutex) RUnlock(t *RToken)
     func (m *RBMutex) Unlock()
-type RToken struct{ ... }
+
+type RToken struct { ... }
 ```
 
 ### Go 同步扩展库
