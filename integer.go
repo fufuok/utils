@@ -101,12 +101,6 @@ func Comma(v int64) string {
 // Ref: dustin/go-humanize
 func Commau(v uint64) string {
 	sign := ""
-
-	if v < 0 {
-		sign = "-"
-		v = 0 - v
-	}
-
 	parts := []string{"", "", "", "", "", "", ""}
 	j := len(parts) - 1
 

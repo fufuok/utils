@@ -86,7 +86,7 @@ func BenchmarkCopyS2B(b *testing.B) {
 	})
 	b.Run("append", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			_ = append(append([]byte{}, s...))
+			_ = append([]byte{}, s...)
 		}
 	})
 }

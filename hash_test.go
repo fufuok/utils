@@ -8,8 +8,6 @@ import (
 
 var (
 	tmpS = "Fufu 中　文加密/解密~&#123a"
-	tmpK = []byte("0123456789012345")
-	tmpB = []byte("Fufu 中　文\u2728->?\n*\U0001F63A0123456789012345")
 )
 
 func TestSha256Hex(t *testing.T) {

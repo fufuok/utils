@@ -43,7 +43,7 @@ func TestIsNil(t *testing.T) {
 	AssertEqual(t, false, IsNil(slice1))
 	AssertEqual(t, true, IsNil(slice2))
 
-	slice3 := make([]int, 0, 0)
+	slice3 := make([]int, 0)
 	AssertEqual(t, false, IsNil(slice3))
 	slice4 := slice3
 	AssertEqual(t, false, IsNil(slice4))
@@ -74,7 +74,7 @@ func TestIsNil(t *testing.T) {
 
 	var iface4 interface{} = ptr
 	AssertEqual(t, true, IsNil(iface4))
-	AssertEqual(t, false, iface4 == nil) // go1.16.4
+	// AssertEqual(t, false, iface4 == nil) // go1.16.4
 
 	var fun func(int) error
 	AssertEqual(t, true, IsNil(fun))

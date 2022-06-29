@@ -115,7 +115,7 @@ func TestParseHumanBytesErrors(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected error, got %v", got)
 	}
-	got, err = ParseHumanBytes("")
+	_, err = ParseHumanBytes("")
 	if err == nil {
 		t.Errorf("Expected error parsing nothing")
 	}
