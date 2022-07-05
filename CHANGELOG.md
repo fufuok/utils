@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.7.6
+
+**2022-07-05**
+
+- !调整压缩助手函数: `Zip` `ZipLevel` `Unzip` `Gzip` `GzipLevel` `Ungzip`
+
 ## v0.7.5
 
 **2022-06-28**

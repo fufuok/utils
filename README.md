@@ -98,6 +98,8 @@ func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
+func Gzip(data []byte) ([]byte, error)
+func GzipLevel(data []byte, level int) (dst []byte, err error)
 func Hash(b []byte, h hash.Hash) []byte
 func HashBytes(b ...[]byte) string
 func HashBytes32(b ...[]byte) uint32
@@ -222,6 +224,7 @@ func UUID() []byte
 func UUIDShort() string
 func UUIDSimple() string
 func UUIDString() string
+func Ungzip(data []byte) (src []byte, err error)
 func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
 func WaitNextMinute()
