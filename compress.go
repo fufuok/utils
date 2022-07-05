@@ -149,7 +149,7 @@ func newZlibWriterPool() (pools []*sync.Pool) {
 	for i := 0; i < 12; i++ {
 		level := i - 2
 		pools = append(pools, &sync.Pool{
-			New: func() any {
+			New: func() interface{} {
 				zw, _ := zlib.NewWriterLevel(nil, level)
 				return zw
 			},
