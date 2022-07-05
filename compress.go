@@ -3,13 +3,15 @@ package utils
 import (
 	"bytes"
 	"compress/gzip"
+	"compress/zlib"
 	"io/ioutil"
 	"sync"
 )
 
 var (
-	writerPool = newGzipWriterPool()
-	readerPool = sync.Pool{
+	gzipWritePool  = newGzipWriterPool()
+	zlibWritePool  = newZlibWriterPool()
+	gzipReaderPool = sync.Pool{
 		New: func() interface{} {
 			return new(gzip.Reader)
 		},
@@ -21,19 +23,83 @@ var (
 	}
 )
 
+func Gzip(data []byte) ([]byte, error) {
+	return GzipLevel(data, gzip.BestSpeed)
+}
+
+func GzipLevel(data []byte, level int) (dst []byte, err error) {
+	buf := bufferPool.Get().(*bytes.Buffer)
+	idx := getWriterPoolIndex(level)
+	zw := gzipWritePool[idx].Get().(*gzip.Writer)
+	zw.Reset(buf)
+	defer func() {
+		buf.Reset()
+		bufferPool.Put(buf)
+		gzipWritePool[idx].Put(zw)
+	}()
+
+	_, err = zw.Write(data)
+	if err != nil {
+		return
+	}
+	err = zw.Flush()
+	if err != nil {
+		return
+	}
+	err = zw.Close()
+	if err != nil {
+		return
+	}
+
+	dst = buf.Bytes()
+	return
+}
+
+func Ungzip(data []byte) (src []byte, err error) {
+	buf := bufferPool.Get().(*bytes.Buffer)
+	defer func() {
+		buf.Reset()
+		bufferPool.Put(buf)
+	}()
+
+	_, err = buf.Write(data)
+	if err != nil {
+		return
+	}
+
+	zr := gzipReaderPool.Get().(*gzip.Reader)
+	defer func() {
+		gzipReaderPool.Put(zr)
+	}()
+
+	err = zr.Reset(buf)
+	if err != nil {
+		return
+	}
+	defer func() {
+		_ = zr.Close()
+	}()
+
+	src, err = ioutil.ReadAll(zr)
+	if err != nil {
+		return
+	}
+	return
+}
+
 func Zip(data []byte) ([]byte, error) {
-	return ZipLevel(data, gzip.BestSpeed)
+	return ZipLevel(data, zlib.BestSpeed)
 }
 
 func ZipLevel(data []byte, level int) (dst []byte, err error) {
 	buf := bufferPool.Get().(*bytes.Buffer)
 	idx := getWriterPoolIndex(level)
-	zw := writerPool[idx].Get().(*gzip.Writer)
+	zw := zlibWritePool[idx].Get().(*zlib.Writer)
 	zw.Reset(buf)
 	defer func() {
 		buf.Reset()
 		bufferPool.Put(buf)
-		writerPool[idx].Put(zw)
+		zlibWritePool[idx].Put(zw)
 	}()
 
 	_, err = zw.Write(data)
@@ -64,15 +130,9 @@ func Unzip(data []byte) (src []byte, err error) {
 	if err != nil {
 		return
 	}
-
-	zr := readerPool.Get().(*gzip.Reader)
-	defer func() {
-		readerPool.Put(zr)
-	}()
-
-	err = zr.Reset(buf)
+	zr, err := zlib.NewReader(buf)
 	if err != nil {
-		return
+		return nil, err
 	}
 	defer func() {
 		_ = zr.Close()
@@ -81,6 +141,19 @@ func Unzip(data []byte) (src []byte, err error) {
 	src, err = ioutil.ReadAll(zr)
 	if err != nil {
 		return
+	}
+	return
+}
+
+func newZlibWriterPool() (pools []*sync.Pool) {
+	for i := 0; i < 12; i++ {
+		level := i - 2
+		pools = append(pools, &sync.Pool{
+			New: func() any {
+				zw, _ := zlib.NewWriterLevel(nil, level)
+				return zw
+			},
+		})
 	}
 	return
 }
