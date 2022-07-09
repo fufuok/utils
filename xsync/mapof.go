@@ -333,8 +333,8 @@ func (m *MapOf[V]) Range(f func(key string, value V) bool) {
 	}
 }
 
-// used in tests to verify the table counter
-func (m *MapOf[V]) size() int {
+// Size returns current size of the map.
+func (m *MapOf[V]) Size() int {
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
 	return int(sumSize(table))
 }

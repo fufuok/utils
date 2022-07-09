@@ -28,6 +28,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadandstore>)
   - [func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadorstore>)
   - [func (m *Map) Range(f func(key string, value interface{}) bool)](<#func-map-range>)
+  - [func (m *Map) Size() int](<#func-map-size>)
   - [func (m *Map) Store(key string, value interface{})](<#func-map-store>)
 - [type MapOf](<#type-mapof>)
   - [func NewMapOf[V any]() *MapOf[V]](<#func-newmapof>)
@@ -37,6 +38,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)](<#func-mapofv-loadandstore>)
   - [func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)](<#func-mapofv-loadorstore>)
   - [func (m *MapOf[V]) Range(f func(key string, value V) bool)](<#func-mapofv-range>)
+  - [func (m *MapOf[V]) Size() int](<#func-mapofv-size>)
   - [func (m *MapOf[V]) Store(key string, value V)](<#func-mapofv-store>)
 - [type RBMutex](<#type-rbmutex>)
   - [func (m *RBMutex) Lock()](<#func-rbmutex-lock>)
@@ -232,6 +234,14 @@ Range does not necessarily correspond to any consistent snapshot of the Map's co
 
 It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
 
+### func \(\*Map\) Size
+
+```go
+func (m *Map) Size() int
+```
+
+Size returns current size of the map\.
+
 ### func \(\*Map\) Store
 
 ```go
@@ -317,6 +327,14 @@ Range calls f sequentially for each key and value present in the map\. If f retu
 Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once\, but if the value for any key is stored or deleted concurrently\, Range may reflect any mapping for that key from any point during the Range call\.
 
 It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
+
+### func \(\*MapOf\[V\]\) Size
+
+```go
+func (m *MapOf[V]) Size() int
+```
+
+Size returns current size of the map\.
 
 ### func \(\*MapOf\[V\]\) Store
 
