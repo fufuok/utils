@@ -3,12 +3,14 @@
 // go run main.go -d="Fufu  777"
 // go run main.go -d=Fufu -k=TestEnv
 // go run main.go -k=TestEnv
+// go run main.go -u=db_user -p='abc!@#$%^&*()_+ ?><'
 package main
 
 import (
 	"flag"
 	"fmt"
 	"log"
+	"net/url"
 
 	"github.com/fufuok/utils/xcrypto"
 )
@@ -23,6 +25,9 @@ var (
 	key string
 	// 待加解密内容
 	value string
+
+	// 编码用户名密码字符串
+	user, password string
 )
 
 func init() {
@@ -40,9 +45,15 @@ func init() {
 
 func main() {
 	// 参数
+	flag.StringVar(&user, "u", "", "待编码的用户名")
+	flag.StringVar(&password, "p", "", "待编码的密码字符串")
 	flag.StringVar(&key, "k", "envname", "环境变量名")
 	flag.StringVar(&value, "d", "", "待加密字符串")
 	flag.Parse()
+
+	if user != "" || password != "" {
+		fmt.Printf("url.UserPassword:\n%s\n%s\n%s\n", user, password, url.UserPassword(user, password))
+	}
 
 	if value != "" {
 		// 加密
