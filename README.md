@@ -12,6 +12,11 @@ go get github.com/fufuok/utils
 
 ## 目录
 
+### 常用函数
+
+<details>
+  <summary>DOC</summary>
+
 ```go
 package utils // import "github.com/fufuok/utils"
 
@@ -237,6 +242,7 @@ type Bool struct{ ... }
 type NoCmp [0]func()
 type NoCopy struct{}
 ```
+</details>
 
 ### 泛型方法集
 
@@ -268,6 +274,9 @@ type NoCopy struct{}
 ### 常用对称加解密函数
 
 见: [xcrypto](xcrypto)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package xcrypto // import "github.com/fufuok/utils/xcrypto"
@@ -386,12 +395,16 @@ func XOREnStringB58(s string, key []byte) string
 func XOREnStringB64(s string, key []byte) string
 func XOREnStringHex(s string, key []byte) string
 ```
+</details>
 
 ### 获取内外网 IP 小工具
 
 见: [myip](myip)
 
 或: https://github.com/fufuok/myip
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package myip // import "github.com/fufuok/utils/myip"
@@ -407,12 +420,16 @@ func InternalIPv6() string
 func LocalIP() string
 func LocalIPv4s() (ips []string)
 ```
+</details>
 
 ### 编码解码 base58
 
 见: [base58](base58)
 
 或: https://github.com/fufuok/basex
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package base58 // import "github.com/fufuok/utils/base58"
@@ -422,6 +439,7 @@ func CheckEncode(input []byte, version byte) string
 func Decode(b string) []byte
 func Encode(b []byte) string
 ```
+</details>
 
 ### 可排序全局唯一 ID 生成器
 
@@ -434,6 +452,9 @@ func Encode(b []byte) string
 见: [xid](xid)
 
 或: http://github.com/fufuok/xid
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package xid // import "github.com/fufuok/utils/xid"
@@ -448,12 +469,16 @@ type ID [rawLen]byte
     func NewWithTime(t time.Time) ID
     func NilID() ID
 ```
+</details>
 
 ### 自守护进程和后台运行
 
 见: [xdaemon](xdaemon)
 
 或: https://github.com/fufuok/xdaemon
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package xdaemon // import "github.com/fufuok/utils/xdaemon"
@@ -464,12 +489,16 @@ func NewSysProcAttr() *syscall.SysProcAttr
 type Daemon struct{ ... }
     func NewDaemon(logFile string) *Daemon
 ```
+</details>
 
 ### 高性能并发安全同步扩展库
 
 见: [xsync](xsync)
 
 或: https://github.com/fufuok/xsync
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package xsync // import "github.com/fufuok/utils/xsync"
@@ -516,6 +545,7 @@ type RBMutex struct { ... }
 
 type RToken struct { ... }
 ```
+</details>
 
 ### Go 同步扩展库
 
@@ -533,6 +563,9 @@ type RToken struct { ... }
 
 或: [https://github.com/fufuok/jsongen](https://github.com/fufuok/jsongen)
 
+<details>
+  <summary>DOC</summary>
+
 ```go
 package jsongen // import "github.com/fufuok/utils/xjson/jsongen"
 
@@ -549,12 +582,16 @@ type UnquotedValue string
 type Value interface{ ... }
     func EscapeString(s string) Value
 ```
+</details>
 
 2. **超高效的 JSON 字符串解析和字段搜索**
 
 来自: `tidwall/gjson`
 
 见: [gjson](xjson/gjson)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package gjson // import "github.com/fufuok/utils/xjson/gjson"
@@ -596,12 +633,16 @@ type Result struct{ ... }
 type Type int
     const Null Type = iota ...
 ```
+</details>
 
 3. **JSON 字符串字段修改和删除**
 
 来自: `tidwall/sjson`
 
 见: [sjson](xjson/sjson)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package sjson // import "github.com/fufuok/utils/xjson/sjson"
@@ -620,12 +661,16 @@ func SetRawBytesOptions(json []byte, path string, value []byte, opts *Options) (
 func SetRawOptions(json, path, value string, opts *Options) (string, error)
 type Options struct{ ... }
 ```
+</details>
 
 4. **JSON 字符串格式化和校验**
 
 来自: `tidwall/pretty`
 
 见: [pretty](xjson/pretty)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package pretty // import "github.com/fufuok/utils/xjson/pretty"
@@ -642,12 +687,16 @@ type Options struct{ ... }
 type Style struct{ ... }
     var TerminalStyle *Style
 ```
+</details>
 
 5. 字符串模式匹配(`*?`通配符搜索)
 
 来自: `tidwall/match`
 
 见: [match](xjson/match)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package match // import "github.com/fufuok/utils/xjson/match"
@@ -659,12 +708,16 @@ func IsPattern(str string) bool
 func Match(str, pattern string) bool
 func MatchLimit(str, pattern string, maxcomp int) (matched, stopped bool)
 ```
+</details>
 
 ### 常用的池
 
 `[]byte` 字节切片池化见: [github.com/fufuok/bytespool](https://github.com/fufuok/bytespool)
 
 见: [pools](pools)
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package bufferpool // import "github.com/fufuok/utils/pools/bufferpool"
@@ -693,6 +746,7 @@ package tickerpool // import "github.com/fufuok/utils/pools/tickerpool"
 func New(d time.Duration) *time.Ticker
 func Release(t *time.Ticker)
 ```
+</details>
 
 ### 并发任务调度库
 
@@ -701,6 +755,9 @@ func Release(t *time.Ticker)
 或: https://github.com/fufuok/sched
 
 简洁, 高效, 并发限制, 复用 goroutine
+
+<details>
+  <summary>DOC</summary>
 
 ```go
 package sched // import "github.com/fufuok/utils/sched"
@@ -711,6 +768,7 @@ type Option func(w *Pool)
 type Pool struct{ ... }
     func New(opts ...Option) *Pool
 ```
+</details>
 
 ## 使用示例
 
