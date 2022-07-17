@@ -22,21 +22,21 @@ import "github.com/fufuok/utils/xdaemon"
 const EnvName = "XW_DAEMON_IDX"
 ```
 
-## func [Background](<https://gitee.com/fufuok/utils/blob/master/xdaemon/daemon.go#L28>)
+## func Background
 
 ```go
 func Background(logFile string, isExit bool) (*exec.Cmd, error)
 ```
 
-Background 把本身程序转化为后台运行\(启动一个子进程\, 然后自己退出\) logFile 若不为空\,子程序的标准输出和错误输出将记入此文件 isExit  启动子加进程后是否直接退出主程序\, 若为false\, 主程序返回\*os\.Process\, 子程序返回 nil\. 需自行判断处理
+Background 把本身程序转化为后台运行\(启动一个子进程, 然后自己退出\) logFile 若不为空,子程序的标准输出和错误输出将记入此文件 isExit  启动子加进程后是否直接退出主程序, 若为false, 主程序返回\*os.Process, 子程序返回 nil. 需自行判断处理
 
-## func [NewSysProcAttr](<https://gitee.com/fufuok/utils/blob/master/xdaemon/attr_windows.go#L7>)
+## func NewSysProcAttr
 
 ```go
 func NewSysProcAttr() *syscall.SysProcAttr
 ```
 
-## type [Daemon](<https://gitee.com/fufuok/utils/blob/master/xdaemon/daemon.go#L18-L23>)
+## type Daemon
 
 Daemon 守护进程
 
@@ -49,13 +49,13 @@ type Daemon struct {
 }
 ```
 
-### func [NewDaemon](<https://gitee.com/fufuok/utils/blob/master/xdaemon/daemon.go#L60>)
+### func NewDaemon
 
 ```go
 func NewDaemon(logFile string) *Daemon
 ```
 
-### func \(\*Daemon\) [Run](<https://gitee.com/fufuok/utils/blob/master/xdaemon/daemon.go#L70>)
+### func \(\*Daemon\) Run
 
 ```go
 func (d *Daemon) Run()

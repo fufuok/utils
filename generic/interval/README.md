@@ -6,15 +6,15 @@
 import "github.com/fufuok/utils/generic/interval"
 ```
 
-Package interval provides an implementation of an interval tree built using an augmented AVL tree\. An interval tree stores values associated with intervals\, and can efficiently determine which intervals overlap with others\. All intervals must have a unique starting position\. It supports the following operations\, where 'n' is the number of intervals in the tree:
+Package interval provides an implementation of an interval tree built using an augmented AVL tree. An interval tree stores values associated with intervals, and can efficiently determine which intervals overlap with others. All intervals must have a unique starting position. It supports the following operations, where 'n' is the number of intervals in the tree:
 
-\* Put: add an interval to the tree\. Complexity: O\(lg n\)\.
+\* Put: add an interval to the tree. Complexity: O\(lg n\).
 
-\* Get: find an interval with a given starting position\. Complexity O\(lg n\)\.
+\* Get: find an interval with a given starting position. Complexity O\(lg n\).
 
-\* Overlaps: find all intervals that overlap with a given interval\. Complexity: O\(lg n \+ m\)\, where 'm' is the size of the result \(number of overlapping intervals found\)\.
+\* Overlaps: find all intervals that overlap with a given interval. Complexity: O\(lg n \+ m\), where 'm' is the size of the result \(number of overlapping intervals found\).
 
-\* Remove: remove the interval at a given position\. Complexity: O\(lg n\)\.
+\* Remove: remove the interval at a given position. Complexity: O\(lg n\).
 
 <details><summary>Example</summary>
 <p>
@@ -60,7 +60,7 @@ bar
   - [func (t *Tree[I, V]) Size() int](<#func-treei-v-size>)
 
 
-## type [KV](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L27-L30>)
+## type KV
 
 ```go
 type KV[I constraints.Ordered, V any] struct {
@@ -69,9 +69,9 @@ type KV[I constraints.Ordered, V any] struct {
 }
 ```
 
-## type [Tree](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L59-L61>)
+## type Tree
 
-Tree implements an interval tree\. All intervals must have unique starting positions\. Every low bound if an interval is inclusive\, while high is exclusive\.
+Tree implements an interval tree. All intervals must have unique starting positions. Every low bound if an interval is inclusive, while high is exclusive.
 
 ```go
 type Tree[I constraints.Ordered, V any] struct {
@@ -79,81 +79,81 @@ type Tree[I constraints.Ordered, V any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L64>)
+### func New
 
 ```go
 func New[I constraints.Ordered, V any]() *Tree[I, V]
 ```
 
-New returns an empty interval tree\.
+New returns an empty interval tree.
 
-### func \(\*Tree\[I\, V\]\) [Add](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L72>)
+### func \(\*Tree\[I, V\]\) Add
 
 ```go
 func (t *Tree[I, V]) Add(low, high I, value V) (KV[I, V], bool)
 ```
 
-Add associates the interval \[low\, high\) with value\.
+Add associates the interval \[low, high\) with value.
 
-If an interval starting at low already exists in t\, this method doesn't perform any change of the tree\, but returns the conflicting interval\.
+If an interval starting at low already exists in t, this method doesn't perform any change of the tree, but returns the conflicting interval.
 
-### func \(\*Tree\[I\, V\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L114>)
+### func \(\*Tree\[I, V\]\) Each
 
 ```go
 func (t *Tree[I, V]) Each(fn func(low, high I, val V))
 ```
 
-Each calls 'fn' on every element in the tree\, and its corresponding interval\, in order sorted by starting position\.
+Each calls 'fn' on every element in the tree, and its corresponding interval, in order sorted by starting position.
 
-### func \(\*Tree\[I\, V\]\) [Get](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L104>)
+### func \(\*Tree\[I, V\]\) Get
 
 ```go
 func (t *Tree[I, V]) Get(low I) (KV[I, V], bool)
 ```
 
-Get returns the interval and value associated with the interval starting at low\, or false if no such value exists\.
+Get returns the interval and value associated with the interval starting at low, or false if no such value exists.
 
-### func \(\*Tree\[I\, V\]\) [Height](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L119>)
+### func \(\*Tree\[I, V\]\) Height
 
 ```go
 func (t *Tree[I, V]) Height() int
 ```
 
-Height returns the height of the tree\.
+Height returns the height of the tree.
 
-### func \(\*Tree\[I\, V\]\) [Overlaps](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L90>)
+### func \(\*Tree\[I, V\]\) Overlaps
 
 ```go
 func (t *Tree[I, V]) Overlaps(low, high I) []KV[I, V]
 ```
 
-Overlaps returns all values that overlap with the given range\. List returned is sorted by low positions of intervals\.
+Overlaps returns all values that overlap with the given range. List returned is sorted by low positions of intervals.
 
-### func \(\*Tree\[I\, V\]\) [Put](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L82>)
+### func \(\*Tree\[I, V\]\) Put
 
 ```go
 func (t *Tree[I, V]) Put(low, high I, value V) (KV[I, V], bool)
 ```
 
-Put associates the interval \[low\, high\) with value\.
+Put associates the interval \[low, high\) with value.
 
-If an interval starting at low already exists\, this method will replace it\. In such a case the conflicting \(replaced\) interval is returned\.
+If an interval starting at low already exists, this method will replace it. In such a case the conflicting \(replaced\) interval is returned.
 
-### func \(\*Tree\[I\, V\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L96>)
+### func \(\*Tree\[I, V\]\) Remove
 
 ```go
 func (t *Tree[I, V]) Remove(low I) (KV[I, V], bool)
 ```
 
-Remove deletes the interval starting at low\. The removed interval is returned\. If no such interval existed in a tree\, the returned value is false\.
+Remove deletes the interval starting at low. The removed interval is returned. If no such interval existed in a tree, the returned value is false.
 
-### func \(\*Tree\[I\, V\]\) [Size](<https://gitee.com/fufuok/utils/blob/master/generic/interval/itree.go#L124>)
+### func \(\*Tree\[I, V\]\) Size
 
 ```go
 func (t *Tree[I, V]) Size() int
 ```
 
-Size returns the number of elements in the tree\.
+Size returns the number of elements in the tree.
 
 
 

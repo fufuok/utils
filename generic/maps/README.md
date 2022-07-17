@@ -20,7 +20,7 @@ Package maps defines various functions useful with maps of any type\.
 - [func Values[M ~map[K]V, K comparable, V any](m M) []V](<#func-values>)
 
 
-## func [Clear](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L60>)
+## func [Clear](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L60>)
 
 ```go
 func Clear[M ~map[K]V, K comparable, V any](m M)
@@ -28,7 +28,7 @@ func Clear[M ~map[K]V, K comparable, V any](m M)
 
 Clear removes all entries from m\, leaving it empty\.
 
-## func [Clone](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L68>)
+## func [Clone](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L68>)
 
 ```go
 func Clone[M ~map[K]V, K comparable, V any](m M) M
@@ -36,7 +36,7 @@ func Clone[M ~map[K]V, K comparable, V any](m M) M
 
 Clone returns a copy of m\.  This is a shallow clone: the new keys and values are set using ordinary assignment\.
 
-## func [Copy](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L80>)
+## func [Copy](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L80>)
 
 ```go
 func Copy[M ~map[K]V, K comparable, V any](dst, src M)
@@ -44,7 +44,7 @@ func Copy[M ~map[K]V, K comparable, V any](dst, src M)
 
 Copy copies all key/value pairs in src adding them to dst\. When a key in src is already present in dst\, the value in dst will be overwritten by the value associated with the key in src\.
 
-## func [DeleteFunc](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L87>)
+## func [DeleteFunc](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L87>)
 
 ```go
 func DeleteFunc[M ~map[K]V, K comparable, V any](m M, del func(K, V) bool)
@@ -52,7 +52,7 @@ func DeleteFunc[M ~map[K]V, K comparable, V any](m M, del func(K, V) bool)
 
 DeleteFunc deletes any key/value pairs from m for which del returns true\.
 
-## func [Equal](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L33>)
+## func [Equal](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L33>)
 
 ```go
 func Equal[M1, M2 ~map[K]V, K, V comparable](m1 M1, m2 M2) bool
@@ -60,7 +60,7 @@ func Equal[M1, M2 ~map[K]V, K, V comparable](m1 M1, m2 M2) bool
 
 Equal reports whether two maps contain the same key/value pairs\. Values are compared using ==\.
 
-## func [EqualFunc](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L47>)
+## func [EqualFunc](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L47>)
 
 ```go
 func EqualFunc[M1 ~map[K]V1, M2 ~map[K]V2, K comparable, V1, V2 any](m1 M1, m2 M2, eq func(V1, V2) bool) bool
@@ -68,7 +68,7 @@ func EqualFunc[M1 ~map[K]V1, M2 ~map[K]V2, K comparable, V1, V2 any](m1 M1, m2 M
 
 EqualFunc is like Equal\, but compares values using eq\. Keys are still compared with ==\.
 
-## func [Keys](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L13>)
+## func [Keys](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L13>)
 
 ```go
 func Keys[M ~map[K]V, K comparable, V any](m M) []K
@@ -76,7 +76,7 @@ func Keys[M ~map[K]V, K comparable, V any](m M) []K
 
 Keys returns the keys of the map m\. The keys will be in an indeterminate order\.
 
-## func [Values](<https://gitee.com/fufuok/utils/blob/master/generic/maps/maps.go#L23>)
+## func [Values](<https://github.com/fufuok/utils/blob/master/generic/maps/maps.go#L23>)
 
 ```go
 func Values[M ~map[K]V, K comparable, V any](m M) []V

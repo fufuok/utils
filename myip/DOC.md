@@ -58,7 +58,7 @@ ExternalIPv6 获取外网地址 \(IPv6\)
 func InterfaceAddrs(v ...string) (map[string][]net.IP, error)
 ```
 
-InterfaceAddrs 获取所有带 IP 的接口和对应的所有 IP
+InterfaceAddrs 获取所有带 IP 的接口和对应的所有 IP 排除本地链路地址和环回地址
 
 ## func InternalIP
 

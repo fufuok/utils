@@ -22,37 +22,37 @@ import "github.com/fufuok/utils/xjson/pretty"
 
 ## Variables
 
-DefaultOptions is the default options for pretty formats\.
+DefaultOptions is the default options for pretty formats.
 
 ```go
 var DefaultOptions = &Options{Width: 80, Prefix: "", Indent: "  ", SortKeys: false}
 ```
 
-## func [Color](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L463>)
+## func Color
 
 ```go
 func Color(src []byte, style *Style) []byte
 ```
 
-Color will colorize the json\. The style parma is used for customizing the colors\. Passing nil to the style param will use the default TerminalStyle\.
+Color will colorize the json. The style parma is used for customizing the colors. Passing nil to the style param will use the default TerminalStyle.
 
-## func [Pretty](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L31>)
+## func Pretty
 
 ```go
 func Pretty(json []byte) []byte
 ```
 
-Pretty converts the input json into a more human readable format where each element is on it's own line with clear indentation\.
+Pretty converts the input json into a more human readable format where each element is on it's own line with clear indentation.
 
-## func [PrettyOptions](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L34>)
+## func PrettyOptions
 
 ```go
 func PrettyOptions(json []byte, opts *Options) []byte
 ```
 
-PrettyOptions is like Pretty but with customized options\.
+PrettyOptions is like Pretty but with customized options.
 
-## func [Spec](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L596>)
+## func Spec
 
 ```go
 func Spec(src []byte) []byte
@@ -60,33 +60,33 @@ func Spec(src []byte) []byte
 
 Spec strips out comments and trailing commas and convert the input to a valid JSON per the official spec: https://tools.ietf.org/html/rfc8259
 
-The resulting JSON will always be the same length as the input and it will include all of the same line breaks at matching offsets\. This is to ensure the result can be later processed by a external parser and that that parser will report messages or errors with the correct offsets\.
+The resulting JSON will always be the same length as the input and it will include all of the same line breaks at matching offsets. This is to ensure the result can be later processed by a external parser and that that parser will report messages or errors with the correct offsets.
 
-## func [SpecInPlace](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L602>)
+## func SpecInPlace
 
 ```go
 func SpecInPlace(src []byte) []byte
 ```
 
-SpecInPlace is the same as Spec\, but this method reuses the input json buffer to avoid allocations\. Do not use the original bytes slice upon return\.
+SpecInPlace is the same as Spec, but this method reuses the input json buffer to avoid allocations. Do not use the original bytes slice upon return.
 
-## func [Ugly](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L53>)
+## func Ugly
 
 ```go
 func Ugly(json []byte) []byte
 ```
 
-Ugly removes insignificant space characters from the input json byte slice and returns the compacted result\.
+Ugly removes insignificant space characters from the input json byte slice and returns the compacted result.
 
-## func [UglyInPlace](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L62>)
+## func UglyInPlace
 
 ```go
 func UglyInPlace(json []byte) []byte
 ```
 
-UglyInPlace removes insignificant space characters from the input json byte slice and returns the compacted result\. This method reuses the input json buffer to avoid allocations\. Do not use the original bytes slice upon return\.
+UglyInPlace removes insignificant space characters from the input json byte slice and returns the compacted result. This method reuses the input json buffer to avoid allocations. Do not use the original bytes slice upon return.
 
-## type [Options](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L11-L24>)
+## type Options
 
 Options is Pretty options
 
@@ -107,7 +107,7 @@ type Options struct {
 }
 ```
 
-## type [Style](<https://gitee.com/fufuok/utils/blob/master/xjson/pretty/pretty.go#L421-L426>)
+## type Style
 
 Style is the color style
 

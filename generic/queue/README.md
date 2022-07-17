@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/queue"
 ```
 
-Package queue provides an implementation of a First In First Out \(FIFO\) queue\. The FIFO queue is implemented using the doubly\-linked list from the 'list' package\.
+Package queue provides an implementation of a First In First Out \(FIFO\) queue. The FIFO queue is implemented using the doubly\-linked list from the 'list' package.
 
 <details><summary>Example</summary>
 <p>
@@ -34,7 +34,7 @@ Package queue provides an implementation of a First In First Out \(FIFO\) queue\
 </p>
 </details>
 
-<details><summary>Example ($equeue)</summary>
+<details><summary>Example (Dequeue)</summary>
 <p>
 
 ```go
@@ -56,7 +56,7 @@ Package queue provides an implementation of a First In First Out \(FIFO\) queue\
 </p>
 </details>
 
-<details><summary>Example (%mpty_empty)</summary>
+<details><summary>Example (Empty_empty)</summary>
 <p>
 
 ```go
@@ -77,7 +77,7 @@ true
 </p>
 </details>
 
-<details><summary>Example (%mpty_nonempty)</summary>
+<details><summary>Example (Empty_nonempty)</summary>
 <p>
 
 ```go
@@ -99,7 +99,7 @@ false
 </p>
 </details>
 
-<details><summary>Example (%nqueue)</summary>
+<details><summary>Example (Enqueue)</summary>
 <p>
 
 ```go
@@ -112,7 +112,7 @@ false
 </p>
 </details>
 
-<details><summary>Example (0eek)</summary>
+<details><summary>Example (Peek)</summary>
 <p>
 
 ```go
@@ -145,9 +145,9 @@ false
   - [func (q *Queue[T]) Peek() T](<#func-queuet-peek>)
 
 
-## type [Queue](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L11-L13>)
+## type Queue
 
-Queue is a simple First In First Out \(FIFO\) queue\.
+Queue is a simple First In First Out \(FIFO\) queue.
 
 ```go
 type Queue[T any] struct {
@@ -155,57 +155,57 @@ type Queue[T any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L16>)
+### func New
 
 ```go
 func New[T any]() *Queue[T]
 ```
 
-New returns an empty First In First Out \(FIFO\) queue\.
+New returns an empty First In First Out \(FIFO\) queue.
 
-### func \(\*Queue\[T\]\) [Dequeue](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L30>)
+### func \(\*Queue\[T\]\) Dequeue
 
 ```go
 func (q *Queue[T]) Dequeue() T
 ```
 
-Dequeue removes and returns the item at the front of the queue\.
+Dequeue removes and returns the item at the front of the queue.
 
-A panic occurs if the queue is Empty\.
+A panic occurs if the queue is Empty.
 
-### func \(\*Queue\[T\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L51>)
+### func \(\*Queue\[T\]\) Each
 
 ```go
 func (q *Queue[T]) Each(fn func(t T))
 ```
 
-Each calls 'fn' on every item in the queue\, starting with the least recently pushed element\.
+Each calls 'fn' on every item in the queue, starting with the least recently pushed element.
 
-### func \(\*Queue\[T\]\) [Empty](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L45>)
+### func \(\*Queue\[T\]\) Empty
 
 ```go
 func (q *Queue[T]) Empty() bool
 ```
 
-Empty returns true if the queue is empty\.
+Empty returns true if the queue is empty.
 
-### func \(\*Queue\[T\]\) [Enqueue](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L23>)
+### func \(\*Queue\[T\]\) Enqueue
 
 ```go
 func (q *Queue[T]) Enqueue(value T)
 ```
 
-Enqueue inserts 'value' to the end of the queue\.
+Enqueue inserts 'value' to the end of the queue.
 
-### func \(\*Queue\[T\]\) [Peek](<https://gitee.com/fufuok/utils/blob/master/generic/queue/queue.go#L40>)
+### func \(\*Queue\[T\]\) Peek
 
 ```go
 func (q *Queue[T]) Peek() T
 ```
 
-Peek returns the item at the front of the queue without removing it\.
+Peek returns the item at the front of the queue without removing it.
 
-A panic occurs if the queue is Empty\.
+A panic occurs if the queue is Empty.
 
 
 

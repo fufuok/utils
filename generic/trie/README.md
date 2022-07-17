@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/trie"
 ```
 
-Package trie provides an implementation of a ternary search trie\.
+Package trie provides an implementation of a ternary search trie.
 
 <details><summary>Example</summary>
 <p>
@@ -56,9 +56,9 @@ false
   - [func (t *Trie[V]) Size() int](<#func-triev-size>)
 
 
-## type [Trie](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L9-L12>)
+## type Trie
 
-A Trie is a data structure that supports common prefix operations\.
+A Trie is a data structure that supports common prefix operations.
 
 ```go
 type Trie[V any] struct {
@@ -66,77 +66,77 @@ type Trie[V any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L22>)
+### func New
 
 ```go
 func New[V any]() *Trie[V]
 ```
 
-New returns an empty trie\.
+New returns an empty trie.
 
-### func \(\*Trie\[V\]\) [Contains](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L32>)
+### func \(\*Trie\[V\]\) Contains
 
 ```go
 func (t *Trie[V]) Contains(key string) bool
 ```
 
-Contains returns whether this trie contains 'key'\.
+Contains returns whether this trie contains 'key'.
 
-### func \(\*Trie\[V\]\) [Get](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L41>)
+### func \(\*Trie\[V\]\) Get
 
 ```go
 func (t *Trie[V]) Get(key string) (v V, ok bool)
 ```
 
-Get returns the value associated with 'key'\.
+Get returns the value associated with 'key'.
 
-### func \(\*Trie\[V\]\) [Keys](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L136>)
+### func \(\*Trie\[V\]\) Keys
 
 ```go
 func (t *Trie[V]) Keys() (queue []string)
 ```
 
-Keys returns all keys in the trie\.
+Keys returns all keys in the trie.
 
-### func \(\*Trie\[V\]\) [KeysWithPrefix](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L141>)
+### func \(\*Trie\[V\]\) KeysWithPrefix
 
 ```go
 func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)
 ```
 
-KeysWithPrefix returns all keys with prefix 'prefix'\.
+KeysWithPrefix returns all keys with prefix 'prefix'.
 
-### func \(\*Trie\[V\]\) [LongestPrefix](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L111>)
+### func \(\*Trie\[V\]\) LongestPrefix
 
 ```go
 func (t *Trie[V]) LongestPrefix(query string) string
 ```
 
-LongestPrefix returns the key that is the longest prefix of 'query'\.
+LongestPrefix returns the key that is the longest prefix of 'query'.
 
-### func \(\*Trie\[V\]\) [Put](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L69>)
+### func \(\*Trie\[V\]\) Put
 
 ```go
 func (t *Trie[V]) Put(key string, val V)
 ```
 
-Put associates 'val' with 'key'\.
+Put associates 'val' with 'key'.
 
-### func \(\*Trie\[V\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L80>)
+### func \(\*Trie\[V\]\) Remove
 
 ```go
 func (t *Trie[V]) Remove(key string)
 ```
 
-Remove removes the value associated with 'key'\.
+Remove removes the value associated with 'key'.
 
-### func \(\*Trie\[V\]\) [Size](<https://gitee.com/fufuok/utils/blob/master/generic/trie/trie.go#L27>)
+### func \(\*Trie\[V\]\) Size
 
 ```go
 func (t *Trie[V]) Size() int
 ```
 
-Size returns the size of the trie\.
+Size returns the size of the trie.
 
 
 

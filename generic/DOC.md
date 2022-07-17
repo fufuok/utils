@@ -12,6 +12,10 @@ import "github.com/fufuok/utils/generic"
 - [func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T](<#func-clampfunc>)
 - [func Compare[T any](a, b T, less LessFn[T]) int](<#func-compare>)
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
+- [func HashBytes(b []byte) uint64](<#func-hashbytes>)
+- [func HashInt(i int) uint64](<#func-hashint>)
+- [func HashString(s string) uint64](<#func-hashstring>)
+- [func HashUint64(u uint64) uint64](<#func-hashuint64>)
 - [func Less[T constraints.Ordered](a, b T) bool](<#func-less>)
 - [func Max[T constraints.Ordered](a, b T) T](<#func-max>)
 - [func MaxFunc[T any](a, b T, less LessFn[T]) T](<#func-maxfunc>)
@@ -22,13 +26,13 @@ import "github.com/fufuok/utils/generic"
 - [type LessFn](<#type-lessfn>)
 
 
-## func [Clamp](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L60>)
+## func Clamp
 
 ```go
 func Clamp[T constraints.Ordered](x, lo, hi T) T
 ```
 
-Clamp returns x constrained within \[lo:hi\] range\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+Clamp returns x constrained within \[lo:hi\] range. If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
 
 <details><summary>Example</summary>
 <p>
@@ -75,13 +79,13 @@ func main() {
 </p>
 </details>
 
-## func [ClampFunc](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L82>)
+## func ClampFunc
 
 ```go
 func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T
 ```
 
-ClampFunc returns x constrained within \[lo:hi\] range using the less func\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+ClampFunc returns x constrained within \[lo:hi\] range using the less func. If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
 
 <details><summary>Example</summary>
 <p>
@@ -126,13 +130,13 @@ func main() {
 </p>
 </details>
 
-## func [Compare](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L33>)
+## func Compare
 
 ```go
 func Compare[T any](a, b T, less LessFn[T]) int
 ```
 
-Compare uses a less function to determine the ordering of 'a' and 'b'\. It returns:
+Compare uses a less function to determine the ordering of 'a' and 'b'. It returns:
 
 \* \-1 if a \< b
 
@@ -140,29 +144,53 @@ Compare uses a less function to determine the ordering of 'a' and 'b'\. It retur
 
 \* 0 if a == b
 
-## func [Equals](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L17>)
+## func Equals
 
 ```go
 func Equals[T comparable](a, b T) bool
 ```
 
-Equals wraps the '==' operator for comparable types\.
+Equals wraps the '==' operator for comparable types.
 
-## func [Less](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L22>)
+## func HashBytes
+
+```go
+func HashBytes(b []byte) uint64
+```
+
+## func HashInt
+
+```go
+func HashInt(i int) uint64
+```
+
+## func HashString
+
+```go
+func HashString(s string) uint64
+```
+
+## func HashUint64
+
+```go
+func HashUint64(u uint64) uint64
+```
+
+## func Less
 
 ```go
 func Less[T constraints.Ordered](a, b T) bool
 ```
 
-Less wraps the '\<' operator for ordered types\.
+Less wraps the '\<' operator for ordered types.
 
-## func [Max](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L43>)
+## func Max
 
 ```go
 func Max[T constraints.Ordered](a, b T) T
 ```
 
-Max returns the max of a and b\.
+Max returns the max of a and b.
 
 <details><summary>Example</summary>
 <p>
@@ -192,13 +220,13 @@ func main() {
 </p>
 </details>
 
-## func [MaxFunc](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L65>)
+## func MaxFunc
 
 ```go
 func MaxFunc[T any](a, b T, less LessFn[T]) T
 ```
 
-MaxFunc returns the max of a and b using the less func\.
+MaxFunc returns the max of a and b using the less func.
 
 <details><summary>Example</summary>
 <p>
@@ -230,13 +258,13 @@ func main() {
 </p>
 </details>
 
-## func [Min](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L51>)
+## func Min
 
 ```go
 func Min[T constraints.Ordered](a, b T) T
 ```
 
-Min returns the min of a and b\.
+Min returns the min of a and b.
 
 <details><summary>Example</summary>
 <p>
@@ -266,13 +294,13 @@ func main() {
 </p>
 </details>
 
-## func [MinFunc](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L73>)
+## func MinFunc
 
 ```go
 func MinFunc[T any](a, b T, less LessFn[T]) T
 ```
 
-MinFunc returns the min of a and b using the less func\.
+MinFunc returns the min of a and b using the less func.
 
 <details><summary>Example</summary>
 <p>
@@ -304,25 +332,25 @@ func main() {
 </p>
 </details>
 
-## type [EqualsFn](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L8>)
+## type EqualsFn
 
-EqualsFn is a function that returns whether 'a' and 'b' are equal\.
+EqualsFn is a function that returns whether 'a' and 'b' are equal.
 
 ```go
 type EqualsFn[T any] func(a, b T) bool
 ```
 
-## type [HashFn](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L14>)
+## type HashFn
 
-HashFn is a function that returns the hash of 't'\.
+HashFn is a function that returns the hash of 't'.
 
 ```go
 type HashFn[T any] func(t T) uint64
 ```
 
-## type [LessFn](<https://gitee.com/fufuok/utils/blob/master/generic/generic.go#L11>)
+## type LessFn
 
-LessFn is a function that returns whether 'a' is less than 'b'\.
+LessFn is a function that returns whether 'a' is less than 'b'.
 
 ```go
 type LessFn[T any] func(a, b T) bool

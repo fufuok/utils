@@ -14,35 +14,35 @@ import "github.com/fufuok/utils/xjson"
   - [func (m *RawMessage) UnmarshalJSON(data []byte) error](<#func-rawmessage-unmarshaljson>)
 
 
-## type [RawMessage](<https://gitee.com/fufuok/utils/blob/master/xjson/xjson.go#L7>)
+## type RawMessage
 
 ```go
 type RawMessage []byte
 ```
 
-### func \(RawMessage\) [Clone](<https://gitee.com/fufuok/utils/blob/master/xjson/xjson.go#L27>)
+### func \(RawMessage\) Clone
 
 ```go
 func (m RawMessage) Clone() []byte
 ```
 
-Clone returns a copy of m\.
+Clone returns a copy of m.
 
-### func \(RawMessage\) [MarshalJSON](<https://gitee.com/fufuok/utils/blob/master/xjson/xjson.go#L10>)
+### func \(RawMessage\) MarshalJSON
 
 ```go
 func (m RawMessage) MarshalJSON() ([]byte, error)
 ```
 
-MarshalJSON returns m as the JSON encoding of m\.
+MarshalJSON returns m as the JSON encoding of m.
 
-### func \(\*RawMessage\) [UnmarshalJSON](<https://gitee.com/fufuok/utils/blob/master/xjson/xjson.go#L18>)
+### func \(\*RawMessage\) UnmarshalJSON
 
 ```go
 func (m *RawMessage) UnmarshalJSON(data []byte) error
 ```
 
-UnmarshalJSON sets \*m to a copy of data\.
+UnmarshalJSON sets \*m to a copy of data.
 
 
 

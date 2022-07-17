@@ -35,7 +35,7 @@ Note that the less function in IsSortedFunc\, SortFunc\, SortStableFunc requires
 - [func SortStableFunc[E any](x []E, less func(a, b E) bool)](<#func-sortstablefunc>)
 
 
-## func [BinarySearch](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L67>)
+## func [BinarySearch](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L67>)
 
 ```go
 func BinarySearch[E constraints.Ordered](x []E, target E) (int, bool)
@@ -43,7 +43,7 @@ func BinarySearch[E constraints.Ordered](x []E, target E) (int, bool)
 
 BinarySearch searches for target in a sorted slice and returns the position where target is found\, or the position where target would appear in the sort order; it also returns a bool saying whether the target is really found in the slice\. The slice must be sorted in increasing order\.
 
-## func [BinarySearchFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L84>)
+## func [BinarySearchFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L84>)
 
 ```go
 func BinarySearchFunc[E any](x []E, target E, cmp func(E, E) int) (int, bool)
@@ -51,7 +51,7 @@ func BinarySearchFunc[E any](x []E, target E, cmp func(E, E) int) (int, bool)
 
 BinarySearchFunc works like BinarySearch\, but uses a custom comparison function\. The slice must be sorted in increasing order\, where "increasing" is defined by cmp\. cmp\(a\, b\) is expected to return an integer comparing the two parameters: 0 if a == b\, a negative number if a \< b and a positive number if a \> b\.
 
-## func [Clip](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L223>)
+## func [Clip](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L223>)
 
 ```go
 func Clip[S ~[]E, E any](s S) S
@@ -59,7 +59,7 @@ func Clip[S ~[]E, E any](s S) S
 
 Clip removes unused capacity from the slice\, returning s\[:len\(s\):len\(s\)\]\.
 
-## func [Clone](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L169>)
+## func [Clone](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L169>)
 
 ```go
 func Clone[S ~[]E, E any](s S) S
@@ -67,7 +67,7 @@ func Clone[S ~[]E, E any](s S) S
 
 Clone returns a copy of the slice\. The elements are copied using assignment\, so this is a shallow clone\.
 
-## func [Compact](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L180>)
+## func [Compact](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L180>)
 
 ```go
 func Compact[S ~[]E, E comparable](s S) S
@@ -75,7 +75,7 @@ func Compact[S ~[]E, E comparable](s S) S
 
 Compact replaces consecutive runs of equal elements with a single copy\. This is like the uniq command found on Unix\. Compact modifies the contents of the slice s; it does not create a new slice\.
 
-## func [CompactFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L197>)
+## func [CompactFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L197>)
 
 ```go
 func CompactFunc[S ~[]E, E any](s S, eq func(E, E) bool) S
@@ -83,7 +83,7 @@ func CompactFunc[S ~[]E, E any](s S, eq func(E, E) bool) S
 
 CompactFunc is like Compact but uses a comparison function\.
 
-## func [Compare](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L67>)
+## func [Compare](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L67>)
 
 ```go
 func Compare[E constraints.Ordered](s1, s2 []E) int
@@ -91,7 +91,7 @@ func Compare[E constraints.Ordered](s1, s2 []E) int
 
 Compare compares the elements of s1 and s2\. The elements are compared sequentially\, starting at index 0\, until one element is not equal to the other\. The result of comparing the first non\-matching elements is returned\. If both slices are equal until one of them ends\, the shorter slice is considered less than the longer one\. The result is 0 if s1 == s2\, \-1 if s1 \< s2\, and \+1 if s1 \> s2\. Comparisons involving floating point NaNs are ignored\.
 
-## func [CompareFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L94>)
+## func [CompareFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L94>)
 
 ```go
 func CompareFunc[E1, E2 any](s1 []E1, s2 []E2, cmp func(E1, E2) int) int
@@ -99,7 +99,7 @@ func CompareFunc[E1, E2 any](s1 []E1, s2 []E2, cmp func(E1, E2) int) int
 
 CompareFunc is like Compare but uses a comparison function on each pair of elements\. The elements are compared in increasing index order\, and the comparisons stop after the first time cmp returns non\-zero\. The result is the first non\-zero result of cmp; if cmp always returns 0 the result is 0 if len\(s1\) == len\(s2\)\, \-1 if len\(s1\) \< len\(s2\)\, and \+1 if len\(s1\) \> len\(s2\)\.
 
-## func [Contains](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L134>)
+## func [Contains](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L134>)
 
 ```go
 func Contains[E comparable](s []E, v E) bool
@@ -107,7 +107,7 @@ func Contains[E comparable](s []E, v E) bool
 
 Contains reports whether v is present in s\.
 
-## func [Delete](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L163>)
+## func [Delete](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L163>)
 
 ```go
 func Delete[S ~[]E, E any](s S, i, j int) S
@@ -115,7 +115,7 @@ func Delete[S ~[]E, E any](s S, i, j int) S
 
 Delete removes the elements s\[i:j\] from s\, returning the modified slice\. Delete panics if s\[i:j\] is not a valid slice of s\. Delete modifies the contents of the slice s; it does not create a new slice\. Delete is O\(len\(s\)\-\(j\-i\)\)\, so if many items must be deleted\, it is better to make a single call deleting them all together than to delete one at a time\.
 
-## func [Equal](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L29>)
+## func [Equal](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L29>)
 
 ```go
 func Equal[E comparable](s1, s2 []E) bool
@@ -123,7 +123,7 @@ func Equal[E comparable](s1, s2 []E) bool
 
 Equal reports whether two slices are equal: the same length and all elements equal\. If the lengths are different\, Equal returns false\. Otherwise\, the elements are compared in increasing index order\, and the comparison stops at the first unequal pair\. Floating point NaNs are not considered equal\.
 
-## func [EqualFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L46>)
+## func [EqualFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L46>)
 
 ```go
 func EqualFunc[E1, E2 any](s1 []E1, s2 []E2, eq func(E1, E2) bool) bool
@@ -131,7 +131,7 @@ func EqualFunc[E1, E2 any](s1 []E1, s2 []E2, eq func(E1, E2) bool) bool
 
 EqualFunc reports whether two slices are equal using a comparison function on each pair of elements\. If the lengths are different\, EqualFunc returns false\. Otherwise\, the elements are compared in increasing index order\, and the comparison stops at the first index for which eq returns false\.
 
-## func [Grow](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L218>)
+## func [Grow](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L218>)
 
 ```go
 func Grow[S ~[]E, E any](s S, n int) S
@@ -139,7 +139,7 @@ func Grow[S ~[]E, E any](s S, n int) S
 
 Grow increases the slice's capacity\, if necessary\, to guarantee space for another n elements\. After Grow\(n\)\, at least n elements can be appended to the slice without another allocation\. Grow may modify elements of the slice between the length and the capacity\. If n is negative or too large to allocate the memory\, Grow panics\.
 
-## func [Index](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L113>)
+## func [Index](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L113>)
 
 ```go
 func Index[E comparable](s []E, v E) int
@@ -147,7 +147,7 @@ func Index[E comparable](s []E, v E) int
 
 Index returns the index of the first occurrence of v in s\, or \-1 if not present\.
 
-## func [IndexFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L124>)
+## func [IndexFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L124>)
 
 ```go
 func IndexFunc[E any](s []E, f func(E) bool) int
@@ -155,7 +155,7 @@ func IndexFunc[E any](s []E, f func(E) bool) int
 
 IndexFunc returns the first index i satisfying f\(s\[i\]\)\, or \-1 if none do\.
 
-## func [Insert](<https://gitee.com/fufuok/utils/blob/master/generic/slices/slices.go#L143>)
+## func [Insert](<https://github.com/fufuok/utils/blob/master/generic/slices/slices.go#L143>)
 
 ```go
 func Insert[S ~[]E, E any](s S, i int, v ...E) S
@@ -163,7 +163,7 @@ func Insert[S ~[]E, E any](s S, i int, v ...E) S
 
 Insert inserts the values v\.\.\. into s at index i\, returning the modified slice\. In the returned slice r\, r\[i\] == v\[0\]\. Insert panics if i is out of range\. This function is O\(len\(s\) \+ len\(v\)\)\.
 
-## func [IsSorted](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L43>)
+## func [IsSorted](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L43>)
 
 ```go
 func IsSorted[E constraints.Ordered](x []E) bool
@@ -171,7 +171,7 @@ func IsSorted[E constraints.Ordered](x []E) bool
 
 IsSorted reports whether x is sorted in ascending order\.
 
-## func [IsSortedFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L54>)
+## func [IsSortedFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L54>)
 
 ```go
 func IsSortedFunc[E any](x []E, less func(a, b E) bool) bool
@@ -179,7 +179,7 @@ func IsSortedFunc[E any](x []E, less func(a, b E) bool) bool
 
 IsSortedFunc reports whether x is sorted in ascending order\, with less as the comparison function\.
 
-## func [Sort](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L21>)
+## func [Sort](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L21>)
 
 ```go
 func Sort[E constraints.Ordered](x []E)
@@ -187,7 +187,7 @@ func Sort[E constraints.Ordered](x []E)
 
 Sort sorts a slice of any ordered type in ascending order\. Sort may fail to sort correctly when sorting slices of floating\-point numbers containing Not\-a\-number \(NaN\) values\. Use slices\.SortFunc\(x\, func\(a\, b float64\) bool \{return a \< b || \(math\.IsNaN\(a\) && \!math\.IsNaN\(b\)\)\}\) instead if the input may contain NaNs\.
 
-## func [SortFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L31>)
+## func [SortFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L31>)
 
 ```go
 func SortFunc[E any](x []E, less func(a, b E) bool)
@@ -197,7 +197,7 @@ SortFunc sorts the slice x in ascending order as determined by the less function
 
 SortFunc requires that less is a strict weak ordering\. See https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings\.
 
-## func [SortStableFunc](<https://gitee.com/fufuok/utils/blob/master/generic/slices/sort.go#L38>)
+## func [SortStableFunc](<https://github.com/fufuok/utils/blob/master/generic/slices/sort.go#L38>)
 
 ```go
 func SortStableFunc[E any](x []E, less func(a, b E) bool)

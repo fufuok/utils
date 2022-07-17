@@ -123,103 +123,103 @@ import "github.com/fufuok/utils/xcrypto"
 - [func XOREnStringHex(s string, key []byte) string](<#func-xorenstringhex>)
 
 
-## func [AesCBCDeB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L92>)
+## func AesCBCDeB58
 
 ```go
 func AesCBCDeB58(s string, key []byte) []byte
 ```
 
-AesCBCDeB58 解密\, ZerosPadding
+AesCBCDeB58 解密, ZerosPadding
 
-## func [AesCBCDeB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L132>)
+## func AesCBCDeB64
 
 ```go
 func AesCBCDeB64(s string, key []byte) []byte
 ```
 
-AesCBCDeB64 解密\, ZerosPadding
+AesCBCDeB64 解密, ZerosPadding
 
-## func [AesCBCDeHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L44>)
+## func AesCBCDeHex
 
 ```go
 func AesCBCDeHex(s string, key []byte) []byte
 ```
 
-AesCBCDeHex 解密\, ZerosPadding
+AesCBCDeHex 解密, ZerosPadding
 
-## func [AesCBCDePKCS7B58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L97>)
+## func AesCBCDePKCS7B58
 
 ```go
 func AesCBCDePKCS7B58(s string, key []byte) []byte
 ```
 
-AesCBCDePKCS7B58 解密\, Pkcs7Padding
+AesCBCDePKCS7B58 解密, Pkcs7Padding
 
-## func [AesCBCDePKCS7B64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L137>)
+## func AesCBCDePKCS7B64
 
 ```go
 func AesCBCDePKCS7B64(s string, key []byte) []byte
 ```
 
-AesCBCDePKCS7B64 解密\, Pkcs7Padding
+AesCBCDePKCS7B64 解密, Pkcs7Padding
 
-## func [AesCBCDePKCS7Hex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L53>)
+## func AesCBCDePKCS7Hex
 
 ```go
 func AesCBCDePKCS7Hex(s string, key []byte) []byte
 ```
 
-AesCBCDePKCS7Hex 解密\, Pkcs7Padding
+AesCBCDePKCS7Hex 解密, Pkcs7Padding
 
-## func [AesCBCDePKCS7StringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L87>)
+## func AesCBCDePKCS7StringB58
 
 ```go
 func AesCBCDePKCS7StringB58(s string, key []byte) string
 ```
 
-AesCBCDePKCS7StringB58 解密\, Pkcs7Padding
+AesCBCDePKCS7StringB58 解密, Pkcs7Padding
 
-## func [AesCBCDePKCS7StringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L127>)
+## func AesCBCDePKCS7StringB64
 
 ```go
 func AesCBCDePKCS7StringB64(s string, key []byte) string
 ```
 
-AesCBCDePKCS7StringB64 解密\, Pkcs7Padding
+AesCBCDePKCS7StringB64 解密, Pkcs7Padding
 
-## func [AesCBCDePKCS7StringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L39>)
+## func AesCBCDePKCS7StringHex
 
 ```go
 func AesCBCDePKCS7StringHex(s string, key []byte) string
 ```
 
-AesCBCDePKCS7StringHex 解密\, Pkcs7Padding
+AesCBCDePKCS7StringHex 解密, Pkcs7Padding
 
-## func [AesCBCDeStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L82>)
+## func AesCBCDeStringB58
 
 ```go
 func AesCBCDeStringB58(s string, key []byte) string
 ```
 
-AesCBCDeStringB58 解密\, ZerosPadding
+AesCBCDeStringB58 解密, ZerosPadding
 
-## func [AesCBCDeStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L122>)
+## func AesCBCDeStringB64
 
 ```go
 func AesCBCDeStringB64(s string, key []byte) string
 ```
 
-AesCBCDeStringB64 解密\, ZerosPadding
+AesCBCDeStringB64 解密, ZerosPadding
 
-## func [AesCBCDeStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L34>)
+## func AesCBCDeStringHex
 
 ```go
 func AesCBCDeStringHex(s string, key []byte) string
 ```
 
-AesCBCDeStringHex 解密\, ZerosPadding
+AesCBCDeStringHex 解密, ZerosPadding
 
-## func [AesCBCDecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L148>)
+## func AesCBCDecrypt
 
 ```go
 func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
@@ -227,111 +227,111 @@ func AesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plainte
 
 AesCBCDecrypt AES\-CBC 解密
 
-## func [AesCBCDecryptE](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L188>)
+## func AesCBCDecryptE
 
 ```go
 func AesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
 ```
 
-AesCBCDecryptE AES\-CBC 解密\, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\)
+AesCBCDecryptE AES\-CBC 解密, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\)
 
-## func [AesCBCEnB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L72>)
+## func AesCBCEnB58
 
 ```go
 func AesCBCEnB58(b, key []byte) string
 ```
 
-AesCBCEnB58 加密\, ZerosPadding
+AesCBCEnB58 加密, ZerosPadding
 
-## func [AesCBCEnB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L112>)
+## func AesCBCEnB64
 
 ```go
 func AesCBCEnB64(b, key []byte) string
 ```
 
-AesCBCEnB64 加密\, ZerosPadding
+AesCBCEnB64 加密, ZerosPadding
 
-## func [AesCBCEnHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L24>)
+## func AesCBCEnHex
 
 ```go
 func AesCBCEnHex(b, key []byte) string
 ```
 
-AesCBCEnHex 加密\, ZerosPadding
+AesCBCEnHex 加密, ZerosPadding
 
-## func [AesCBCEnPKCS7B58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L77>)
+## func AesCBCEnPKCS7B58
 
 ```go
 func AesCBCEnPKCS7B58(b, key []byte) string
 ```
 
-AesCBCEnPKCS7B58 加密\, Pkcs7Padding
+AesCBCEnPKCS7B58 加密, Pkcs7Padding
 
-## func [AesCBCEnPKCS7B64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L117>)
+## func AesCBCEnPKCS7B64
 
 ```go
 func AesCBCEnPKCS7B64(b, key []byte) string
 ```
 
-AesCBCEnPKCS7B64 加密\, Pkcs7Padding
+AesCBCEnPKCS7B64 加密, Pkcs7Padding
 
-## func [AesCBCEnPKCS7Hex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L29>)
+## func AesCBCEnPKCS7Hex
 
 ```go
 func AesCBCEnPKCS7Hex(b, key []byte) string
 ```
 
-AesCBCEnPKCS7Hex 加密\, Pkcs7Padding
+AesCBCEnPKCS7Hex 加密, Pkcs7Padding
 
-## func [AesCBCEnPKCS7StringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L67>)
+## func AesCBCEnPKCS7StringB58
 
 ```go
 func AesCBCEnPKCS7StringB58(s string, key []byte) string
 ```
 
-AesCBCEnPKCS7StringB58 加密\, Pkcs7Padding
+AesCBCEnPKCS7StringB58 加密, Pkcs7Padding
 
-## func [AesCBCEnPKCS7StringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L107>)
+## func AesCBCEnPKCS7StringB64
 
 ```go
 func AesCBCEnPKCS7StringB64(s string, key []byte) string
 ```
 
-AesCBCEnPKCS7StringB64 加密\, Pkcs7Padding
+AesCBCEnPKCS7StringB64 加密, Pkcs7Padding
 
-## func [AesCBCEnPKCS7StringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L19>)
+## func AesCBCEnPKCS7StringHex
 
 ```go
 func AesCBCEnPKCS7StringHex(s string, key []byte) string
 ```
 
-AesCBCEnPKCS7StringHex 加密\, Pkcs7Padding
+AesCBCEnPKCS7StringHex 加密, Pkcs7Padding
 
-## func [AesCBCEnStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L62>)
+## func AesCBCEnStringB58
 
 ```go
 func AesCBCEnStringB58(s string, key []byte) string
 ```
 
-AesCBCEnStringB58 加密\, ZerosPadding
+AesCBCEnStringB58 加密, ZerosPadding
 
-## func [AesCBCEnStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L102>)
+## func AesCBCEnStringB64
 
 ```go
 func AesCBCEnStringB64(s string, key []byte) string
 ```
 
-AesCBCEnStringB64 加密\, ZerosPadding
+AesCBCEnStringB64 加密, ZerosPadding
 
-## func [AesCBCEnStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L14>)
+## func AesCBCEnStringHex
 
 ```go
 func AesCBCEnStringHex(s string, key []byte) string
 ```
 
-AesCBCEnStringHex 加密\, ZerosPadding
+AesCBCEnStringHex 加密, ZerosPadding
 
-## func [AesCBCEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L142>)
+## func AesCBCEncrypt
 
 ```go
 func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
@@ -339,15 +339,15 @@ func AesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (cipherte
 
 AesCBCEncrypt AES\-CBC 加密
 
-## func [AesCBCEncryptE](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L156>)
+## func AesCBCEncryptE
 
 ```go
 func AesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
 ```
 
-AesCBCEncryptE AES\-CBC 加密\, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\) key 长度分别是 16 \(AES\-128\)\, 24 \(AES\-192?\)\, 32 \(AES\-256?\) asPKCS7: false \(ZerosPadding\)\, true \(Pkcs7Padding\)
+AesCBCEncryptE AES\-CBC 加密, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\) key 长度分别是 16 \(AES\-128\), 24 \(AES\-192?\), 32 \(AES\-256?\) asPKCS7: false \(ZerosPadding\), true \(Pkcs7Padding\)
 
-## func [AesGCMDeB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L57>)
+## func AesGCMDeB58
 
 ```go
 func AesGCMDeB58(s string, key, nonce []byte) []byte
@@ -355,7 +355,7 @@ func AesGCMDeB58(s string, key, nonce []byte) []byte
 
 AesGCMDeB58 解密
 
-## func [AesGCMDeB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L78>)
+## func AesGCMDeB64
 
 ```go
 func AesGCMDeB64(s string, key, nonce []byte) []byte
@@ -363,7 +363,7 @@ func AesGCMDeB64(s string, key, nonce []byte) []byte
 
 AesGCMDeB64 解密
 
-## func [AesGCMDeHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L32>)
+## func AesGCMDeHex
 
 ```go
 func AesGCMDeHex(s string, key, nonce []byte) []byte
@@ -371,7 +371,7 @@ func AesGCMDeHex(s string, key, nonce []byte) []byte
 
 AesGCMDeHex 解密
 
-## func [AesGCMDeStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L52>)
+## func AesGCMDeStringB58
 
 ```go
 func AesGCMDeStringB58(s string, key, nonce []byte) string
@@ -379,7 +379,7 @@ func AesGCMDeStringB58(s string, key, nonce []byte) string
 
 AesGCMDeStringB58 解密
 
-## func [AesGCMDeStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L73>)
+## func AesGCMDeStringB64
 
 ```go
 func AesGCMDeStringB64(s string, key, nonce []byte) string
@@ -387,7 +387,7 @@ func AesGCMDeStringB64(s string, key, nonce []byte) string
 
 AesGCMDeStringB64 解密
 
-## func [AesGCMDeStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L27>)
+## func AesGCMDeStringHex
 
 ```go
 func AesGCMDeStringHex(s string, key, nonce []byte) string
@@ -395,7 +395,7 @@ func AesGCMDeStringHex(s string, key, nonce []byte) string
 
 AesGCMDeStringHex 解密
 
-## func [AesGCMDecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L89>)
+## func AesGCMDecrypt
 
 ```go
 func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte)
@@ -403,15 +403,15 @@ func AesGCMDecrypt(ciphertext, key, nonce []byte) (plaintext []byte)
 
 AesGCMDecrypt AES\-GCM 解密
 
-## func [AesGCMDecryptWithNonce](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L122>)
+## func AesGCMDecryptWithNonce
 
 ```go
 func AesGCMDecryptWithNonce(ciphertext, key, nonce, additionalData []byte) ([]byte, error)
 ```
 
-AesGCMDecryptWithNonce AES\-GCM 解密\, \(Galois/Counter Mode \(GCM\)\)
+AesGCMDecryptWithNonce AES\-GCM 解密, \(Galois/Counter Mode \(GCM\)\)
 
-## func [AesGCMEnB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L46>)
+## func AesGCMEnB58
 
 ```go
 func AesGCMEnB58(b, key []byte) (string, []byte)
@@ -419,7 +419,7 @@ func AesGCMEnB58(b, key []byte) (string, []byte)
 
 AesGCMEnB58 加密
 
-## func [AesGCMEnB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L67>)
+## func AesGCMEnB64
 
 ```go
 func AesGCMEnB64(b, key []byte) (string, []byte)
@@ -427,7 +427,7 @@ func AesGCMEnB64(b, key []byte) (string, []byte)
 
 AesGCMEnB64 加密
 
-## func [AesGCMEnHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L21>)
+## func AesGCMEnHex
 
 ```go
 func AesGCMEnHex(b, key []byte) (string, []byte)
@@ -435,7 +435,7 @@ func AesGCMEnHex(b, key []byte) (string, []byte)
 
 AesGCMEnHex 加密
 
-## func [AesGCMEnStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L41>)
+## func AesGCMEnStringB58
 
 ```go
 func AesGCMEnStringB58(s string, key []byte) (string, []byte)
@@ -443,7 +443,7 @@ func AesGCMEnStringB58(s string, key []byte) (string, []byte)
 
 AesGCMEnStringB58 加密
 
-## func [AesGCMEnStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L62>)
+## func AesGCMEnStringB64
 
 ```go
 func AesGCMEnStringB64(s string, key []byte) (string, []byte)
@@ -451,7 +451,7 @@ func AesGCMEnStringB64(s string, key []byte) (string, []byte)
 
 AesGCMEnStringB64 加密
 
-## func [AesGCMEnStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L16>)
+## func AesGCMEnStringHex
 
 ```go
 func AesGCMEnStringHex(s string, key []byte) (string, []byte)
@@ -459,7 +459,7 @@ func AesGCMEnStringHex(s string, key []byte) (string, []byte)
 
 AesGCMEnStringHex 加密
 
-## func [AesGCMEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L83>)
+## func AesGCMEncrypt
 
 ```go
 func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte)
@@ -467,15 +467,15 @@ func AesGCMEncrypt(plaintext, key []byte) (ciphertext []byte, nonce []byte)
 
 AesGCMEncrypt AES\-GCM 加密
 
-## func [AesGCMEncryptWithNonce](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L96>)
+## func AesGCMEncryptWithNonce
 
 ```go
 func AesGCMEncryptWithNonce(plaintext, key, nonce, additionalData []byte) ([]byte, []byte, error)
 ```
 
-AesGCMEncryptWithNonce AES\-GCM 加密\, \(Galois/Counter Mode \(GCM\)\) key 长度分别是 16 \(AES\-128\)\, 32 \(AES\-256\)
+AesGCMEncryptWithNonce AES\-GCM 加密, \(Galois/Counter Mode \(GCM\)\) key 长度分别是 16 \(AES\-128\), 32 \(AES\-256\)
 
-## func [Decrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/crypto.go#L34>)
+## func Decrypt
 
 ```go
 func Decrypt(value, secret string) string
@@ -483,103 +483,103 @@ func Decrypt(value, secret string) string
 
 Decrypt 解密
 
-## func [DesCBCDeB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L91>)
+## func DesCBCDeB58
 
 ```go
 func DesCBCDeB58(s string, key []byte) []byte
 ```
 
-DesCBCDeB58 解密\, ZerosPadding
+DesCBCDeB58 解密, ZerosPadding
 
-## func [DesCBCDeB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L131>)
+## func DesCBCDeB64
 
 ```go
 func DesCBCDeB64(s string, key []byte) []byte
 ```
 
-DesCBCDeB64 解密\, ZerosPadding
+DesCBCDeB64 解密, ZerosPadding
 
-## func [DesCBCDeHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L43>)
+## func DesCBCDeHex
 
 ```go
 func DesCBCDeHex(s string, key []byte) []byte
 ```
 
-DesCBCDeHex 解密\, ZerosPadding
+DesCBCDeHex 解密, ZerosPadding
 
-## func [DesCBCDePKCS7B58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L96>)
+## func DesCBCDePKCS7B58
 
 ```go
 func DesCBCDePKCS7B58(s string, key []byte) []byte
 ```
 
-DesCBCDePKCS7B58 解密\, Pkcs7Padding
+DesCBCDePKCS7B58 解密, Pkcs7Padding
 
-## func [DesCBCDePKCS7B64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L136>)
+## func DesCBCDePKCS7B64
 
 ```go
 func DesCBCDePKCS7B64(s string, key []byte) []byte
 ```
 
-DesCBCDePKCS7B64 解密\, Pkcs7Padding
+DesCBCDePKCS7B64 解密, Pkcs7Padding
 
-## func [DesCBCDePKCS7Hex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L52>)
+## func DesCBCDePKCS7Hex
 
 ```go
 func DesCBCDePKCS7Hex(s string, key []byte) []byte
 ```
 
-DesCBCDePKCS7Hex 解密\, Pkcs7Padding
+DesCBCDePKCS7Hex 解密, Pkcs7Padding
 
-## func [DesCBCDePKCS7StringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L86>)
+## func DesCBCDePKCS7StringB58
 
 ```go
 func DesCBCDePKCS7StringB58(s string, key []byte) string
 ```
 
-DesCBCDePKCS7StringB58 解密\, Pkcs7Padding
+DesCBCDePKCS7StringB58 解密, Pkcs7Padding
 
-## func [DesCBCDePKCS7StringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L126>)
+## func DesCBCDePKCS7StringB64
 
 ```go
 func DesCBCDePKCS7StringB64(s string, key []byte) string
 ```
 
-DesCBCDePKCS7StringB64 解密\, Pkcs7Padding
+DesCBCDePKCS7StringB64 解密, Pkcs7Padding
 
-## func [DesCBCDePKCS7StringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L38>)
+## func DesCBCDePKCS7StringHex
 
 ```go
 func DesCBCDePKCS7StringHex(s string, key []byte) string
 ```
 
-DesCBCDePKCS7StringHex 解密\, Pkcs7Padding
+DesCBCDePKCS7StringHex 解密, Pkcs7Padding
 
-## func [DesCBCDeStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L81>)
+## func DesCBCDeStringB58
 
 ```go
 func DesCBCDeStringB58(s string, key []byte) string
 ```
 
-DesCBCDeStringB58 解密\, ZerosPadding
+DesCBCDeStringB58 解密, ZerosPadding
 
-## func [DesCBCDeStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L121>)
+## func DesCBCDeStringB64
 
 ```go
 func DesCBCDeStringB64(s string, key []byte) string
 ```
 
-DesCBCDeStringB64 解密\, ZerosPadding
+DesCBCDeStringB64 解密, ZerosPadding
 
-## func [DesCBCDeStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L33>)
+## func DesCBCDeStringHex
 
 ```go
 func DesCBCDeStringHex(s string, key []byte) string
 ```
 
-DesCBCDeStringHex 解密\, ZerosPadding
+DesCBCDeStringHex 解密, ZerosPadding
 
-## func [DesCBCDecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L147>)
+## func DesCBCDecrypt
 
 ```go
 func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plaintext []byte)
@@ -587,111 +587,111 @@ func DesCBCDecrypt(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) (plainte
 
 DesCBCDecrypt AES\-CBC 解密
 
-## func [DesCBCDecryptE](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L186>)
+## func DesCBCDecryptE
 
 ```go
 func DesCBCDecryptE(asPKCS7 bool, ciphertext, key []byte, ivs ...[]byte) ([]byte, error)
 ```
 
-DesCBCDecryptE DES\-CBC 解密\, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\)
+DesCBCDecryptE DES\-CBC 解密, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\)
 
-## func [DesCBCEnB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L71>)
+## func DesCBCEnB58
 
 ```go
 func DesCBCEnB58(b, key []byte) string
 ```
 
-DesCBCEnB58 加密\, ZerosPadding
+DesCBCEnB58 加密, ZerosPadding
 
-## func [DesCBCEnB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L111>)
+## func DesCBCEnB64
 
 ```go
 func DesCBCEnB64(b, key []byte) string
 ```
 
-DesCBCEnB64 加密\, ZerosPadding
+DesCBCEnB64 加密, ZerosPadding
 
-## func [DesCBCEnHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L23>)
+## func DesCBCEnHex
 
 ```go
 func DesCBCEnHex(b, key []byte) string
 ```
 
-DesCBCEnHex 加密\, ZerosPadding
+DesCBCEnHex 加密, ZerosPadding
 
-## func [DesCBCEnPKCS7B58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L76>)
+## func DesCBCEnPKCS7B58
 
 ```go
 func DesCBCEnPKCS7B58(b, key []byte) string
 ```
 
-DesCBCEnPKCS7B58 加密\, Pkcs7Padding
+DesCBCEnPKCS7B58 加密, Pkcs7Padding
 
-## func [DesCBCEnPKCS7B64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L116>)
+## func DesCBCEnPKCS7B64
 
 ```go
 func DesCBCEnPKCS7B64(b, key []byte) string
 ```
 
-DesCBCEnPKCS7B64 加密\, Pkcs7Padding
+DesCBCEnPKCS7B64 加密, Pkcs7Padding
 
-## func [DesCBCEnPKCS7Hex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L28>)
+## func DesCBCEnPKCS7Hex
 
 ```go
 func DesCBCEnPKCS7Hex(b, key []byte) string
 ```
 
-DesCBCEnPKCS7Hex 加密\, Pkcs7Padding
+DesCBCEnPKCS7Hex 加密, Pkcs7Padding
 
-## func [DesCBCEnPKCS7StringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L66>)
+## func DesCBCEnPKCS7StringB58
 
 ```go
 func DesCBCEnPKCS7StringB58(s string, key []byte) string
 ```
 
-DesCBCEnPKCS7StringB58 加密\, Pkcs7Padding
+DesCBCEnPKCS7StringB58 加密, Pkcs7Padding
 
-## func [DesCBCEnPKCS7StringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L106>)
+## func DesCBCEnPKCS7StringB64
 
 ```go
 func DesCBCEnPKCS7StringB64(s string, key []byte) string
 ```
 
-DesCBCEnPKCS7StringB64 加密\, Pkcs7Padding
+DesCBCEnPKCS7StringB64 加密, Pkcs7Padding
 
-## func [DesCBCEnPKCS7StringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L18>)
+## func DesCBCEnPKCS7StringHex
 
 ```go
 func DesCBCEnPKCS7StringHex(s string, key []byte) string
 ```
 
-DesCBCEnPKCS7StringHex 加密\, Pkcs7Padding
+DesCBCEnPKCS7StringHex 加密, Pkcs7Padding
 
-## func [DesCBCEnStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L61>)
+## func DesCBCEnStringB58
 
 ```go
 func DesCBCEnStringB58(s string, key []byte) string
 ```
 
-DesCBCEnStringB58 加密\, ZerosPadding
+DesCBCEnStringB58 加密, ZerosPadding
 
-## func [DesCBCEnStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L101>)
+## func DesCBCEnStringB64
 
 ```go
 func DesCBCEnStringB64(s string, key []byte) string
 ```
 
-DesCBCEnStringB64 加密\, ZerosPadding
+DesCBCEnStringB64 加密, ZerosPadding
 
-## func [DesCBCEnStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L13>)
+## func DesCBCEnStringHex
 
 ```go
 func DesCBCEnStringHex(s string, key []byte) string
 ```
 
-DesCBCEnStringHex 加密\, ZerosPadding
+DesCBCEnStringHex 加密, ZerosPadding
 
-## func [DesCBCEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L141>)
+## func DesCBCEncrypt
 
 ```go
 func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (ciphertext []byte)
@@ -699,23 +699,23 @@ func DesCBCEncrypt(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) (cipherte
 
 DesCBCEncrypt AES\-CBC 加密
 
-## func [DesCBCEncryptE](<https://gitee.com/fufuok/utils/blob/master/xcrypto/des.go#L155>)
+## func DesCBCEncryptE
 
 ```go
 func DesCBCEncryptE(asPKCS7 bool, plaintext, key []byte, ivs ...[]byte) ([]byte, error)
 ```
 
-DesCBCEncryptE DES\-CBC 加密\, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\) key 长度固定为 8 asPKCS7: false \(ZerosPadding\)\, true \(Pkcs7Padding\)
+DesCBCEncryptE DES\-CBC 加密, 密码分组链接模式 \(Cipher Block Chaining \(CBC\)\) key 长度固定为 8 asPKCS7: false \(ZerosPadding\), true \(Pkcs7Padding\)
 
-## func [Encrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/crypto.go#L25>)
+## func Encrypt
 
 ```go
 func Encrypt(value, secret string) string
 ```
 
-Encrypt 加密 \(密钥取 32 位 MD5\, AES\-CBC\, base58\)
+Encrypt 加密 \(密钥取 32 位 MD5, AES\-CBC, base58\)
 
-## func [GCMDeB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L197>)
+## func GCMDeB58
 
 ```go
 func GCMDeB58(s string, key []byte) []byte
@@ -723,7 +723,7 @@ func GCMDeB58(s string, key []byte) []byte
 
 GCMDeB58 解密
 
-## func [GCMDeB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L225>)
+## func GCMDeB64
 
 ```go
 func GCMDeB64(s string, key []byte) []byte
@@ -731,7 +731,7 @@ func GCMDeB64(s string, key []byte) []byte
 
 GCMDeB64 解密
 
-## func [GCMDeHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L167>)
+## func GCMDeHex
 
 ```go
 func GCMDeHex(s string, key []byte) []byte
@@ -739,7 +739,7 @@ func GCMDeHex(s string, key []byte) []byte
 
 GCMDeHex 解密
 
-## func [GCMDeStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L192>)
+## func GCMDeStringB58
 
 ```go
 func GCMDeStringB58(s string, key []byte) string
@@ -747,7 +747,7 @@ func GCMDeStringB58(s string, key []byte) string
 
 GCMDeStringB58 解密
 
-## func [GCMDeStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L220>)
+## func GCMDeStringB64
 
 ```go
 func GCMDeStringB64(s string, key []byte) string
@@ -755,7 +755,7 @@ func GCMDeStringB64(s string, key []byte) string
 
 GCMDeStringB64 解密
 
-## func [GCMDeStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L162>)
+## func GCMDeStringHex
 
 ```go
 func GCMDeStringHex(s string, key []byte) string
@@ -763,7 +763,7 @@ func GCMDeStringHex(s string, key []byte) string
 
 GCMDeStringHex 解密
 
-## func [GCMDecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L258>)
+## func GCMDecrypt
 
 ```go
 func GCMDecrypt(encrypted, key []byte) ([]byte, error)
@@ -771,7 +771,7 @@ func GCMDecrypt(encrypted, key []byte) ([]byte, error)
 
 GCMDecrypt AES\-GCM 解密
 
-## func [GCMEnB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L183>)
+## func GCMEnB58
 
 ```go
 func GCMEnB58(b, key []byte) string
@@ -779,7 +779,7 @@ func GCMEnB58(b, key []byte) string
 
 GCMEnB58 加密
 
-## func [GCMEnB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L211>)
+## func GCMEnB64
 
 ```go
 func GCMEnB64(b, key []byte) string
@@ -787,7 +787,7 @@ func GCMEnB64(b, key []byte) string
 
 GCMEnB64 加密
 
-## func [GCMEnHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L153>)
+## func GCMEnHex
 
 ```go
 func GCMEnHex(b, key []byte) string
@@ -795,7 +795,7 @@ func GCMEnHex(b, key []byte) string
 
 GCMEnHex 加密
 
-## func [GCMEnStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L178>)
+## func GCMEnStringB58
 
 ```go
 func GCMEnStringB58(s string, key []byte) string
@@ -803,7 +803,7 @@ func GCMEnStringB58(s string, key []byte) string
 
 GCMEnStringB58 加密
 
-## func [GCMEnStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L206>)
+## func GCMEnStringB64
 
 ```go
 func GCMEnStringB64(s string, key []byte) string
@@ -811,7 +811,7 @@ func GCMEnStringB64(s string, key []byte) string
 
 GCMEnStringB64 加密
 
-## func [GCMEnStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L148>)
+## func GCMEnStringHex
 
 ```go
 func GCMEnStringHex(s string, key []byte) string
@@ -819,7 +819,7 @@ func GCMEnStringHex(s string, key []byte) string
 
 GCMEnStringHex 加密
 
-## func [GCMEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/gcm.go#L234>)
+## func GCMEncrypt
 
 ```go
 func GCMEncrypt(plaintext, key []byte) ([]byte, error)
@@ -827,15 +827,15 @@ func GCMEncrypt(plaintext, key []byte) ([]byte, error)
 
 GCMEncrypt AES\-GCM 加密
 
-## func [GenRSAKey](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L17>)
+## func GenRSAKey
 
 ```go
 func GenRSAKey(bits int) (publicKey, privateKey []byte)
 ```
 
-GenRSAKey 生成 RSA 密钥对 openssl genrsa \-out rsa\_private\_key\.pem 1024 openssl rsa \-in rsa\_private\_key\.pem \-pubout \-out rsa\_public\_key\.pem
+GenRSAKey 生成 RSA 密钥对 openssl genrsa \-out rsa\_private\_key.pem 1024 openssl rsa \-in rsa\_private\_key.pem \-pubout \-out rsa\_public\_key.pem
 
-## func [GetenvDecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/crypto.go#L20>)
+## func GetenvDecrypt
 
 ```go
 func GetenvDecrypt(key string, secret string) string
@@ -843,7 +843,7 @@ func GetenvDecrypt(key string, secret string) string
 
 GetenvDecrypt 解密环境变量参数\(string\)
 
-## func [Padding](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L219>)
+## func Padding
 
 ```go
 func Padding(b []byte, bSize int, pkcs7 bool) []byte
@@ -851,23 +851,23 @@ func Padding(b []byte, bSize int, pkcs7 bool) []byte
 
 Padding 填充
 
-## func [ParsePrivateKey](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L97>)
+## func ParsePrivateKey
 
 ```go
 func ParsePrivateKey(privateKey []byte) (priv *rsa.PrivateKey, err error)
 ```
 
-ParsePrivateKey parses an RSA private key in PKCS \#1\, ASN\.1 DER form\.
+ParsePrivateKey parses an RSA private key in PKCS \#1, ASN.1 DER form.
 
-## func [ParsePublicKey](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L105>)
+## func ParsePublicKey
 
 ```go
 func ParsePublicKey(publicKey []byte) (pub *rsa.PublicKey, err error)
 ```
 
-ParsePublicKey parses a public key in PKIX\, ASN\.1 DER form\.
+ParsePublicKey parses a public key in PKIX, ASN.1 DER form.
 
-## func [RSADecrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L59>)
+## func RSADecrypt
 
 ```go
 func RSADecrypt(ciphertext, privateKey []byte) ([]byte, error)
@@ -875,7 +875,7 @@ func RSADecrypt(ciphertext, privateKey []byte) ([]byte, error)
 
 RSADecrypt 私钥解密
 
-## func [RSAEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L43>)
+## func RSAEncrypt
 
 ```go
 func RSAEncrypt(plaintext, publicKey []byte) ([]byte, error)
@@ -883,7 +883,7 @@ func RSAEncrypt(plaintext, publicKey []byte) ([]byte, error)
 
 RSAEncrypt 公钥加密
 
-## func [RSASign](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L75>)
+## func RSASign
 
 ```go
 func RSASign(data, privateKey []byte) ([]byte, error)
@@ -891,7 +891,7 @@ func RSASign(data, privateKey []byte) ([]byte, error)
 
 RSASign 私钥签名
 
-## func [RSASignVerify](<https://gitee.com/fufuok/utils/blob/master/xcrypto/rsa.go#L86>)
+## func RSASignVerify
 
 ```go
 func RSASignVerify(data, publicKey, sig []byte) error
@@ -899,7 +899,7 @@ func RSASignVerify(data, publicKey, sig []byte) error
 
 RSASignVerify 公钥验证签名
 
-## func [SetenvEncrypt](<https://gitee.com/fufuok/utils/blob/master/xcrypto/crypto.go#L10>)
+## func SetenvEncrypt
 
 ```go
 func SetenvEncrypt(key, value, secret string) (string, error)
@@ -907,7 +907,7 @@ func SetenvEncrypt(key, value, secret string) (string, error)
 
 SetenvEncrypt 加密并设置环境变量\(string\)
 
-## func [UnPadding](<https://gitee.com/fufuok/utils/blob/master/xcrypto/aes.go#L235>)
+## func UnPadding
 
 ```go
 func UnPadding(b []byte, pkcs7 bool) []byte
@@ -915,7 +915,7 @@ func UnPadding(b []byte, pkcs7 bool) []byte
 
 UnPadding 去除填充
 
-## func [XOR](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L76>)
+## func XOR
 
 ```go
 func XOR(src, key []byte) []byte
@@ -923,7 +923,7 @@ func XOR(src, key []byte) []byte
 
 XOR 异或加解密
 
-## func [XORDeB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L51>)
+## func XORDeB58
 
 ```go
 func XORDeB58(s string, key []byte) []byte
@@ -931,7 +931,7 @@ func XORDeB58(s string, key []byte) []byte
 
 XORDeB58 解密
 
-## func [XORDeB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L71>)
+## func XORDeB64
 
 ```go
 func XORDeB64(s string, key []byte) []byte
@@ -939,7 +939,7 @@ func XORDeB64(s string, key []byte) []byte
 
 XORDeB64 解密
 
-## func [XORDeHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L27>)
+## func XORDeHex
 
 ```go
 func XORDeHex(s string, key []byte) []byte
@@ -947,7 +947,7 @@ func XORDeHex(s string, key []byte) []byte
 
 XORDeHex 解密
 
-## func [XORDeStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L46>)
+## func XORDeStringB58
 
 ```go
 func XORDeStringB58(s string, key []byte) string
@@ -955,7 +955,7 @@ func XORDeStringB58(s string, key []byte) string
 
 XORDeStringB58 解密
 
-## func [XORDeStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L66>)
+## func XORDeStringB64
 
 ```go
 func XORDeStringB64(s string, key []byte) string
@@ -963,7 +963,7 @@ func XORDeStringB64(s string, key []byte) string
 
 XORDeStringB64 解密
 
-## func [XORDeStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L22>)
+## func XORDeStringHex
 
 ```go
 func XORDeStringHex(s string, key []byte) string
@@ -971,15 +971,15 @@ func XORDeStringHex(s string, key []byte) string
 
 XORDeStringHex 解密
 
-## func [XORE](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L83>)
+## func XORE
 
 ```go
 func XORE(src, key []byte) ([]byte, error)
 ```
 
-XORE RC4 加密算法\(异或运算\)\, 简单加解密\, 不够安全 key 长度是 1\-256
+XORE RC4 加密算法\(异或运算\), 简单加解密, 不够安全 key 长度是 1\-256
 
-## func [XOREnB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L41>)
+## func XOREnB58
 
 ```go
 func XOREnB58(b, key []byte) string
@@ -987,7 +987,7 @@ func XOREnB58(b, key []byte) string
 
 XOREnB58 加密
 
-## func [XOREnB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L61>)
+## func XOREnB64
 
 ```go
 func XOREnB64(b, key []byte) string
@@ -995,7 +995,7 @@ func XOREnB64(b, key []byte) string
 
 XOREnB64 加密
 
-## func [XOREnHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L17>)
+## func XOREnHex
 
 ```go
 func XOREnHex(b, key []byte) string
@@ -1003,7 +1003,7 @@ func XOREnHex(b, key []byte) string
 
 XOREnHex 加密
 
-## func [XOREnStringB58](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L36>)
+## func XOREnStringB58
 
 ```go
 func XOREnStringB58(s string, key []byte) string
@@ -1011,7 +1011,7 @@ func XOREnStringB58(s string, key []byte) string
 
 XOREnStringB58 加密
 
-## func [XOREnStringB64](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L56>)
+## func XOREnStringB64
 
 ```go
 func XOREnStringB64(s string, key []byte) string
@@ -1019,7 +1019,7 @@ func XOREnStringB64(s string, key []byte) string
 
 XOREnStringB64 加密
 
-## func [XOREnStringHex](<https://gitee.com/fufuok/utils/blob/master/xcrypto/xor.go#L12>)
+## func XOREnStringHex
 
 ```go
 func XOREnStringHex(s string, key []byte) string

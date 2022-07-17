@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/list"
 ```
 
-Package list provides an implementation of a doubly\-linked list with a front and back\. The individual nodes of the list are publicly exposed so that the user can have fine\-grained control over the list\.
+Package list provides an implementation of a doubly\-linked list with a front and back. The individual nodes of the list are publicly exposed so that the user can have fine\-grained control over the list.
 
 <details><summary>Example</summary>
 <p>
@@ -58,9 +58,9 @@ func main() {
   - [func (n *Node[V]) EachReverse(fn func(val V))](<#func-nodev-eachreverse>)
 
 
-## type [List](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L7-L9>)
+## type List
 
-List implements a doubly\-linked list\.
+List implements a doubly\-linked list.
 
 ```go
 type List[V any] struct {
@@ -68,57 +68,57 @@ type List[V any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L18>)
+### func New
 
 ```go
 func New[V any]() *List[V]
 ```
 
-New returns an empty linked list\.
+New returns an empty linked list.
 
-### func \(\*List\[V\]\) [PushBack](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L23>)
+### func \(\*List\[V\]\) PushBack
 
 ```go
 func (l *List[V]) PushBack(v V)
 ```
 
-PushBack adds 'v' to the end of the list\.
+PushBack adds 'v' to the end of the list.
 
-### func \(\*List\[V\]\) [PushBackNode](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L37>)
+### func \(\*List\[V\]\) PushBackNode
 
 ```go
 func (l *List[V]) PushBackNode(n *Node[V])
 ```
 
-PushBackNode adds the node 'n' to the back of the list\.
+PushBackNode adds the node 'n' to the back of the list.
 
-### func \(\*List\[V\]\) [PushFront](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L30>)
+### func \(\*List\[V\]\) PushFront
 
 ```go
 func (l *List[V]) PushFront(v V)
 ```
 
-PushFront adds 'v' to the beginning of the list\.
+PushFront adds 'v' to the beginning of the list.
 
-### func \(\*List\[V\]\) [PushFrontNode](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L49>)
+### func \(\*List\[V\]\) PushFrontNode
 
 ```go
 func (l *List[V]) PushFrontNode(n *Node[V])
 ```
 
-PushFrontNode adds the node 'n' to the front of the list\.
+PushFrontNode adds the node 'n' to the front of the list.
 
-### func \(\*List\[V\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L61>)
+### func \(\*List\[V\]\) Remove
 
 ```go
 func (l *List[V]) Remove(n *Node[V])
 ```
 
-Remove removes the node 'n' from the list\.
+Remove removes the node 'n' from the list.
 
-## type [Node](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L12-L15>)
+## type Node
 
-Node is a node in the linked list\.
+Node is a node in the linked list.
 
 ```go
 type Node[V any] struct {
@@ -127,21 +127,21 @@ type Node[V any] struct {
 }
 ```
 
-### func \(\*Node\[V\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L75>)
+### func \(\*Node\[V\]\) Each
 
 ```go
 func (n *Node[V]) Each(fn func(val V))
 ```
 
-Each calls 'fn' on every element from this node onward in the list\.
+Each calls 'fn' on every element from this node onward in the list.
 
-### func \(\*Node\[V\]\) [EachReverse](<https://gitee.com/fufuok/utils/blob/master/generic/list/list.go#L84>)
+### func \(\*Node\[V\]\) EachReverse
 
 ```go
 func (n *Node[V]) EachReverse(fn func(val V))
 ```
 
-EachReverse calls 'fn' on every element from this node backward in the list\.
+EachReverse calls 'fn' on every element from this node backward in the list.
 
 
 

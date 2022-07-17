@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/hashmap"
 ```
 
-Package hashmap provides an implementation of a hashmap\. The map uses linear probing and automatically resizes\. The map can also be efficiently copied\, and will perform copies lazily\, using copy\-on\-write\. However\, the copy\-on\-write will copy the entire map after the first write\. One can imagine a more efficient implementation that would split the map into chunks and use copy\-on\-write selectively for each chunk\.
+Package hashmap provides an implementation of a hashmap. The map uses linear probing and automatically resizes. The map can also be efficiently copied, and will perform copies lazily, using copy\-on\-write. However, the copy\-on\-write will copy the entire map after the first write. One can imagine a more efficient implementation that would split the map into chunks and use copy\-on\-write selectively for each chunk.
 
 <details><summary>Example</summary>
 <p>
@@ -58,9 +58,9 @@ func main() {
   - [func (m *Map[K, V]) Size() int](<#func-mapk-v-size>)
 
 
-## type [Map](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L20-L27>)
+## type Map
 
-A Map is a hashmap that supports copying via copy\-on\-write\.
+A Map is a hashmap that supports copying via copy\-on\-write.
 
 ```go
 type Map[K, V any] struct {
@@ -68,61 +68,61 @@ type Map[K, V any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L43>)
+### func New
 
 ```go
 func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]
 ```
 
-New constructs a new map with the given capacity\.
+New constructs a new map with the given capacity.
 
-### func \(\*Map\[K\, V\]\) [Copy](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L181>)
+### func \(\*Map\[K, V\]\) Copy
 
 ```go
 func (m *Map[K, V]) Copy() *Map[K, V]
 ```
 
-Copy returns a copy of this map\. The copy will not allocate any memory until the first write\, so any number of read\-only copies can be made without any additional allocations\.
+Copy returns a copy of this map. The copy will not allocate any memory until the first write, so any number of read\-only copies can be made without any additional allocations.
 
-### func \(\*Map\[K\, V\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L194>)
+### func \(\*Map\[K, V\]\) Each
 
 ```go
 func (m *Map[K, V]) Each(fn func(key K, val V))
 ```
 
-Each calls 'fn' on every key\-value pair in the hashmap in no particular order\.
+Each calls 'fn' on every key\-value pair in the hashmap in no particular order.
 
-### func \(\*Map\[K\, V\]\) [Get](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L60>)
+### func \(\*Map\[K, V\]\) Get
 
 ```go
 func (m *Map[K, V]) Get(key K) (V, bool)
 ```
 
-Get returns the value stored for this key\, or false if there is no such value\.
+Get returns the value stored for this key, or false if there is no such value.
 
-### func \(\*Map\[K\, V\]\) [Put](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L97>)
+### func \(\*Map\[K, V\]\) Put
 
 ```go
 func (m *Map[K, V]) Put(key K, val V)
 ```
 
-Put maps the given key to the given value\. If the key already exists its value will be overwritten with the new value\.
+Put maps the given key to the given value. If the key already exists its value will be overwritten with the new value.
 
-### func \(\*Map\[K\, V\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L137>)
+### func \(\*Map\[K, V\]\) Remove
 
 ```go
 func (m *Map[K, V]) Remove(key K)
 ```
 
-Remove removes the specified key\-value pair from the map\.
+Remove removes the specified key\-value pair from the map.
 
-### func \(\*Map\[K\, V\]\) [Size](<https://gitee.com/fufuok/utils/blob/master/generic/hashmap/map.go#L174>)
+### func \(\*Map\[K, V\]\) Size
 
 ```go
 func (m *Map[K, V]) Size() int
 ```
 
-Size returns the number of items in the map\.
+Size returns the number of items in the map.
 
 
 

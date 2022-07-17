@@ -6,17 +6,17 @@
 import "github.com/fufuok/utils/base58"
 ```
 
-Package base58 provides an API for working with modified base58 and Base58Check encodings\.
+Package base58 provides an API for working with modified base58 and Base58Check encodings.
 
 ### Modified Base58 Encoding
 
-Standard base58 encoding is similar to standard base64 encoding except\, as the name implies\, it uses a 58 character alphabet which results in an alphanumeric string and allows some characters which are problematic for humans to be excluded\.  Due to this\, there can be various base58 alphabets\.
+Standard base58 encoding is similar to standard base64 encoding except, as the name implies, it uses a 58 character alphabet which results in an alphanumeric string and allows some characters which are problematic for humans to be excluded.  Due to this, there can be various base58 alphabets.
 
-The modified base58 alphabet used by Bitcoin\, and hence this package\, omits the 0\, O\, I\, and l characters that look the same in many fonts and are therefore hard to humans to distinguish\.
+The modified base58 alphabet used by Bitcoin, and hence this package, omits the 0, O, I, and l characters that look the same in many fonts and are therefore hard to humans to distinguish.
 
 ### Base58Check Encoding Scheme
 
-The Base58Check encoding scheme is primarily used for Bitcoin addresses at the time of this writing\, however it can be used to generically encode arbitrary byte arrays into human\-readable strings along with a version byte that can be used to differentiate the same payload\.  For Bitcoin addresses\, the extra version is used to differentiate the network of otherwise identical public keys which helps prevent using an address intended for one network on another\.
+The Base58Check encoding scheme is primarily used for Bitcoin addresses at the time of this writing, however it can be used to generically encode arbitrary byte arrays into human\-readable strings along with a version byte that can be used to differentiate the same payload.  For Bitcoin addresses, the extra version is used to differentiate the network of otherwise identical public keys which helps prevent using an address intended for one network on another.
 
 ## Index
 
@@ -29,30 +29,30 @@ The Base58Check encoding scheme is primarily used for Bitcoin addresses at the t
 
 ## Variables
 
-ErrChecksum indicates that the checksum of a check\-encoded string does not verify against the checksum\.
+ErrChecksum indicates that the checksum of a check\-encoded string does not verify against the checksum.
 
 ```go
 var ErrChecksum = errors.New("checksum error")
 ```
 
-ErrInvalidFormat indicates that the check\-encoded string has an invalid format\.
+ErrInvalidFormat indicates that the check\-encoded string has an invalid format.
 
 ```go
 var ErrInvalidFormat = errors.New("invalid format: version and/or checksum bytes missing")
 ```
 
-## func [CheckDecode](<https://gitee.com/fufuok/utils/blob/master/base58/base58check.go#L38>)
+## func CheckDecode
 
 ```go
 func CheckDecode(input string) (result []byte, version byte, err error)
 ```
 
-CheckDecode decodes a string that was encoded with CheckEncode and verifies the checksum\.
+CheckDecode decodes a string that was encoded with CheckEncode and verifies the checksum.
 
 <details><summary>Example</summary>
 <p>
 
-This example demonstrates how to decode Base58Check encoded data\.
+This example demonstrates how to decode Base58Check encoded data.
 
 ```go
 package main
@@ -88,18 +88,18 @@ Version Byte: 0
 </p>
 </details>
 
-## func [CheckEncode](<https://gitee.com/fufuok/utils/blob/master/base58/base58check.go#L28>)
+## func CheckEncode
 
 ```go
 func CheckEncode(input []byte, version byte) string
 ```
 
-CheckEncode prepends a version byte and appends a four byte checksum\.
+CheckEncode prepends a version byte and appends a four byte checksum.
 
 <details><summary>Example</summary>
 <p>
 
-This example demonstrates how to encode data using the Base58Check encoding scheme\.
+This example demonstrates how to encode data using the Base58Check encoding scheme.
 
 ```go
 package main
@@ -129,18 +129,18 @@ Encoded Data: 182iP79GRURMp7oMHDU
 </p>
 </details>
 
-## func [Decode](<https://gitee.com/fufuok/utils/blob/master/base58/base58.go#L30>)
+## func Decode
 
 ```go
 func Decode(b string) []byte
 ```
 
-Decode decodes a modified base58 string to a byte slice\.
+Decode decodes a modified base58 string to a byte slice.
 
 <details><summary>Example</summary>
 <p>
 
-This example demonstrates how to decode modified base58 encoded data\.
+This example demonstrates how to decode modified base58 encoded data.
 
 ```go
 package main
@@ -170,18 +170,18 @@ Decoded Data: Test data
 </p>
 </details>
 
-## func [Encode](<https://gitee.com/fufuok/utils/blob/master/base58/base58.go#L88>)
+## func Encode
 
 ```go
 func Encode(b []byte) string
 ```
 
-Encode encodes a byte slice to a modified base58 string\.
+Encode encodes a byte slice to a modified base58 string.
 
 <details><summary>Example</summary>
 <p>
 
-This example demonstrates how to encode data using the modified base58 encoding scheme\.
+This example demonstrates how to encode data using the modified base58 encoding scheme.
 
 ```go
 package main

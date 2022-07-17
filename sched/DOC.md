@@ -23,33 +23,33 @@ import "github.com/fufuok/utils/sched"
   - [func (p *Pool) WaitAndRelease()](<#func-pool-waitandrelease>)
 
 
-## type [Option](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L28>)
+## type Option
 
-Option is a scheduler option\.
+Option is a scheduler option.
 
 ```go
 type Option func(w *Pool)
 ```
 
-### func [Queues](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L40>)
+### func Queues
 
 ```go
 func Queues(limit int) Option
 ```
 
-Queues is buffer capacity of the tasks channel\.
+Queues is buffer capacity of the tasks channel.
 
-### func [Workers](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L31>)
+### func Workers
 
 ```go
 func Workers(limit int) Option
 ```
 
-Workers is number of workers that can execute tasks concurrently\.
+Workers is number of workers that can execute tasks concurrently.
 
-## type [Pool](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L13-L19>)
+## type Pool
 
-Pool is a worker pool\.
+Pool is a worker pool.
 
 ```go
 type Pool struct {
@@ -57,59 +57,59 @@ type Pool struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L49>)
+### func New
 
 ```go
 func New(opts ...Option) *Pool
 ```
 
-New creates a new task scheduler and returns a pool of workers\.
+New creates a new task scheduler and returns a pool of workers.
 
-### func \(\*Pool\) [Add](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L92>)
+### func \(\*Pool\) Add
 
 ```go
 func (p *Pool) Add(numTasks int) int
 ```
 
-### func \(\*Pool\) [IsRunning](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L100>)
+### func \(\*Pool\) IsRunning
 
 ```go
 func (p *Pool) IsRunning() bool
 ```
 
-### func \(\*Pool\) [Release](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L108>)
+### func \(\*Pool\) Release
 
 ```go
 func (p *Pool) Release()
 ```
 
-### func \(\*Pool\) [Run](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L82>)
+### func \(\*Pool\) Run
 
 ```go
 func (p *Pool) Run(f ...func())
 ```
 
-Run runs f in the current pool\.
+Run runs f in the current pool.
 
-### func \(\*Pool\) [RunWithArgs](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L88>)
+### func \(\*Pool\) RunWithArgs
 
 ```go
 func (p *Pool) RunWithArgs(f func(args interface{}), args interface{})
 ```
 
-### func \(\*Pool\) [Running](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L96>)
+### func \(\*Pool\) Running
 
 ```go
 func (p *Pool) Running() uint64
 ```
 
-### func \(\*Pool\) [Wait](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L104>)
+### func \(\*Pool\) Wait
 
 ```go
 func (p *Pool) Wait()
 ```
 
-### func \(\*Pool\) [WaitAndRelease](<https://gitee.com/fufuok/utils/blob/master/sched/sched.go#L113>)
+### func \(\*Pool\) WaitAndRelease
 
 ```go
 func (p *Pool) WaitAndRelease()

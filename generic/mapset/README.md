@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/mapset"
 ```
 
-Package mapset provides an implementation of a set using the built\-in map\.
+Package mapset provides an implementation of a set using the built\-in map.
 
 <details><summary>Example</summary>
 <p>
@@ -44,6 +44,7 @@ false
 
 - [type Set](<#type-set>)
   - [func New[K comparable]() Set[K]](<#func-new>)
+  - [func Of[K comparable](vals ...K) Set[K]](<#func-of>)
   - [func (s Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s Set[K]) Has(val K) bool](<#func-setk-has>)
   - [func (s Set[K]) Put(val K)](<#func-setk-put>)
@@ -51,9 +52,9 @@ false
   - [func (s Set[K]) Size() int](<#func-setk-size>)
 
 
-## type [Set](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L5-L7>)
+## type Set
 
-Set implements a hashset\, using the hashmap as the underlying storage\.
+Set implements a hashset, using the hashmap as the underlying storage.
 
 ```go
 type Set[K comparable] struct {
@@ -61,53 +62,61 @@ type Set[K comparable] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L10>)
+### func New
 
 ```go
 func New[K comparable]() Set[K]
 ```
 
-New returns an empty hashset\.
+New returns an empty hashset.
 
-### func \(Set\[K\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L38>)
+### func Of
+
+```go
+func Of[K comparable](vals ...K) Set[K]
+```
+
+Of returns a new hashset initialized with the given 'vals'
+
+### func \(Set\[K\]\) Each
 
 ```go
 func (s Set[K]) Each(fn func(key K))
 ```
 
-Each calls 'fn' on every item in the set in no particular order\.
+Each calls 'fn' on every item in the set in no particular order.
 
-### func \(Set\[K\]\) [Has](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L22>)
+### func \(Set\[K\]\) Has
 
 ```go
 func (s Set[K]) Has(val K) bool
 ```
 
-Has returns true only if 'val' is in the set\.
+Has returns true only if 'val' is in the set.
 
-### func \(Set\[K\]\) [Put](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L17>)
+### func \(Set\[K\]\) Put
 
 ```go
 func (s Set[K]) Put(val K)
 ```
 
-Put adds 'val' to the set\.
+Put adds 'val' to the set.
 
-### func \(Set\[K\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L28>)
+### func \(Set\[K\]\) Remove
 
 ```go
 func (s Set[K]) Remove(val K)
 ```
 
-Remove removes 'val' from the set\.
+Remove removes 'val' from the set.
 
-### func \(Set\[K\]\) [Size](<https://gitee.com/fufuok/utils/blob/master/generic/mapset/set.go#L33>)
+### func \(Set\[K\]\) Size
 
 ```go
 func (s Set[K]) Size() int
 ```
 
-Size returns the number of elements in the set\.
+Size returns the number of elements in the set.
 
 
 

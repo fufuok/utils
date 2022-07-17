@@ -17,11 +17,11 @@ Xid is using Mongo Object ID algorithm to generate globally unique ids: https://
 - 3-byte counter, starting with a random value.
 ```
 
-The binary representation of the id is compatible with Mongo 12 bytes Object IDs\. The string representation is using base32 hex \(w/o padding\) for better space efficiency when stored in that form \(20 bytes\)\. The hex variant of base32 is used to retain the sortable property of the id\.
+The binary representation of the id is compatible with Mongo 12 bytes Object IDs. The string representation is using base32 hex \(w/o padding\) for better space efficiency when stored in that form \(20 bytes\). The hex variant of base32 is used to retain the sortable property of the id.
 
-Xid doesn't use base64 because case sensitivity and the 2 non alphanum chars may be an issue when transported as a string between various systems\. Base36 wasn't retained either because 1/ it's not standard 2/ the resulting size is not predictable \(not bit aligned\) and 3/ it would not remain sortable\. To validate a base32 \`xid\`\, expect a 20 chars long\, all lowercase sequence of \`a\` to \`v\` letters and \`0\` to \`9\` numbers \(\`\[0\-9a\-v\]\{20\}\`\)\.
+Xid doesn't use base64 because case sensitivity and the 2 non alphanum chars may be an issue when transported as a string between various systems. Base36 wasn't retained either because 1/ it's not standard 2/ the resulting size is not predictable \(not bit aligned\) and 3/ it would not remain sortable. To validate a base32 \`xid\`, expect a 20 chars long, all lowercase sequence of \`a\` to \`v\` letters and \`0\` to \`9\` numbers \(\`\[0\-9a\-v\]\{20\}\`\).
 
-UUID is 16 bytes \(128 bits\)\, snowflake is 8 bytes \(64 bits\)\, xid stands in between with 12 bytes with a more compact string representation ready for the web and no required configuration or central generation server\.
+UUID is 16 bytes \(128 bits\), snowflake is 8 bytes \(64 bits\), xid stands in between with 12 bytes with a more compact string representation ready for the web and no required configuration or central generation server.
 
 Features:
 
@@ -34,7 +34,7 @@ Features:
 - Unicity guaranteed for 16,777,216 (24 bits) unique ids per second and per host/process
 ```
 
-Best used with xlog's RequestIDHandler \(https://godoc.org/github.com/rs/xlog#RequestIDHandler\)\.
+Best used with xlog's RequestIDHandler \(https://godoc.org/github.com/rs/xlog#RequestIDHandler\).
 
 References:
 
@@ -72,31 +72,31 @@ References:
   - [func (id ID) Value() (driver.Value, error)](<#func-id-value>)
 
 
-## func [NewBytes](<https://gitee.com/fufuok/utils/blob/master/xid/helper.go#L9>)
+## func NewBytes
 
 ```go
 func NewBytes() []byte
 ```
 
-NewBytes New\(\)\.Bytes\(\)
+NewBytes New\(\).Bytes\(\)
 
-## func [NewString](<https://gitee.com/fufuok/utils/blob/master/xid/helper.go#L4>)
+## func NewString
 
 ```go
 func NewString() string
 ```
 
-NewString New\(\)\.String\(\)
+NewString New\(\).String\(\)
 
-## func [Sort](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L390>)
+## func Sort
 
 ```go
 func Sort(ids []ID)
 ```
 
-Sort sorts an array of IDs inplace\. It works by wrapping \`\[\]ID\` and use \`sort\.Sort\`\.
+Sort sorts an array of IDs inplace. It works by wrapping \`\[\]ID\` and use \`sort.Sort\`.
 
-## type [ID](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L63>)
+## type ID
 
 ID represents a unique request id
 
@@ -104,7 +104,7 @@ ID represents a unique request id
 type ID [rawLen]byte
 ```
 
-### func [FromBytes](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L358>)
+### func FromBytes
 
 ```go
 func FromBytes(b []byte) (ID, error)
@@ -112,7 +112,7 @@ func FromBytes(b []byte) (ID, error)
 
 FromBytes convert the byte array representation of \`ID\` back to \`ID\`
 
-### func [FromString](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L167>)
+### func FromString
 
 ```go
 func FromString(id string) (ID, error)
@@ -120,7 +120,7 @@ func FromString(id string) (ID, error)
 
 FromString reads an ID from its string representation
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L142>)
+### func New
 
 ```go
 func New() ID
@@ -128,7 +128,7 @@ func New() ID
 
 New generates a globally unique ID
 
-### func [NewWithTime](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L147>)
+### func NewWithTime
 
 ```go
 func NewWithTime(t time.Time) ID
@@ -136,15 +136,15 @@ func NewWithTime(t time.Time) ID
 
 NewWithTime generates a globally unique ID with the passed in time
 
-### func [NilID](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L348>)
+### func NilID
 
 ```go
 func NilID() ID
 ```
 
-NilID returns a zero value for \`xid\.ID\`\.
+NilID returns a zero value for \`xid.ID\`.
 
-### func \(ID\) [Bytes](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L353>)
+### func \(ID\) Bytes
 
 ```go
 func (id ID) Bytes() []byte
@@ -152,31 +152,31 @@ func (id ID) Bytes() []byte
 
 Bytes returns the byte array representation of \`ID\`
 
-### func \(ID\) [Compare](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L370>)
+### func \(ID\) Compare
 
 ```go
 func (id ID) Compare(other ID) int
 ```
 
-Compare returns an integer comparing two IDs\. It behaves just like \`bytes\.Compare\`\. The result will be 0 if two IDs are identical\, \-1 if current id is less than the other one\, and 1 if current id is greater than the other\.
+Compare returns an integer comparing two IDs. It behaves just like \`bytes.Compare\`. The result will be 0 if two IDs are identical, \-1 if current id is less than the other one, and 1 if current id is greater than the other.
 
-### func \(ID\) [Counter](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L312>)
+### func \(ID\) Counter
 
 ```go
 func (id ID) Counter() int32
 ```
 
-Counter returns the incrementing value part of the id\. It's a runtime error to call this method with an invalid id\.
+Counter returns the incrementing value part of the id. It's a runtime error to call this method with an invalid id.
 
-### func \(ID\) [Encode](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L181>)
+### func \(ID\) Encode
 
 ```go
 func (id ID) Encode(dst []byte) []byte
 ```
 
-Encode encodes the id using base32 encoding\, writing 20 bytes to dst and return it\.
+Encode encodes the id using base32 encoding, writing 20 bytes to dst and return it.
 
-### func \(ID\) [IsNil](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L343>)
+### func \(ID\) IsNil
 
 ```go
 func (id ID) IsNil() bool
@@ -184,15 +184,15 @@ func (id ID) IsNil() bool
 
 IsNil Returns true if this is a "nil" ID
 
-### func \(ID\) [Machine](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L300>)
+### func \(ID\) Machine
 
 ```go
 func (id ID) Machine() []byte
 ```
 
-Machine returns the 3\-byte machine id part of the id\. It's a runtime error to call this method with an invalid id\.
+Machine returns the 3\-byte machine id part of the id. It's a runtime error to call this method with an invalid id.
 
-### func \(ID\) [MarshalJSON](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L194>)
+### func \(ID\) MarshalJSON
 
 ```go
 func (id ID) MarshalJSON() ([]byte, error)
@@ -200,7 +200,7 @@ func (id ID) MarshalJSON() ([]byte, error)
 
 MarshalJSON implements encoding/json Marshaler interface
 
-### func \(ID\) [MarshalText](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L187>)
+### func \(ID\) MarshalText
 
 ```go
 func (id ID) MarshalText() ([]byte, error)
@@ -208,39 +208,39 @@ func (id ID) MarshalText() ([]byte, error)
 
 MarshalText implements encoding/text TextMarshaler interface
 
-### func \(ID\) [Pid](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L306>)
+### func \(ID\) Pid
 
 ```go
 func (id ID) Pid() uint16
 ```
 
-Pid returns the process id part of the id\. It's a runtime error to call this method with an invalid id\.
+Pid returns the process id part of the id. It's a runtime error to call this method with an invalid id.
 
-### func \(\*ID\) [Scan](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L328>)
+### func \(\*ID\) Scan
 
 ```go
 func (id *ID) Scan(value interface{}) (err error)
 ```
 
-Scan implements the sql\.Scanner interface\.
+Scan implements the sql.Scanner interface.
 
-### func \(ID\) [String](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L174>)
+### func \(ID\) String
 
 ```go
 func (id ID) String() string
 ```
 
-String returns a base32 hex lowercased with no padding representation of the id \(char set is 0\-9\, a\-v\)\.
+String returns a base32 hex lowercased with no padding representation of the id \(char set is 0\-9, a\-v\).
 
-### func \(ID\) [Time](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L292>)
+### func \(ID\) Time
 
 ```go
 func (id ID) Time() time.Time
 ```
 
-Time returns the timestamp part of the id\. It's a runtime error to call this method with an invalid id\.
+Time returns the timestamp part of the id. It's a runtime error to call this method with an invalid id.
 
-### func \(\*ID\) [UnmarshalJSON](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L248>)
+### func \(\*ID\) UnmarshalJSON
 
 ```go
 func (id *ID) UnmarshalJSON(b []byte) error
@@ -248,7 +248,7 @@ func (id *ID) UnmarshalJSON(b []byte) error
 
 UnmarshalJSON implements encoding/json Unmarshaler interface
 
-### func \(\*ID\) [UnmarshalText](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L232>)
+### func \(\*ID\) UnmarshalText
 
 ```go
 func (id *ID) UnmarshalText(text []byte) error
@@ -256,13 +256,13 @@ func (id *ID) UnmarshalText(text []byte) error
 
 UnmarshalText implements encoding/text TextUnmarshaler interface
 
-### func \(ID\) [Value](<https://gitee.com/fufuok/utils/blob/master/xid/id.go#L319>)
+### func \(ID\) Value
 
 ```go
 func (id ID) Value() (driver.Value, error)
 ```
 
-Value implements the driver\.Valuer interface\.
+Value implements the driver.Valuer interface.
 
 
 

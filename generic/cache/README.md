@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/generic/cache"
 ```
 
-Package cache provides an implementation of a key\-value store with a maximum size\. Once the maximum size is reached\, the cache uses a least\-recently\-used policy to evict old entries\. The cache is implemented as a combined hashmap and linked list\. This ensures all operations are constant\-time\.
+Package cache provides an implementation of a key\-value store with a maximum size. Once the maximum size is reached, the cache uses a least\-recently\-used policy to evict old entries. The cache is implemented as a combined hashmap and linked list. This ensures all operations are constant\-time.
 
 <details><summary>Example</summary>
 <p>
@@ -81,9 +81,9 @@ each 2
 - [type KV](<#type-kv>)
 
 
-## type [Cache](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L15-L20>)
+## type Cache
 
-A Cache is an LRU cache for keys and values\. Each entry is put into the table with an associated key used for looking up the entry\. The cache has a maximum size\, and uses a least\-recently\-used eviction policy when there is not space for a new entry\.
+A Cache is an LRU cache for keys and values. Each entry is put into the table with an associated key used for looking up the entry. The cache has a maximum size, and uses a least\-recently\-used eviction policy when there is not space for a new entry.
 
 ```go
 type Cache[K comparable, V any] struct {
@@ -91,79 +91,79 @@ type Cache[K comparable, V any] struct {
 }
 ```
 
-### func [New](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L28>)
+### func New
 
 ```go
 func New[K comparable, V any](capacity int) *Cache[K, V]
 ```
 
-New returns a new Cache with the given capacity\.
+New returns a new Cache with the given capacity.
 
-### func \(\*Cache\[K\, V\]\) [Capacity](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L102>)
+### func \(\*Cache\[K, V\]\) Capacity
 
 ```go
 func (t *Cache[K, V]) Capacity() int
 ```
 
-Capacity returns the maximum capacity of the cache\.
+Capacity returns the maximum capacity of the cache.
 
-### func \(\*Cache\[K\, V\]\) [Each](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L108>)
+### func \(\*Cache\[K, V\]\) Each
 
 ```go
 func (t *Cache[K, V]) Each(fn func(key K, val V))
 ```
 
-Each calls 'fn' on every value in the cache\, from most recently used to least recently used\.
+Each calls 'fn' on every value in the cache, from most recently used to least recently used.
 
-### func \(\*Cache\[K\, V\]\) [Get](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L38>)
+### func \(\*Cache\[K, V\]\) Get
 
 ```go
 func (t *Cache[K, V]) Get(k K) (V, bool)
 ```
 
-Get returns the entry associated with a given key\, and a boolean indicating whether the key exists in the table\.
+Get returns the entry associated with a given key, and a boolean indicating whether the key exists in the table.
 
-### func \(\*Cache\[K\, V\]\) [Put](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L49>)
+### func \(\*Cache\[K, V\]\) Put
 
 ```go
 func (t *Cache[K, V]) Put(k K, e V)
 ```
 
-Put adds a new key\-entry pair to the table\.
+Put adds a new key\-entry pair to the table.
 
-### func \(\*Cache\[K\, V\]\) [Remove](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L81>)
+### func \(\*Cache\[K, V\]\) Remove
 
 ```go
 func (t *Cache[K, V]) Remove(k K)
 ```
 
-Remove causes the entry associated with the given key to be immediately evicted from the cache\.
+Remove causes the entry associated with the given key to be immediately evicted from the cache.
 
-### func \(\*Cache\[K\, V\]\) [Resize](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L89>)
+### func \(\*Cache\[K, V\]\) Resize
 
 ```go
 func (t *Cache[K, V]) Resize(capacity int)
 ```
 
-Resize changes the maximum capacity for this cache to 'capacity'\.
+Resize changes the maximum capacity for this cache to 'capacity'.
 
-### func \(\*Cache\[K\, V\]\) [SetEvictCallback](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L116>)
+### func \(\*Cache\[K, V\]\) SetEvictCallback
 
 ```go
 func (t *Cache[K, V]) SetEvictCallback(fn func(key K, val V))
 ```
 
-SetEvictCallback sets a callback to be invoked before an entry is evicted\. This replaces any prior callback set by this method\.
+SetEvictCallback sets a callback to be invoked before an entry is evicted. This replaces any prior callback set by this method.
 
-### func \(\*Cache\[K\, V\]\) [Size](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L97>)
+### func \(\*Cache\[K, V\]\) Size
 
 ```go
 func (t *Cache[K, V]) Size() int
 ```
 
-Size returns the number of active elements in the cache\.
+Size returns the number of active elements in the cache.
 
-## type [KV](<https://gitee.com/fufuok/utils/blob/master/generic/cache/cache.go#L22-L25>)
+## type KV
 
 ```go
 type KV[K comparable, V any] struct {

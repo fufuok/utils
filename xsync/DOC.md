@@ -50,11 +50,11 @@ import "github.com/fufuok/utils/xsync"
 
 ## type Counter
 
-A Counter is a striped int64 counter\.
+A Counter is a striped int64 counter.
 
-Should be preferred over a single atomically updated int64 counter in high contention scenarios\.
+Should be preferred over a single atomically updated int64 counter in high contention scenarios.
 
-A Counter must not be copied after first use\.
+A Counter must not be copied after first use.
 
 ```go
 type Counter struct {
@@ -68,7 +68,7 @@ type Counter struct {
 func (c *Counter) Add(delta int64)
 ```
 
-Add adds the delta to the counter\.
+Add adds the delta to the counter.
 
 ### func \(\*Counter\) Dec
 
@@ -76,7 +76,7 @@ Add adds the delta to the counter\.
 func (c *Counter) Dec()
 ```
 
-Dec decrements the counter by 1\.
+Dec decrements the counter by 1.
 
 ### func \(\*Counter\) Inc
 
@@ -84,7 +84,7 @@ Dec decrements the counter by 1\.
 func (c *Counter) Inc()
 ```
 
-Inc increments the counter by 1\.
+Inc increments the counter by 1.
 
 ### func \(\*Counter\) Reset
 
@@ -92,7 +92,7 @@ Inc increments the counter by 1\.
 func (c *Counter) Reset()
 ```
 
-Reset resets the counter to zero\. This method should only be used when it is known that there are no concurrent modifications of the counter\.
+Reset resets the counter to zero. This method should only be used when it is known that there are no concurrent modifications of the counter.
 
 ### func \(\*Counter\) Value
 
@@ -100,13 +100,13 @@ Reset resets the counter to zero\. This method should only be used when it is kn
 func (c *Counter) Value() int64
 ```
 
-Value returns the current counter value\. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter\.
+Value returns the current counter value. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter.
 
 ## type MPMCQueue
 
-A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue\.
+A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue.
 
-MPMCQueue instances must be created with NewMPMCQueue function\. A MPMCQueue must not be copied after first use\.
+MPMCQueue instances must be created with NewMPMCQueue function. A MPMCQueue must not be copied after first use.
 
 Based on the data structure from the following C\+\+ library: https://github.com/rigtorp/MPMCQueue
 
@@ -122,7 +122,7 @@ type MPMCQueue struct {
 func NewMPMCQueue(capacity int) *MPMCQueue
 ```
 
-NewMPMCQueue creates a new MPMCQueue instance with the given capacity\.
+NewMPMCQueue creates a new MPMCQueue instance with the given capacity.
 
 ### func \(\*MPMCQueue\) Dequeue
 
@@ -130,7 +130,7 @@ NewMPMCQueue creates a new MPMCQueue instance with the given capacity\.
 func (q *MPMCQueue) Dequeue() interface{}
 ```
 
-Dequeue retrieves and removes the item from the head of the queue\. Blocks\, if the queue is empty\.
+Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
 
 ### func \(\*MPMCQueue\) Enqueue
 
@@ -138,7 +138,7 @@ Dequeue retrieves and removes the item from the head of the queue\. Blocks\, if 
 func (q *MPMCQueue) Enqueue(item interface{})
 ```
 
-Enqueue inserts the given item into the queue\. Blocks\, if the queue is full\.
+Enqueue inserts the given item into the queue. Blocks, if the queue is full.
 
 ### func \(\*MPMCQueue\) TryDequeue
 
@@ -146,7 +146,7 @@ Enqueue inserts the given item into the queue\. Blocks\, if the queue is full\.
 func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
 ```
 
-TryDequeue retrieves and removes the item from the head of the queue\. Does not block and returns immediately\. The ok result indicates that the queue isn't empty and an item was retrieved\.
+TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
 
 ### func \(\*MPMCQueue\) TryEnqueue
 
@@ -154,19 +154,19 @@ TryDequeue retrieves and removes the item from the head of the queue\. Does not 
 func (q *MPMCQueue) TryEnqueue(item interface{}) bool
 ```
 
-TryEnqueue inserts the given item into the queue\. Does not block and returns immediately\. The result indicates that the queue isn't full and the item was inserted\.
+TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
 
 ## type Map
 
-Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map\.
+Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map.
 
-A Map must not be copied after first use\.
+A Map must not be copied after first use.
 
 Map uses a modified version of Cache\-Line Hash Table \(CLHT\) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache\-line\-sized buckets\, so that on all modern CPUs update operations complete with at most one cache\-line transfer\. Also\, Get operations involve no write to memory\, as well as no mutexes or any other sort of locks\. Due to this design\, in all considered scenarios Map outperforms sync\.Map\.
+CLHT is built around idea to organize the hash table in cache\-line\-sized buckets, so that on all modern CPUs update operations complete with at most one cache\-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios Map outperforms sync.Map.
 
-One important difference with sync\.Map is that only string keys are supported\. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values\.
+One important difference with sync.Map is that only string keys are supported. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values.
 
 ```go
 type Map struct {
@@ -180,7 +180,7 @@ type Map struct {
 func NewMap() *Map
 ```
 
-NewMap creates a new Map instance\.
+NewMap creates a new Map instance.
 
 ### func \(\*Map\) Delete
 
@@ -188,7 +188,7 @@ NewMap creates a new Map instance\.
 func (m *Map) Delete(key string)
 ```
 
-Delete deletes the value for a key\.
+Delete deletes the value for a key.
 
 ### func \(\*Map\) Load
 
@@ -196,7 +196,7 @@ Delete deletes the value for a key\.
 func (m *Map) Load(key string) (value interface{}, ok bool)
 ```
 
-Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
+Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
 
 ### func \(\*Map\) LoadAndDelete
 
@@ -204,7 +204,7 @@ Load returns the value stored in the map for a key\, or nil if no value is prese
 func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
 ```
 
-LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
+LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
 
 ### func \(\*Map\) LoadAndStore
 
@@ -212,7 +212,7 @@ LoadAndDelete deletes the value for a key\, returning the previous value if any\
 func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadAndStore returns the existing value for the key if present\. Otherwise\, returns the given value\. The loaded result is true if the value was loaded\, false if stored\. Store the given value\.
+LoadAndStore returns the existing value for the key if present. Otherwise, returns the given value. The loaded result is true if the value was loaded, false if stored. Store the given value.
 
 ### func \(\*Map\) LoadOrStore
 
@@ -220,7 +220,7 @@ LoadAndStore returns the existing value for the key if present\. Otherwise\, ret
 func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
+LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
 
 ### func \(\*Map\) Range
 
@@ -228,11 +228,11 @@ LoadOrStore returns the existing value for the key if present\. Otherwise\, it s
 func (m *Map) Range(f func(key string, value interface{}) bool)
 ```
 
-Range calls f sequentially for each key and value present in the map\. If f returns false\, range stops the iteration\.
+Range calls f sequentially for each key and value present in the map. If f returns false, range stops the iteration.
 
-Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once\, but if the value for any key is stored or deleted concurrently\, Range may reflect any mapping for that key from any point during the Range call\.
+Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
 
-It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
+It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
 ### func \(\*Map\) Size
 
@@ -240,7 +240,7 @@ It is safe to modify the map while iterating it\. However\, the concurrent modif
 func (m *Map) Size() int
 ```
 
-Size returns current size of the map\.
+Size returns current size of the map.
 
 ### func \(\*Map\) Store
 
@@ -248,19 +248,19 @@ Size returns current size of the map\.
 func (m *Map) Store(key string, value interface{})
 ```
 
-Store sets the value for a key\.
+Store sets the value for a key.
 
 ## type MapOf
 
-MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map\.
+MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map.
 
-A MapOf must not be copied after first use\.
+A MapOf must not be copied after first use.
 
 MapOf uses a modified version of Cache\-Line Hash Table \(CLHT\) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache\-line\-sized buckets\, so that on all modern CPUs update operations complete with at most one cache\-line transfer\. Also\, Get operations involve no write to memory\, as well as no mutexes or any other sort of locks\. Due to this design\, in all considered scenarios MapOf outperforms sync\.Map\.
+CLHT is built around idea to organize the hash table in cache\-line\-sized buckets, so that on all modern CPUs update operations complete with at most one cache\-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios MapOf outperforms sync.Map.
 
-One important difference with sync\.Map is that only string keys are supported\. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values\.
+One important difference with sync.Map is that only string keys are supported. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values.
 
 ```go
 type MapOf[V any] struct {
@@ -274,7 +274,7 @@ type MapOf[V any] struct {
 func NewMapOf[V any]() *MapOf[V]
 ```
 
-NewMapOf creates a new MapOf instance\.
+NewMapOf creates a new MapOf instance.
 
 ### func \(\*MapOf\[V\]\) Delete
 
@@ -282,7 +282,7 @@ NewMapOf creates a new MapOf instance\.
 func (m *MapOf[V]) Delete(key string)
 ```
 
-Delete deletes the value for a key\.
+Delete deletes the value for a key.
 
 ### func \(\*MapOf\[V\]\) Load
 
@@ -290,7 +290,7 @@ Delete deletes the value for a key\.
 func (m *MapOf[V]) Load(key string) (value V, ok bool)
 ```
 
-Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
+Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
 
 ### func \(\*MapOf\[V\]\) LoadAndDelete
 
@@ -298,7 +298,7 @@ Load returns the value stored in the map for a key\, or nil if no value is prese
 func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)
 ```
 
-LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
+LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
 
 ### func \(\*MapOf\[V\]\) LoadAndStore
 
@@ -306,7 +306,7 @@ LoadAndDelete deletes the value for a key\, returning the previous value if any\
 func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)
 ```
 
-LoadAndStore returns the existing value for the key if present\. Otherwise\, returns the given value\. The loaded result is true if the value was loaded\, false if stored\. Store the given value\.
+LoadAndStore returns the existing value for the key if present. Otherwise, returns the given value. The loaded result is true if the value was loaded, false if stored. Store the given value.
 
 ### func \(\*MapOf\[V\]\) LoadOrStore
 
@@ -314,7 +314,7 @@ LoadAndStore returns the existing value for the key if present\. Otherwise\, ret
 func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)
 ```
 
-LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
+LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
 
 ### func \(\*MapOf\[V\]\) Range
 
@@ -322,11 +322,11 @@ LoadOrStore returns the existing value for the key if present\. Otherwise\, it s
 func (m *MapOf[V]) Range(f func(key string, value V) bool)
 ```
 
-Range calls f sequentially for each key and value present in the map\. If f returns false\, range stops the iteration\.
+Range calls f sequentially for each key and value present in the map. If f returns false, range stops the iteration.
 
-Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once\, but if the value for any key is stored or deleted concurrently\, Range may reflect any mapping for that key from any point during the Range call\.
+Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
 
-It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
+It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
 ### func \(\*MapOf\[V\]\) Size
 
@@ -334,7 +334,7 @@ It is safe to modify the map while iterating it\. However\, the concurrent modif
 func (m *MapOf[V]) Size() int
 ```
 
-Size returns current size of the map\.
+Size returns current size of the map.
 
 ### func \(\*MapOf\[V\]\) Store
 
@@ -342,19 +342,19 @@ Size returns current size of the map\.
 func (m *MapOf[V]) Store(key string, value V)
 ```
 
-Store sets the value for a key\.
+Store sets the value for a key.
 
 ## type RBMutex
 
-A RBMutex is a reader biased reader/writer mutual exclusion lock\. The lock can be held by an many readers or a single writer\. The zero value for a RBMutex is an unlocked mutex\.
+A RBMutex is a reader biased reader/writer mutual exclusion lock. The lock can be held by an many readers or a single writer. The zero value for a RBMutex is an unlocked mutex.
 
-A RBMutex must not be copied after first use\.
+A RBMutex must not be copied after first use.
 
 RBMutex is based on the BRAVO \(Biased Locking for Reader\-Writer Locks\) algorithm: https://arxiv.org/pdf/1810.01553.pdf
 
-RBMutex is a specialized mutex for scenarios\, such as caches\, where the vast majority of locks are acquired by readers and write lock acquire attempts are infrequent\. In such scenarios\, RBMutex performs better than the sync\.RWMutex on large multicore machines\.
+RBMutex is a specialized mutex for scenarios, such as caches, where the vast majority of locks are acquired by readers and write lock acquire attempts are infrequent. In such scenarios, RBMutex performs better than the sync.RWMutex on large multicore machines.
 
-RBMutex extends sync\.RWMutex internally and uses it as the "reader bias disabled" fallback\, so the same semantics apply\. The only noticeable difference is in reader tokens returned from the RLock/RUnlock methods\.
+RBMutex extends sync.RWMutex internally and uses it as the "reader bias disabled" fallback, so the same semantics apply. The only noticeable difference is in reader tokens returned from the RLock/RUnlock methods.
 
 ```go
 type RBMutex struct {
@@ -368,7 +368,7 @@ type RBMutex struct {
 func (m *RBMutex) Lock()
 ```
 
-Lock locks m for writing\. If the lock is already locked for reading or writing\, Lock blocks until the lock is available\.
+Lock locks m for writing. If the lock is already locked for reading or writing, Lock blocks until the lock is available.
 
 ### func \(\*RBMutex\) RLock
 
@@ -376,9 +376,9 @@ Lock locks m for writing\. If the lock is already locked for reading or writing\
 func (m *RBMutex) RLock() *RToken
 ```
 
-RLock locks m for reading and returns a reader token\. The token must be used in the later RUnlock call\.
+RLock locks m for reading and returns a reader token. The token must be used in the later RUnlock call.
 
-Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock\.
+Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock.
 
 ### func \(\*RBMutex\) RUnlock
 
@@ -386,7 +386,7 @@ Should not be used for recursive read locking; a blocked Lock call excludes new 
 func (m *RBMutex) RUnlock(t *RToken)
 ```
 
-RUnlock undoes a single RLock call\. A reader token obtained from the RLock call must be provided\. RUnlock does not affect other simultaneous readers\. A panic is raised if m is not locked for reading on entry to RUnlock\.
+RUnlock undoes a single RLock call. A reader token obtained from the RLock call must be provided. RUnlock does not affect other simultaneous readers. A panic is raised if m is not locked for reading on entry to RUnlock.
 
 ### func \(\*RBMutex\) Unlock
 
@@ -394,13 +394,13 @@ RUnlock undoes a single RLock call\. A reader token obtained from the RLock call
 func (m *RBMutex) Unlock()
 ```
 
-Unlock unlocks m for writing\. A panic is raised if m is not locked for writing on entry to Unlock\.
+Unlock unlocks m for writing. A panic is raised if m is not locked for writing on entry to Unlock.
 
-As with RWMutex\, a locked RBMutex is not associated with a particular goroutine\. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it\.
+As with RWMutex, a locked RBMutex is not associated with a particular goroutine. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it.
 
 ## type RToken
 
-RToken is a reader lock token\.
+RToken is a reader lock token.
 
 ```go
 type RToken struct {

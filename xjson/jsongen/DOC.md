@@ -67,7 +67,7 @@ Package jsongen forked from darjun/json\-gen
   - [func EscapeString(s string) Value](<#func-escapestring>)
 
 
-## type [Array](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L67>)
+## type Array
 
 Array 表示一个\`json\`数组
 
@@ -75,7 +75,7 @@ Array 表示一个\`json\`数组
 type Array []Value
 ```
 
-### func [NewArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L70>)
+### func NewArray
 
 ```go
 func NewArray() *Array
@@ -83,7 +83,7 @@ func NewArray() *Array
 
 NewArray 创建一个\`json\`数组，返回其指针
 
-### func \(\*Array\) [AppendArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L222>)
+### func \(\*Array\) AppendArray
 
 ```go
 func (a *Array) AppendArray(oa Array)
@@ -91,7 +91,7 @@ func (a *Array) AppendArray(oa Array)
 
 AppendArray 将\`json\`数组\`oa\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendBool](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L152>)
+### func \(\*Array\) AppendBool
 
 ```go
 func (a *Array) AppendBool(b bool)
@@ -99,7 +99,7 @@ func (a *Array) AppendBool(b bool)
 
 AppendBool 将\`bool\`类型的值\`b\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendBoolArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L195>)
+### func \(\*Array\) AppendBoolArray
 
 ```go
 func (a *Array) AppendBoolArray(b []bool)
@@ -107,7 +107,7 @@ func (a *Array) AppendBoolArray(b []bool)
 
 AppendBoolArray 将\`bool\`数组\`b\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendFloat](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L146>)
+### func \(\*Array\) AppendFloat
 
 ```go
 func (a *Array) AppendFloat(f float64)
@@ -115,7 +115,7 @@ func (a *Array) AppendFloat(f float64)
 
 AppendFloat 将\`float64\`类型的值\`f\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendFloatArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L186>)
+### func \(\*Array\) AppendFloatArray
 
 ```go
 func (a *Array) AppendFloatArray(f []float64)
@@ -123,7 +123,7 @@ func (a *Array) AppendFloatArray(f []float64)
 
 AppendFloatArray 将\`float64\`数组\`f\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendInt](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L140>)
+### func \(\*Array\) AppendInt
 
 ```go
 func (a *Array) AppendInt(i int64)
@@ -131,7 +131,7 @@ func (a *Array) AppendInt(i int64)
 
 AppendInt 将\`int64\`类型的值\`i\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendIntArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L177>)
+### func \(\*Array\) AppendIntArray
 
 ```go
 func (a *Array) AppendIntArray(i []int64)
@@ -139,7 +139,7 @@ func (a *Array) AppendIntArray(i []int64)
 
 AppendIntArray 将\`int64\`数组\`i\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendMap](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L163>)
+### func \(\*Array\) AppendMap
 
 ```go
 func (a *Array) AppendMap(m *Map)
@@ -147,7 +147,7 @@ func (a *Array) AppendMap(m *Map)
 
 AppendMap 将\`Map\`类型的值\`m\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendMapArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L213>)
+### func \(\*Array\) AppendMapArray
 
 ```go
 func (a *Array) AppendMapArray(m []Map)
@@ -155,31 +155,31 @@ func (a *Array) AppendMapArray(m []Map)
 
 AppendMapArray 将\`Map\`数组\`m\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendRawBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L113>)
+### func \(\*Array\) AppendRawBytes
 
 ```go
 func (a *Array) AppendRawBytes(b []byte)
 ```
 
-### func \(\*Array\) [AppendRawBytesArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L125>)
+### func \(\*Array\) AppendRawBytesArray
 
 ```go
 func (a *Array) AppendRawBytesArray(bs [][]byte)
 ```
 
-### func \(\*Array\) [AppendRawString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L109>)
+### func \(\*Array\) AppendRawString
 
 ```go
 func (a *Array) AppendRawString(s string)
 ```
 
-### func \(\*Array\) [AppendRawStringArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L117>)
+### func \(\*Array\) AppendRawStringArray
 
 ```go
 func (a *Array) AppendRawStringArray(ss []string)
 ```
 
-### func \(\*Array\) [AppendString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L158>)
+### func \(\*Array\) AppendString
 
 ```go
 func (a *Array) AppendString(value string)
@@ -187,7 +187,7 @@ func (a *Array) AppendString(value string)
 
 AppendString 将\`string\`类型的值\`s\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendStringArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L204>)
+### func \(\*Array\) AppendStringArray
 
 ```go
 func (a *Array) AppendStringArray(s []string)
@@ -195,7 +195,7 @@ func (a *Array) AppendStringArray(s []string)
 
 AppendStringArray 将\`string\`数组\`s\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendUint](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L134>)
+### func \(\*Array\) AppendUint
 
 ```go
 func (a *Array) AppendUint(u uint64)
@@ -203,7 +203,7 @@ func (a *Array) AppendUint(u uint64)
 
 AppendUint 将\`uint64\`类型的值\`u\`追加到数组\`a\`后
 
-### func \(\*Array\) [AppendUintArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L168>)
+### func \(\*Array\) AppendUintArray
 
 ```go
 func (a *Array) AppendUintArray(u []uint64)
@@ -211,7 +211,7 @@ func (a *Array) AppendUintArray(u []uint64)
 
 AppendUintArray 将\`uint64\`数组\`u\`追加到数组\`a\`后
 
-### func \(Array\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L76>)
+### func \(Array\) Serialize
 
 ```go
 func (a Array) Serialize(buf []byte) []byte
@@ -219,7 +219,7 @@ func (a Array) Serialize(buf []byte) []byte
 
 Serialize 将\`a\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(Array\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L93>)
+### func \(Array\) Size
 
 ```go
 func (a Array) Size() int
@@ -227,7 +227,7 @@ func (a Array) Size() int
 
 Size 返回\`a\`在最终的\`json\`串中占有多少字节
 
-## type [Map](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L227-L230>)
+## type Map
 
 Map 表示一个\`json\`映射
 
@@ -237,7 +237,7 @@ type Map struct {
 }
 ```
 
-### func [NewMap](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L386>)
+### func NewMap
 
 ```go
 func NewMap() *Map
@@ -245,7 +245,7 @@ func NewMap() *Map
 
 NewMap 创建一个\`json\`映射返回其指针
 
-### func \(\*Map\) [PutArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L376>)
+### func \(\*Map\) PutArray
 
 ```go
 func (m *Map) PutArray(key string, a *Array)
@@ -253,7 +253,7 @@ func (m *Map) PutArray(key string, a *Array)
 
 PutArray 将\`json\`数组\`a\`与键\`key\`关联
 
-### func \(\*Map\) [PutBool](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L320>)
+### func \(\*Map\) PutBool
 
 ```go
 func (m *Map) PutBool(key string, b bool)
@@ -261,7 +261,7 @@ func (m *Map) PutBool(key string, b bool)
 
 PutBool 将\`bool\`类型的值\`b\`与键\`key\`关联
 
-### func \(\*Map\) [PutBoolArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L358>)
+### func \(\*Map\) PutBoolArray
 
 ```go
 func (m *Map) PutBoolArray(key string, b []bool)
@@ -269,7 +269,7 @@ func (m *Map) PutBoolArray(key string, b []bool)
 
 PutBoolArray 将\`bool\`数组类型的值\`b\`与键\`key\`关联
 
-### func \(\*Map\) [PutFloat](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L314>)
+### func \(\*Map\) PutFloat
 
 ```go
 func (m *Map) PutFloat(key string, f float64)
@@ -277,7 +277,7 @@ func (m *Map) PutFloat(key string, f float64)
 
 PutFloat 将\`float64\`类型的值\`f\`与键\`key\`关联
 
-### func \(\*Map\) [PutFloatArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L349>)
+### func \(\*Map\) PutFloatArray
 
 ```go
 func (m *Map) PutFloatArray(key string, f []float64)
@@ -285,7 +285,7 @@ func (m *Map) PutFloatArray(key string, f []float64)
 
 PutFloatArray 将\`float64\`数组类型的值\`f\`与键\`key\`关联
 
-### func \(\*Map\) [PutInt](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L308>)
+### func \(\*Map\) PutInt
 
 ```go
 func (m *Map) PutInt(key string, i int64)
@@ -293,7 +293,7 @@ func (m *Map) PutInt(key string, i int64)
 
 PutInt 将\`int64\`类型的值\`i\`与键\`key\`关联
 
-### func \(\*Map\) [PutIntArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L340>)
+### func \(\*Map\) PutIntArray
 
 ```go
 func (m *Map) PutIntArray(key string, i []int64)
@@ -301,7 +301,7 @@ func (m *Map) PutIntArray(key string, i []int64)
 
 PutIntArray 将\`int64\`数组类型的值\`i\`与键\`key\`关联
 
-### func \(\*Map\) [PutMap](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L381>)
+### func \(\*Map\) PutMap
 
 ```go
 func (m *Map) PutMap(key string, om *Map)
@@ -309,31 +309,31 @@ func (m *Map) PutMap(key string, om *Map)
 
 PutMap 将\`json\`映射\`om\`与键\`key\`关联
 
-### func \(\*Map\) [PutRawBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L281>)
+### func \(\*Map\) PutRawBytes
 
 ```go
 func (m *Map) PutRawBytes(key string, b []byte)
 ```
 
-### func \(\*Map\) [PutRawBytesArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L293>)
+### func \(\*Map\) PutRawBytesArray
 
 ```go
 func (m *Map) PutRawBytesArray(key string, bs [][]byte)
 ```
 
-### func \(\*Map\) [PutRawString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L277>)
+### func \(\*Map\) PutRawString
 
 ```go
 func (m *Map) PutRawString(key, s string)
 ```
 
-### func \(\*Map\) [PutRawStringArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L285>)
+### func \(\*Map\) PutRawStringArray
 
 ```go
 func (m *Map) PutRawStringArray(key string, ss []string)
 ```
 
-### func \(\*Map\) [PutString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L326>)
+### func \(\*Map\) PutString
 
 ```go
 func (m *Map) PutString(key, value string)
@@ -341,7 +341,7 @@ func (m *Map) PutString(key, value string)
 
 PutString 将\`string\`类型的值\`value\`与键\`key\`关联
 
-### func \(\*Map\) [PutStringArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L367>)
+### func \(\*Map\) PutStringArray
 
 ```go
 func (m *Map) PutStringArray(key string, s []string)
@@ -349,7 +349,7 @@ func (m *Map) PutStringArray(key string, s []string)
 
 PutStringArray 将\`string\`数组类型的值\`s\`与键\`key\`关联
 
-### func \(\*Map\) [PutUint](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L302>)
+### func \(\*Map\) PutUint
 
 ```go
 func (m *Map) PutUint(key string, u uint64)
@@ -357,7 +357,7 @@ func (m *Map) PutUint(key string, u uint64)
 
 PutUint 将\`uint64\`类型的值\`u\`与键\`key\`关联
 
-### func \(\*Map\) [PutUintArray](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L331>)
+### func \(\*Map\) PutUintArray
 
 ```go
 func (m *Map) PutUintArray(key string, u []uint64)
@@ -365,7 +365,7 @@ func (m *Map) PutUintArray(key string, u []uint64)
 
 PutUintArray 将\`uint64\`数组类型的值\`u\`与键\`key\`关联
 
-### func \(Map\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L233>)
+### func \(Map\) Serialize
 
 ```go
 func (m Map) Serialize(buf []byte) []byte
@@ -373,7 +373,7 @@ func (m Map) Serialize(buf []byte) []byte
 
 Serialize 将\`m\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(Map\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L254>)
+### func \(Map\) Size
 
 ```go
 func (m Map) Size() int
@@ -381,7 +381,7 @@ func (m Map) Size() int
 
 Size 返回\`m\`在最终的\`json\`串中占有多少字节
 
-## type [QuotedValue](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L19>)
+## type QuotedValue
 
 QuotedValue 表示需要用"包裹起来的值，例如字符串
 
@@ -389,7 +389,7 @@ QuotedValue 表示需要用"包裹起来的值，例如字符串
 type QuotedValue string
 ```
 
-### func \(QuotedValue\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L22>)
+### func \(QuotedValue\) Serialize
 
 ```go
 func (q QuotedValue) Serialize(buf []byte) []byte
@@ -397,7 +397,7 @@ func (q QuotedValue) Serialize(buf []byte) []byte
 
 Serialize 将\`q\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(QuotedValue\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L29>)
+### func \(QuotedValue\) Size
 
 ```go
 func (q QuotedValue) Size() int
@@ -405,43 +405,43 @@ func (q QuotedValue) Size() int
 
 Size 返回\`q\`在最终的\`json\`串中占有多少字节
 
-## type [RawBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L46>)
+## type RawBytes
 
 ```go
 type RawBytes []byte
 ```
 
-### func \(RawBytes\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L48>)
+### func \(RawBytes\) Serialize
 
 ```go
 func (b RawBytes) Serialize(buf []byte) []byte
 ```
 
-### func \(RawBytes\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L52>)
+### func \(RawBytes\) Size
 
 ```go
 func (b RawBytes) Size() int
 ```
 
-## type [RawString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L56>)
+## type RawString
 
 ```go
 type RawString string
 ```
 
-### func \(RawString\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L58>)
+### func \(RawString\) Serialize
 
 ```go
 func (s RawString) Serialize(buf []byte) []byte
 ```
 
-### func \(RawString\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L62>)
+### func \(RawString\) Size
 
 ```go
 func (s RawString) Size() int
 ```
 
-## type [UnquotedValue](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L34>)
+## type UnquotedValue
 
 UnquotedValue 表示不需要用"包裹起来的值，例如整数，浮点数等
 
@@ -449,7 +449,7 @@ UnquotedValue 表示不需要用"包裹起来的值，例如整数，浮点数�
 type UnquotedValue string
 ```
 
-### func \(UnquotedValue\) [Serialize](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L37>)
+### func \(UnquotedValue\) Serialize
 
 ```go
 func (u UnquotedValue) Serialize(buf []byte) []byte
@@ -457,7 +457,7 @@ func (u UnquotedValue) Serialize(buf []byte) []byte
 
 Serialize 将\`u\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(UnquotedValue\) [Size](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L42>)
+### func \(UnquotedValue\) Size
 
 ```go
 func (u UnquotedValue) Size() int
@@ -465,7 +465,7 @@ func (u UnquotedValue) Size() int
 
 Size 返回\`u\`在最终的\`json\`串中占有多少字节
 
-## type [Value](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L11-L16>)
+## type Value
 
 Value 表示将要序列化到\`json\`字符串中的值
 
@@ -478,7 +478,7 @@ type Value interface {
 }
 ```
 
-### func [EscapeString](<https://gitee.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L393>)
+### func EscapeString
 
 ```go
 func EscapeString(s string) Value

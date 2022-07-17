@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/xjson/gjson"
 ```
 
-Package gjson provides searching for json strings\.
+Package gjson provides searching for json strings.
 
 ## Index
 
@@ -54,63 +54,63 @@ DisableModifiers will disable the modifier syntax
 var DisableModifiers = false
 ```
 
-## func [AddModifier](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2731>)
+## func AddModifier
 
 ```go
 func AddModifier(name string, fn func(json, arg string) string)
 ```
 
-AddModifier binds a custom modifier command to the GJSON syntax\. This operation is not thread safe and should be executed prior to using all other gjson function\.
+AddModifier binds a custom modifier command to the GJSON syntax. This operation is not thread safe and should be executed prior to using all other gjson function.
 
-## func [AppendJSONString](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L1840>)
+## func AppendJSONString
 
 ```go
 func AppendJSONString(dst []byte, s string) []byte
 ```
 
-AppendJSONString is a convenience function that converts the provided string to a valid JSON string and appends it to dst\.
+AppendJSONString is a convenience function that converts the provided string to a valid JSON string and appends it to dst.
 
-## func [ForEachLine](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L1715>)
+## func ForEachLine
 
 ```go
 func ForEachLine(json string, iterator func(line Result) bool)
 ```
 
-ForEachLine iterates through lines of JSON as specified by the JSON Lines format \(http://jsonlines.org/\)\. Each line is returned as a GJSON Result\.
+ForEachLine iterates through lines of JSON as specified by the JSON Lines format \(http://jsonlines.org/\). Each line is returned as a GJSON Result.
 
-## func [ModifierExists](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2736>)
+## func ModifierExists
 
 ```go
 func ModifierExists(name string, fn func(json, arg string) string) bool
 ```
 
-ModifierExists returns true when the specified modifier exists\.
+ModifierExists returns true when the specified modifier exists.
 
-## func [Valid](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2549>)
+## func Valid
 
 ```go
 func Valid(json string) bool
 ```
 
-Valid returns true if the input is valid json\.
+Valid returns true if the input is valid json.
 
-if \!gjson\.Valid\(json\) \{ return errors\.New\("invalid json"\) \} value := gjson\.Get\(json\, "name\.last"\)
+if \!gjson.Valid\(json\) \{ return errors.New\("invalid json"\) \} value := gjson.Get\(json, "name.last"\)
 
-## func [ValidBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2563>)
+## func ValidBytes
 
 ```go
 func ValidBytes(json []byte) bool
 ```
 
-ValidBytes returns true if the input is valid json\.
+ValidBytes returns true if the input is valid json.
 
-if \!gjson\.Valid\(json\) \{ return errors\.New\("invalid json"\) \} value := gjson\.Get\(json\, "name\.last"\)
+if \!gjson.Valid\(json\) \{ return errors.New\("invalid json"\) \} value := gjson.Get\(json, "name.last"\)
 
-If working with bytes\, this method preferred over ValidBytes\(string\(data\)\)
+If working with bytes, this method preferred over ValidBytes\(string\(data\)\)
 
-## type [Result](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L55-L69>)
+## type Result
 
-Result represents a json value that is returned from Get\(\)\.
+Result represents a json value that is returned from Get\(\).
 
 ```go
 type Result struct {
@@ -130,169 +130,169 @@ type Result struct {
 }
 ```
 
-### func [Get](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L1928>)
+### func Get
 
 ```go
 func Get(json, path string) Result
 ```
 
-Get searches json for the specified path\. A path is in dot syntax\, such as "name\.last" or "age"\. When the value is found it's returned immediately\.
+Get searches json for the specified path. A path is in dot syntax, such as "name.last" or "age". When the value is found it's returned immediately.
 
-A path is a series of keys separated by a dot\. A key may contain special wildcard characters '\*' and '?'\. To access an array value use the index as the key\. To get the number of elements in an array or to access a child path\, use the '\#' character\. The dot and wildcard character can be escaped with '\\'\.
+A path is a series of keys separated by a dot. A key may contain special wildcard characters '\*' and '?'. To access an array value use the index as the key. To get the number of elements in an array or to access a child path, use the '\#' character. The dot and wildcard character can be escaped with '\\'.
 
-\{ "name": \{"first": "Tom"\, "last": "Anderson"\}\, "age":37\, "children": \["Sara"\,"Alex"\,"Jack"\]\, "friends": \[ \{"first": "James"\, "last": "Murphy"\}\, \{"first": "Roger"\, "last": "Craig"\} \] \} "name\.last"          \>\> "Anderson" "age"                \>\> 37 "children"           \>\> \["Sara"\,"Alex"\,"Jack"\] "children\.\#"         \>\> 3 "children\.1"         \>\> "Alex" "child\*\.2"           \>\> "Jack" "c?ildren\.0"         \>\> "Sara" "friends\.\#\.first"    \>\> \["James"\,"Roger"\]
+\{ "name": \{"first": "Tom", "last": "Anderson"\}, "age":37, "children": \["Sara","Alex","Jack"\], "friends": \[ \{"first": "James", "last": "Murphy"\}, \{"first": "Roger", "last": "Craig"\} \] \} "name.last"          \>\> "Anderson" "age"                \>\> 37 "children"           \>\> \["Sara","Alex","Jack"\] "children.\#"         \>\> 3 "children.1"         \>\> "Alex" "child\*.2"           \>\> "Jack" "c?ildren.0"         \>\> "Sara" "friends.\#.first"    \>\> \["James","Roger"\]
 
-This function expects that the json is well\-formed\, and does not validate\. Invalid json will not panic\, but it may return back unexpected results\. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first\.
+This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first.
 
-### func [GetBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2041>)
+### func GetBytes
 
 ```go
 func GetBytes(json []byte, path string) Result
 ```
 
-GetBytes searches json for the specified path\. If working with bytes\, this method preferred over Get\(string\(data\)\, path\)
+GetBytes searches json for the specified path. If working with bytes, this method preferred over Get\(string\(data\), path\)
 
-### func [GetMany](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2253>)
+### func GetMany
 
 ```go
 func GetMany(json string, path ...string) []Result
 ```
 
-GetMany searches json for the multiple paths\. The return value is a Result array where the number of items will be equal to the number of input paths\.
+GetMany searches json for the multiple paths. The return value is a Result array where the number of items will be equal to the number of input paths.
 
-### func [GetManyBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2264>)
+### func GetManyBytes
 
 ```go
 func GetManyBytes(json []byte, path ...string) []Result
 ```
 
-GetManyBytes searches json for the multiple paths\. The return value is a Result array where the number of items will be equal to the number of input paths\.
+GetManyBytes searches json for the multiple paths. The return value is a Result array where the number of items will be equal to the number of input paths.
 
-### func [Parse](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L464>)
+### func Parse
 
 ```go
 func Parse(json string) Result
 ```
 
-Parse parses the json and returns a result\.
+Parse parses the json and returns a result.
 
-This function expects that the json is well\-formed\, and does not validate\. Invalid json will not panic\, but it may return back unexpected results\. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first\.
+This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first.
 
-### func [ParseBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L513>)
+### func ParseBytes
 
 ```go
 func ParseBytes(json []byte) Result
 ```
 
-ParseBytes parses the json and returns a result\. If working with bytes\, this method preferred over Parse\(string\(data\)\)
+ParseBytes parses the json and returns a result. If working with bytes, this method preferred over Parse\(string\(data\)\)
 
-### func \(Result\) [Array](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L195>)
+### func \(Result\) Array
 
 ```go
 func (t Result) Array() []Result
 ```
 
-Array returns back an array of values\. If the result represents a null value or is non\-existent\, then an empty array will be returned\. If the result is not a JSON array\, the return value will be an array containing one result\.
+Array returns back an array of values. If the result represents a null value or is non\-existent, then an empty array will be returned. If the result is not a JSON array, the return value will be an array containing one result.
 
-### func \(Result\) [Bool](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L103>)
+### func \(Result\) Bool
 
 ```go
 func (t Result) Bool() bool
 ```
 
-Bool returns an boolean representation\.
+Bool returns an boolean representation.
 
-### func \(Result\) [Exists](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L651>)
+### func \(Result\) Exists
 
 ```go
 func (t Result) Exists() bool
 ```
 
-Exists returns true if value exists\.
+Exists returns true if value exists.
 
-if gjson\.Get\(json\, "name\.last"\)\.Exists\(\)\{ println\("value exists"\) \}
+if gjson.Get\(json, "name.last"\).Exists\(\)\{ println\("value exists"\) \}
 
-### func \(Result\) [Float](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L170>)
+### func \(Result\) Float
 
 ```go
 func (t Result) Float() float64
 ```
 
-Float returns an float64 representation\.
+Float returns an float64 representation.
 
-### func \(Result\) [ForEach](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L227>)
+### func \(Result\) ForEach
 
 ```go
 func (t Result) ForEach(iterator func(key, value Result) bool)
 ```
 
-ForEach iterates through values\. If the result represents a non\-existent value\, then no values will be iterated\. If the result is an Object\, the iterator will pass the key and value of each item\. If the result is an Array\, the iterator will only pass the value of each item\. If the result is not a JSON array or object\, the iterator will pass back one value equal to the result\.
+ForEach iterates through values. If the result represents a non\-existent value, then no values will be iterated. If the result is an Object, the iterator will pass the key and value of each item. If the result is an Array, the iterator will only pass the value of each item. If the result is not a JSON array or object, the iterator will pass back one value equal to the result.
 
-### func \(Result\) [Get](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L316>)
+### func \(Result\) Get
 
 ```go
 func (t Result) Get(path string) Result
 ```
 
-Get searches result for the specified path\. The result should be a JSON array or object\.
+Get searches result for the specified path. The result should be a JSON array or object.
 
-### func \(Result\) [Int](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L118>)
+### func \(Result\) Int
 
 ```go
 func (t Result) Int() int64
 ```
 
-Int returns an integer representation\.
+Int returns an integer representation.
 
-### func \(Result\) [IsArray](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L212>)
+### func \(Result\) IsArray
 
 ```go
 func (t Result) IsArray() bool
 ```
 
-IsArray returns true if the result value is a JSON array\.
+IsArray returns true if the result value is a JSON array.
 
-### func \(Result\) [IsBool](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L217>)
+### func \(Result\) IsBool
 
 ```go
 func (t Result) IsBool() bool
 ```
 
-IsBool returns true if the result value is a JSON boolean\.
+IsBool returns true if the result value is a JSON boolean.
 
-### func \(Result\) [IsObject](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L207>)
+### func \(Result\) IsObject
 
 ```go
 func (t Result) IsObject() bool
 ```
 
-IsObject returns true if the result value is a JSON object\.
+IsObject returns true if the result value is a JSON object.
 
-### func \(Result\) [Less](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L2116>)
+### func \(Result\) Less
 
 ```go
 func (t Result) Less(token Result, caseSensitive bool) bool
 ```
 
-Less return true if a token is less than another token\. The caseSensitive paramater is used when the tokens are Strings\. The order when comparing two different type is:
+Less return true if a token is less than another token. The caseSensitive paramater is used when the tokens are Strings. The order when comparing two different type is:
 
 Null \< False \< Number \< String \< True \< JSON
 
-### func \(Result\) [Map](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L306>)
+### func \(Result\) Map
 
 ```go
 func (t Result) Map() map[string]Result
 ```
 
-Map returns back a map of values\. The result should be a JSON object\. If the result is not a JSON object\, the return value will be an empty map\.
+Map returns back a map of values. The result should be a JSON object. If the result is not a JSON object, the return value will be an empty map.
 
-### func \(Result\) [Path](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L3238>)
+### func \(Result\) Path
 
 ```go
 func (t Result) Path(json string) string
 ```
 
-Path returns the original GJSON path for a Result where the Result came from a simple path that returns a single value\, like:
+Path returns the original GJSON path for a Result where the Result came from a simple path that returns a single value, like:
 
 ```
 gjson.Get(json, "friends.#(last=Murphy)")
@@ -304,17 +304,17 @@ The returned value will be in the form of a JSON string:
 "friends.0"
 ```
 
-The param 'json' must be the original JSON used when calling Get\.
+The param 'json' must be the original JSON used when calling Get.
 
-Returns an empty string if the paths cannot be determined\, which can happen when the Result came from a path that contained a multipath\, modifier\, or a nested query\.
+Returns an empty string if the paths cannot be determined, which can happen when the Result came from a path that contained a multipath, modifier, or a nested query.
 
-### func \(Result\) [Paths](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L3209>)
+### func \(Result\) Paths
 
 ```go
 func (t Result) Paths(json string) []string
 ```
 
-Paths returns the original GJSON paths for a Result where the Result came from a simple query path that returns an array\, like:
+Paths returns the original GJSON paths for a Result where the Result came from a simple query path that returns an array, like:
 
 ```
 gjson.Get(json, "friends.#.first")
@@ -326,35 +326,35 @@ The returned value will be in the form of a JSON array:
 ["friends.0.first","friends.1.first","friends.2.first"]
 ```
 
-The param 'json' must be the original JSON used when calling Get\.
+The param 'json' must be the original JSON used when calling Get.
 
-Returns an empty string if the paths cannot be determined\, which can happen when the Result came from a path that contained a multipath\, modifier\, or a nested query\.
+Returns an empty string if the paths cannot be determined, which can happen when the Result came from a path that contained a multipath, modifier, or a nested query.
 
-### func \(Result\) [String](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L72>)
+### func \(Result\) String
 
 ```go
 func (t Result) String() string
 ```
 
-String returns a string representation of the value\.
+String returns a string representation of the value.
 
-### func \(Result\) [Time](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L185>)
+### func \(Result\) Time
 
 ```go
 func (t Result) Time() time.Time
 ```
 
-Time returns a time\.Time representation\.
+Time returns a time.Time representation.
 
-### func \(Result\) [Uint](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L144>)
+### func \(Result\) Uint
 
 ```go
 func (t Result) Uint() uint64
 ```
 
-Uint returns an unsigned integer representation\.
+Uint returns an unsigned integer representation.
 
-### func \(Result\) [Value](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L665>)
+### func \(Result\) Value
 
 ```go
 func (t Result) Value() interface{}
@@ -372,7 +372,7 @@ map[string]interface{}, for JSON objects
 []interface{}, for JSON arrays
 ```
 
-## type [Type](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L17>)
+## type Type
 
 Type is Result type
 
@@ -397,13 +397,13 @@ const (
 )
 ```
 
-### func \(Type\) [String](<https://gitee.com/fufuok/utils/blob/master/xjson/gjson/gjson.go#L35>)
+### func \(Type\) String
 
 ```go
 func (t Type) String() string
 ```
 
-String returns a string representation of the type\.
+String returns a string representation of the type.
 
 
 

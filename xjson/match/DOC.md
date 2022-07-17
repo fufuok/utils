@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/xjson/match"
 ```
 
-Package match provides a simple pattern matcher with unicode support\.
+Package match provides a simple pattern matcher with unicode support.
 
 ## Index
 
@@ -16,41 +16,41 @@ Package match provides a simple pattern matcher with unicode support\.
 - [func MatchLimit(str, pattern string, maxcomp int) (matched, stopped bool)](<#func-matchlimit>)
 
 
-## func [Allowable](<https://gitee.com/fufuok/utils/blob/master/xjson/match/match.go#L190>)
+## func Allowable
 
 ```go
 func Allowable(pattern string) (min, max string)
 ```
 
-Allowable parses the pattern and determines the minimum and maximum allowable values that the pattern can represent\. When the max cannot be determined\, 'true' will be returned for infinite\.
+Allowable parses the pattern and determines the minimum and maximum allowable values that the pattern can represent. When the max cannot be determined, 'true' will be returned for infinite.
 
-## func [IsPattern](<https://gitee.com/fufuok/utils/blob/master/xjson/match/match.go#L230>)
+## func IsPattern
 
 ```go
 func IsPattern(str string) bool
 ```
 
-IsPattern returns true if the string is a pattern\.
+IsPattern returns true if the string is a pattern.
 
-## func [Match](<https://gitee.com/fufuok/utils/blob/master/xjson/match/match.go#L20>)
+## func Match
 
 ```go
 func Match(str, pattern string) bool
 ```
 
-Match returns true if str matches pattern\. This is a very simple wildcard match where '\*' matches on any number characters and '?' matches on any one character\.
+Match returns true if str matches pattern. This is a very simple wildcard match where '\*' matches on any number characters and '?' matches on any one character.
 
-pattern: \{ term \} term: '\*'         matches any sequence of non\-Separator characters '?'         matches any single non\-Separator character c           matches character c \(c \!= '\*'\, '?'\, '\\\\'\) '\\\\' c      matches character c
+pattern: \{ term \} term: '\*'         matches any sequence of non\-Separator characters '?'         matches any single non\-Separator character c           matches character c \(c \!= '\*', '?', '\\\\'\) '\\\\' c      matches character c
 
-## func [MatchLimit](<https://gitee.com/fufuok/utils/blob/master/xjson/match/match.go#L36>)
+## func MatchLimit
 
 ```go
 func MatchLimit(str, pattern string, maxcomp int) (matched, stopped bool)
 ```
 
-MatchLimit is the same as Match but will limit the complexity of the match operation\. This is to avoid long running matches\, specifically to avoid ReDos attacks from arbritary inputs\.
+MatchLimit is the same as Match but will limit the complexity of the match operation. This is to avoid long running matches, specifically to avoid ReDos attacks from arbritary inputs.
 
-How it works: The underlying match routine is recursive and may call itself when it encounters a sandwiched wildcard pattern\, such as: \`user:\*:name\`\. Everytime it calls itself a counter is incremented\. The operation is stopped when counter \> maxcomp\*len\(str\)\.
+How it works: The underlying match routine is recursive and may call itself when it encounters a sandwiched wildcard pattern, such as: \`user:\*:name\`. Everytime it calls itself a counter is incremented. The operation is stopped when counter \> maxcomp\*len\(str\).
 
 
 

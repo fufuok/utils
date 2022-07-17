@@ -71,7 +71,7 @@ s1: 2, s2: 0, s3: 2
 - [func Value[T any](src T) (dst T)](<#func-value>)
 
 
-## func [Value](<https://gitee.com/fufuok/utils/blob/master/generic/deepcopy/deepcopy.go#L55>)
+## func [Value](<https://github.com/fufuok/utils/blob/master/generic/deepcopy/deepcopy.go#L55>)
 
 ```go
 func Value[T any](src T) (dst T)

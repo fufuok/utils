@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/xjson/sjson"
 ```
 
-Package sjson provides setting json values\.
+Package sjson provides setting json values.
 
 ## Index
 
@@ -23,93 +23,93 @@ Package sjson provides setting json values\.
 - [type Options](<#type-options>)
 
 
-## func [Delete](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L486>)
+## func Delete
 
 ```go
 func Delete(json, path string) (string, error)
 ```
 
-Delete deletes a value from json for the specified path\.
+Delete deletes a value from json for the specified path.
 
-## func [DeleteBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L491>)
+## func DeleteBytes
 
 ```go
 func DeleteBytes(json []byte, path string) ([]byte, error)
 ```
 
-DeleteBytes deletes a value from json for the specified path\.
+DeleteBytes deletes a value from json for the specified path.
 
-## func [Set](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L443>)
+## func Set
 
 ```go
 func Set(json, path string, value interface{}) (string, error)
 ```
 
-Set sets a json value for the specified path\. A path is in dot syntax\, such as "name\.last" or "age"\. This function expects that the json is well\-formed\, and does not validate\. Invalid json will not panic\, but it may return back unexpected results\. An error is returned if the path is not valid\.
+Set sets a json value for the specified path. A path is in dot syntax, such as "name.last" or "age". This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. An error is returned if the path is not valid.
 
-A path is a series of keys separated by a dot\.
+A path is a series of keys separated by a dot.
 
-\{ "name": \{"first": "Tom"\, "last": "Anderson"\}\, "age":37\, "children": \["Sara"\,"Alex"\,"Jack"\]\, "friends": \[ \{"first": "James"\, "last": "Murphy"\}\, \{"first": "Roger"\, "last": "Craig"\} \] \} "name\.last"          \>\> "Anderson" "age"                \>\> 37 "children\.1"         \>\> "Alex"
+\{ "name": \{"first": "Tom", "last": "Anderson"\}, "age":37, "children": \["Sara","Alex","Jack"\], "friends": \[ \{"first": "James", "last": "Murphy"\}, \{"first": "Roger", "last": "Craig"\} \] \} "name.last"          \>\> "Anderson" "age"                \>\> 37 "children.1"         \>\> "Alex"
 
-## func [SetBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L450>)
+## func SetBytes
 
 ```go
 func SetBytes(json []byte, path string, value interface{}) ([]byte, error)
 ```
 
-SetBytes sets a json value for the specified path\. If working with bytes\, this method preferred over Set\(string\(data\)\, path\, value\)
+SetBytes sets a json value for the specified path. If working with bytes, this method preferred over Set\(string\(data\), path, value\)
 
-## func [SetBytesOptions](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L652-L653>)
+## func SetBytesOptions
 
 ```go
 func SetBytesOptions(json []byte, path string, value interface{}, opts *Options) ([]byte, error)
 ```
 
-SetBytesOptions sets a json value for the specified path with options\. If working with bytes\, this method preferred over SetOptions\(string\(data\)\, path\, value\)
+SetBytesOptions sets a json value for the specified path with options. If working with bytes, this method preferred over SetOptions\(string\(data\), path, value\)
 
-## func [SetOptions](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L631-L632>)
+## func SetOptions
 
 ```go
 func SetOptions(json, path string, value interface{}, opts *Options) (string, error)
 ```
 
-SetOptions sets a json value for the specified path with options\. A path is in dot syntax\, such as "name\.last" or "age"\. This function expects that the json is well\-formed\, and does not validate\. Invalid json will not panic\, but it may return back unexpected results\. An error is returned if the path is not valid\.
+SetOptions sets a json value for the specified path with options. A path is in dot syntax, such as "name.last" or "age". This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. An error is returned if the path is not valid.
 
-## func [SetRaw](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L457>)
+## func SetRaw
 
 ```go
 func SetRaw(json, path, value string) (string, error)
 ```
 
-SetRaw sets a raw json value for the specified path\. This function works the same as Set except that the value is set as a raw block of json\. This allows for setting premarshalled json objects\.
+SetRaw sets a raw json value for the specified path. This function works the same as Set except that the value is set as a raw block of json. This allows for setting premarshalled json objects.
 
-## func [SetRawBytes](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L479>)
+## func SetRawBytes
 
 ```go
 func SetRawBytes(json []byte, path string, value []byte) ([]byte, error)
 ```
 
-SetRawBytes sets a raw json value for the specified path\. If working with bytes\, this method preferred over SetRaw\(string\(data\)\, path\, value\)
+SetRawBytes sets a raw json value for the specified path. If working with bytes, this method preferred over SetRaw\(string\(data\), path, value\)
 
-## func [SetRawBytesOptions](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L723-L724>)
+## func SetRawBytesOptions
 
 ```go
 func SetRawBytesOptions(json []byte, path string, value []byte, opts *Options) ([]byte, error)
 ```
 
-SetRawBytesOptions sets a raw json value for the specified path with options\. If working with bytes\, this method preferred over SetRawOptions\(string\(data\)\, path\, value\, opts\)
+SetRawBytesOptions sets a raw json value for the specified path with options. If working with bytes, this method preferred over SetRawOptions\(string\(data\), path, value, opts\)
 
-## func [SetRawOptions](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L464>)
+## func SetRawOptions
 
 ```go
 func SetRawOptions(json, path, value string, opts *Options) (string, error)
 ```
 
-SetRawOptions sets a raw json value for the specified path with options\. This furnction works the same as SetOptions except that the value is set as a raw block of json\. This allows for setting premarshalled json objects\.
+SetRawOptions sets a raw json value for the specified path with options. This furnction works the same as SetOptions except that the value is set as a raw block of json. This allows for setting premarshalled json objects.
 
-## type [Options](<https://gitee.com/fufuok/utils/blob/master/xjson/sjson/sjson.go#L22-L35>)
+## type Options
 
-Options represents additional options for the Set and Delete functions\.
+Options represents additional options for the Set and Delete functions.
 
 ```go
 type Options struct {
