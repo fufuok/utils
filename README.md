@@ -770,6 +770,41 @@ type Pool struct{ ... }
 ```
 </details>
 
+### NTP 简单时间同步
+
+见: [ntp](ntp)
+
+默认优选 NTP Host, 周期性返回时钟偏移值或当前时间, 也可指定 Host 单次请求
+
+<details>
+  <summary>DOC</summary>
+
+```go
+package ntp // import "github.com/fufuok/utils/ntp"
+
+Package ntp provides an implementation of a Simple NTP (SNTP) client capable
+of querying the current time from a remote NTP server. See RFC5905
+(https://tools.ietf.org/html/rfc5905) for more details.
+
+This approach grew out of a go-nuts post by Michael Hofmann:
+https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/FlcdMU5fkLQ
+
+const LeapNoWarning LeapIndicator = 0 ...
+func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Duration
+func Time(host string) (time.Time, error)
+func TimeChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Time
+func TimeV(host string, version int) (time.Time, error)
+type HostResponse struct{ ... }
+    func HostPreferred(hosts []string) *HostResponse
+type LeapIndicator uint8
+type QueryOptions struct{ ... }
+type Response struct{ ... }
+    func GetResponse(host string) *Response
+    func Query(host string) (*Response, error)
+    func QueryWithOptions(host string, opt QueryOptions) (*Response, error)
+```
+</details>
+
 ## 使用示例
 
 ```go
