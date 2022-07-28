@@ -88,6 +88,8 @@ import "github.com/fufuok/utils"
 - [func GetSafeS2B(s string, defaultVal ...[]byte) []byte](<#func-getsafes2b>)
 - [func GetSafeString(s string, defaultVal ...string) string](<#func-getsafestring>)
 - [func GetString(v interface{}, defaultVal ...string) string](<#func-getstring>)
+- [func Gzip(data []byte) ([]byte, error)](<#func-gzip>)
+- [func GzipLevel(data []byte, level int) (dst []byte, err error)](<#func-gziplevel>)
 - [func Hash(b []byte, h hash.Hash) []byte](<#func-hash>)
 - [func HashBytes(b ...[]byte) string](<#func-hashbytes>)
 - [func HashBytes32(b ...[]byte) uint32](<#func-hashbytes32>)
@@ -212,9 +214,10 @@ import "github.com/fufuok/utils"
 - [func UUIDShort() string](<#func-uuidshort>)
 - [func UUIDSimple() string](<#func-uuidsimple>)
 - [func UUIDString() string](<#func-uuidstring>)
+- [func Ungzip(data []byte) (src []byte, err error)](<#func-ungzip>)
 - [func Unzip(data []byte) (src []byte, err error)](<#func-unzip>)
 - [func ValidOptionalPort(port string) bool](<#func-validoptionalport>)
-- [func WaitNextMinute()](<#func-waitnextminute>)
+- [func WaitNextMinute(t ...time.Time)](<#func-waitnextminute>)
 - [func Zip(data []byte) ([]byte, error)](<#func-zip>)
 - [func ZipLevel(data []byte, level int) (dst []byte, err error)](<#func-ziplevel>)
 - [type Bool](<#type-bool>)
@@ -240,7 +243,7 @@ import "github.com/fufuok/utils"
 
 ## Constants
 
-Ref: dustin/go\-humanize IEC Sizes\. kibis of bits
+Ref: dustin/go\-humanize IEC Sizes. kibis of bits
 
 ```go
 const (
@@ -254,7 +257,7 @@ const (
 )
 ```
 
-SI Sizes\.
+SI Sizes.
 
 ```go
 const (
@@ -334,7 +337,7 @@ var (
 func AddBytes32(h uint32, b []byte) uint32
 ```
 
-AddBytes32 adds the hash of b to the precomputed hash value h\. Ref: segmentio/fasthash
+AddBytes32 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
 
 ## func AddBytes64
 
@@ -342,7 +345,7 @@ AddBytes32 adds the hash of b to the precomputed hash value h\. Ref: segmentio/f
 func AddBytes64(h uint64, b []byte) uint64
 ```
 
-AddBytes64 adds the hash of b to the precomputed hash value h\. Ref: segmentio/fasthash
+AddBytes64 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
 
 ## func AddString
 
@@ -358,7 +361,7 @@ AddString 拼接字符串
 func AddString32(h uint32, s string) uint32
 ```
 
-AddString32 adds the hash of s to the precomputed hash value h\. Ref: segmentio/fasthash
+AddString32 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
 
 ## func AddString64
 
@@ -366,7 +369,7 @@ AddString32 adds the hash of s to the precomputed hash value h\. Ref: segmentio/
 func AddString64(h uint64, s string) uint64
 ```
 
-AddString64 adds the hash of s to the precomputed hash value h\. Ref: segmentio/fasthash
+AddString64 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
 
 ## func AddStringBytes
 
@@ -374,7 +377,7 @@ AddString64 adds the hash of s to the precomputed hash value h\. Ref: segmentio/
 func AddStringBytes(s ...string) []byte
 ```
 
-AddStringBytes 拼接字符串\, 返回 bytes from bytes\.Join\(\)
+AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
 
 ## func AddUint32
 
@@ -382,7 +385,7 @@ AddStringBytes 拼接字符串\, 返回 bytes from bytes\.Join\(\)
 func AddUint32(h, u uint32) uint32
 ```
 
-AddUint32 adds the hash value of the 8 bytes of u to h\. Ref: segmentio/fasthash
+AddUint32 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
 
 ## func AddUint64
 
@@ -390,7 +393,7 @@ AddUint32 adds the hash value of the 8 bytes of u to h\. Ref: segmentio/fasthash
 func AddUint64(h uint64, u uint64) uint64
 ```
 
-AddUint64 adds the hash value of the 8 bytes of u to h\. Ref: segmentio/fasthash
+AddUint64 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
 
 ## func AssertEqual
 
@@ -452,7 +455,7 @@ B64UrlDecode Base64 解码
 func B64UrlEncode(b []byte) string
 ```
 
-B64UrlEncode Base64 解码\, 安全 URL\, 替换: "\+/" 为 "\-\_"
+B64UrlEncode Base64 解码, 安全 URL, 替换: "\+/" 为 "\-\_"
 
 ## func BeginOfDay
 
@@ -556,7 +559,7 @@ BeginOfYesterday 昨天 0 点
 func BigComma(b *big.Int) string
 ```
 
-BigComma big\.Int 千分位分隔字符串 Ref: dustin/go\-humanize
+BigComma big.Int 千分位分隔字符串 Ref: dustin/go\-humanize
 
 ## func BigCommaf
 
@@ -564,7 +567,7 @@ BigComma big\.Int 千分位分隔字符串 Ref: dustin/go\-humanize
 func BigCommaf(v *big.Float) string
 ```
 
-BigCommaf big\.Float 千分位分隔字符串 Ref: dustin/go\-humanize
+BigCommaf big.Float 千分位分隔字符串 Ref: dustin/go\-humanize
 
 ## func Bigoom
 
@@ -572,7 +575,7 @@ BigCommaf big\.Float 千分位分隔字符串 Ref: dustin/go\-humanize
 func Bigoom(n, b *big.Int) (float64, int)
 ```
 
-Bigoom big\.Int 总数量级 Ref: dustin/go\-humanize
+Bigoom big.Int 总数量级 Ref: dustin/go\-humanize
 
 ## func CPUTicks
 
@@ -580,7 +583,7 @@ Bigoom big\.Int 总数量级 Ref: dustin/go\-humanize
 func CPUTicks() int64
 ```
 
-CPUTicks CPU 时钟周期\, 更高精度 \(云服务器做伪随机数种子时慎用\)
+CPUTicks CPU 时钟周期, 更高精度 \(云服务器做伪随机数种子时慎用\)
 
 ## func CallPath
 
@@ -588,7 +591,7 @@ CPUTicks CPU 时钟周期\, 更高精度 \(云服务器做伪随机数种子时�
 func CallPath() string
 ```
 
-CallPath 运行时路径\, 编译目录 假如: mklink E:\\tmp\\linkapp\.exe D:\\Fufu\\Test\\abc\\app\.exe 执行: E:\\tmp\\linkapp\.exe CallPath: E:\\Go\\src\\github\.com\\fufuok\\utils\\tmp\\osext
+CallPath 运行时路径, 编译目录 假如: mklink E:\\tmp\\linkapp.exe D:\\Fufu\\Test\\abc\\app.exe 执行: E:\\tmp\\linkapp.exe CallPath: E:\\Go\\src\\github.com\\fufuok\\utils\\tmp\\osext
 
 ## func Comma
 
@@ -596,7 +599,7 @@ CallPath 运行时路径\, 编译目录 假如: mklink E:\\tmp\\linkapp\.exe D:\
 func Comma(v int64) string
 ```
 
-Comma 整数转千分位分隔字符串 Ref: dustin/go\-humanize e\.g\. Comma\(834142\) \-\> 834\,142
+Comma 整数转千分位分隔字符串 Ref: dustin/go\-humanize e.g. Comma\(834142\) \-\> 834,142
 
 ## func Commaf
 
@@ -604,7 +607,7 @@ Comma 整数转千分位分隔字符串 Ref: dustin/go\-humanize e\.g\. Comma\(8
 func Commaf(v float64) string
 ```
 
-Commaf 浮点数转千分位分隔字符串 Ref: dustin/go\-humanize e\.g\. Commaf\(834142\.32\) \-\> 834\,142\.32
+Commaf 浮点数转千分位分隔字符串 Ref: dustin/go\-humanize e.g. Commaf\(834142.32\) \-\> 834,142.32
 
 ## func Commai
 
@@ -628,7 +631,7 @@ Commau 整数转千分位分隔字符串 Ref: dustin/go\-humanize
 func CopyB2S(b []byte) string
 ```
 
-CopyB2S Immutable\, \[\]byte to string string\(b\)
+CopyB2S Immutable, \[\]byte to string string\(b\)
 
 ## func CopyBytes
 
@@ -636,7 +639,7 @@ CopyB2S Immutable\, \[\]byte to string string\(b\)
 func CopyBytes(b []byte) []byte
 ```
 
-CopyBytes Immutable\, \[\]byte to \[\]byte
+CopyBytes Immutable, \[\]byte to \[\]byte
 
 ## func CopyS2B
 
@@ -644,7 +647,7 @@ CopyBytes Immutable\, \[\]byte to \[\]byte
 func CopyS2B(s string) []byte
 ```
 
-CopyS2B Immutable\, string to \[\]byte \[\]byte\(s\)
+CopyS2B Immutable, string to \[\]byte \[\]byte\(s\)
 
 ## func CopyString
 
@@ -652,7 +655,7 @@ CopyS2B Immutable\, string to \[\]byte \[\]byte\(s\)
 func CopyString(s string) string
 ```
 
-CopyString Immutable\, string to string e\.g\. fiberParam := utils\.CopyString\(c\.Params\("test"\)\) e\.g\. utils\.CopyString\(s\[500:1000\]\) // 可以让 s 被 GC 回收 strings\.Clone\(s\) // go1\.18
+CopyString Immutable, string to string e.g. fiberParam := utils.CopyString\(c.Params\("test"\)\) e.g. utils.CopyString\(s\[500:1000\]\) // 可以让 s 被 GC 回收 strings.Clone\(s\) // go1.18
 
 ## func CutBytes
 
@@ -660,9 +663,9 @@ CopyString Immutable\, string to string e\.g\. fiberParam := utils\.CopyString\(
 func CutBytes(s, sep []byte) (before, after []byte, found bool)
 ```
 
-CutBytes slices s around the first instance of sep\, returning the text before and after sep\. The found result reports whether sep appears in s\. If sep does not appear in s\, cut returns s\, nil\, false\.
+CutBytes slices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, nil, false.
 
-Cut returns slices of the original slice s\, not copies\. Ref: go1\.18
+Cut returns slices of the original slice s, not copies. Ref: go1.18
 
 ## func CutString
 
@@ -670,7 +673,7 @@ Cut returns slices of the original slice s\, not copies\. Ref: go1\.18
 func CutString(s, sep string) (before, after string, found bool)
 ```
 
-CutString slices s around the first instance of sep\, returning the text before and after sep\. The found result reports whether sep appears in s\. If sep does not appear in s\, cut returns s\, ""\, false\. Ref: go1\.18
+CutString slices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, "", false. Ref: go1.18
 
 ## func Djb33
 
@@ -678,7 +681,7 @@ CutString slices s around the first instance of sep\, returning the text before 
 func Djb33(s string) uint32
 ```
 
-Djb33 比 FnvHash32 更快的获取字符串哈希值 djb2 with better shuffling\. 5x faster than FNV with the hash\.Hash overhead\. Ref: patrickmn/go\-cache
+Djb33 比 FnvHash32 更快的获取字符串哈希值 djb2 with better shuffling. 5x faster than FNV with the hash.Hash overhead. Ref: patrickmn/go\-cache
 
 ## func EncodeUUID
 
@@ -806,7 +809,7 @@ EqualFoldBytes tests ascii slices for equality case\-insensitively Ref: fiber
 func Executable(evalSymlinks ...bool) string
 ```
 
-Executable 当前执行程序绝对路径 true 时返回解析符号链接后的绝对路径 Excutable: E:\\tmp\\linkapp\.exe Excutable\(true\): D:\\Fufu\\Test\\abc\\app\.exe
+Executable 当前执行程序绝对路径 true 时返回解析符号链接后的绝对路径 Excutable: E:\\tmp\\linkapp.exe Excutable\(true\): D:\\Fufu\\Test\\abc\\app.exe
 
 ## func ExecutableDir
 
@@ -822,7 +825,7 @@ ExecutableDir 当前执行程序所在目录 true 时返回解析符号链接后
 func FastIntn(n int) int
 ```
 
-FastIntn this is similar to rand\.Intn\, but faster\. A non\-negative pseudo\-random number in the half\-open interval \[0\,n\)\. Return 0 if n \<= 0\.
+FastIntn this is similar to rand.Intn, but faster. A non\-negative pseudo\-random number in the half\-open interval \[0,n\). Return 0 if n \<= 0.
 
 ## func FastRand
 
@@ -838,7 +841,7 @@ FastRand 随机数
 func FastRandBytes(n int) []byte
 ```
 
-FastRandBytes random bytes\, but faster\.
+FastRandBytes random bytes, but faster.
 
 ## func FastRandn
 
@@ -846,7 +849,7 @@ FastRandBytes random bytes\, but faster\.
 func FastRandn(n uint32) uint32
 ```
 
-FastRandn 等同于 FastRand\(\) % n\, 但更快 See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+FastRandn 等同于 FastRand\(\) % n, 但更快 See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
 
 ## func FnvHash
 
@@ -870,7 +873,7 @@ FnvHash32 获取字符串的哈希值
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 ```
 
-GetBytes 先转为字符串再转为 \[\]byte\, 可选指定默认值
+GetBytes 先转为字符串再转为 \[\]byte, 可选指定默认值
 
 ## func GetIPPort
 
@@ -886,7 +889,7 @@ GetIPPort 返回 IP 和 端口
 func GetInt(v interface{}, defaultInt ...int) int
 ```
 
-GetInt 获取 int 结果\, 可选指定默认值\(若给定了默认值\,则返回正整数或 0\)
+GetInt 获取 int 结果, 可选指定默认值\(若给定了默认值,则返回正整数或 0\)
 
 ## func GetMonthDays
 
@@ -902,7 +905,7 @@ GetMonthDays 当月天数
 func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
 ```
 
-GetNotInternalIPv4 如果是内网 IPv4 则使用默认值\, flag 为真是必定返回一个 IP
+GetNotInternalIPv4 如果是内网 IPv4 则使用默认值, flag 为真是必定返回一个 IP
 
 ## func GetNotInternalIPv4String
 
@@ -918,7 +921,7 @@ GetNotInternalIPv4String 如果是内网 IPv4 则使用默认值
 func GetSafeB2S(b []byte, defaultVal ...string) string
 ```
 
-GetSafeB2S Immutable\, 可选指定默认值
+GetSafeB2S Immutable, 可选指定默认值
 
 ## func GetSafeBytes
 
@@ -926,7 +929,7 @@ GetSafeB2S Immutable\, 可选指定默认值
 func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 ```
 
-GetSafeBytes Immutable\, 可选指定默认值
+GetSafeBytes Immutable, 可选指定默认值
 
 ## func GetSafeS2B
 
@@ -934,7 +937,7 @@ GetSafeBytes Immutable\, 可选指定默认值
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 ```
 
-GetSafeS2B Immutable\, 可选指定默认值
+GetSafeS2B Immutable, 可选指定默认值
 
 ## func GetSafeString
 
@@ -942,7 +945,7 @@ GetSafeS2B Immutable\, 可选指定默认值
 func GetSafeString(s string, defaultVal ...string) string
 ```
 
-GetSafeString Immutable\, 可选指定默认值
+GetSafeString Immutable, 可选指定默认值
 
 ## func GetString
 
@@ -950,7 +953,19 @@ GetSafeString Immutable\, 可选指定默认值
 func GetString(v interface{}, defaultVal ...string) string
 ```
 
-GetString 获取字符串结果\, 可选指定默认值
+GetString 获取字符串结果, 可选指定默认值
+
+## func Gzip
+
+```go
+func Gzip(data []byte) ([]byte, error)
+```
+
+## func GzipLevel
+
+```go
+func GzipLevel(data []byte, level int) (dst []byte, err error)
+```
 
 ## func Hash
 
@@ -964,7 +979,7 @@ func Hash(b []byte, h hash.Hash) []byte
 func HashBytes(b ...[]byte) string
 ```
 
-HashBytes 合并 Bytes\, 得到字符串哈希
+HashBytes 合并 Bytes, 得到字符串哈希
 
 ## func HashBytes32
 
@@ -984,7 +999,7 @@ func HashBytes64(b ...[]byte) uint64
 func HashString(s ...string) string
 ```
 
-HashString 合并一串文本\, 得到字符串哈希
+HashString 合并一串文本, 得到字符串哈希
 
 ## func HashString32
 
@@ -1004,7 +1019,7 @@ func HashString64(s ...string) uint64
 func HashUint32(u uint32) uint32
 ```
 
-HashUint32 returns the hash of u\. Ref: segmentio/fasthash
+HashUint32 returns the hash of u. Ref: segmentio/fasthash
 
 ## func HashUint64
 
@@ -1012,7 +1027,7 @@ HashUint32 returns the hash of u\. Ref: segmentio/fasthash
 func HashUint64(u uint64) uint64
 ```
 
-HashUint64 returns the hash of u\. Ref: segmentio/fasthash
+HashUint64 returns the hash of u. Ref: segmentio/fasthash
 
 ## func Hmac
 
@@ -1070,9 +1085,9 @@ HumanBaseBytes 数字的数量级表示
 func HumanBigBytes(s *big.Int) string
 ```
 
-HumanBigBytes produces a human readable representation of an SI size\.
+HumanBigBytes produces a human readable representation of an SI size.
 
-See also: ParseHumanBigBytes\.
+See also: ParseHumanBigBytes.
 
 HumanBigBytes\(82854982\) \-\> 83 MB
 
@@ -1082,9 +1097,9 @@ HumanBigBytes\(82854982\) \-\> 83 MB
 func HumanBigIBytes(s *big.Int) string
 ```
 
-HumanBigIBytes produces a human readable representation of an IEC size\.
+HumanBigIBytes produces a human readable representation of an IEC size.
 
-See also: ParseHumanBigBytes\.
+See also: ParseHumanBigBytes.
 
 HumanBigIBytes\(82854982\) \-\> 79 MiB
 
@@ -1094,7 +1109,7 @@ HumanBigIBytes\(82854982\) \-\> 79 MiB
 func HumanBigKbps(s *big.Int) string
 ```
 
-HumanBigKbps 1 Kbps = 1000 bit\, 传输速率\(bit per second\, 位每秒\) e\.g\. HumanBigKbps\(82854982\) \-\> 83 Mbps
+HumanBigKbps 1 Kbps = 1000 bit, 传输速率\(bit per second, 位每秒\) e.g. HumanBigKbps\(82854982\) \-\> 83 Mbps
 
 ## func HumanBytes
 
@@ -1102,7 +1117,7 @@ HumanBigKbps 1 Kbps = 1000 bit\, 传输速率\(bit per second\, 位每秒\) e\.g
 func HumanBytes(v uint64) string
 ```
 
-HumanBytes 1 KB = 1000 B e\.g\. HumanBytes\(82854982\) \-\> 83 MB
+HumanBytes 1 KB = 1000 B e.g. HumanBytes\(82854982\) \-\> 83 MB
 
 ## func HumanGBMB
 
@@ -1118,7 +1133,7 @@ HumanGBMB 转为 \*\* GB \*\* MB 1 GB = 1024 MB
 func HumanIBytes(v uint64) string
 ```
 
-HumanIBytes 1 KiB = 1024 B e\.g\. HumanIBytes\(82854982\) \-\> 79 MiB
+HumanIBytes 1 KiB = 1024 B e.g. HumanIBytes\(82854982\) \-\> 79 MiB
 
 ## func HumanIntBytes
 
@@ -1150,7 +1165,7 @@ HumanIntKbps 1 Kbps = 1000 bit
 func HumanKbps(v uint64) string
 ```
 
-HumanKbps 1 Kbps = 1000 bit\, 传输速率\(bit per second\, 位每秒\) e\.g\. HumanKbps\(82854982\) \-\> 83 Mbps
+HumanKbps 1 Kbps = 1000 bit, 传输速率\(bit per second, 位每秒\) e.g. HumanKbps\(82854982\) \-\> 83 Mbps
 
 ## func ID
 
@@ -1262,7 +1277,7 @@ IsIPv6 判断是否为合法 IPv6
 func IsInternalIPv4(ip net.IP) bool
 ```
 
-IsInternalIPv4 是否为内网 IPv4\, 包含 NAT 专用网段 RFC6598\, 比如华为云 ELB 的 100\.125\.0\.0/16
+IsInternalIPv4 是否为内网 IPv4, 包含 NAT 专用网段 RFC6598, 比如华为云 ELB 的 100.125.0.0/16
 
 ## func IsInternalIPv4String
 
@@ -1278,7 +1293,7 @@ IsInternalIPv4String 是否为内网 IPv4
 func IsNil(i interface{}) bool
 ```
 
-IsNil 判断对象\(pointer\, channel\, func\, interface\, map\, slice\)是否为 nil nil 是一个 Type 类型的变量\, Type 类型是基于 int 的类型 var 若变量本身是指针\, 占用 8 字节\, 指向类型内部结构体并置 0\, 仅定义了变量本身\, 此时为 nil 指针是非复合类型\, 赋值 nil 时\, 将 8 字节置 0\, 即没有指向任何值的指针 0x0 map\, channel: var 时仅定义了指针\, 需要 make 初始化内部结构后才能使用\, make 后非 nil var 若变量非指针\, 如 struct\, int\, 非 nil slice: type slice struct\, 占用 24 字节\, 1 指针\(array unsafe\.Pointer\) 2 个整型字段\(len\, cap int\) var 定义后即可使用\, 置 0 并分配\, 此时 array 指针为 0 即没有实际数据时为 nil interface: type iface struct\(interface 类型\)\, type eface struct\(空接口\)\, 占用 16 字节 判断 data 指针为 0 即为 nil\, 初始化后即非 0
+IsNil 判断对象\(pointer, channel, func, interface, map, slice\)是否为 nil nil 是一个 Type 类型的变量, Type 类型是基于 int 的类型 var 若变量本身是指针, 占用 8 字节, 指向类型内部结构体并置 0, 仅定义了变量本身, 此时为 nil 指针是非复合类型, 赋值 nil 时, 将 8 字节置 0, 即没有指向任何值的指针 0x0 map, channel: var 时仅定义了指针, 需要 make 初始化内部结构后才能使用, make 后非 nil var 若变量非指针, 如 struct, int, 非 nil slice: type slice struct, 占用 24 字节, 1 指针\(array unsafe.Pointer\) 2 个整型字段\(len, cap int\) var 定义后即可使用, 置 0 并分配, 此时 array 指针为 0 即没有实际数据时为 nil interface: type iface struct\(interface 类型\), type eface struct\(空接口\), 占用 16 字节 判断 data 指针为 0 即为 nil, 初始化后即非 0
 
 ## func IsPrivateIP
 
@@ -1286,7 +1301,7 @@ IsNil 判断对象\(pointer\, channel\, func\, interface\, map\, slice\)是否�
 func IsPrivateIP(ip net.IP) bool
 ```
 
-IsPrivateIP reports whether ip is a private address\, according to RFC 1918 \(IPv4 addresses\) and RFC 4193 \(IPv6 addresses\)\. Ref: go1\.17\+ func \(ip IP\) IsPrivate\(\) bool
+IsPrivateIP reports whether ip is a private address, according to RFC 1918 \(IPv4 addresses\) and RFC 4193 \(IPv6 addresses\). Ref: go1.17\+ func \(ip IP\) IsPrivate\(\) bool
 
 ## func IsPrivateIPString
 
@@ -1486,7 +1501,7 @@ func MustMD5Sum(filename string) string
 func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 ```
 
-MustParseHumanBigBytes 解析数字的数量级表示 e\.g\. MustParseHumanBigBytes\("42 MB"\) \-\> 42000000 e\.g\. MustParseHumanBigBytes\("\-42 mib"\, 123\) \-\> 123
+MustParseHumanBigBytes 解析数字的数量级表示 e.g. MustParseHumanBigBytes\("42 MB"\) \-\> 42000000 e.g. MustParseHumanBigBytes\("\-42 mib", 123\) \-\> 123
 
 ## func MustParseHumanBytes
 
@@ -1494,7 +1509,7 @@ MustParseHumanBigBytes 解析数字的数量级表示 e\.g\. MustParseHumanBigBy
 func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 ```
 
-MustParseHumanBytes 解析数字的数量级表示 e\.g\. MustParseHumanBytes\("42 MB"\) \-\> 42000000 e\.g\. MustParseHumanBytes\("\-42 mib"\, 123\) \-\> 123
+MustParseHumanBytes 解析数字的数量级表示 e.g. MustParseHumanBytes\("42 MB"\) \-\> 42000000 e.g. MustParseHumanBytes\("\-42 mib", 123\) \-\> 123
 
 ## func MustString
 
@@ -1518,7 +1533,7 @@ NanoTime 返回当前时间 \(以纳秒为单位\)
 func NewRand(seed ...int64) *rand.Rand
 ```
 
-NewRand goroutine\-safe rand\.Rand\, optional seed value
+NewRand goroutine\-safe rand.Rand, optional seed value
 
 ## func Pad
 
@@ -1526,7 +1541,7 @@ NewRand goroutine\-safe rand\.Rand\, optional seed value
 func Pad(s, pad string, n int) string
 ```
 
-Pad 填充字符串到指定长度\, 同 Python3: 'str'\.center\(\)
+Pad 填充字符串到指定长度, 同 Python3: 'str'.center\(\)
 
 ## func PadBytes
 
@@ -1542,11 +1557,11 @@ PadBytes 填充到指定长度
 func ParseHumanBigBytes(s string) (*big.Int, error)
 ```
 
-ParseHumanBigBytes parses a string representation of bytes into the number of bytes it represents\.
+ParseHumanBigBytes parses a string representation of bytes into the number of bytes it represents.
 
-See also: HumanBigBytes\, HumanBigIBytes\.
+See also: HumanBigBytes, HumanBigIBytes.
 
-ParseHumanBigBytes\("42 MB"\) \-\> 42000000\, nil ParseHumanBigBytes\("42 mib"\) \-\> 44040192\, nil
+ParseHumanBigBytes\("42 MB"\) \-\> 42000000, nil ParseHumanBigBytes\("42 mib"\) \-\> 44040192, nil
 
 ## func ParseHumanBytes
 
@@ -1554,7 +1569,7 @@ ParseHumanBigBytes\("42 MB"\) \-\> 42000000\, nil ParseHumanBigBytes\("42 mib"\)
 func ParseHumanBytes(s string) (uint64, error)
 ```
 
-ParseHumanBytes 解析数字的数量级表示 e\.g\. ParseHumanBytes\("42 MB"\) \-\> 42000000\, nil e\.g\. ParseHumanBytes\("42 mib"\) \-\> 44040192\, nil
+ParseHumanBytes 解析数字的数量级表示 e.g. ParseHumanBytes\("42 MB"\) \-\> 42000000, nil e.g. ParseHumanBytes\("42 mib"\) \-\> 44040192, nil
 
 ## func ParseIPv4
 
@@ -1602,7 +1617,7 @@ RandInt \(\>=\)min \- \(\<\)max
 func RandString(n int) string
 ```
 
-RandString a random string\, which may contain uppercase letters\, lowercase letters and numbers\. Ref: stackoverflow\.icza
+RandString a random string, which may contain uppercase letters, lowercase letters and numbers. Ref: stackoverflow.icza
 
 ## func RandUint32
 
@@ -1626,7 +1641,7 @@ RemoveString 删除字符串元素
 func ReplaceHost(a, b string) string
 ```
 
-ReplaceHost 返回 b 的主机名 \+ a 的端口 e\.g\. ReplaceHost\("a\.cn:77"\, "b\.cn:88"\) == "b\.cn:77"
+ReplaceHost 返回 b 的主机名 \+ a 的端口 e.g. ReplaceHost\("a.cn:77", "b.cn:88"\) == "b.cn:77"
 
 ## func RightPad
 
@@ -1650,7 +1665,7 @@ RightPadBytes 从右填充到指定长度
 func Round(v float64, precision int) float64
 ```
 
-Round 四舍五入\, ROUND\_HALF\_UP 模式实现 返回将 val 根据指定精度 precision \(十进制小数点后数字的数目\) 进行四舍五入的结果 precision 也可以是负数或零 Ref: thinkeridea/go\-extend
+Round 四舍五入, ROUND\_HALF\_UP 模式实现 返回将 val 根据指定精度 precision \(十进制小数点后数字的数目\) 进行四舍五入的结果 precision 也可以是负数或零 Ref: thinkeridea/go\-extend
 
 ## func RunPath
 
@@ -1666,7 +1681,7 @@ RunPath 实际程序所在目录 RunPath: E:\\tmp
 func S2B(s string) []byte
 ```
 
-S2B StringToBytes converts string to byte slice without a memory allocation\. Ref: gin
+S2B StringToBytes converts string to byte slice without a memory allocation. Ref: gin
 
 ## func SearchInt
 
@@ -1674,7 +1689,7 @@ S2B StringToBytes converts string to byte slice without a memory allocation\. Re
 func SearchInt(slice []int, n int) int
 ```
 
-SearchInt 搜索整数位置\(左\, 第一个\)
+SearchInt 搜索整数位置\(左, 第一个\)
 
 ## func SearchString
 
@@ -1682,7 +1697,7 @@ SearchInt 搜索整数位置\(左\, 第一个\)
 func SearchString(ss []string, s string) int
 ```
 
-SearchString 搜索字符串位置\(左\, 第一个\)
+SearchString 搜索字符串位置\(左, 第一个\)
 
 ## func Sha1
 
@@ -1726,7 +1741,7 @@ func Sha512Hex(s string) string
 func SplitHostPort(hostPort string) (host, port string)
 ```
 
-SplitHostPort separates host and port\. If the port is not valid\, it returns the entire input as host\, and it doesn't check the validity of the host\. Unlike net\.SplitHostPort\, but per RFC 3986\, it requires ports to be numeric\.
+SplitHostPort separates host and port. If the port is not valid, it returns the entire input as host, and it doesn't check the validity of the host. Unlike net.SplitHostPort, but per RFC 3986, it requires ports to be numeric.
 
 ## func Str2Bytes
 
@@ -1734,7 +1749,7 @@ SplitHostPort separates host and port\. If the port is not valid\, it returns th
 func Str2Bytes(s string) (b []byte)
 ```
 
-Str2Bytes Ref: csdn\.weixin\_43705457
+Str2Bytes Ref: csdn.weixin\_43705457
 
 ## func StrToBytes
 
@@ -1756,7 +1771,7 @@ func String2Bytes(s string) (bs []byte)
 func StringToBytes(s string) (b []byte)
 ```
 
-StringToBytes Ref: csdn\.u010853261
+StringToBytes Ref: csdn.u010853261
 
 ## func Sum32
 
@@ -1836,7 +1851,7 @@ ToUpperBytes converts ascii slice to upper\-case Ref: fiber
 func Trim(s string, cutset byte) string
 ```
 
-Trim is the equivalent of strings\.Trim Ref: fiber
+Trim is the equivalent of strings.Trim Ref: fiber
 
 ## func TrimBytes
 
@@ -1844,7 +1859,7 @@ Trim is the equivalent of strings\.Trim Ref: fiber
 func TrimBytes(b []byte, cutset byte) []byte
 ```
 
-TrimBytes is the equivalent of bytes\.Trim Ref: fiber
+TrimBytes is the equivalent of bytes.Trim Ref: fiber
 
 ## func TrimLeft
 
@@ -1852,7 +1867,7 @@ TrimBytes is the equivalent of bytes\.Trim Ref: fiber
 func TrimLeft(s string, cutset byte) string
 ```
 
-TrimLeft is the equivalent of strings\.TrimLeft Ref: fiber
+TrimLeft is the equivalent of strings.TrimLeft Ref: fiber
 
 ## func TrimLeftBytes
 
@@ -1860,7 +1875,7 @@ TrimLeft is the equivalent of strings\.TrimLeft Ref: fiber
 func TrimLeftBytes(b []byte, cutset byte) []byte
 ```
 
-TrimLeftBytes is the equivalent of bytes\.TrimLeft Ref: fiber
+TrimLeftBytes is the equivalent of bytes.TrimLeft Ref: fiber
 
 ## func TrimRight
 
@@ -1868,7 +1883,7 @@ TrimLeftBytes is the equivalent of bytes\.TrimLeft Ref: fiber
 func TrimRight(s string, cutset byte) string
 ```
 
-TrimRight is the equivalent of strings\.TrimRight Ref: fiber
+TrimRight is the equivalent of strings.TrimRight Ref: fiber
 
 ## func TrimRightBytes
 
@@ -1876,7 +1891,7 @@ TrimRight is the equivalent of strings\.TrimRight Ref: fiber
 func TrimRightBytes(b []byte, cutset byte) []byte
 ```
 
-TrimRightBytes is the equivalent of bytes\.TrimRight Ref: fiber
+TrimRightBytes is the equivalent of bytes.TrimRight Ref: fiber
 
 ## func UUID
 
@@ -1884,7 +1899,7 @@ TrimRightBytes is the equivalent of bytes\.TrimRight Ref: fiber
 func UUID() []byte
 ```
 
-UUID 随机 UUID\, RFC4122\, Version 4
+UUID 随机 UUID, RFC4122, Version 4
 
 ## func UUIDShort
 
@@ -1892,7 +1907,7 @@ UUID 随机 UUID\, RFC4122\, Version 4
 func UUIDShort() string
 ```
 
-UUIDShort 随机 UUID\, 短版\, base58
+UUIDShort 随机 UUID, 短版, base58
 
 ## func UUIDSimple
 
@@ -1900,7 +1915,7 @@ UUIDShort 随机 UUID\, 短版\, base58
 func UUIDSimple() string
 ```
 
-UUIDSimple 随机 UUID\, 无短横线
+UUIDSimple 随机 UUID, 无短横线
 
 ## func UUIDString
 
@@ -1909,6 +1924,12 @@ func UUIDString() string
 ```
 
 UUIDString 随机 UUID
+
+## func Ungzip
+
+```go
+func Ungzip(data []byte) (src []byte, err error)
+```
 
 ## func Unzip
 
@@ -1927,10 +1948,10 @@ ValidOptionalPort reports whether port is either an empty string or matches /^:\
 ## func WaitNextMinute
 
 ```go
-func WaitNextMinute()
+func WaitNextMinute(t ...time.Time)
 ```
 
-WaitNextMinute 下一分钟\, 对齐时间\, 0 秒
+WaitNextMinute 下一分钟, 对齐时间, 0 秒
 
 ## func Zip
 
@@ -1946,7 +1967,7 @@ func ZipLevel(data []byte, level int) (dst []byte, err error)
 
 ## type Bool
 
-A Bool is an atomic boolean value\. The zero value is false\.
+A Bool is an atomic boolean value. The zero value is false.
 
 ```go
 type Bool struct {
@@ -1984,7 +2005,7 @@ func (x *Bool) CAS(old, new bool) bool
 func (x *Bool) CompareAndSwap(old, new bool) (swapped bool)
 ```
 
-CompareAndSwap executes the compare\-and\-swap operation for the boolean value x\.
+CompareAndSwap executes the compare\-and\-swap operation for the boolean value x.
 
 ### func \(\*Bool\) Load
 
@@ -1992,7 +2013,7 @@ CompareAndSwap executes the compare\-and\-swap operation for the boolean value x
 func (x *Bool) Load() bool
 ```
 
-Load atomically loads and returns the value stored in x\.
+Load atomically loads and returns the value stored in x.
 
 ### func \(\*Bool\) MarshalJSON
 
@@ -2006,7 +2027,7 @@ func (x *Bool) MarshalJSON() ([]byte, error)
 func (x *Bool) Store(val bool)
 ```
 
-Store atomically stores val into x\.
+Store atomically stores val into x.
 
 ### func \(\*Bool\) StoreFalse
 
@@ -2032,7 +2053,7 @@ func (x *Bool) String() string
 func (x *Bool) Swap(new bool) (old bool)
 ```
 
-Swap atomically stores new into x and returns the previous value\.
+Swap atomically stores new into x and returns the previous value.
 
 ### func \(\*Bool\) Toggle
 
@@ -2050,9 +2071,9 @@ func (x *Bool) UnmarshalJSON(b []byte) error
 
 ## type NoCmp
 
-NoCmp is an uncomparable struct\. Embed this inside another struct to make it uncomparable\.
+NoCmp is an uncomparable struct. Embed this inside another struct to make it uncomparable.
 
-type Foo struct \{ NoCmp // \.\.\. \}
+type Foo struct \{ NoCmp // ... \}
 
 This DOES NOT:
 
@@ -2064,11 +2085,11 @@ type NoCmp [0]func()
 
 ## type NoCopy
 
-NoCopy may be added to structs which must not be copied after the first use\.
+NoCopy may be added to structs which must not be copied after the first use.
 
-See https://github.com/golang/go/issues/8005#issuecomment-190753527 for details\. and also: https://stackoverflow.com/questions/52494458/nocopy-minimal-example
+See https://github.com/golang/go/issues/8005#issuecomment-190753527 for details. and also: https://stackoverflow.com/questions/52494458/nocopy-minimal-example
 
-Note that it must not be embedded\, due to the Lock and Unlock methods\.
+Note that it must not be embedded, due to the Lock and Unlock methods.
 
 ```go
 type NoCopy struct{} //nolint:unused
@@ -2080,7 +2101,7 @@ type NoCopy struct{} //nolint:unused
 func (*NoCopy) Lock()
 ```
 
-Lock is a no\-op used by \-copylocks checker from \`go vet\`\.
+Lock is a no\-op used by \-copylocks checker from \`go vet\`.
 
 ### func \(\*NoCopy\) Unlock
 

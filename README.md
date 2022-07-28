@@ -232,7 +232,7 @@ func UUIDString() string
 func Ungzip(data []byte) (src []byte, err error)
 func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
-func WaitNextMinute()
+func WaitNextMinute(t ...time.Time)
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
 type Bool struct{ ... }
