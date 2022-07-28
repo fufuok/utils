@@ -5,8 +5,11 @@ import (
 )
 
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
-func WaitNextMinute() {
+func WaitNextMinute(t ...time.Time) {
 	now := time.Now()
+	if len(t) > 0 {
+		now = t[0]
+	}
 	<-time.After(BeginOfMinute(now.Add(time.Minute)).Sub(now))
 }
 
