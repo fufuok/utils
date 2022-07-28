@@ -160,16 +160,12 @@ func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, lo
 	return m.doStore(key, value, true)
 }
 
-// LoadAndStore returns the existing value for the key if present.
-// Otherwise, returns the given value.
-// The loaded result is true if the value was loaded, false if stored.
-// Store the given value.
+// LoadAndStore returns the existing value for the key if present,
+// while setting the new value for the key.
+// Otherwise, it stores and returns the given value.
+// The loaded result is true if the value was loaded, false otherwise.
 func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool) {
-	actual, loaded = m.LoadOrStore(key, value)
-	if loaded {
-		m.Store(key, value)
-	}
-	return
+	return m.doStore(key, value, false)
 }
 
 func (m *Map) doStore(key string, value interface{}, loadIfExists bool) (interface{}, bool) {
@@ -217,8 +213,8 @@ func (m *Map) doStore(key string, value interface{}, loadIfExists bool) (interfa
 				continue
 			}
 			if key == derefKey(b.keys[i]) {
+				vp := b.values[i]
 				if loadIfExists {
-					vp := b.values[i]
 					b.mu.Unlock()
 					return derefValue(vp), true
 				}
@@ -228,7 +224,7 @@ func (m *Map) doStore(key string, value interface{}, loadIfExists bool) (interfa
 				// of multiple Store calls using the same value.
 				atomic.StorePointer(&b.values[i], unsafe.Pointer(&value))
 				b.mu.Unlock()
-				return value, false
+				return derefValue(vp), true
 			}
 		}
 		if emptykp != nil {
