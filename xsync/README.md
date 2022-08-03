@@ -1,8 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*github.com/puzpuzpuz/xsync v20220407*
-
-**注意: 仅 64 位构建通过了官方认证, 若要使用 32 位, 注意自己测试**
+*forked from puzpuzpuz/xsync v20220802*
 
 ## 改动:
 
@@ -17,8 +15,6 @@
 Concurrent data structures for Go. An extension for the standard `sync` package.
 
 This library should be considered experimental, so make sure to run tests and benchmarks for your use cases before adding it to your application.
-
-*Important note*. Only 64-bit builds are officially supported at the moment. If you need to run a 32-bit build, make sure to test it and open a GH issue in case of any problems.
 
 ### Benchmarks
 
