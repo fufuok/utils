@@ -422,6 +422,63 @@ func LocalIPv4s() (ips []string)
 ```
 </details>
 
+### 编码解码 base62
+
+见: [base62](base62)
+
+或: https://github.com/fufuok/basex
+
+<details>
+  <summary>DOC</summary>
+
+```go
+package base62 // import "github.com/fufuok/utils/base62"
+
+var StdEncoding = NewEncoding(encodeStd)
+func AppendInt(dst []byte, num int64) []byte
+func AppendUint(dst []byte, num uint64) []byte
+func Decode(src []byte) ([]byte, error)
+func DecodeString(src string) ([]byte, error)
+func DecodeToBuf(dst []byte, src []byte) ([]byte, error)
+func Encode(src []byte) []byte
+func EncodeToBuf(dst []byte, src []byte) []byte
+func EncodeToString(src []byte) string
+func FormatInt(num int64) []byte
+func FormatUint(num uint64) []byte
+func ParseInt(src []byte) (int64, error)
+func ParseUint(src []byte) (uint64, error)
+type CorruptInputError int64
+type Encoding struct{ ... }
+    func NewEncoding(encoder string) *Encoding
+```
+</details>
+
+<details>
+  <summary>Usage</summary>
+
+```go
+// Basic usage.
+Encode(src []byte) []byte
+EncodeToString(src []byte) string
+Decode(src []byte) ([]byte, error)
+DecodeString(src string) ([]byte, error)
+FormatInt(num int64) []byte
+FormatUint(num uint64) []byte
+ParseInt(src []byte) (int64, error)
+ParseUint(src []byte) (uint64, error)
+
+// Providing a dst buffer, you may reuse buffers to reduce memory allocation.
+EncodeToBuf(dst []byte, src []byte) []byte
+DecodeToBuf(dst []byte, src []byte) ([]byte, error)
+AppendInt(dst []byte, num int64) []byte
+AppendUint(dst []byte, num uint64) []byte
+
+// Or you may use a custom encoding alphabet.
+enc := NewEncoding("...my-62-byte-string-alphabet...")
+enc.XXX()
+```
+</details>
+
 ### 编码解码 base58
 
 见: [base58](base58)
@@ -817,6 +874,7 @@ import (
 
 	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
+	"github.com/fufuok/utils/base62"
 	"github.com/fufuok/utils/jsongen"
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
@@ -873,6 +931,12 @@ func main() {
 	fmt.Println(x) // Mw4hP7t9bnMMczU2AvyorU
 	x = xid.NewString()
 	fmt.Println(x) // c294bsnn5ek0ub0200fg
+
+	x = base62.EncodeToString([]byte("Test data"))
+	fmt.Println(x) // hRXYkBCdzVGV
+	bs, _ := base62.DecodeString("hRXYkBCdzVGV")
+	x = utils.B2S(bs)
+	fmt.Println(x) // Test data
 
 	x = base58.Encode([]byte("Test data"))
 	fmt.Println(x) // 25JnwSn7XKfNQ
