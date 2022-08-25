@@ -155,8 +155,8 @@ func BenchmarkInIPNetString(b *testing.B) {
 
 func TestGetIPPort(t *testing.T) {
 	var (
-		IP       = "::1"
-		PORT int = 111
+		IP   = "::1"
+		PORT = 111
 	)
 	addr := net.TCPAddr{
 		IP:   net.ParseIP(IP),
