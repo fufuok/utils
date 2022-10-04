@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
-
-	"github.com/fufuok/utils"
 )
 
 func TestBufferPool(t *testing.T) {
@@ -51,12 +49,12 @@ func TestBufferPool(t *testing.T) {
 			t.Fatalf("Unexpected result: true, Expecting false")
 		}
 		buf = Get()
-		buf.WriteString(utils.RandString(64))
+		buf.Write(make([]byte, 64))
 		if !Release(buf) {
 			t.Fatalf("Unexpected result: true, Expecting false")
 		}
 		buf = Get()
-		buf.WriteString(utils.RandString(65))
+		buf.Write(make([]byte, 65))
 		if Release(buf) {
 			t.Fatal("Unexpected result: false, Expecting true")
 		}

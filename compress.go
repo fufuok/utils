@@ -1,11 +1,13 @@
 package utils
 
 import (
-	"bytes"
 	"compress/gzip"
 	"compress/zlib"
 	"io/ioutil"
 	"sync"
+
+	"github.com/fufuok/utils/pools/bufferpool"
+	"github.com/fufuok/utils/pools/readerpool"
 )
 
 var (
@@ -16,11 +18,6 @@ var (
 			return new(gzip.Reader)
 		},
 	}
-	bufferPool = sync.Pool{
-		New: func() interface{} {
-			return bytes.NewBuffer(nil)
-		},
-	}
 )
 
 func Gzip(data []byte) ([]byte, error) {
@@ -28,13 +25,12 @@ func Gzip(data []byte) ([]byte, error) {
 }
 
 func GzipLevel(data []byte, level int) (dst []byte, err error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
+	buf := bufferpool.Get()
 	idx := getWriterPoolIndex(level)
 	zw := gzipWritePool[idx].Get().(*gzip.Writer)
 	zw.Reset(buf)
 	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
+		bufferpool.Put(buf)
 		gzipWritePool[idx].Put(zw)
 	}()
 
@@ -51,28 +47,19 @@ func GzipLevel(data []byte, level int) (dst []byte, err error) {
 		return
 	}
 
-	dst = buf.Bytes()
+	dst = CopyBytes(buf.Bytes())
 	return
 }
 
 func Ungzip(data []byte) (src []byte, err error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
-	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
-	}()
-
-	_, err = buf.Write(data)
-	if err != nil {
-		return
-	}
-
+	rData := readerpool.New(data)
 	zr := gzipReaderPool.Get().(*gzip.Reader)
 	defer func() {
+		readerpool.Release(rData)
 		gzipReaderPool.Put(zr)
 	}()
 
-	err = zr.Reset(buf)
+	err = zr.Reset(rData)
 	if err != nil {
 		return
 	}
@@ -92,13 +79,12 @@ func Zip(data []byte) ([]byte, error) {
 }
 
 func ZipLevel(data []byte, level int) (dst []byte, err error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
+	buf := bufferpool.Get()
 	idx := getWriterPoolIndex(level)
 	zw := zlibWritePool[idx].Get().(*zlib.Writer)
 	zw.Reset(buf)
 	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
+		bufferpool.Put(buf)
 		zlibWritePool[idx].Put(zw)
 	}()
 
@@ -115,22 +101,14 @@ func ZipLevel(data []byte, level int) (dst []byte, err error) {
 		return
 	}
 
-	dst = buf.Bytes()
+	dst = CopyBytes(buf.Bytes())
 	return
 }
 
 func Unzip(data []byte) (src []byte, err error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
-	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
-	}()
-
-	_, err = buf.Write(data)
-	if err != nil {
-		return
-	}
-	zr, err := zlib.NewReader(buf)
+	rData := readerpool.New(data)
+	defer readerpool.Release(rData)
+	zr, err := zlib.NewReader(rData)
 	if err != nil {
 		return nil, err
 	}
