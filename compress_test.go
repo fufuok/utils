@@ -69,7 +69,7 @@ func TestCompressGzip(t *testing.T) {
 	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
 }
 
-func BenchmarkCompressZip(b *testing.B) {
+func BenchmarkCompress_Zip(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -78,7 +78,7 @@ func BenchmarkCompressZip(b *testing.B) {
 	}
 }
 
-func BenchmarkCompressZipBestCompression(b *testing.B) {
+func BenchmarkCompress_Zip_BestCompression(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -87,7 +87,28 @@ func BenchmarkCompressZipBestCompression(b *testing.B) {
 	}
 }
 
-func BenchmarkCompressUnzip(b *testing.B) {
+func BenchmarkCompress_Unzip(b *testing.B) {
+	data := bytes.Repeat(testBytes, 100)
+	dec, _ := Zip(data)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = Unzip(dec)
+	}
+}
+
+func BenchmarkCompress_Zip_Parallel(b *testing.B) {
+	data := bytes.Repeat(testBytes, 100)
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_, _ = Zip(data)
+		}
+	})
+}
+
+func BenchmarkCompress_Unzip_Parallel(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	dec, _ := Zip(data)
 	b.ReportAllocs()
@@ -99,7 +120,7 @@ func BenchmarkCompressUnzip(b *testing.B) {
 	})
 }
 
-func BenchmarkCompressZipUnzip(b *testing.B) {
+func BenchmarkCompress_ZipUnzip_Parallel(b *testing.B) {
 	bs := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -117,7 +138,7 @@ func BenchmarkCompressZipUnzip(b *testing.B) {
 	})
 }
 
-func BenchmarkCompressGzip(b *testing.B) {
+func BenchmarkCompress_Gzip(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -126,7 +147,7 @@ func BenchmarkCompressGzip(b *testing.B) {
 	}
 }
 
-func BenchmarkCompressGzipBestCompression(b *testing.B) {
+func BenchmarkCompress_Gzip_BestCompression(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -135,7 +156,28 @@ func BenchmarkCompressGzipBestCompression(b *testing.B) {
 	}
 }
 
-func BenchmarkCompressUngzip(b *testing.B) {
+func BenchmarkCompress_Ungzip(b *testing.B) {
+	data := bytes.Repeat(testBytes, 100)
+	dec, _ := Gzip(data)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = Ungzip(dec)
+	}
+}
+
+func BenchmarkCompress_Gzip_Parallel(b *testing.B) {
+	data := bytes.Repeat(testBytes, 100)
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_, _ = Gzip(data)
+		}
+	})
+}
+
+func BenchmarkCompress_Ungzip_Parallel(b *testing.B) {
 	data := bytes.Repeat(testBytes, 100)
 	dec, _ := Gzip(data)
 	b.ReportAllocs()
@@ -147,7 +189,7 @@ func BenchmarkCompressUngzip(b *testing.B) {
 	})
 }
 
-func BenchmarkCompressGzipUngzip(b *testing.B) {
+func BenchmarkCompress_GzipUngzip(b *testing.B) {
 	bs := bytes.Repeat(testBytes, 100)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -170,19 +212,27 @@ func BenchmarkCompressGzipUngzip(b *testing.B) {
 // goarch: amd64
 // pkg: github.com/fufuok/utils
 // cpu: Intel(R) Xeon(R) Gold 6151 CPU @ 3.00GHz
-// BenchmarkCompressZip-4                            133740              8911 ns/op               0 B/op          0 allocs/op
-// BenchmarkCompressZip-4                            134272              8975 ns/op               8 B/op          0 allocs/op
-// BenchmarkCompressZipBestCompression-4              35164             33991 ns/op               0 B/op          0 allocs/op
-// BenchmarkCompressZipBestCompression-4              35014             33796 ns/op              23 B/op          0 allocs/op
-// BenchmarkCompressUnzip-4                          148243              8101 ns/op           52604 B/op         12 allocs/op
-// BenchmarkCompressUnzip-4                          151365              8247 ns/op           52604 B/op         12 allocs/op
-// BenchmarkCompressZipUnzip-4                        88929             13559 ns/op           61415 B/op         12 allocs/op
-// BenchmarkCompressZipUnzip-4                        84874             13709 ns/op           61295 B/op         12 allocs/op
-// BenchmarkCompressGzip-4                           151142              7880 ns/op               0 B/op          0 allocs/op
-// BenchmarkCompressGzip-4                           151334              7877 ns/op               7 B/op          0 allocs/op
-// BenchmarkCompressGzipBestCompression-4             36963             32587 ns/op               0 B/op          0 allocs/op
-// BenchmarkCompressGzipBestCompression-4             37431             32252 ns/op              21 B/op          0 allocs/op
-// BenchmarkCompressUngzip-4                         365432              3492 ns/op           12043 B/op          6 allocs/op
-// BenchmarkCompressUngzip-4                         363258              3426 ns/op           12043 B/op          6 allocs/op
-// BenchmarkCompressGzipUngzip-4                     186872              6677 ns/op           14367 B/op          6 allocs/op
-// BenchmarkCompressGzipUngzip-4                     183661              6602 ns/op           13901 B/op          6 allocs/op
+// BenchmarkCompress_Zip-4                           137169              8728 ns/op              96 B/op          1 allocs/op
+// BenchmarkCompress_Zip-4                           136028              8758 ns/op             104 B/op          1 allocs/op
+// BenchmarkCompress_Zip_BestCompression-4            31932             35699 ns/op             105 B/op          1 allocs/op
+// BenchmarkCompress_Zip_BestCompression-4            31845             35171 ns/op              80 B/op          1 allocs/op
+// BenchmarkCompress_Unzip-4                          84660             14576 ns/op           52604 B/op         12 allocs/op
+// BenchmarkCompress_Unzip-4                          80158             15248 ns/op           52604 B/op         12 allocs/op
+// BenchmarkCompress_Zip_Parallel-4                  504540              2354 ns/op             100 B/op          1 allocs/op
+// BenchmarkCompress_Zip_Parallel-4                  490543              2429 ns/op              96 B/op          1 allocs/op
+// BenchmarkCompress_Unzip_Parallel-4                102718             11924 ns/op           52606 B/op         12 allocs/op
+// BenchmarkCompress_Unzip_Parallel-4                 82278             14111 ns/op           52604 B/op         12 allocs/op
+// BenchmarkCompress_ZipUnzip_Parallel-4              85200             15105 ns/op           61635 B/op         13 allocs/op
+// BenchmarkCompress_ZipUnzip_Parallel-4              85476             14631 ns/op           61918 B/op         13 allocs/op
+// BenchmarkCompress_Gzip-4                          155563              7617 ns/op             119 B/op          1 allocs/op
+// BenchmarkCompress_Gzip-4                          155354              7601 ns/op             112 B/op          1 allocs/op
+// BenchmarkCompress_Gzip_BestCompression-4           32972             34728 ns/op             120 B/op          1 allocs/op
+// BenchmarkCompress_Gzip_BestCompression-4           33518             33674 ns/op              96 B/op          1 allocs/op
+// BenchmarkCompress_Ungzip-4                        173500              7082 ns/op           12037 B/op          6 allocs/op
+// BenchmarkCompress_Ungzip-4                        162517              7543 ns/op           12038 B/op          6 allocs/op
+// BenchmarkCompress_Gzip_Parallel-4                 584652              2074 ns/op             114 B/op          1 allocs/op
+// BenchmarkCompress_Gzip_Parallel-4                 507086              2096 ns/op             114 B/op          1 allocs/op
+// BenchmarkCompress_Ungzip_Parallel-4               318189              3876 ns/op           12042 B/op          6 allocs/op
+// BenchmarkCompress_Ungzip_Parallel-4               313982              4064 ns/op           12043 B/op          6 allocs/op
+// BenchmarkCompress_GzipUngzip-4                    177799              6656 ns/op           14329 B/op          7 allocs/op
+// BenchmarkCompress_GzipUngzip-4                    192142              6538 ns/op           14509 B/op          7 allocs/op
