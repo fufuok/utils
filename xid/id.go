@@ -133,7 +133,7 @@ func readMachineID() []byte {
 func randInt() uint32 {
 	b := make([]byte, 3)
 	if _, err := rand.Reader.Read(b); err != nil {
-		panic(fmt.Errorf("xid: cannot generate random number: %v;", err))
+		panic(fmt.Errorf("xid: cannot generate random number: %v", err))
 	}
 	return uint32(b[0])<<16 | uint32(b[1])<<8 | uint32(b[2])
 }
@@ -239,6 +239,7 @@ func (id *ID) UnmarshalText(text []byte) error {
 		}
 	}
 	if !decode(id, text) {
+		*id = nilID
 		return ErrInvalidID
 	}
 	return nil
@@ -264,6 +265,10 @@ func decode(id *ID, src []byte) bool {
 	_ = id[11]
 
 	id[11] = dec[src[17]]<<6 | dec[src[18]]<<1 | dec[src[19]]>>4
+	// check the last byte
+	if encoding[(id[11]<<4)&0x1F] != src[19] {
+		return false
+	}
 	id[10] = dec[src[16]]<<3 | dec[src[17]]>>2
 	id[9] = dec[src[14]]<<5 | dec[src[15]]
 	id[8] = dec[src[12]]<<7 | dec[src[13]]<<2 | dec[src[14]]>>3
@@ -275,16 +280,7 @@ func decode(id *ID, src []byte) bool {
 	id[2] = dec[src[3]]<<4 | dec[src[4]]>>1
 	id[1] = dec[src[1]]<<6 | dec[src[2]]<<1 | dec[src[3]]>>4
 	id[0] = dec[src[0]]<<3 | dec[src[1]]>>2
-
-	// Validate that there are no discarer bits (padding) in src that would
-	// cause the string-encoded id not to equal src.
-	var check [4]byte
-
-	check[3] = encoding[(id[11]<<4)&0x1F]
-	check[2] = encoding[(id[11]>>1)&0x1F]
-	check[1] = encoding[(id[11]>>6)&0x1F|(id[10]<<2)&0x1F]
-	check[0] = encoding[id[10]>>3]
-	return bytes.Equal([]byte(src[16:20]), check[:])
+	return true
 }
 
 // Time returns the timestamp part of the id.

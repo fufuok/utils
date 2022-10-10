@@ -63,6 +63,23 @@ func TestIDPartsExtraction(t *testing.T) {
 	}
 }
 
+func TestPadding(t *testing.T) {
+	for i := 0; i < 100000; i++ {
+		wantBytes := make([]byte, 20)
+		wantBytes[19] = encoding[0]                       // 0
+		copy(wantBytes[0:13], []byte("c6e52g2mrqcjl")[:]) // c6e52g2mrqcjl44hf170
+		for j := 0; j < 6; j++ {
+			wantBytes[13+j] = encoding[rand.Intn(32)]
+		}
+		want := string(wantBytes)
+		id, _ := FromString(want)
+		got := id.String()
+		if got != want {
+			t.Errorf("String() = %v, want %v %v", got, want, wantBytes)
+		}
+	}
+}
+
 func TestNew(t *testing.T) {
 	// Generate 10 ids
 	ids := make([]ID, 10)
@@ -130,6 +147,10 @@ func TestFromStringInvalid(t *testing.T) {
 	_, err := FromString("invalid")
 	if err != ErrInvalidID {
 		t.Errorf("FromString(invalid) err=%v, want %v", err, ErrInvalidID)
+	}
+	id, err := FromString("c6e52g2mrqcjl44hf179")
+	if id != nilID {
+		t.Errorf("FromString() =%v, want %v", id, nilID)
 	}
 }
 
