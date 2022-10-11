@@ -89,5 +89,3 @@ func BenchmarkBufferNew(b *testing.B) {
 // cpu: Intel(R) Xeon(R) Gold 6151 CPU @ 3.00GHz
 // BenchmarkBufferPool-4           162477872                9.719 ns/op           0 B/op          0 allocs/op
 // BenchmarkBufferNew-4             76593980                15.72 ns/op          64 B/op          1 allocs/op
-// PASS
-// ok      github.com/fufuok/utils/pools/bufferpool        4.410s

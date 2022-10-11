@@ -2,12 +2,18 @@ package bufferpool
 
 import (
 	"bytes"
+	"math"
 	"sync"
 )
 
+const (
+	smallBufferSize   = 64
+	largeBufferSize   = math.MaxInt32
+	defaultBufferSize = 8 << 20 // 8 MiB
+)
+
 var (
-	// 8 MiB
-	defaultMaxSize = 8 << 20
+	defaultMaxSize = defaultBufferSize
 
 	bufferPool = sync.Pool{
 		New: func() interface{} {
@@ -17,11 +23,8 @@ var (
 )
 
 // SetMaxSize 设置回收时允许的最大字节
-// smallBufferSize is an initial allocation minimal capacity.
-// const smallBufferSize = 64
 func SetMaxSize(size int) bool {
-	// 64 <= size <= 2GiB
-	if size >= 64 && size <= 2<<30 {
+	if size >= smallBufferSize && size <= largeBufferSize {
 		defaultMaxSize = size
 		return true
 	}
