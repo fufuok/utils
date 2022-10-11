@@ -1,10 +1,20 @@
 ### 常用的池
 
-`[]byte` 字节切片池化见: [github.com/fufuok/bytespool](https://github.com/fufuok/bytespool)
-
-见: [pools](pools)
+`[]byte` 更多功能的字节切片池化见: [github.com/fufuok/bytespool](https://github.com/fufuok/bytespool)
 
 ```go
+package bytespool // import "github.com/fufuok/utils/pools/bytespool"
+
+func Append(buf []byte, elems ...byte) []byte
+func AppendString(buf []byte, elems string) []byte
+func Get(size int) []byte
+func Make(size int) []byte
+func New(size int) []byte
+func Put(buf []byte)
+func Release(buf []byte) bool
+func SetMaxSize(size int) bool
+type CapacityPools struct{ ... }
+
 package bufferpool // import "github.com/fufuok/utils/pools/bufferpool"
 
 func Get() *bytes.Buffer
