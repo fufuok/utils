@@ -253,19 +253,25 @@ type NoCopy struct{}
 - [slices](generic/slices) golang exp 的 slices
 - [maps](generic/maps) golang exp 的 maps
 - [avl](generic/avl): an AVL tree.
+- [bimap](generic/bimap): a bi-directional map; a map that allows lookups on both keys and values.
 - [btree](generic/btree): a B-tree.
-- [cache](generic/cache): a wrapper around `map[K]V` that uses a maximum size and evicts elements using LRU when full.
-- [hashmap](generic/hashmap): a hashmap with linear probing. The main feature is that the hashmap can be efficiently copied, using copy-on-write under the hood.
+- [cache](generic/cache): a wrapper around `map[K]V` that uses a maximum size and evicts
+  elements using LRU when full.
+- [hashmap](generic/hashmap): a hashmap with linear probing. The main feature is that
+  the hashmap can be efficiently copied, using copy-on-write under the hood.
 - [hashset](generic/hashset): a hashset that uses the hashmap as the underlying storage.
-- [mapset](generic/mapset): a set that uses Go's built-in map as the underlying storage.
-- [multimap](generic/multimap): an associative container that permits multiple entries with the same key.
+- [heap](generic/heap): a binary heap.
 - [interval](generic/interval): an interval tree, implemented as an augmented AVL tree.
 - [list](generic/list): a doubly-linked list.
-- [rope](generic/rope): a generic rope, which is similar to an array but supports efficient insertion and deletion from anywhere in the array. Ropes are typically used for arrays of bytes, but this rope is generic.
+- [mapset](generic/mapset): a set that uses Go's built-in map as the underlying storage.
+- [multimap](generic/multimap): an associative container that permits multiple entries with the same key.
+- [queue](generic/queue): a First In First Out (FIFO) queue.
+- [rope](generic/rope): a generic rope, which is similar to an array but supports efficient
+  insertion and deletion from anywhere in the array. Ropes are typically used
+  for arrays of bytes, but this rope is generic.
+- [set](generic/set): a Set.
 - [stack](generic/stack): a LIFO stack.
 - [trie](generic/trie): a ternary search trie.
-- [queue](generic/queue): a First In First Out (FIFO) queue.
-- [heap](generic/heap): a binary heap.
 
 ### 加解密小工具
 

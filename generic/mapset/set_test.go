@@ -42,7 +42,7 @@ func TestCrossCheck(t *testing.T) {
 		}
 
 		checkeq(set, func(k int) bool {
-			_, ok := stdm[int(k)]
+			_, ok := stdm[k]
 			return ok
 		}, t)
 	}
