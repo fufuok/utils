@@ -195,3 +195,10 @@ func TestIsIP(t *testing.T) {
 	AssertEqual(t, false, IsIPv4("123"))
 	AssertEqual(t, false, IsIPv6("123"))
 }
+
+func TestIPv42LongLittle(t *testing.T) {
+	ipv4 := "1.2.3.4"
+	longLittle := IPv4String2LongLittle(ipv4)
+	AssertEqual(t, "4.3.2.1", Long2IPv4String(longLittle))
+	AssertEqual(t, ipv4, LongLittle2IPv4String(longLittle))
+}

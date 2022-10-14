@@ -58,7 +58,6 @@ func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP {
 
 		return defaultIP
 	}
-
 	return ip
 }
 
@@ -76,7 +75,6 @@ func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string {
 
 		return defaultIP
 	}
-
 	return ip
 }
 
@@ -86,8 +84,16 @@ func IPv42Long(ip net.IP) int {
 	if ip4 == nil {
 		return -1
 	}
-
 	return int(ip4[0])<<24 | int(ip4[1])<<16 | int(ip4[2])<<8 | int(ip4[3])
+}
+
+// IPv42LongLittle IPv4 转小端数值
+func IPv42LongLittle(ip net.IP) int {
+	ip4 := ip.To4()
+	if ip4 == nil {
+		return -1
+	}
+	return int(ip4[3])<<24 | int(ip4[2])<<16 | int(ip4[1])<<8 | int(ip4[0])
 }
 
 // Long2IPv4 数值转 IPv4
@@ -101,7 +107,20 @@ func Long2IPv4(n int) net.IP {
 	ip4[1] = byte(n >> 16)
 	ip4[2] = byte(n >> 8)
 	ip4[3] = byte(n)
+	return ip4
+}
 
+// LongLittle2IPv4 小端数值转 IPv4
+func LongLittle2IPv4(n int) net.IP {
+	if n > 4294967295 || n < 0 {
+		return nil
+	}
+
+	ip4 := make(net.IP, net.IPv4len)
+	ip4[3] = byte(n >> 24)
+	ip4[2] = byte(n >> 16)
+	ip4[1] = byte(n >> 8)
+	ip4[0] = byte(n)
 	return ip4
 }
 
@@ -110,14 +129,27 @@ func IPv4String2Long(ip string) int {
 	return IPv42Long(net.ParseIP(ip))
 }
 
+// IPv4String2LongLittle IPv4 字符串转数值(小端)
+func IPv4String2LongLittle(ip string) int {
+	return IPv42LongLittle(net.ParseIP(ip))
+}
+
 // Long2IPv4String 数值转 IPv4 字符串
 func Long2IPv4String(n int) string {
 	ip4 := Long2IPv4(n)
 	if ip4 == nil {
 		return ""
 	}
+	return ip4.String()
+}
 
-	return Long2IPv4(n).String()
+// LongLittle2IPv4String 数值(小端)转 IPv4 字符串
+func LongLittle2IPv4String(n int) string {
+	ip4 := LongLittle2IPv4(n)
+	if ip4 == nil {
+		return ""
+	}
+	return ip4.String()
 }
 
 // InIPNetString 是否包含在指定 IPNet 列表中
@@ -136,7 +168,6 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
@@ -152,7 +183,6 @@ func GetIPPort(addr net.Addr) (ip net.IP, port int, err error) {
 	default:
 		err = errors.New("not TCPAddr or UDPAddr")
 	}
-
 	return
 }
 
