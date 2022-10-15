@@ -119,7 +119,9 @@ import "github.com/fufuok/utils"
 - [func HumanKbps(v uint64) string](<#func-humankbps>)
 - [func ID() uint64](<#func-id>)
 - [func IPv42Long(ip net.IP) int](<#func-ipv42long>)
+- [func IPv42LongLittle(ip net.IP) int](<#func-ipv42longlittle>)
 - [func IPv4String2Long(ip string) int](<#func-ipv4string2long>)
+- [func IPv4String2LongLittle(ip string) int](<#func-ipv4string2longlittle>)
 - [func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnet>)
 - [func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnetstring>)
 - [func InInts(slice []int, n int) bool](<#func-inints>)
@@ -141,6 +143,8 @@ import "github.com/fufuok/utils"
 - [func Logn(n, b float64) float64](<#func-logn>)
 - [func Long2IPv4(n int) net.IP](<#func-long2ipv4>)
 - [func Long2IPv4String(n int) string](<#func-long2ipv4string>)
+- [func LongLittle2IPv4(n int) net.IP](<#func-longlittle2ipv4>)
+- [func LongLittle2IPv4String(n int) string](<#func-longlittle2ipv4string>)
 - [func MD5(b []byte) []byte](<#func-md5>)
 - [func MD5BytesHex(bs []byte) string](<#func-md5byteshex>)
 - [func MD5Hex(s string) string](<#func-md5hex>)
@@ -175,6 +179,7 @@ import "github.com/fufuok/utils"
 - [func RandInt(min, max int) int](<#func-randint>)
 - [func RandString(n int) string](<#func-randstring>)
 - [func RandUint32(min, max uint32) uint32](<#func-randuint32>)
+- [func Recover(cb ...RecoveryCallback)](<#func-recover>)
 - [func RemoveString(ss []string, s string) ([]string, bool)](<#func-removestring>)
 - [func ReplaceHost(a, b string) string](<#func-replacehost>)
 - [func RightPad(s, pad string, n int) string](<#func-rightpad>)
@@ -182,6 +187,7 @@ import "github.com/fufuok/utils"
 - [func Round(v float64, precision int) float64](<#func-round>)
 - [func RunPath() string](<#func-runpath>)
 - [func S2B(s string) []byte](<#func-s2b>)
+- [func SafeGo(fn func(), cb ...RecoveryCallback)](<#func-safego>)
 - [func SearchInt(slice []int, n int) int](<#func-searchint>)
 - [func SearchString(ss []string, s string) int](<#func-searchstring>)
 - [func Sha1(b []byte) []byte](<#func-sha1>)
@@ -218,6 +224,7 @@ import "github.com/fufuok/utils"
 - [func Unzip(data []byte) (src []byte, err error)](<#func-unzip>)
 - [func ValidOptionalPort(port string) bool](<#func-validoptionalport>)
 - [func WaitNextMinute(t ...time.Time)](<#func-waitnextminute>)
+- [func WaitSignal(sig ...os.Signal) os.Signal](<#func-waitsignal>)
 - [func Zip(data []byte) ([]byte, error)](<#func-zip>)
 - [func ZipLevel(data []byte, level int) (dst []byte, err error)](<#func-ziplevel>)
 - [type Bool](<#type-bool>)
@@ -239,6 +246,7 @@ import "github.com/fufuok/utils"
 - [type NoCopy](<#type-nocopy>)
   - [func (*NoCopy) Lock()](<#func-nocopy-lock>)
   - [func (*NoCopy) Unlock()](<#func-nocopy-unlock>)
+- [type RecoveryCallback](<#type-recoverycallback>)
 
 
 ## Constants
@@ -328,6 +336,12 @@ var (
     // Rand goroutine-safe, use Rand.xxx instead of rand.xxx
     Rand = NewRand()
     Seed = FastRand()
+)
+```
+
+```go
+var (
+    StackTraceBufferSize = 4 << 10
 )
 ```
 
@@ -1183,6 +1197,14 @@ func IPv42Long(ip net.IP) int
 
 IPv42Long IPv4 转数值
 
+## func IPv42LongLittle
+
+```go
+func IPv42LongLittle(ip net.IP) int
+```
+
+IPv42LongLittle IPv4 转小端数值
+
 ## func IPv4String2Long
 
 ```go
@@ -1190,6 +1212,14 @@ func IPv4String2Long(ip string) int
 ```
 
 IPv4String2Long IPv4 字符串转数值
+
+## func IPv4String2LongLittle
+
+```go
+func IPv4String2LongLittle(ip string) int
+```
+
+IPv4String2LongLittle IPv4 字符串转数值\(小端\)
 
 ## func InIPNet
 
@@ -1356,6 +1386,22 @@ func Long2IPv4String(n int) string
 ```
 
 Long2IPv4String 数值转 IPv4 字符串
+
+## func LongLittle2IPv4
+
+```go
+func LongLittle2IPv4(n int) net.IP
+```
+
+LongLittle2IPv4 小端数值转 IPv4
+
+## func LongLittle2IPv4String
+
+```go
+func LongLittle2IPv4String(n int) string
+```
+
+LongLittle2IPv4String 数值\(小端\)转 IPv4 字符串
 
 ## func MD5
 
@@ -1627,6 +1673,14 @@ func RandUint32(min, max uint32) uint32
 
 RandUint32 \(\>=\)min \- \(\<\)max
 
+## func Recover
+
+```go
+func Recover(cb ...RecoveryCallback)
+```
+
+Recover 从 panic 中恢复并记录堆栈信息
+
 ## func RemoveString
 
 ```go
@@ -1682,6 +1736,14 @@ func S2B(s string) []byte
 ```
 
 S2B StringToBytes converts string to byte slice without a memory allocation. Ref: gin
+
+## func SafeGo
+
+```go
+func SafeGo(fn func(), cb ...RecoveryCallback)
+```
+
+SafeGo 带 Recover 的 goroutine 运行
 
 ## func SearchInt
 
@@ -1953,6 +2015,14 @@ func WaitNextMinute(t ...time.Time)
 
 WaitNextMinute 下一分钟, 对齐时间, 0 秒
 
+## func WaitSignal
+
+```go
+func WaitSignal(sig ...os.Signal) os.Signal
+```
+
+WaitSignal 等待系统信号
+
 ## func Zip
 
 ```go
@@ -2107,6 +2177,14 @@ Lock is a no\-op used by \-copylocks checker from \`go vet\`.
 
 ```go
 func (*NoCopy) Unlock()
+```
+
+## type RecoveryCallback
+
+RecoveryCallback 自定义恢复信息回调
+
+```go
+type RecoveryCallback func(err interface{}, trace []byte)
 ```
 
 

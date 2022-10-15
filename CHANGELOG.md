@@ -1,5 +1,21 @@
 # Go-Utils
 
+## v0.7.16
+
+**2022-10-10**
+
+- 新增 `pools/bytespool`, 精简版 [bytespool](https://github.com/fufuok/bytespool)
+- 新增 `SafeGo` `Recover` `WaitSignal` 安全 goroutine 助手, IPv4 小端转换函数
+- 增加 `generic/bimap` `generic/set` 包
+- 同步 `xid` 包修改: 修正 nilID, 优化检查逻辑
+- 同步 `generic/slices` 修改
+
+## v0.7.15
+
+**2022-10-08**
+
+- 优化 `zlib` `gzip`
+
 ## v0.7.14
 
 **2022-08-25**

@@ -25,6 +25,7 @@ const IByte = 1 ...
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
+var StackTraceBufferSize = 4 << 10
 func AddBytes32(h uint32, b []byte) uint32
 func AddBytes64(h uint64, b []byte) uint64
 func AddString(s ...string) string
@@ -134,7 +135,9 @@ func HumanIntKbps(v int) string
 func HumanKbps(v uint64) string
 func ID() uint64
 func IPv42Long(ip net.IP) int
+func IPv42LongLittle(ip net.IP) int
 func IPv4String2Long(ip string) int
+func IPv4String2LongLittle(ip string) int
 func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
@@ -156,6 +159,8 @@ func LeftPadBytes(b, pad []byte, n int) []byte
 func Logn(n, b float64) float64
 func Long2IPv4(n int) net.IP
 func Long2IPv4String(n int) string
+func LongLittle2IPv4(n int) net.IP
+func LongLittle2IPv4String(n int) string
 func MD5(b []byte) []byte
 func MD5BytesHex(bs []byte) string
 func MD5Hex(s string) string
@@ -190,6 +195,7 @@ func RandHex(nHalf int) string
 func RandInt(min, max int) int
 func RandString(n int) string
 func RandUint32(min, max uint32) uint32
+func Recover(cb ...RecoveryCallback)
 func RemoveString(ss []string, s string) ([]string, bool)
 func ReplaceHost(a, b string) string
 func RightPad(s, pad string, n int) string
@@ -197,6 +203,7 @@ func RightPadBytes(b, pad []byte, n int) []byte
 func Round(v float64, precision int) float64
 func RunPath() string
 func S2B(s string) []byte
+func SafeGo(fn func(), cb ...RecoveryCallback)
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
 func Sha1(b []byte) []byte
@@ -233,6 +240,7 @@ func Ungzip(data []byte) (src []byte, err error)
 func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
 func WaitNextMinute(t ...time.Time)
+func WaitSignal(sig ...os.Signal) os.Signal
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
 type Bool struct{ ... }
@@ -241,6 +249,7 @@ type Bool struct{ ... }
     func NewTrue() *Bool
 type NoCmp [0]func()
 type NoCopy struct{}
+type RecoveryCallback func(err interface{}, trace []byte)
 ```
 </details>
 
@@ -893,11 +902,11 @@ import (
 	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/base58"
 	"github.com/fufuok/utils/base62"
-	"github.com/fufuok/utils/jsongen"
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xcrypto"
 	"github.com/fufuok/utils/xid"
+	"github.com/fufuok/utils/xjson/jsongen"
 	"github.com/fufuok/utils/xsync"
 )
 
@@ -1066,12 +1075,23 @@ func main() {
 	bus.WaitAndRelease()
 	fmt.Println("is running:", bus.IsRunning()) // is running: false
 
-	// 原子操作的安全布尔值
+	// 原子操作的安全布尔值 (与 go1.19 一致)
 	var atomicBool utils.Bool
 	atomicBool.StoreTrue()
 	fmt.Println("is running:", atomicBool.Load()) // is running: true
 	atomicBool.Toggle()
 	fmt.Println("is running:", atomicBool.String()) // is running: false
+
+	woo := func() {
+		panic("woo...")
+	}
+	utils.SafeGo(woo)
+	utils.SafeGo(woo, func(err interface{}, trace []byte) {
+		fmt.Printf("SafeGo, ERR: %v, Traceback: \n%s\n", err, trace)
+	})
+	fmt.Println("Ctrl+c to exit")
+	utils.WaitSignal()
+	fmt.Println("Exited.")
 }
 ```
 
