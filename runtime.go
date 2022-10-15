@@ -1,11 +1,20 @@
 package utils
 
 import (
+	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"unsafe"
 )
+
+var (
+	StackTraceBufferSize = 4 << 10
+)
+
+// RecoveryCallback 自定义恢复信息回调
+type RecoveryCallback func(err interface{}, trace []byte)
 
 // CallPath 运行时路径, 编译目录
 // 假如: mklink E:\tmp\linkapp.exe D:\Fufu\Test\abc\app.exe
@@ -54,20 +63,53 @@ func ExecutableDir(evalSymlinks ...bool) string {
 	return filepath.Dir(Executable(evalSymlinks...))
 }
 
+// Recover 从 panic 中恢复并记录堆栈信息
+func Recover(cb ...RecoveryCallback) {
+	if err := recover(); err != nil {
+		buf := make([]byte, StackTraceBufferSize)
+		buf = buf[:runtime.Stack(buf, false)]
+		if len(cb) > 0 && cb[0] != nil {
+			cb[0](err, buf)
+			return
+		}
+		log.Printf("Recovery: %v\n--- Traceback:\n%v\n", err, B2S(buf))
+	}
+}
+
+// SafeGo 带 Recover 的 goroutine 运行
+func SafeGo(fn func(), cb ...RecoveryCallback) {
+	defer Recover(cb...)
+	fn()
+}
+
+// WaitSignal 等待系统信号
+func WaitSignal(sig ...os.Signal) os.Signal {
+	if len(sig) == 0 {
+		sig = []os.Signal{os.Interrupt}
+	}
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, sig...)
+	return <-ch
+}
+
 // FastRand 随机数
+//
 //go:linkname FastRand runtime.fastrand
 func FastRand() uint32
 
 // FastRandn 等同于 FastRand() % n, 但更快
 // See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+//
 //go:linkname FastRandn runtime.fastrandn
 func FastRandn(n uint32) uint32
 
 // CPUTicks CPU 时钟周期, 更高精度 (云服务器做伪随机数种子时慎用)
+//
 //go:linkname CPUTicks runtime.cputicks
 func CPUTicks() int64
 
 // NanoTime 返回当前时间 (以纳秒为单位)
+//
 //go:linkname NanoTime runtime.nanotime
 func NanoTime() int64
 
