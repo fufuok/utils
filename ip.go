@@ -2,8 +2,13 @@ package utils
 
 import (
 	"errors"
+	"math"
 	"net"
 	"strings"
+)
+
+var (
+	ErrInvalidHostPort = errors.New("invalid Host or Port")
 )
 
 // IsPrivateIP reports whether ip is a private address, according to
@@ -215,4 +220,24 @@ func ParseIPv6(ip string) net.IP {
 		return net.ParseIP(ip)
 	}
 	return nil
+}
+
+// ParseIP 解析 IP 并返回是否为 IPv6
+func ParseIP(s string) (net.IP, bool) {
+	ip := net.ParseIP(s)
+	if ip == nil {
+		return nil, false
+	}
+	return ip, strings.Contains(s, ":")
+}
+
+// ParseHostPort 解析 IP 和端口
+func ParseHostPort(s string) (net.IP, uint16, bool, error) {
+	h, p := SplitHostPort(s)
+	ip, isIPv6 := ParseIP(h)
+	port := MustInt(p)
+	if ip == nil || port > math.MaxUint16 {
+		return nil, 0, false, ErrInvalidHostPort
+	}
+	return ip, uint16(port), isIPv6, nil
 }

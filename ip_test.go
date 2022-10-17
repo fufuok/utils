@@ -191,9 +191,16 @@ func TestIsIP(t *testing.T) {
 		AssertEqual(t, v.v4, IsIPv4(v.ip), v.ip)
 		AssertEqual(t, !v.v4, IsIPv6(v.ip), v.ip)
 		AssertEqual(t, true, IsIP(v.ip), v.ip)
+
+		ip, isIPv6 := ParseIP(v.ip)
+		AssertEqual(t, true, ip != nil)
+		AssertEqual(t, !v.v4, isIPv6)
 	}
 	AssertEqual(t, false, IsIPv4("123"))
 	AssertEqual(t, false, IsIPv6("123"))
+	ip, isIPv6 := ParseIP("123")
+	AssertEqual(t, false, ip != nil)
+	AssertEqual(t, false, isIPv6)
 }
 
 func TestIPv42LongLittle(t *testing.T) {
@@ -201,4 +208,30 @@ func TestIPv42LongLittle(t *testing.T) {
 	longLittle := IPv4String2LongLittle(ipv4)
 	AssertEqual(t, "4.3.2.1", Long2IPv4String(longLittle))
 	AssertEqual(t, ipv4, LongLittle2IPv4String(longLittle))
+}
+
+func TestParseHostPort(t *testing.T) {
+	tests := []struct {
+		s    string
+		ip   string
+		port uint16
+		v6   bool
+	}{
+		{"0.0.0.0:80", "0.0.0.0", 80, false},
+		{"255.255.255.255:0", "255.255.255.255", 0, false},
+		{"[::1]:22", "::1", 22, true},
+		{"[::ffff:0.0.0.0]", "0.0.0.0", 0, true},
+		{"[2001:4860:4860::8888]:777", "2001:4860:4860::8888", 777, true},
+	}
+	for _, v := range tests {
+		host, port, isv6, err := ParseHostPort(v.s)
+		AssertEqual(t, true, host != nil)
+		AssertEqual(t, v.ip, host.String())
+		AssertEqual(t, v.port, port)
+		AssertEqual(t, v.v6, isv6)
+		AssertEqual(t, nil, err)
+	}
+	host, _, _, err := ParseHostPort("0:1")
+	AssertEqual(t, false, host != nil)
+	AssertEqual(t, false, err == nil)
 }
