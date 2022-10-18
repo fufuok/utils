@@ -170,8 +170,10 @@ import "github.com/fufuok/utils"
 - [func NewRand(seed ...int64) *rand.Rand](<#func-newrand>)
 - [func Pad(s, pad string, n int) string](<#func-pad>)
 - [func PadBytes(s, pad []byte, n int) []byte](<#func-padbytes>)
+- [func ParseHostPort(s string) (net.IP, uint16, bool, error)](<#func-parsehostport>)
 - [func ParseHumanBigBytes(s string) (*big.Int, error)](<#func-parsehumanbigbytes>)
 - [func ParseHumanBytes(s string) (uint64, error)](<#func-parsehumanbytes>)
+- [func ParseIP(s string) (net.IP, bool)](<#func-parseip>)
 - [func ParseIPv4(ip string) net.IP](<#func-parseipv4>)
 - [func ParseIPv6(ip string) net.IP](<#func-parseipv6>)
 - [func RandBytes(n int) []byte](<#func-randbytes>)
@@ -336,6 +338,12 @@ var (
     // Rand goroutine-safe, use Rand.xxx instead of rand.xxx
     Rand = NewRand()
     Seed = FastRand()
+)
+```
+
+```go
+var (
+    ErrInvalidHostPort = errors.New("invalid Host or Port")
 )
 ```
 
@@ -1597,6 +1605,14 @@ func PadBytes(s, pad []byte, n int) []byte
 
 PadBytes 填充到指定长度
 
+## func ParseHostPort
+
+```go
+func ParseHostPort(s string) (net.IP, uint16, bool, error)
+```
+
+ParseHostPort 解析 IP 和端口
+
 ## func ParseHumanBigBytes
 
 ```go
@@ -1616,6 +1632,14 @@ func ParseHumanBytes(s string) (uint64, error)
 ```
 
 ParseHumanBytes 解析数字的数量级表示 e.g. ParseHumanBytes\("42 MB"\) \-\> 42000000, nil e.g. ParseHumanBytes\("42 mib"\) \-\> 44040192, nil
+
+## func ParseIP
+
+```go
+func ParseIP(s string) (net.IP, bool)
+```
+
+ParseIP 解析 IP 并返回是否为 IPv6
 
 ## func ParseIPv4
 

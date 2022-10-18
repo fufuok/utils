@@ -25,6 +25,7 @@ const IByte = 1 ...
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
+var ErrInvalidHostPort = errors.New("invalid Host or Port")
 var StackTraceBufferSize = 4 << 10
 func AddBytes32(h uint32, b []byte) uint32
 func AddBytes64(h uint64, b []byte) uint64
@@ -186,8 +187,10 @@ func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
 func Pad(s, pad string, n int) string
 func PadBytes(s, pad []byte, n int) []byte
+func ParseHostPort(s string) (net.IP, uint16, bool, error)
 func ParseHumanBigBytes(s string) (*big.Int, error)
 func ParseHumanBytes(s string) (uint64, error)
+func ParseIP(s string) (net.IP, bool)
 func ParseIPv4(ip string) net.IP
 func ParseIPv6(ip string) net.IP
 func RandBytes(n int) []byte
