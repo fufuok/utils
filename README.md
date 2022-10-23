@@ -585,6 +585,10 @@ type Counter struct { ... }
     func (c *Counter) Reset()
     func (c *Counter) Value() int64
 
+type IntegerConstraint interface {
+        ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
 type MPMCQueue struct { ... }
     func NewMPMCQueue(capacity int) *MPMCQueue
     func (q *MPMCQueue) Dequeue() interface{}
@@ -598,19 +602,25 @@ type Map struct { ... }
     func (m *Map) Load(key string) (value interface{}, ok bool)
     func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
     func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
+    func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual interface{}, loaded bool)
     func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
     func (m *Map) Range(f func(key string, value interface{}) bool)
+    func (m *Map) Size() int
     func (m *Map) Store(key string, value interface{})
 
-type MapOf[V any] struct { ... }
-    func NewMapOf[V any]() *MapOf[V]
-    func (m *MapOf[V]) Delete(key string)
-    func (m *MapOf[V]) Load(key string) (value V, ok bool)
-    func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool)
-    func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool)
-    func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool)
-    func (m *MapOf[V]) Range(f func(key string, value V) bool)
-    func (m *MapOf[V]) Store(key string, value V)
+type MapOf[K comparable, V any] struct { ... }
+    func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]
+    func NewMapOf[V any]() *MapOf[string, V]
+    func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V]
+    func (m *MapOf[K, V]) Delete(key K)
+    func (m *MapOf[K, V]) Load(key K) (value V, ok bool)
+    func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)
+    func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool)
+    func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
+    func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)
+    func (m *MapOf[K, V]) Range(f func(key K, value V) bool)
+    func (m *MapOf[K, V]) Size() int
+    func (m *MapOf[K, V]) Store(key K, value V)
 
 type RBMutex struct { ... }
     func (m *RBMutex) Lock()

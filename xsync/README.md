@@ -1,10 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20220802*
-
-## 改动:
-
-- 增加: `m.LoadAndStore()` 返回旧值, 存入新值 (旧值不存在时, `ok` 为 `false`, 返回的值是新值)
+*forked from puzpuzpuz/xsync v20221023*
 
 [![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync)
 [![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync)
@@ -18,7 +14,7 @@ This library should be considered experimental, so make sure to run tests and be
 
 ### Benchmarks
 
-Benchmark results may be found [here](BENCHMARKS.md).
+Benchmark results may be found [here](https://github.com/puzpuzpuz/xsync/blob/main/BENCHMARKS.md).
 
 ## Counter
 
@@ -48,7 +44,7 @@ s := m.Size()
 
 `Map` uses a modified version of Cache-Line Hash Table (CLHT) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache-line-sized buckets, so that on all modern CPUs update operations complete with minimal cache-line transfer. Also, `Get` operations involve no writes to shared memory, hence no mutexes or any other sort of locks. Due to this design, in all considered scenarios `Map` outperforms `sync.Map`.
+CLHT is built around idea to organize the hash table in cache-line-sized buckets, so that on all modern CPUs update operations complete with minimal cache-line transfer. Also, `Get`, `Range` and other read-only operations are obstruction-free and involve no writes to shared memory, hence no mutexes or any other sort of locks. Due to this design, in all considered scenarios `Map` outperforms `sync.Map`.
 
 One important difference with `sync.Map` is that only string keys are supported. That's because Golang standard library does not expose the built-in hash functions for `interface{}` values.
 
@@ -58,6 +54,21 @@ One important difference with `sync.Map` is that only string keys are supported.
 m := xsync.NewMapOf[string]()
 m.Store("foo", "bar")
 v, ok := m.Load("foo")
+```
+
+One important difference with `Map` is that `MapOf` supports arbitrary `comparable` key types:
+
+```go
+type point struct {
+	x int
+	y int
+}
+// provide a hash function when creating the MapOf
+m := NewTypedMapOf[point, int](func(p point) uint64 {
+	return uint64(31*p.x + p.y)
+})
+m.Store(point{42, 42}, 42)
+v, ok := m.Load(point{42, 42})
 ```
 
 ## MPMCQueue

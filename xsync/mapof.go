@@ -30,19 +30,46 @@ import (
 // One important difference with sync.Map is that only string keys
 // are supported. That's because Golang standard library does not
 // expose the built-in hash functions for interface{} values.
-type MapOf[V any] struct {
+type MapOf[K comparable, V any] struct {
 	totalGrowths int64
 	totalShrinks int64
 	resizing     int64          // resize in progress flag; updated atomically
 	resizeMu     sync.Mutex     // only used along with resizeCond
 	resizeCond   sync.Cond      // used to wake up resize waiters (concurrent modifications)
 	table        unsafe.Pointer // *mapTable
+	hasher       func(K) uint64
 }
 
-// NewMapOf creates a new MapOf instance.
-func NewMapOf[V any]() *MapOf[V] {
-	m := &MapOf[V]{}
+// NewMapOf creates a new MapOf instance with string keys
+func NewMapOf[V any]() *MapOf[string, V] {
+	return NewTypedMapOf[string, V](func(k string) uint64 {
+		return maphash64(k)
+	})
+}
+
+// IntegerConstraint represents any integer type.
+type IntegerConstraint interface {
+	// Recreation of golang.org/x/exp/constraints.Integer to avoid taking a dependency on an
+	// experimental package.
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+// NewIntegerMapOf creates a new MapOf instance with integer typed keys.
+func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V] {
+	return NewTypedMapOf[K, V](func(k K) uint64 {
+		return uint64(k)
+	})
+}
+
+// NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
+// Keys are hashed to uint64 using the hasher fn.
+func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V] {
+	m := &MapOf[K, V]{}
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
+	m.hasher = func(k K) uint64 {
+		// Apply finalizer to mitigate poor quality hash functions.
+		return mixhash64(hasher(k))
+	}
 	table := newMapTable(minMapTableLen)
 	atomic.StorePointer(&m.table, unsafe.Pointer(table))
 	return m
@@ -51,55 +78,88 @@ func NewMapOf[V any]() *MapOf[V] {
 // Load returns the value stored in the map for a key, or nil if no
 // value is present.
 // The ok result indicates whether value was found in the map.
-func (m *MapOf[V]) Load(key string) (value V, ok bool) {
-	hash := maphash64(key)
+func (m *MapOf[K, V]) Load(key K) (value V, ok bool) {
+	hash := m.hasher(key)
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
 	bidx := bucketIdx(table, hash)
 	b := &table.buckets[bidx]
-	topHashes := atomic.LoadUint64(&b.topHashes)
-	for i := 0; i < entriesPerMapBucket; i++ {
-		if !topHashMatch(hash, topHashes, i) {
-			continue
-		}
-	atomic_snapshot:
-		// Start atomic snapshot.
-		vp := atomic.LoadPointer(&b.values[i])
-		kp := atomic.LoadPointer(&b.keys[i])
-		if kp != nil && vp != nil {
-			if key == derefKey(kp) {
-				if uintptr(vp) == uintptr(atomic.LoadPointer(&b.values[i])) {
-					// Atomic snapshot succeeded.
-					return derefTypedValue[V](vp), true
+	for {
+		topHashes := atomic.LoadUint64(&b.topHashMutex)
+		for i := 0; i < entriesPerMapBucket; i++ {
+			if !topHashMatch(hash, topHashes, i) {
+				continue
+			}
+		atomic_snapshot:
+			// Start atomic snapshot.
+			vp := atomic.LoadPointer(&b.values[i])
+			kp := atomic.LoadPointer(&b.keys[i])
+			if kp != nil && vp != nil {
+				if key == derefTypedKey[K](kp) {
+					if uintptr(vp) == uintptr(atomic.LoadPointer(&b.values[i])) {
+						// Atomic snapshot succeeded.
+						return derefTypedValue[V](vp), true
+					}
+					// Concurrent update/remove. Go for another spin.
+					goto atomic_snapshot
 				}
-				// Concurrent update/remove. Go for another spin.
-				goto atomic_snapshot
 			}
 		}
+		bucketPtr := atomic.LoadPointer(&b.next)
+		if bucketPtr == nil {
+			return
+		}
+		b = (*bucketPadded)(bucketPtr)
 	}
-	return value, false
 }
 
 // Store sets the value for a key.
-func (m *MapOf[V]) Store(key string, value V) {
-	m.doStore(key, value, false)
+func (m *MapOf[K, V]) Store(key K, value V) {
+	m.doStore(
+		key,
+		func() V {
+			return value
+		},
+		false,
+	)
 }
 
 // LoadOrStore returns the existing value for the key if present.
 // Otherwise, it stores and returns the given value.
 // The loaded result is true if the value was loaded, false if stored.
-func (m *MapOf[V]) LoadOrStore(key string, value V) (actual V, loaded bool) {
-	return m.doStore(key, value, true)
+func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool) {
+	return m.doStore(
+		key,
+		func() V {
+			return value
+		},
+		true,
+	)
 }
 
 // LoadAndStore returns the existing value for the key if present,
 // while setting the new value for the key.
-// Otherwise, it stores and returns the given value.
-// The loaded result is true if the value was loaded, false otherwise.
-func (m *MapOf[V]) LoadAndStore(key string, value V) (actual V, loaded bool) {
-	return m.doStore(key, value, false)
+// It stores the new value and returns the existing one, if present.
+// The loaded result is true if the existing value was loaded,
+// false otherwise.
+func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool) {
+	return m.doStore(
+		key,
+		func() V {
+			return value
+		},
+		false,
+	)
 }
 
-func (m *MapOf[V]) doStore(key string, value V, loadIfExists bool) (V, bool) {
+// LoadOrCompute returns the existing value for the key if present.
+// Otherwise, it computes the value using the provided function and
+// returns the computed value. The loaded result is true if the value
+// was loaded, false if stored.
+func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool) {
+	return m.doStore(key, valueFn, true)
+}
+
+func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bool) {
 	// Read-only path.
 	if loadIfExists {
 		if v, ok := m.Load(key); ok {
@@ -107,86 +167,113 @@ func (m *MapOf[V]) doStore(key string, value V, loadIfExists bool) (V, bool) {
 		}
 	}
 	// Write path.
-	hash := maphash64(key)
+	hash := m.hasher(key)
 	for {
+	store_attempt:
 		var (
 			emptykp, emptyvp *unsafe.Pointer
 			emptyidx         int
 		)
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
+		tableLen := len(table.buckets)
 		bidx := bucketIdx(table, hash)
-		b := &table.buckets[bidx]
-		b.mu.Lock()
+		rootb := &table.buckets[bidx]
+		b := rootb
+		lockBucket(&rootb.topHashMutex)
 		if m.newerTableExists(table) {
 			// Someone resized the table. Go for another attempt.
-			b.mu.Unlock()
-			continue
+			unlockBucket(&rootb.topHashMutex)
+			goto store_attempt
 		}
 		if m.resizeInProgress() {
 			// Resize is in progress. Wait, then go for another attempt.
-			b.mu.Unlock()
+			unlockBucket(&rootb.topHashMutex)
 			m.waitForResize()
-			continue
+			goto store_attempt
 		}
-		for i := 0; i < entriesPerMapBucket; i++ {
-			if b.keys[i] == nil {
-				if emptykp == nil {
-					emptykp = &b.keys[i]
-					emptyvp = &b.values[i]
-					emptyidx = i
+		for {
+			topHashes := atomic.LoadUint64(&b.topHashMutex)
+			for i := 0; i < entriesPerMapBucket; i++ {
+				if b.keys[i] == nil {
+					if emptykp == nil {
+						emptykp = &b.keys[i]
+						emptyvp = &b.values[i]
+						emptyidx = i
+					}
+					continue
 				}
-				continue
-			}
-			if !topHashMatch(hash, b.topHashes, i) {
-				continue
-			}
-			if key == derefKey(b.keys[i]) {
-				vp := b.values[i]
-				if loadIfExists {
-					b.mu.Unlock()
+				if !topHashMatch(hash, topHashes, i) {
+					continue
+				}
+				if key == derefTypedKey[K](b.keys[i]) {
+					vp := b.values[i]
+					if loadIfExists {
+						unlockBucket(&rootb.topHashMutex)
+						return derefTypedValue[V](vp), true
+					}
+					// In-place update case. We get a copy of the value via an
+					// interface{} on each call, thus the live value pointers are
+					// unique. Otherwise atomic snapshot won't be correct in case
+					// of multiple Store calls using the same value.
+					value := valueFn()
+					var wv interface{} = value
+					nvp := unsafe.Pointer(&wv)
+					if assertionsEnabled && vp == nvp {
+						panic("non-unique value pointer")
+					}
+					atomic.StorePointer(&b.values[i], nvp)
+					unlockBucket(&rootb.topHashMutex)
+					// LoadAndStore expects the old value to be returned.
 					return derefTypedValue[V](vp), true
 				}
-				// In-place update case. We get a copy of the value via an
-				// interface{} on each call, thus the live value pointers are
-				// unique. Otherwise atomic snapshot won't be correct in case
-				// of multiple Store calls using the same value.
-				var wv interface{} = value
-				nvp := unsafe.Pointer(&wv)
-				if assertionsEnabled && vp == nvp {
-					panic("non-unique value pointer")
-				}
-				atomic.StorePointer(&b.values[i], nvp)
-				b.mu.Unlock()
-				return derefTypedValue[V](vp), true
 			}
+			if b.next == nil {
+				if emptykp != nil {
+					// Insertion case. First we update the value, then the key.
+					// This is important for atomic snapshot states.
+					atomic.StoreUint64(&b.topHashMutex, storeTopHash(hash, topHashes, emptyidx))
+					value := valueFn()
+					var wv interface{} = valueFn()
+					atomic.StorePointer(emptyvp, unsafe.Pointer(&wv))
+					atomic.StorePointer(emptykp, unsafe.Pointer(&key))
+					unlockBucket(&rootb.topHashMutex)
+					table.addSize(bidx, 1)
+					return value, false
+				}
+				growThreshold := float64(tableLen) * entriesPerMapBucket * mapLoadFactor
+				if table.sumSize() > int64(growThreshold) {
+					// Need to grow the table. Then go for another attempt.
+					unlockBucket(&rootb.topHashMutex)
+					m.resize(table, mapGrowHint)
+					goto store_attempt
+				}
+				// Create and append a new bucket.
+				newb := new(bucketPadded)
+				newb.keys[0] = unsafe.Pointer(&key)
+				value := valueFn()
+				var wv interface{} = value
+				newb.values[0] = unsafe.Pointer(&wv)
+				newb.topHashMutex = storeTopHash(hash, topHashes, emptyidx)
+				atomic.StorePointer(&b.next, unsafe.Pointer(newb))
+				unlockBucket(&rootb.topHashMutex)
+				table.addSize(bidx, 1)
+				return value, false
+			}
+			b = (*bucketPadded)(b.next)
 		}
-		if emptykp != nil {
-			// Insertion case. First we update the value, then the key.
-			// This is important for atomic snapshot states.
-			atomic.StoreUint64(&b.topHashes, storeTopHash(hash, b.topHashes, emptyidx))
-			var wv interface{} = value
-			atomic.StorePointer(emptyvp, unsafe.Pointer(&wv))
-			atomic.StorePointer(emptykp, unsafe.Pointer(&key))
-			b.mu.Unlock()
-			addSize(table, bidx, 1)
-			return value, false
-		}
-		// Need to grow the table. Then go for another attempt.
-		b.mu.Unlock()
-		m.resize(table, mapGrowHint)
 	}
 }
 
-func (m *MapOf[V]) newerTableExists(table *mapTable) bool {
+func (m *MapOf[K, V]) newerTableExists(table *mapTable) bool {
 	curTablePtr := atomic.LoadPointer(&m.table)
 	return uintptr(curTablePtr) != uintptr(unsafe.Pointer(table))
 }
 
-func (m *MapOf[V]) resizeInProgress() bool {
+func (m *MapOf[K, V]) resizeInProgress() bool {
 	return atomic.LoadInt64(&m.resizing) == 1
 }
 
-func (m *MapOf[V]) waitForResize() {
+func (m *MapOf[K, V]) waitForResize() {
 	m.resizeMu.Lock()
 	for m.resizeInProgress() {
 		m.resizeCond.Wait()
@@ -194,13 +281,13 @@ func (m *MapOf[V]) waitForResize() {
 	m.resizeMu.Unlock()
 }
 
-func (m *MapOf[V]) resize(table *mapTable, hint mapResizeHint) {
+func (m *MapOf[K, V]) resize(table *mapTable, hint mapResizeHint) {
 	var shrinkThreshold int64
 	tableLen := len(table.buckets)
 	// Fast path for shrink attempts.
 	if hint == mapShrinkHint {
 		shrinkThreshold = int64((tableLen * entriesPerMapBucket) / mapShrinkFraction)
-		if tableLen == minMapTableLen || sumSize(table) > shrinkThreshold {
+		if tableLen == minMapTableLen || table.sumSize() > shrinkThreshold {
 			return
 		}
 	}
@@ -217,7 +304,7 @@ func (m *MapOf[V]) resize(table *mapTable, hint mapResizeHint) {
 		atomic.AddInt64(&m.totalGrowths, 1)
 		newTable = newMapTable(tableLen << 1)
 	case mapShrinkHint:
-		if sumSize(table) <= shrinkThreshold {
+		if table.sumSize() <= shrinkThreshold {
 			// Shrink the table with factor of 2.
 			atomic.AddInt64(&m.totalShrinks, 1)
 			newTable = newMapTable(tableLen >> 1)
@@ -232,15 +319,9 @@ func (m *MapOf[V]) resize(table *mapTable, hint mapResizeHint) {
 	default:
 		panic(fmt.Sprintf("unexpected resize hint: %d", hint))
 	}
-copy:
 	for i := 0; i < tableLen; i++ {
-		copied, ok := copyBucket(&table.buckets[i], newTable)
-		if !ok {
-			// Table size is insufficient, need to grow it.
-			newTable = newMapTable(len(newTable.buckets) << 1)
-			goto copy
-		}
-		addSizeNonAtomic(newTable, uint64(i), copied)
+		copied := copyBucketOf(&table.buckets[i], newTable, m.hasher)
+		newTable.addSizePlain(uint64(i), copied)
 	}
 	// Publish the new table and wake up all waiters.
 	atomic.StorePointer(&m.table, unsafe.Pointer(newTable))
@@ -250,60 +331,89 @@ copy:
 	m.resizeMu.Unlock()
 }
 
+func copyBucketOf[K comparable](b *bucketPadded, destTable *mapTable, hasher func(K) uint64) (copied int) {
+	rootb := b
+	lockBucket(&rootb.topHashMutex)
+	for {
+		for i := 0; i < entriesPerMapBucket; i++ {
+			if b.keys[i] != nil {
+				hash := hasher(derefTypedKey[K](b.keys[i]))
+				bidx := bucketIdx(destTable, hash)
+				destb := &destTable.buckets[bidx]
+				appendToBucket(hash, b.keys[i], b.values[i], destb)
+				copied++
+			}
+		}
+		if b.next == nil {
+			unlockBucket(&rootb.topHashMutex)
+			return
+		}
+		b = (*bucketPadded)(b.next)
+	}
+}
+
 // LoadAndDelete deletes the value for a key, returning the previous
 // value if any. The loaded result reports whether the key was
 // present.
-func (m *MapOf[V]) LoadAndDelete(key string) (value V, loaded bool) {
-	hash := maphash64(key)
-delete_attempt:
-	hintNonEmpty := 0
-	table := (*mapTable)(atomic.LoadPointer(&m.table))
-	bidx := bucketIdx(table, hash)
-	b := &table.buckets[bidx]
-	b.mu.Lock()
-	if m.newerTableExists(table) {
-		// Someone resized the table. Go for another attempt.
-		b.mu.Unlock()
-		goto delete_attempt
-	}
-	if m.resizeInProgress() {
-		// Resize is in progress. Wait, then go for another attempt.
-		b.mu.Unlock()
-		m.waitForResize()
-		goto delete_attempt
-	}
-	for i := 0; i < entriesPerMapBucket; i++ {
-		kp := b.keys[i]
-		if kp == nil || !topHashMatch(hash, b.topHashes, i) {
+func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool) {
+	hash := m.hasher(key)
+	for {
+		hintNonEmpty := 0
+		table := (*mapTable)(atomic.LoadPointer(&m.table))
+		bidx := bucketIdx(table, hash)
+		rootb := &table.buckets[bidx]
+		b := rootb
+		lockBucket(&rootb.topHashMutex)
+		if m.newerTableExists(table) {
+			// Someone resized the table. Go for another attempt.
+			unlockBucket(&rootb.topHashMutex)
 			continue
 		}
-		if key == derefKey(kp) {
-			vp := b.values[i]
-			// Deletion case. First we update the value, then the key.
-			// This is important for atomic snapshot states.
-			atomic.StoreUint64(&b.topHashes, eraseTopHash(b.topHashes, i))
-			atomic.StorePointer(&b.values[i], nil)
-			atomic.StorePointer(&b.keys[i], nil)
-			leftEmpty := false
-			if hintNonEmpty == 0 {
-				leftEmpty = isEmpty(b)
-			}
-			b.mu.Unlock()
-			addSize(table, bidx, -1)
-			// Might need to shrink the table.
-			if leftEmpty {
-				m.resize(table, mapShrinkHint)
-			}
-			return derefTypedValue[V](vp), true
+		if m.resizeInProgress() {
+			// Resize is in progress. Wait, then go for another attempt.
+			unlockBucket(&rootb.topHashMutex)
+			m.waitForResize()
+			continue
 		}
-		hintNonEmpty++
+		for {
+			topHashes := atomic.LoadUint64(&b.topHashMutex)
+			for i := 0; i < entriesPerMapBucket; i++ {
+				kp := b.keys[i]
+				if kp == nil || !topHashMatch(hash, topHashes, i) {
+					continue
+				}
+				if key == derefTypedKey[K](kp) {
+					vp := b.values[i]
+					// Deletion case. First we update the value, then the key.
+					// This is important for atomic snapshot states.
+					atomic.StoreUint64(&b.topHashMutex, eraseTopHash(topHashes, i))
+					atomic.StorePointer(&b.values[i], nil)
+					atomic.StorePointer(&b.keys[i], nil)
+					leftEmpty := false
+					if hintNonEmpty == 0 {
+						leftEmpty = isEmpty(b)
+					}
+					unlockBucket(&rootb.topHashMutex)
+					table.addSize(bidx, -1)
+					// Might need to shrink the table.
+					if leftEmpty {
+						m.resize(table, mapShrinkHint)
+					}
+					return derefTypedValue[V](vp), true
+				}
+				hintNonEmpty++
+			}
+			if b.next == nil {
+				unlockBucket(&rootb.topHashMutex)
+				return
+			}
+			b = (*bucketPadded)(b.next)
+		}
 	}
-	b.mu.Unlock()
-	return value, false
 }
 
 // Delete deletes the value for a key.
-func (m *MapOf[V]) Delete(key string) {
+func (m *MapOf[K, V]) Delete(key K) {
 	m.LoadAndDelete(key)
 }
 
@@ -319,26 +429,38 @@ func (m *MapOf[V]) Delete(key string) {
 // It is safe to modify the map while iterating it. However, the
 // concurrent modification rule apply, i.e. the changes may be not
 // reflected in the subsequently iterated entries.
-func (m *MapOf[V]) Range(f func(key string, value V) bool) {
+func (m *MapOf[K, V]) Range(f func(key K, value V) bool) {
 	var bentries [entriesPerMapBucket]rangeEntry
 	tablep := atomic.LoadPointer(&m.table)
 	table := *(*mapTable)(tablep)
 	for i := range table.buckets {
-		n := copyRangeEntries(&table.buckets[i], &bentries)
-		for j := 0; j < n; j++ {
-			k := derefKey(bentries[j].key)
-			v := derefTypedValue[V](bentries[j].value)
-			if !f(k, v) {
-				return
+		b := &table.buckets[i]
+		for {
+			n := copyRangeEntries(b, &bentries)
+			for j := 0; j < n; j++ {
+				k := derefTypedKey[K](bentries[j].key)
+				v := derefTypedValue[V](bentries[j].value)
+				if !f(k, v) {
+					return
+				}
 			}
+			bucketPtr := atomic.LoadPointer(&b.next)
+			if bucketPtr == nil {
+				break
+			}
+			b = (*bucketPadded)(bucketPtr)
 		}
 	}
 }
 
 // Size returns current size of the map.
-func (m *MapOf[V]) Size() int {
+func (m *MapOf[K, V]) Size() int {
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
-	return int(sumSize(table))
+	return int(table.sumSize())
+}
+
+func derefTypedKey[K comparable](keyPtr unsafe.Pointer) (key K) {
+	return *(*K)(keyPtr)
 }
 
 func derefTypedValue[V any](valuePtr unsafe.Pointer) (val V) {
@@ -346,7 +468,7 @@ func derefTypedValue[V any](valuePtr unsafe.Pointer) (val V) {
 }
 
 // O(N) operation; use for debug purposes only
-func (m *MapOf[V]) stats() mapStats {
+func (m *MapOf[K, V]) stats() mapStats {
 	stats := mapStats{
 		TotalGrowths: atomic.LoadInt64(&m.totalGrowths),
 		TotalShrinks: atomic.LoadInt64(&m.totalShrinks),
@@ -354,17 +476,23 @@ func (m *MapOf[V]) stats() mapStats {
 	}
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
 	stats.TableLen = len(table.buckets)
-	stats.Counter = int(sumSize(table))
+	stats.Counter = int(table.sumSize())
 	stats.CounterLen = len(table.size)
 	for i := range table.buckets {
 		numEntries := 0
-		stats.Capacity += entriesPerMapBucket
 		b := &table.buckets[i]
-		for i := 0; i < entriesPerMapBucket; i++ {
-			if atomic.LoadPointer(&b.keys[i]) != nil {
-				stats.Size++
-				numEntries++
+		for {
+			stats.Capacity += entriesPerMapBucket
+			for i := 0; i < entriesPerMapBucket; i++ {
+				if atomic.LoadPointer(&b.keys[i]) != nil {
+					stats.Size++
+					numEntries++
+				}
 			}
+			if b.next == nil {
+				break
+			}
+			b = (*bucketPadded)(b.next)
 		}
 		if numEntries < stats.MinEntries {
 			stats.MinEntries = numEntries

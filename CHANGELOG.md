@@ -1,5 +1,14 @@
 # Go-Utils
 
+## v0.7.18
+
+**2022-10-23**
+
+- 同步 `xsync` 修改, 增加任意可比较类型为键的 Map:
+  - `func NewMapOf[V any]() *MapOf[string, V]`
+  - `func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]`
+  - `func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V]`
+
 ## v0.7.17
 
 **2022-10-17**
