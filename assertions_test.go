@@ -5,11 +5,12 @@ import (
 	"testing"
 )
 
-// Ref: gofiber/utils
 func TestAssertEqual(t *testing.T) {
 	t.Parallel()
 	AssertEqual(nil, []string{}, []string{})
 	AssertEqual(t, []string{}, []string{})
+	AssertNotEqualf(t, []string{"f"}, []string{}, "desc: %s", "abc")
+	AssertNotEqual(t, nil, []string{})
 }
 
 func TestAssertPanics(t *testing.T) {
