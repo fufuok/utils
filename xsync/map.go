@@ -17,21 +17,30 @@ const (
 )
 
 const (
-	// number of entries per bucket; 7 entries lead to size of 128B
-	// (2 cache lines) on 64-bit machines
-	entriesPerMapBucket = 7
+	// number of entries per bucket; 3 entries lead to size of 64B
+	// (one cache line) on 64-bit machines
+	entriesPerMapBucket = 3
 	// threshold fraction of table occupation to start a table shrinking
 	// when deleting the last entry in a bucket chain
 	mapShrinkFraction = 128
 	// map load factor to trigger a table resize during insertion;
 	// a map holds up to mapLoadFactor*entriesPerMapBucket*mapTableLen
-	// key-value pairs
-	mapLoadFactor = 1.0
+	// key-value pairs (this is a soft limit)
+	mapLoadFactor = 0.75
 	// minimal table size, i.e. number of buckets; thus, minimal map
 	// capacity can be calculated as entriesPerMapBucket*minMapTableLen
-	minMapTableLen = 16
+	minMapTableLen = 32
 	// maximum counter stripes to use; stands for around 8KB of memory
 	maxMapCounterLen = 64
+)
+
+var (
+	topHashMask       = uint64((1 << 20) - 1)
+	topHashEntryMasks = [3]uint64{
+		^(topHashMask << 44),
+		^(topHashMask << 24),
+		^(topHashMask << 4),
+	}
 )
 
 // Map is like a Go map[string]interface{} but is safe for concurrent
@@ -78,7 +87,7 @@ type counterStripe struct {
 
 type bucketPadded struct {
 	//lint:ignore U1000 ensure each bucket takes two cache lines on both 32 and 64-bit archs
-	pad [2*cacheLineSize - unsafe.Sizeof(bucket{})]byte
+	pad [cacheLineSize - unsafe.Sizeof(bucket{})]byte
 	bucket
 }
 
@@ -88,13 +97,12 @@ type bucket struct {
 	values [entriesPerMapBucket]unsafe.Pointer
 	// topHashMutex is a 2-in-1 value.
 	//
-	// First, it contains packed top bytes (8 MSBs) of hash codes for
-	// keys stored in the bucket:
-	// | key 0's top hash | ... | key 7's top hash | bitmap for keys |
-	// |      1 byte      | ... |      1 byte      |     1 byte      |
+	// It contains packed top 20 bits (20 MSBs) of hash codes for keys
+	// stored in the bucket:
+	// | key 0's top hash | key 1's top hash | key 2's top hash | bitmap for keys | mutex |
+	// |      20 bits     |      20 bits     |      20 bits     |     3 bits      | 1 bit |
 	//
-	// Second, the least significant bit in the bitmap for keys byte
-	// is used for the mutex (TTAS spinlock).
+	// The least significant bit is used for the mutex (TTAS spinlock).
 	topHashMutex uint64
 }
 
@@ -132,7 +140,7 @@ func newMapTable(size int) *mapTable {
 // value is present.
 // The ok result indicates whether value was found in the map.
 func (m *Map) Load(key string) (value interface{}, ok bool) {
-	hash := maphash64(key)
+	hash := StrHash64(key)
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
 	bidx := bucketIdx(table, hash)
 	b := &table.buckets[bidx]
@@ -220,7 +228,7 @@ func (m *Map) doStore(key string, valueFn func() interface{}, loadIfExists bool)
 		}
 	}
 	// Write path.
-	hash := maphash64(key)
+	hash := StrHash64(key)
 	for {
 	store_attempt:
 		var (
@@ -388,7 +396,7 @@ func copyBucket(b *bucketPadded, destTable *mapTable) (copied int) {
 		for i := 0; i < entriesPerMapBucket; i++ {
 			if b.keys[i] != nil {
 				k := derefKey(b.keys[i])
-				hash := maphash64(k)
+				hash := StrHash64(k)
 				bidx := bucketIdx(destTable, hash)
 				destb := &destTable.buckets[bidx]
 				appendToBucket(hash, b.keys[i], b.values[i], destb)
@@ -429,7 +437,7 @@ func appendToBucket(hash uint64, keyPtr, valPtr unsafe.Pointer, b *bucketPadded)
 // value if any. The loaded result reports whether the key was
 // present.
 func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool) {
-	hash := maphash64(key)
+	hash := StrHash64(key)
 	for {
 		hintNonEmpty := 0
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
@@ -610,19 +618,19 @@ func topHashMatch(hash, topHashes uint64, idx int) bool {
 		// Entry is not present.
 		return false
 	}
-	top := uint8(hash >> 56)
-	topHashes = topHashes >> (8 * (entriesPerMapBucket - idx))
-	return top == uint8(topHashes)
+	top := uint32(hash >> 44)
+	topHashes = topHashes >> (20*(2-idx) + 4)
+	return top == uint32(topHashes&topHashMask)
 }
 
 func storeTopHash(hash, topHashes uint64, idx int) uint64 {
 	// Zero out top hash at idx.
-	mask := uint64(255) << (8 * (entriesPerMapBucket - idx))
-	topHashes = topHashes &^ mask
-	// Store top byte of the given hash.
-	top := (hash >> 56) << (8 * (entriesPerMapBucket - idx))
+	topHashes = topHashes & topHashEntryMasks[idx]
+	// Chop top 20 MSBs of the given hash and position them at idx.
+	top := (hash >> 44) << (20*(2-idx) + 4)
+	// Store the MSBs.
 	topHashes = topHashes | top
-	topHashes = topHashes | (1 << (idx + 1))
+	// Mark the entry as present.
 	return topHashes | (1 << (idx + 1))
 }
 
