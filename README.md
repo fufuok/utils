@@ -37,6 +37,8 @@ func AddUint32(h, u uint32) uint32
 func AddUint64(h uint64, u uint64) uint64
 func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
 func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, ...)
+func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)
+func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{})
 func AssertPanics(t *testing.T, title string, f func())
 func B2S(b []byte) string
 func B64Decode(s string) []byte
@@ -94,6 +96,8 @@ func FastRandBytes(n int) []byte
 func FastRandn(n uint32) uint32
 func FnvHash(s string) uint64
 func FnvHash32(s string) uint32
+func GenHasher[K comparable]() func(K) uintptr
+func GenHasher64[K comparable]() func(K) uint64
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
@@ -250,6 +254,7 @@ type Bool struct{ ... }
     func NewBool(val bool) *Bool
     func NewFalse() *Bool
     func NewTrue() *Bool
+type Hashable interface{ ... }
 type NoCmp [0]func()
 type NoCopy struct{}
 type RecoveryCallback func(err interface{}, trace []byte)

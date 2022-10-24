@@ -77,6 +77,8 @@ import "github.com/fufuok/utils"
 - [func FastRandn(n uint32) uint32](<#func-fastrandn>)
 - [func FnvHash(s string) uint64](<#func-fnvhash>)
 - [func FnvHash32(s string) uint32](<#func-fnvhash32>)
+- [func GenHasher[K comparable]() func(K) uintptr](<#func-genhasher>)
+- [func GenHasher64[K comparable]() func(K) uint64](<#func-genhasher64>)
 - [func GetBytes(v interface{}, defaultVal ...[]byte) []byte](<#func-getbytes>)
 - [func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)](<#func-getipport>)
 - [func GetInt(v interface{}, defaultInt ...int) int](<#func-getint>)
@@ -244,6 +246,7 @@ import "github.com/fufuok/utils"
   - [func (x *Bool) Swap(new bool) (old bool)](<#func-bool-swap>)
   - [func (x *Bool) Toggle() (old bool)](<#func-bool-toggle>)
   - [func (x *Bool) UnmarshalJSON(b []byte) error](<#func-bool-unmarshaljson>)
+- [type Hashable](<#type-hashable>)
 - [type NoCmp](<#type-nocmp>)
 - [type NoCopy](<#type-nocopy>)
   - [func (*NoCopy) Lock()](<#func-nocopy-lock>)
@@ -888,6 +891,20 @@ func FnvHash32(s string) uint32
 ```
 
 FnvHash32 获取字符串的哈希值
+
+## func GenHasher
+
+```go
+func GenHasher[K comparable]() func(K) uintptr
+```
+
+## func GenHasher64
+
+```go
+func GenHasher64[K comparable]() func(K) uint64
+```
+
+GenHasher64 返回哈希函数 Ref: smallnest/safemap, alphadose/haxmap, cornelk/hashmap
 
 ## func GetBytes
 
@@ -2161,6 +2178,16 @@ Toggle atomically negates the Boolean and returns the previous value
 
 ```go
 func (x *Bool) UnmarshalJSON(b []byte) error
+```
+
+## type Hashable
+
+Hashable allowed map key types constraint
+
+```go
+type Hashable interface {
+    // contains filtered or unexported methods
+}
 ```
 
 ## type NoCmp
