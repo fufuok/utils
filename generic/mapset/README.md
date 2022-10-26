@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/fufuok/utils/generic/mapset"
 )
 
@@ -25,16 +26,28 @@ func main() {
 	set.Put("bar")
 	set.Put("baz")
 
-	fmt.Println(set.Has("foo"))
-	fmt.Println(set.Has("quux"))
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("quux", set.Has("quux"))
+
+	set.Remove("foo")
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
+
+	set.Clear()
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
 }
 ```
 
 #### Output
 
 ```
-true
-false
+foo true
+quux false
+foo false
+bar true
+foo false
+bar false
 ```
 
 </p>
@@ -45,6 +58,7 @@ false
 - [type Set](<#type-set>)
   - [func New[K comparable]() Set[K]](<#func-new>)
   - [func Of[K comparable](vals ...K) Set[K]](<#func-of>)
+  - [func (s Set[K]) Clear()](<#func-setk-clear>)
   - [func (s Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s Set[K]) Has(val K) bool](<#func-setk-has>)
   - [func (s Set[K]) Put(val K)](<#func-setk-put>)
@@ -77,6 +91,14 @@ func Of[K comparable](vals ...K) Set[K]
 ```
 
 Of returns a new hashset initialized with the given 'vals'
+
+### func \(Set\[K\]\) Clear
+
+```go
+func (s Set[K]) Clear()
+```
+
+Clear removes all elements from the set.
 
 ### func \(Set\[K\]\) Each
 

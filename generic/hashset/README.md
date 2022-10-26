@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	g "github.com/fufuok/utils/generic"
 	"github.com/fufuok/utils/generic/hashset"
 )
@@ -28,6 +29,16 @@ func main() {
 
 	fmt.Println(set.Has("foo"))
 	fmt.Println(set.Has("quux"))
+
+	set.Remove("foo")
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
+
+	set.Clear()
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
 }
 ```
 
@@ -35,6 +46,10 @@ func main() {
 
 ```
 true
+false
+false
+true
+false
 false
 ```
 
@@ -46,6 +61,7 @@ false
 - [type Set](<#type-set>)
   - [func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]](<#func-new>)
   - [func Of[K comparable](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], vals ...K) *Set[K]](<#func-of>)
+  - [func (s *Set[K]) Clear()](<#func-setk-clear>)
   - [func (s *Set[K]) Copy() *Set[K]](<#func-setk-copy>)
   - [func (s *Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s *Set[K]) Has(val K) bool](<#func-setk-has>)
@@ -79,6 +95,14 @@ func Of[K comparable](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], v
 ```
 
 Of returns a new hashset initialized with the given 'vals'
+
+### func \(\*Set\[K\]\) Clear
+
+```go
+func (s *Set[K]) Clear()
+```
+
+Clear removes all elements from the set.
 
 ### func \(\*Set\[K\]\) Copy
 

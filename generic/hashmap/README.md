@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	g "github.com/fufuok/utils/generic"
 	"github.com/fufuok/utils/generic/hashmap"
 )
@@ -31,7 +32,12 @@ func main() {
 	m.Remove("foo")
 
 	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 
+	m.Clear()
+
+	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 }
 ```
 
@@ -39,6 +45,9 @@ func main() {
 
 ```
 42 true
+0 false
+0 false
+13 true
 0 false
 0 false
 ```
@@ -50,6 +59,7 @@ func main() {
 
 - [type Map](<#type-map>)
   - [func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]](<#func-new>)
+  - [func (m *Map[K, V]) Clear()](<#func-mapk-v-clear>)
   - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-mapk-v-copy>)
   - [func (m *Map[K, V]) Each(fn func(key K, val V))](<#func-mapk-v-each>)
   - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-mapk-v-get>)
@@ -75,6 +85,14 @@ func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map
 ```
 
 New constructs a new map with the given capacity.
+
+### func \(\*Map\[K, V\]\) Clear
+
+```go
+func (m *Map[K, V]) Clear()
+```
+
+Clear removes all key\-value pairs from the map.
 
 ### func \(\*Map\[K, V\]\) Copy
 
