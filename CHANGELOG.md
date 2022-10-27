@@ -1,5 +1,15 @@
 # Go-Utils
 
+## v0.8.0
+
+**2022-10-27**
+
+- 同步 `xsync v2.0.1`, 增加通用助手函数:
+  - `func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]`
+- 增加 `AssertNotEqual` `AssertNotEqualf` 用于测试
+- 增加 `GenSeedHasher64` `GenHasher64` `GenHasher`, 按数据类型生成 Hash 函数, 基于 xxHash
+- 同步 `generic` 优化, 增加 `sclices.Replace`
+
 ## v0.7.18
 
 **2022-10-23**
