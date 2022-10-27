@@ -98,6 +98,7 @@ func FnvHash(s string) uint64
 func FnvHash32(s string) uint32
 func GenHasher[K comparable]() func(K) uintptr
 func GenHasher64[K comparable]() func(K) uint64
+func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int

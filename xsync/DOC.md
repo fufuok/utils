@@ -8,7 +8,6 @@ import "github.com/fufuok/utils/xsync"
 
 ## Index
 
-- [func StrHash64(s string) uint64](<#func-strhash64>)
 - [type Counter](<#type-counter>)
   - [func (c *Counter) Add(delta int64)](<#func-counter-add>)
   - [func (c *Counter) Dec()](<#func-counter-dec>)
@@ -16,7 +15,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (c *Counter) Reset()](<#func-counter-reset>)
   - [func (c *Counter) Value() int64](<#func-counter-value>)
 - [type HashMapOf](<#type-hashmapof>)
-  - [func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]](<#func-newhashmapof>)
+  - [func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapof>)
 - [type IntegerConstraint](<#type-integerconstraint>)
 - [type MPMCQueue](<#type-mpmcqueue>)
   - [func NewMPMCQueue(capacity int) *MPMCQueue](<#func-newmpmcqueue>)
@@ -38,7 +37,7 @@ import "github.com/fufuok/utils/xsync"
 - [type MapOf](<#type-mapof>)
   - [func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]](<#func-newintegermapof>)
   - [func NewMapOf[V any]() *MapOf[string, V]](<#func-newmapof>)
-  - [func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
+  - [func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
   - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
   - [func (m *MapOf[K, V]) Load(key K) (value V, ok bool)](<#func-mapofk-v-load>)
   - [func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)](<#func-mapofk-v-loadanddelete>)
@@ -55,16 +54,6 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *RBMutex) Unlock()](<#func-rbmutex-unlock>)
 - [type RToken](<#type-rtoken>)
 
-
-## func StrHash64
-
-```go
-func StrHash64(s string) uint64
-```
-
-StrHash64 is the built\-in string hash function. It might be handy when writing a hasher function for NewTypedMapOf.
-
-Returned hash codes are is local to a single process and cannot be recreated in a different process.
 
 ## type Counter
 
@@ -180,7 +169,7 @@ type HashMapOf[K comparable, V any] interface {
 ### func NewHashMapOf
 
 ```go
-func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]
+func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
 ```
 
 NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys. If no hasher is specified, an automatic generation will be attempted. Hashable allowed map key types constraint. Automatically generated hashes for these types are safe:
@@ -395,10 +384,51 @@ NewMapOf creates a new MapOf instance with string keys
 ### func NewTypedMapOf
 
 ```go
-func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V]
+func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]
 ```
 
-NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys. Keys are hashed to uint64 using the hasher function. Note that StrHash64 function might be handy when writing the hasher function for structs with string fields.
+NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys. Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"encoding/binary"
+	"hash/maphash"
+	"time"
+
+	"github.com/fufuok/utils/xsync"
+)
+
+func main() {
+	type Person struct {
+		GivenName   string
+		FamilyName  string
+		YearOfBirth int16
+	}
+	age := xsync.NewTypedMapOf[Person, int](func(seed maphash.Seed, p Person) uint64 {
+		var h maphash.Hash
+		h.SetSeed(seed)
+		h.WriteString(p.GivenName)
+		hash := h.Sum64()
+		h.Reset()
+		h.WriteString(p.FamilyName)
+		hash = 31*hash + h.Sum64()
+		h.Reset()
+		binary.Write(&h, binary.LittleEndian, p.YearOfBirth)
+		return 31*hash + h.Sum64()
+	})
+	Y := time.Now().Year()
+	age.Store(Person{"Ada", "Lovelace", 1815}, Y-1815)
+	age.Store(Person{"Charles", "Babbage", 1791}, Y-1791)
+}
+```
+
+</p>
+</details>
 
 ### func \(\*MapOf\[K, V\]\) Delete
 
