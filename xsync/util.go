@@ -1,9 +1,5 @@
 package xsync
 
-import (
-	"hash/maphash"
-)
-
 // test-only assert()-like flag
 var assertionsEnabled = false
 
@@ -22,12 +18,4 @@ func mixhash64(v uintptr) uint64 {
 	x = ((x >> 33) ^ x) * 0xc4ceb9fe1a85ec53
 	x = (x >> 33) ^ x
 	return x
-}
-
-// hashString calculates a hash of s with the given seed.
-func hashString(seed maphash.Seed, s string) uint64 {
-	var h maphash.Hash
-	h.SetSeed(seed)
-	h.WriteString(s)
-	return h.Sum64()
 }
