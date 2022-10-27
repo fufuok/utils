@@ -2,6 +2,7 @@ package xsync
 
 import (
 	"fmt"
+	"hash/maphash"
 	"math"
 	"runtime"
 	"sync"
@@ -30,8 +31,10 @@ const (
 	// minimal table size, i.e. number of buckets; thus, minimal map
 	// capacity can be calculated as entriesPerMapBucket*minMapTableLen
 	minMapTableLen = 32
-	// maximum counter stripes to use; stands for around 8KB of memory
-	maxMapCounterLen = 64
+	// minimum counter stripes to use
+	minMapCounterLen = 8
+	// maximum counter stripes to use; stands for around 4KB of memory
+	maxMapCounterLen = 32
 )
 
 var (
@@ -77,6 +80,7 @@ type mapTable struct {
 	// used to determine if a table shrinking is needed
 	// occupies min(buckets_memory/1024, 64KB) of memory
 	size []counterStripe
+	seed maphash.Seed
 }
 
 type counterStripe struct {
@@ -123,8 +127,8 @@ func NewMap() *Map {
 func newMapTable(size int) *mapTable {
 	buckets := make([]bucketPadded, size)
 	counterLen := size >> 10
-	if counterLen < minMapTableLen {
-		counterLen = minMapTableLen
+	if counterLen < minMapCounterLen {
+		counterLen = minMapCounterLen
 	} else if counterLen > maxMapCounterLen {
 		counterLen = maxMapCounterLen
 	}
@@ -132,6 +136,7 @@ func newMapTable(size int) *mapTable {
 	t := &mapTable{
 		buckets: buckets,
 		size:    counter,
+		seed:    maphash.MakeSeed(),
 	}
 	return t
 }
@@ -140,8 +145,8 @@ func newMapTable(size int) *mapTable {
 // value is present.
 // The ok result indicates whether value was found in the map.
 func (m *Map) Load(key string) (value interface{}, ok bool) {
-	hash := StrHash64(key)
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
+	hash := hashString(table.seed, key)
 	bidx := bucketIdx(table, hash)
 	b := &table.buckets[bidx]
 	for {
@@ -228,7 +233,6 @@ func (m *Map) doStore(key string, valueFn func() interface{}, loadIfExists bool)
 		}
 	}
 	// Write path.
-	hash := StrHash64(key)
 	for {
 	store_attempt:
 		var (
@@ -237,6 +241,7 @@ func (m *Map) doStore(key string, valueFn func() interface{}, loadIfExists bool)
 		)
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
+		hash := hashString(table.seed, key)
 		bidx := bucketIdx(table, hash)
 		rootb := &table.buckets[bidx]
 		b := rootb
@@ -396,7 +401,7 @@ func copyBucket(b *bucketPadded, destTable *mapTable) (copied int) {
 		for i := 0; i < entriesPerMapBucket; i++ {
 			if b.keys[i] != nil {
 				k := derefKey(b.keys[i])
-				hash := StrHash64(k)
+				hash := hashString(destTable.seed, k)
 				bidx := bucketIdx(destTable, hash)
 				destb := &destTable.buckets[bidx]
 				appendToBucket(hash, b.keys[i], b.values[i], destb)
@@ -437,10 +442,10 @@ func appendToBucket(hash uint64, keyPtr, valPtr unsafe.Pointer, b *bucketPadded)
 // value if any. The loaded result reports whether the key was
 // present.
 func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool) {
-	hash := StrHash64(key)
 	for {
 		hintNonEmpty := 0
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
+		hash := hashString(table.seed, key)
 		bidx := bucketIdx(table, hash)
 		rootb := &table.buckets[bidx]
 		b := rootb

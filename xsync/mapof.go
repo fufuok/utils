@@ -5,6 +5,7 @@ package xsync
 
 import (
 	"fmt"
+	"hash/maphash"
 	"math"
 	"sync"
 	"sync/atomic"
@@ -37,14 +38,12 @@ type MapOf[K comparable, V any] struct {
 	resizeMu     sync.Mutex     // only used along with resizeCond
 	resizeCond   sync.Cond      // used to wake up resize waiters (concurrent modifications)
 	table        unsafe.Pointer // *mapTable
-	hasher       func(K) uint64
+	hasher       func(maphash.Seed, K) uint64
 }
 
 // NewMapOf creates a new MapOf instance with string keys
 func NewMapOf[V any]() *MapOf[string, V] {
-	return NewTypedMapOf[string, V](func(k string) uint64 {
-		return StrHash64(k)
-	})
+	return NewTypedMapOf[string, V](hashString)
 }
 
 // IntegerConstraint represents any integer type.
@@ -56,22 +55,17 @@ type IntegerConstraint interface {
 
 // NewIntegerMapOf creates a new MapOf instance with integer typed keys.
 func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V] {
-	return NewTypedMapOf[K, V](func(k K) uint64 {
-		return uint64(k)
-	})
+	return NewTypedMapOf[K, V](hash64[K])
 }
 
 // NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
-// Keys are hashed to uint64 using the hasher function. Note that StrHash64
-// function might be handy when writing the hasher function for structs with
-// string fields.
-func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V] {
+// Keys are hashed to uint64 using the hasher function. It is strongly
+// recommended to use the hash/maphash package to implement hasher. See the
+// example for how to do that.
+func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V] {
 	m := &MapOf[K, V]{}
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
-	m.hasher = func(k K) uint64 {
-		// Apply finalizer to mitigate poor quality hash functions.
-		return mixhash64(hasher(k))
-	}
+	m.hasher = hasher
 	table := newMapTable(minMapTableLen)
 	atomic.StorePointer(&m.table, unsafe.Pointer(table))
 	return m
@@ -81,8 +75,8 @@ func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V] {
 // value is present.
 // The ok result indicates whether value was found in the map.
 func (m *MapOf[K, V]) Load(key K) (value V, ok bool) {
-	hash := m.hasher(key)
 	table := (*mapTable)(atomic.LoadPointer(&m.table))
+	hash := m.hasher(table.seed, key)
 	bidx := bucketIdx(table, hash)
 	b := &table.buckets[bidx]
 	for {
@@ -169,7 +163,6 @@ func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bo
 		}
 	}
 	// Write path.
-	hash := m.hasher(key)
 	for {
 	store_attempt:
 		var (
@@ -178,6 +171,7 @@ func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bo
 		)
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
+		hash := m.hasher(table.seed, key)
 		bidx := bucketIdx(table, hash)
 		rootb := &table.buckets[bidx]
 		b := rootb
@@ -333,13 +327,13 @@ func (m *MapOf[K, V]) resize(table *mapTable, hint mapResizeHint) {
 	m.resizeMu.Unlock()
 }
 
-func copyBucketOf[K comparable](b *bucketPadded, destTable *mapTable, hasher func(K) uint64) (copied int) {
+func copyBucketOf[K comparable](b *bucketPadded, destTable *mapTable, hasher func(maphash.Seed, K) uint64) (copied int) {
 	rootb := b
 	lockBucket(&rootb.topHashMutex)
 	for {
 		for i := 0; i < entriesPerMapBucket; i++ {
 			if b.keys[i] != nil {
-				hash := hasher(derefTypedKey[K](b.keys[i]))
+				hash := hasher(destTable.seed, derefTypedKey[K](b.keys[i]))
 				bidx := bucketIdx(destTable, hash)
 				destb := &destTable.buckets[bidx]
 				appendToBucket(hash, b.keys[i], b.values[i], destb)
@@ -358,10 +352,10 @@ func copyBucketOf[K comparable](b *bucketPadded, destTable *mapTable, hasher fun
 // value if any. The loaded result reports whether the key was
 // present.
 func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool) {
-	hash := m.hasher(key)
 	for {
 		hintNonEmpty := 0
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
+		hash := m.hasher(table.seed, key)
 		bidx := bucketIdx(table, hash)
 		rootb := &table.buckets[bidx]
 		b := rootb
@@ -504,4 +498,14 @@ func (m *MapOf[K, V]) stats() mapStats {
 		}
 	}
 	return stats
+}
+
+// hash64 calculates a hash of v with the given seed.
+func hash64[T IntegerConstraint](seed maphash.Seed, v T) uint64 {
+	n := uint64(v)
+	p := (*[8]byte)(unsafe.Pointer(&n))
+	var h maphash.Hash
+	h.SetSeed(seed)
+	h.Write((*p)[:])
+	return h.Sum64()
 }

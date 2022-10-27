@@ -6,6 +6,7 @@ package utils
 import (
 	"encoding/binary"
 	"fmt"
+	"hash/maphash"
 	"math/bits"
 	"reflect"
 	"strconv"
@@ -44,6 +45,13 @@ type Hashable interface {
 func GenHasher64[K comparable]() func(K) uint64 {
 	hasher := GenHasher[K]()
 	return func(k K) uint64 {
+		return uint64(hasher(k))
+	}
+}
+
+func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64 {
+	hasher := GenHasher[K]()
+	return func(_ maphash.Seed, k K) uint64 {
 		return uint64(hasher(k))
 	}
 }

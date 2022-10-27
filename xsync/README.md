@@ -12,9 +12,7 @@
 
 # xsync
 
-Concurrent data structures for Go. An extension for the standard `sync` package.
-
-This library should be considered experimental, so make sure to run tests and benchmarks for your use cases before adding it to your application.
+Concurrent data structures for Go. Aims to provide more scalable alternatives for some of the data structures from the standard `sync` package, but not only.
 
 ### Benchmarks
 
@@ -22,7 +20,7 @@ Benchmark results may be found [here](https://github.com/puzpuzpuz/xsync/blob/ma
 
 ## Counter
 
-A `Counter` is a striped int64 counter inspired by the j.u.c.a.LongAdder class from Java standard library.
+A `Counter` is a striped `int64` counter inspired by the j.u.c.a.LongAdder class from Java standard library.
 
 ```go
 var c xsync.Counter
@@ -37,7 +35,7 @@ Works better in comparison with a single atomically updated int64 counter in hig
 
 ## Map
 
-A `Map` is like a concurrent hash table based map. It follows the interface of `sync.Map` with a few extensions, like the `Size` method.
+A `Map` is like a concurrent hash table based map. It follows the interface of `sync.Map` with a few extensions, like `LoadOrCompute` or `Size` methods.
 
 ```go
 m := xsync.NewMap()
@@ -63,15 +61,22 @@ v, ok := m.Load("foo")
 One important difference with `Map` is that `MapOf` supports arbitrary `comparable` key types:
 
 ```go
-type point struct {
-	x int
-	y int
+type Point struct {
+	x int32
+	y int32
 }
-// provide a hash function when creating the MapOf
-m := NewTypedMapOf[point, int](func(p point) uint64 {
-	return uint64(31*p.x + p.y)
+m := NewTypedMapOf[Point, int](func(seed maphash.Seed, p Point) uint64 {
+	// provide a hash function when creating the MapOf;
+	// we recommend using the hash/maphash package for the function
+	var h maphash.Hash
+	h.SetSeed(seed)
+	binary.Write(&h, binary.LittleEndian, p.x)
+	hash := h.Sum64()
+	h.Reset()
+	binary.Write(&h, binary.LittleEndian, p.y)
+	return 31*hash + h.Sum64()
 })
-m.Store(point{42, 42}, 42)
+m.Store(Point{42, 42}, 42)
 v, ok := m.Load(point{42, 42})
 ```
 

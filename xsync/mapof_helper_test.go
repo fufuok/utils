@@ -4,6 +4,7 @@
 package xsync_test
 
 import (
+	"hash/maphash"
 	"strconv"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestHashMapOf_StructKey_CustomHasher(t *testing.T) {
 		lon float32
 		lat float32
 	}
-	hasher := func(l location) uint64 {
+	hasher := func(_ maphash.Seed, l location) uint64 {
 		return uint64(6*l.lon + 7*l.lat)
 	}
 	m := NewHashMapOf[location, int](hasher)
@@ -345,7 +346,7 @@ func TestHashMapOf_IntegerMapOfSerialStore(t *testing.T) {
 
 func TestHashMapOf_IntegerMapOfSerialStore_WithHasher(t *testing.T) {
 	const numEntries = 128
-	m := NewHashMapOf[int, int](func(k int) uint64 {
+	m := NewHashMapOf[int, int](func(_ maphash.Seed, k int) uint64 {
 		return uint64(k)
 	})
 	for i := 0; i < numEntries; i++ {

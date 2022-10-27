@@ -4,6 +4,8 @@
 package xsync
 
 import (
+	"hash/maphash"
+
 	"github.com/fufuok/utils"
 )
 
@@ -69,9 +71,9 @@ type HashMapOf[K comparable, V any] interface {
 //		~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
 //		~float32 | ~float64 | ~string | ~complex64 | ~complex128
 //	}
-func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V] {
+func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V] {
 	if len(hasher) > 0 {
 		return NewTypedMapOf[K, V](hasher[0])
 	}
-	return NewTypedMapOf[K, V](utils.GenHasher64[K]())
+	return NewTypedMapOf[K, V](utils.GenSeedHasher64[K]())
 }
