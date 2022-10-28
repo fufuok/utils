@@ -9,6 +9,11 @@ import (
 	"unsafe"
 )
 
+const (
+	// PtrSize 4 on 32-bit systems, 8 on 64-bit.
+	PtrSize = 4 << (^uintptr(0) >> 63)
+)
+
 var (
 	StackTraceBufferSize = 4 << 10
 )
