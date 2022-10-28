@@ -22,6 +22,7 @@ package utils // import "github.com/fufuok/utils"
 
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
+const PtrSize = 4 << (^uintptr(0) >> 63)
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
@@ -92,8 +93,10 @@ func Executable(evalSymlinks ...bool) string
 func ExecutableDir(evalSymlinks ...bool) string
 func FastIntn(n int) int
 func FastRand() uint32
+func FastRand64() uint64
 func FastRandBytes(n int) []byte
 func FastRandn(n uint32) uint32
+func FastRandu() uint
 func FnvHash(s string) uint64
 func FnvHash32(s string) uint32
 func GenHasher[K comparable]() func(K) uintptr

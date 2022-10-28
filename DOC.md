@@ -75,8 +75,10 @@ import "github.com/fufuok/utils"
 - [func ExecutableDir(evalSymlinks ...bool) string](<#func-executabledir>)
 - [func FastIntn(n int) int](<#func-fastintn>)
 - [func FastRand() uint32](<#func-fastrand>)
+- [func FastRand64() uint64](<#func-fastrand64>)
 - [func FastRandBytes(n int) []byte](<#func-fastrandbytes>)
 - [func FastRandn(n uint32) uint32](<#func-fastrandn>)
+- [func FastRandu() uint](<#func-fastrandu>)
 - [func FnvHash(s string) uint64](<#func-fnvhash>)
 - [func FnvHash32(s string) uint32](<#func-fnvhash32>)
 - [func GenHasher[K comparable]() func(K) uintptr](<#func-genhasher>)
@@ -284,6 +286,13 @@ const (
     TByte = GByte * 1000
     PByte = TByte * 1000
     EByte = PByte * 1000
+)
+```
+
+```go
+const (
+    // PtrSize 4 on 32-bit systems, 8 on 64-bit.
+    PtrSize = 4 << (^uintptr(0) >> 63)
 )
 ```
 
@@ -875,6 +884,12 @@ func FastRand() uint32
 
 FastRand 随机数
 
+## func FastRand64
+
+```go
+func FastRand64() uint64
+```
+
 ## func FastRandBytes
 
 ```go
@@ -890,6 +905,12 @@ func FastRandn(n uint32) uint32
 ```
 
 FastRandn 等同于 FastRand\(\) % n, 但更快 See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+
+## func FastRandu
+
+```go
+func FastRandu() uint
+```
 
 ## func FnvHash
 
