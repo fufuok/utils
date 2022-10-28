@@ -60,6 +60,7 @@ References:
   - [func (id ID) Counter() int32](<#func-id-counter>)
   - [func (id ID) Encode(dst []byte) []byte](<#func-id-encode>)
   - [func (id ID) IsNil() bool](<#func-id-isnil>)
+  - [func (id ID) IsZero() bool](<#func-id-iszero>)
   - [func (id ID) Machine() []byte](<#func-id-machine>)
   - [func (id ID) MarshalJSON() ([]byte, error)](<#func-id-marshaljson>)
   - [func (id ID) MarshalText() ([]byte, error)](<#func-id-marshaltext>)
@@ -183,6 +184,14 @@ func (id ID) IsNil() bool
 ```
 
 IsNil Returns true if this is a "nil" ID
+
+### func \(ID\) IsZero
+
+```go
+func (id ID) IsZero() bool
+```
+
+IsZero Alias of IsNil
 
 ### func \(ID\) Machine
 
