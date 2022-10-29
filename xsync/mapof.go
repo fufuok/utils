@@ -229,7 +229,7 @@ func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bo
 					topHashes = atomic.LoadUint64(&emptyb.topHashMutex)
 					atomic.StoreUint64(&emptyb.topHashMutex, storeTopHash(hash, topHashes, emptyidx))
 					value := valueFn()
-					var wv interface{} = valueFn()
+					var wv interface{} = value
 					atomic.StorePointer(&emptyb.values[emptyidx], unsafe.Pointer(&wv))
 					atomic.StorePointer(&emptyb.keys[emptyidx], unsafe.Pointer(&key))
 					unlockBucket(&rootb.topHashMutex)
@@ -312,12 +312,17 @@ func (m *MapOf[K, V]) resize(table *mapTable, hint mapResizeHint) {
 			m.resizeMu.Unlock()
 			return
 		}
+	case mapClearHint:
+		newTable = newMapTable(minMapTableLen)
 	default:
 		panic(fmt.Sprintf("unexpected resize hint: %d", hint))
 	}
-	for i := 0; i < tableLen; i++ {
-		copied := copyBucketOf(&table.buckets[i], newTable, m.hasher)
-		newTable.addSizePlain(uint64(i), copied)
+	// Copy the data only if we're not clearing the map.
+	if hint != mapClearHint {
+		for i := 0; i < tableLen; i++ {
+			copied := copyBucketOf(&table.buckets[i], newTable, m.hasher)
+			newTable.addSizePlain(uint64(i), copied)
+		}
 	}
 	// Publish the new table and wake up all waiters.
 	atomic.StorePointer(&m.table, unsafe.Pointer(newTable))
@@ -447,6 +452,12 @@ func (m *MapOf[K, V]) Range(f func(key K, value V) bool) {
 			b = (*bucketPadded)(bucketPtr)
 		}
 	}
+}
+
+// Clear deletes all keys and values currently stored in the map.
+func (m *MapOf[K, V]) Clear() {
+	table := (*mapTable)(atomic.LoadPointer(&m.table))
+	m.resize(table, mapClearHint)
 }
 
 // Size returns current size of the map.

@@ -25,6 +25,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (q *MPMCQueue) TryEnqueue(item interface{}) bool](<#func-mpmcqueue-tryenqueue>)
 - [type Map](<#type-map>)
   - [func NewMap() *Map](<#func-newmap>)
+  - [func (m *Map) Clear()](<#func-map-clear>)
   - [func (m *Map) Delete(key string)](<#func-map-delete>)
   - [func (m *Map) Load(key string) (value interface{}, ok bool)](<#func-map-load>)
   - [func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)](<#func-map-loadanddelete>)
@@ -38,6 +39,7 @@ import "github.com/fufuok/utils/xsync"
   - [func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]](<#func-newintegermapof>)
   - [func NewMapOf[V any]() *MapOf[string, V]](<#func-newmapof>)
   - [func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
+  - [func (m *MapOf[K, V]) Clear()](<#func-mapofk-v-clear>)
   - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
   - [func (m *MapOf[K, V]) Load(key K) (value V, ok bool)](<#func-mapofk-v-load>)
   - [func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)](<#func-mapofk-v-loadanddelete>)
@@ -271,6 +273,14 @@ func NewMap() *Map
 
 NewMap creates a new Map instance.
 
+### func \(\*Map\) Clear
+
+```go
+func (m *Map) Clear()
+```
+
+Clear deletes all keys and values currently stored in the map.
+
 ### func \(\*Map\) Delete
 
 ```go
@@ -429,6 +439,14 @@ func main() {
 
 </p>
 </details>
+
+### func \(\*MapOf\[K, V\]\) Clear
+
+```go
+func (m *MapOf[K, V]) Clear()
+```
+
+Clear deletes all keys and values currently stored in the map.
 
 ### func \(\*MapOf\[K, V\]\) Delete
 
