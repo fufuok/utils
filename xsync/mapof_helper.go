@@ -58,6 +58,9 @@ type HashMapOf[K comparable, V any] interface {
 	// reflected in the subsequently iterated entries.
 	Range(f func(key K, value V) bool)
 
+	// Clear deletes all keys and values currently stored in the map.
+	Clear()
+
 	// Size returns current size of the map.
 	Size() int
 }
