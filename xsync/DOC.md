@@ -9,6 +9,7 @@ import "github.com/fufuok/utils/xsync"
 ## Index
 
 - [type Counter](<#type-counter>)
+  - [func NewCounter() *Counter](<#func-newcounter>)
   - [func (c *Counter) Add(delta int64)](<#func-counter-add>)
   - [func (c *Counter) Dec()](<#func-counter-dec>)
   - [func (c *Counter) Inc()](<#func-counter-inc>)
@@ -26,6 +27,7 @@ import "github.com/fufuok/utils/xsync"
 - [type Map](<#type-map>)
   - [func NewMap() *Map](<#func-newmap>)
   - [func (m *Map) Clear()](<#func-map-clear>)
+  - [func (m *Map) Compute(key string, valueFn func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool)) (actual interface{}, ok bool)](<#func-map-compute>)
   - [func (m *Map) Delete(key string)](<#func-map-delete>)
   - [func (m *Map) Load(key string) (value interface{}, ok bool)](<#func-map-load>)
   - [func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)](<#func-map-loadanddelete>)
@@ -40,6 +42,7 @@ import "github.com/fufuok/utils/xsync"
   - [func NewMapOf[V any]() *MapOf[string, V]](<#func-newmapof>)
   - [func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
   - [func (m *MapOf[K, V]) Clear()](<#func-mapofk-v-clear>)
+  - [func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newValue V, delete bool)) (actual V, ok bool)](<#func-mapofk-v-compute>)
   - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
   - [func (m *MapOf[K, V]) Load(key K) (value V, ok bool)](<#func-mapofk-v-load>)
   - [func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)](<#func-mapofk-v-loadanddelete>)
@@ -57,13 +60,13 @@ import "github.com/fufuok/utils/xsync"
 - [type RToken](<#type-rtoken>)
 
 
-## type Counter
+## type [Counter](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L27-L30>)
 
-A Counter is a striped int64 counter.
+A Counter is a striped int64 counter\.
 
-Should be preferred over a single atomically updated int64 counter in high contention scenarios.
+Should be preferred over a single atomically updated int64 counter in high contention scenarios\.
 
-A Counter must not be copied after first use.
+A Counter must not be copied after first use\.
 
 ```go
 type Counter struct {
@@ -71,47 +74,53 @@ type Counter struct {
 }
 ```
 
-### func \(\*Counter\) Add
+### func [NewCounter](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L38>)
+
+```go
+func NewCounter() *Counter
+```
+
+### func \(\*Counter\) [Add](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L58>)
 
 ```go
 func (c *Counter) Add(delta int64)
 ```
 
-Add adds the delta to the counter.
+Add adds the delta to the counter\.
 
-### func \(\*Counter\) Dec
+### func \(\*Counter\) [Dec](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L53>)
 
 ```go
 func (c *Counter) Dec()
 ```
 
-Dec decrements the counter by 1.
+Dec decrements the counter by 1\.
 
-### func \(\*Counter\) Inc
+### func \(\*Counter\) [Inc](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L48>)
 
 ```go
 func (c *Counter) Inc()
 ```
 
-Inc increments the counter by 1.
+Inc increments the counter by 1\.
 
-### func \(\*Counter\) Reset
+### func \(\*Counter\) [Reset](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L91>)
 
 ```go
 func (c *Counter) Reset()
 ```
 
-Reset resets the counter to zero. This method should only be used when it is known that there are no concurrent modifications of the counter.
+Reset resets the counter to zero\. This method should only be used when it is known that there are no concurrent modifications of the counter\.
 
-### func \(\*Counter\) Value
+### func \(\*Counter\) [Value](<https://github.com/fufuok/utils/blob/master/xsync/counter.go#L79>)
 
 ```go
 func (c *Counter) Value() int64
 ```
 
-Value returns the current counter value. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter.
+Value returns the current counter value\. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter\.
 
-## type HashMapOf
+## type [HashMapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof_helper.go#L12-L78>)
 
 ```go
 type HashMapOf[K comparable, V any] interface {
@@ -141,6 +150,18 @@ type HashMapOf[K comparable, V any] interface {
     // was loaded, false if stored.
     LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
 
+    // Compute either sets the computed new value for the key or deletes
+    // the value for the key. When the delete result of the valueFn function
+    // is set to true, the value will be deleted, if it exists. When delete
+    // is set to false, the value is updated to the newValue.
+    // The ok result indicates whether value was computed and stored, thus, is
+    // present in the map. The actual result contains the new value in cases where
+    // the value was computed and stored. See the example for a few use cases.
+    Compute(
+        key K,
+        valueFn func(oldValue V, loaded bool) (newValue V, delete bool),
+    ) (actual V, ok bool)
+
     // LoadAndDelete deletes the value for a key, returning the previous
     // value if any. The loaded result reports whether the key was
     // present.
@@ -163,18 +184,21 @@ type HashMapOf[K comparable, V any] interface {
     // reflected in the subsequently iterated entries.
     Range(f func(key K, value V) bool)
 
+    // Clear deletes all keys and values currently stored in the map.
+    Clear()
+
     // Size returns current size of the map.
     Size() int
 }
 ```
 
-### func NewHashMapOf
+### func [NewHashMapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof_helper.go#L89>)
 
 ```go
 func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
 ```
 
-NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys. If no hasher is specified, an automatic generation will be attempted. Hashable allowed map key types constraint. Automatically generated hashes for these types are safe:
+NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys\. If no hasher is specified\, an automatic generation will be attempted\. Hashable allowed map key types constraint\. Automatically generated hashes for these types are safe:
 
 ```
 type Hashable interface {
@@ -183,9 +207,9 @@ type Hashable interface {
 }
 ```
 
-## type IntegerConstraint
+## type [IntegerConstraint](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L47-L51>)
 
-IntegerConstraint represents any integer type.
+IntegerConstraint represents any integer type\.
 
 ```go
 type IntegerConstraint interface {
@@ -193,11 +217,11 @@ type IntegerConstraint interface {
 }
 ```
 
-## type MPMCQueue
+## type [MPMCQueue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L17-L26>)
 
-A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue.
+A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue\.
 
-MPMCQueue instances must be created with NewMPMCQueue function. A MPMCQueue must not be copied after first use.
+MPMCQueue instances must be created with NewMPMCQueue function\. A MPMCQueue must not be copied after first use\.
 
 Based on the data structure from the following C\+\+ library: https://github.com/rigtorp/MPMCQueue
 
@@ -207,57 +231,57 @@ type MPMCQueue struct {
 }
 ```
 
-### func NewMPMCQueue
+### func [NewMPMCQueue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L41>)
 
 ```go
 func NewMPMCQueue(capacity int) *MPMCQueue
 ```
 
-NewMPMCQueue creates a new MPMCQueue instance with the given capacity.
+NewMPMCQueue creates a new MPMCQueue instance with the given capacity\.
 
-### func \(\*MPMCQueue\) Dequeue
+### func \(\*MPMCQueue\) [Dequeue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L66>)
 
 ```go
 func (q *MPMCQueue) Dequeue() interface{}
 ```
 
-Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
+Dequeue retrieves and removes the item from the head of the queue\. Blocks\, if the queue is empty\.
 
-### func \(\*MPMCQueue\) Enqueue
+### func \(\*MPMCQueue\) [Enqueue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L53>)
 
 ```go
 func (q *MPMCQueue) Enqueue(item interface{})
 ```
 
-Enqueue inserts the given item into the queue. Blocks, if the queue is full.
+Enqueue inserts the given item into the queue\. Blocks\, if the queue is full\.
 
-### func \(\*MPMCQueue\) TryDequeue
+### func \(\*MPMCQueue\) [TryDequeue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L107>)
 
 ```go
 func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
 ```
 
-TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
+TryDequeue retrieves and removes the item from the head of the queue\. Does not block and returns immediately\. The ok result indicates that the queue isn't empty and an item was retrieved\.
 
-### func \(\*MPMCQueue\) TryEnqueue
+### func \(\*MPMCQueue\) [TryEnqueue](<https://github.com/fufuok/utils/blob/master/xsync/mpmcqueue.go#L82>)
 
 ```go
 func (q *MPMCQueue) TryEnqueue(item interface{}) bool
 ```
 
-TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
+TryEnqueue inserts the given item into the queue\. Does not block and returns immediately\. The result indicates that the queue isn't full and the item was inserted\.
 
-## type Map
+## type [Map](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L70-L77>)
 
-Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map.
+Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map with a number of valuable extensions like Compute or Size\.
 
-A Map must not be copied after first use.
+A Map must not be copied after first use\.
 
 Map uses a modified version of Cache\-Line Hash Table \(CLHT\) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache\-line\-sized buckets, so that on all modern CPUs update operations complete with at most one cache\-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios Map outperforms sync.Map.
+CLHT is built around idea to organize the hash table in cache\-line\-sized buckets\, so that on all modern CPUs update operations complete with at most one cache\-line transfer\. Also\, Get operations involve no write to memory\, as well as no mutexes or any other sort of locks\. Due to this design\, in all considered scenarios Map outperforms sync\.Map\.
 
-One important difference with sync.Map is that only string keys are supported. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values.
+One important difference with sync\.Map is that only string keys are supported\. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values\.
 
 ```go
 type Map struct {
@@ -265,109 +289,115 @@ type Map struct {
 }
 ```
 
-### func NewMap
+### func [NewMap](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L121>)
 
 ```go
 func NewMap() *Map
 ```
 
-NewMap creates a new Map instance.
+NewMap creates a new Map instance\.
 
-### func \(\*Map\) Clear
+### func \(\*Map\) [Clear](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L617>)
 
 ```go
 func (m *Map) Clear()
 ```
 
-Clear deletes all keys and values currently stored in the map.
+Clear deletes all keys and values currently stored in the map\.
 
-### func \(\*Map\) Delete
+### func \(\*Map\) [Compute](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L247-L250>)
+
+```go
+func (m *Map) Compute(key string, valueFn func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool)) (actual interface{}, ok bool)
+```
+
+Compute either sets the computed new value for the key or deletes the value for the key\. When the delete result of the valueFn function is set to true\, the value will be deleted\, if it exists\. When delete is set to false\, the value is updated to the newValue\. The ok result indicates whether value was computed and stored\, thus\, is present in the map\. The actual result contains the new value in cases where the value was computed and stored\. See the example for a few use cases\.
+
+### func \(\*Map\) [Delete](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L269>)
 
 ```go
 func (m *Map) Delete(key string)
 ```
 
-Delete deletes the value for a key.
+Delete deletes the value for a key\.
 
-### func \(\*Map\) Load
+### func \(\*Map\) [Load](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L149>)
 
 ```go
 func (m *Map) Load(key string) (value interface{}, ok bool)
 ```
 
-Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
+Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
 
-### func \(\*Map\) LoadAndDelete
+### func \(\*Map\) [LoadAndDelete](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L257>)
 
 ```go
 func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
 ```
 
-LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
+LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
 
-### func \(\*Map\) LoadAndStore
+### func \(\*Map\) [LoadAndStore](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L214>)
 
 ```go
 func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadAndStore returns the existing value for the key if present, while setting the new value for the key. It stores the new value and returns the existing one, if present. The loaded result is true if the existing value was loaded, false otherwise.
+LoadAndStore returns the existing value for the key if present\, while setting the new value for the key\. It stores the new value and returns the existing one\, if present\. The loaded result is true if the existing value was loaded\, false otherwise\.
 
-### func \(\*Map\) LoadOrCompute
+### func \(\*Map\) [LoadOrCompute](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L229>)
 
 ```go
 func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
+LoadOrCompute returns the existing value for the key if present\. Otherwise\, it computes the value using the provided function and returns the computed value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*Map\) LoadOrStore
+### func \(\*Map\) [LoadOrStore](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L198>)
 
 ```go
 func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
+LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*Map\) Range
+### func \(\*Map\) [Range](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L568>)
 
 ```go
 func (m *Map) Range(f func(key string, value interface{}) bool)
 ```
 
-Range calls f sequentially for each key and value present in the map. If f returns false, range stops the iteration.
+Range calls f sequentially for each key and value present in the map\. If f returns false\, range stops the iteration\.
 
-Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
+Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once\, but if the value for any key is stored or deleted concurrently\, Range may reflect any mapping for that key from any point during the Range call\.
 
-It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
+It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
 
-### func \(\*Map\) Size
+### func \(\*Map\) [Size](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L623>)
 
 ```go
 func (m *Map) Size() int
 ```
 
-Size returns current size of the map.
+Size returns current size of the map\.
 
-### func \(\*Map\) Store
+### func \(\*Map\) [Store](<https://github.com/fufuok/utils/blob/master/xsync/map.go#L184>)
 
 ```go
 func (m *Map) Store(key string, value interface{})
 ```
 
-Store sets the value for a key.
+Store sets the value for a key\.
 
-## type MapOf
+## type [MapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L31-L39>)
 
-MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map.
+MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination\. It follows the interface of sync\.Map with a number of valuable extensions like Compute or Size\.
 
-A MapOf must not be copied after first use.
+A MapOf must not be copied after first use\.
 
 MapOf uses a modified version of Cache\-Line Hash Table \(CLHT\) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache\-line\-sized buckets, so that on all modern CPUs update operations complete with at most one cache\-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios MapOf outperforms sync.Map.
-
-One important difference with sync.Map is that only string keys are supported. That's because Golang standard library does not expose the built\-in hash functions for interface\{\} values.
+CLHT is built around idea to organize the hash table in cache\-line\-sized buckets\, so that on all modern CPUs update operations complete with at most one cache\-line transfer\. Also\, Get operations involve no write to memory\, as well as no mutexes or any other sort of locks\. Due to this design\, in all considered scenarios MapOf outperforms sync\.Map\.
 
 ```go
 type MapOf[K comparable, V any] struct {
@@ -375,15 +405,15 @@ type MapOf[K comparable, V any] struct {
 }
 ```
 
-### func NewIntegerMapOf
+### func [NewIntegerMapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L54>)
 
 ```go
 func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]
 ```
 
-NewIntegerMapOf creates a new MapOf instance with integer typed keys.
+NewIntegerMapOf creates a new MapOf instance with integer typed keys\.
 
-### func NewMapOf
+### func [NewMapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L42>)
 
 ```go
 func NewMapOf[V any]() *MapOf[string, V]
@@ -391,13 +421,13 @@ func NewMapOf[V any]() *MapOf[string, V]
 
 NewMapOf creates a new MapOf instance with string keys
 
-### func NewTypedMapOf
+### func [NewTypedMapOf](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L62>)
 
 ```go
 func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]
 ```
 
-NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys. Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
+NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys\. Keys are hashed to uint64 using the hasher function\. It is strongly recommended to use the hash/maphash package to implement hasher\. See the example for how to do that\.
 
 <details><summary>Example</summary>
 <p>
@@ -407,10 +437,9 @@ package main
 
 import (
 	"encoding/binary"
+	"github.com/fufuok/utils/xsync"
 	"hash/maphash"
 	"time"
-
-	"github.com/fufuok/utils/xsync"
 )
 
 func main() {
@@ -440,101 +469,109 @@ func main() {
 </p>
 </details>
 
-### func \(\*MapOf\[K, V\]\) Clear
+### func \(\*MapOf\[K\, V\]\) [Clear](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L483>)
 
 ```go
 func (m *MapOf[K, V]) Clear()
 ```
 
-Clear deletes all keys and values currently stored in the map.
+Clear deletes all keys and values currently stored in the map\.
 
-### func \(\*MapOf\[K, V\]\) Delete
+### func \(\*MapOf\[K\, V\]\) [Compute](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L172-L175>)
+
+```go
+func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newValue V, delete bool)) (actual V, ok bool)
+```
+
+Compute either sets the computed new value for the key or deletes the value for the key\. When the delete result of the valueFn function is set to true\, the value will be deleted\, if it exists\. When delete is set to false\, the value is updated to the newValue\. The ok result indicates whether value was computed and stored\, thus\, is present in the map\. The actual result contains the new value in cases where the value was computed and stored\. See the example for a few use cases\.
+
+### func \(\*MapOf\[K\, V\]\) [Delete](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L194>)
 
 ```go
 func (m *MapOf[K, V]) Delete(key K)
 ```
 
-Delete deletes the value for a key.
+Delete deletes the value for a key\.
 
-### func \(\*MapOf\[K, V\]\) Load
+### func \(\*MapOf\[K\, V\]\) [Load](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L74>)
 
 ```go
 func (m *MapOf[K, V]) Load(key K) (value V, ok bool)
 ```
 
-Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
+Load returns the value stored in the map for a key\, or nil if no value is present\. The ok result indicates whether value was found in the map\.
 
-### func \(\*MapOf\[K, V\]\) LoadAndDelete
+### func \(\*MapOf\[K\, V\]\) [LoadAndDelete](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L182>)
 
 ```go
 func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)
 ```
 
-LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
+LoadAndDelete deletes the value for a key\, returning the previous value if any\. The loaded result reports whether the key was present\.
 
-### func \(\*MapOf\[K, V\]\) LoadAndStore
+### func \(\*MapOf\[K\, V\]\) [LoadAndStore](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L139>)
 
 ```go
 func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool)
 ```
 
-LoadAndStore returns the existing value for the key if present, while setting the new value for the key. It stores the new value and returns the existing one, if present. The loaded result is true if the existing value was loaded, false otherwise.
+LoadAndStore returns the existing value for the key if present\, while setting the new value for the key\. It stores the new value and returns the existing one\, if present\. The loaded result is true if the existing value was loaded\, false otherwise\.
 
-### func \(\*MapOf\[K, V\]\) LoadOrCompute
+### func \(\*MapOf\[K\, V\]\) [LoadOrCompute](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L154>)
 
 ```go
 func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
 ```
 
-LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
+LoadOrCompute returns the existing value for the key if present\. Otherwise\, it computes the value using the provided function and returns the computed value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*MapOf\[K, V\]\) LoadOrStore
+### func \(\*MapOf\[K\, V\]\) [LoadOrStore](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L123>)
 
 ```go
 func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)
 ```
 
-LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
+LoadOrStore returns the existing value for the key if present\. Otherwise\, it stores and returns the given value\. The loaded result is true if the value was loaded\, false if stored\.
 
-### func \(\*MapOf\[K, V\]\) Range
+### func \(\*MapOf\[K\, V\]\) [Range](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L458>)
 
 ```go
 func (m *MapOf[K, V]) Range(f func(key K, value V) bool)
 ```
 
-Range calls f sequentially for each key and value present in the map. If f returns false, range stops the iteration.
+Range calls f sequentially for each key and value present in the map\. If f returns false\, range stops the iteration\.
 
-Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
+Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once\, but if the value for any key is stored or deleted concurrently\, Range may reflect any mapping for that key from any point during the Range call\.
 
-It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
+It is safe to modify the map while iterating it\. However\, the concurrent modification rule apply\, i\.e\. the changes may be not reflected in the subsequently iterated entries\.
 
-### func \(\*MapOf\[K, V\]\) Size
+### func \(\*MapOf\[K\, V\]\) [Size](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L489>)
 
 ```go
 func (m *MapOf[K, V]) Size() int
 ```
 
-Size returns current size of the map.
+Size returns current size of the map\.
 
-### func \(\*MapOf\[K, V\]\) Store
+### func \(\*MapOf\[K\, V\]\) [Store](<https://github.com/fufuok/utils/blob/master/xsync/mapof.go#L109>)
 
 ```go
 func (m *MapOf[K, V]) Store(key K, value V)
 ```
 
-Store sets the value for a key.
+Store sets the value for a key\.
 
-## type RBMutex
+## type [RBMutex](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L43-L48>)
 
-A RBMutex is a reader biased reader/writer mutual exclusion lock. The lock can be held by an many readers or a single writer. The zero value for a RBMutex is an unlocked mutex.
+A RBMutex is a reader biased reader/writer mutual exclusion lock\. The lock can be held by an many readers or a single writer\. The zero value for a RBMutex is an unlocked mutex\.
 
-A RBMutex must not be copied after first use.
+A RBMutex must not be copied after first use\.
 
 RBMutex is based on the BRAVO \(Biased Locking for Reader\-Writer Locks\) algorithm: https://arxiv.org/pdf/1810.01553.pdf
 
-RBMutex is a specialized mutex for scenarios, such as caches, where the vast majority of locks are acquired by readers and write lock acquire attempts are infrequent. In such scenarios, RBMutex performs better than the sync.RWMutex on large multicore machines.
+RBMutex is a specialized mutex for scenarios\, such as caches\, where the vast majority of locks are acquired by readers and write lock acquire attempts are infrequent\. In such scenarios\, RBMutex performs better than the sync\.RWMutex on large multicore machines\.
 
-RBMutex extends sync.RWMutex internally and uses it as the "reader bias disabled" fallback, so the same semantics apply. The only noticeable difference is in reader tokens returned from the RLock/RUnlock methods.
+RBMutex extends sync\.RWMutex internally and uses it as the "reader bias disabled" fallback\, so the same semantics apply\. The only noticeable difference is in reader tokens returned from the RLock/RUnlock methods\.
 
 ```go
 type RBMutex struct {
@@ -542,45 +579,45 @@ type RBMutex struct {
 }
 ```
 
-### func \(\*RBMutex\) Lock
+### func \(\*RBMutex\) [Lock](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L95>)
 
 ```go
 func (m *RBMutex) Lock()
 ```
 
-Lock locks m for writing. If the lock is already locked for reading or writing, Lock blocks until the lock is available.
+Lock locks m for writing\. If the lock is already locked for reading or writing\, Lock blocks until the lock is available\.
 
-### func \(\*RBMutex\) RLock
+### func \(\*RBMutex\) [RLock](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L55>)
 
 ```go
 func (m *RBMutex) RLock() *RToken
 ```
 
-RLock locks m for reading and returns a reader token. The token must be used in the later RUnlock call.
+RLock locks m for reading and returns a reader token\. The token must be used in the later RUnlock call\.
 
-Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock.
+Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock\.
 
-### func \(\*RBMutex\) RUnlock
+### func \(\*RBMutex\) [RUnlock](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L82>)
 
 ```go
 func (m *RBMutex) RUnlock(t *RToken)
 ```
 
-RUnlock undoes a single RLock call. A reader token obtained from the RLock call must be provided. RUnlock does not affect other simultaneous readers. A panic is raised if m is not locked for reading on entry to RUnlock.
+RUnlock undoes a single RLock call\. A reader token obtained from the RLock call must be provided\. RUnlock does not affect other simultaneous readers\. A panic is raised if m is not locked for reading on entry to RUnlock\.
 
-### func \(\*RBMutex\) Unlock
+### func \(\*RBMutex\) [Unlock](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L115>)
 
 ```go
 func (m *RBMutex) Unlock()
 ```
 
-Unlock unlocks m for writing. A panic is raised if m is not locked for writing on entry to Unlock.
+Unlock unlocks m for writing\. A panic is raised if m is not locked for writing on entry to Unlock\.
 
-As with RWMutex, a locked RBMutex is not associated with a particular goroutine. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it.
+As with RWMutex\, a locked RBMutex is not associated with a particular goroutine\. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it\.
 
-## type RToken
+## type [RToken](<https://github.com/fufuok/utils/blob/master/xsync/rbmutex.go#L21-L23>)
 
-RToken is a reader lock token.
+RToken is a reader lock token\.
 
 ```go
 type RToken struct {

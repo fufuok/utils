@@ -14,7 +14,8 @@ import (
 
 // MapOf is like a Go map[string]V but is safe for concurrent
 // use by multiple goroutines without additional locking or
-// coordination. It follows the interface of sync.Map.
+// coordination. It follows the interface of sync.Map with
+// a number of valuable extensions like Compute or Size.
 //
 // A MapOf must not be copied after first use.
 //
@@ -27,10 +28,6 @@ import (
 // Also, Get operations involve no write to memory, as well as no
 // mutexes or any other sort of locks. Due to this design, in all
 // considered scenarios MapOf outperforms sync.Map.
-//
-// One important difference with sync.Map is that only string keys
-// are supported. That's because Golang standard library does not
-// expose the built-in hash functions for interface{} values.
 type MapOf[K comparable, V any] struct {
 	totalGrowths int64
 	totalShrinks int64
@@ -110,11 +107,12 @@ func (m *MapOf[K, V]) Load(key K) (value V, ok bool) {
 
 // Store sets the value for a key.
 func (m *MapOf[K, V]) Store(key K, value V) {
-	m.doStore(
+	m.doCompute(
 		key,
-		func() V {
-			return value
+		func(V, bool) (V, bool) {
+			return value, false
 		},
+		false,
 		false,
 	)
 }
@@ -123,12 +121,13 @@ func (m *MapOf[K, V]) Store(key K, value V) {
 // Otherwise, it stores and returns the given value.
 // The loaded result is true if the value was loaded, false if stored.
 func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool) {
-	return m.doStore(
+	return m.doCompute(
 		key,
-		func() V {
-			return value
+		func(V, bool) (V, bool) {
+			return value, false
 		},
 		true,
+		false,
 	)
 }
 
@@ -138,11 +137,12 @@ func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool) {
 // The loaded result is true if the existing value was loaded,
 // false otherwise.
 func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool) {
-	return m.doStore(
+	return m.doCompute(
 		key,
-		func() V {
-			return value
+		func(V, bool) (V, bool) {
+			return value, false
 		},
+		false,
 		false,
 	)
 }
@@ -152,23 +152,75 @@ func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool) {
 // returns the computed value. The loaded result is true if the value
 // was loaded, false if stored.
 func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool) {
-	return m.doStore(key, valueFn, true)
+	return m.doCompute(
+		key,
+		func(V, bool) (V, bool) {
+			return valueFn(), false
+		},
+		true,
+		false,
+	)
 }
 
-func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bool) {
+// Compute either sets the computed new value for the key or deletes
+// the value for the key. When the delete result of the valueFn function
+// is set to true, the value will be deleted, if it exists. When delete
+// is set to false, the value is updated to the newValue.
+// The ok result indicates whether value was computed and stored, thus, is
+// present in the map. The actual result contains the new value in cases where
+// the value was computed and stored. See the example for a few use cases.
+func (m *MapOf[K, V]) Compute(
+	key K,
+	valueFn func(oldValue V, loaded bool) (newValue V, delete bool),
+) (actual V, ok bool) {
+	return m.doCompute(key, valueFn, false, true)
+}
+
+// LoadAndDelete deletes the value for a key, returning the previous
+// value if any. The loaded result reports whether the key was
+// present.
+func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool) {
+	return m.doCompute(
+		key,
+		func(value V, loaded bool) (V, bool) {
+			return value, true
+		},
+		false,
+		false,
+	)
+}
+
+// Delete deletes the value for a key.
+func (m *MapOf[K, V]) Delete(key K) {
+	m.doCompute(
+		key,
+		func(value V, loaded bool) (V, bool) {
+			return value, true
+		},
+		false,
+		false,
+	)
+}
+
+func (m *MapOf[K, V]) doCompute(
+	key K,
+	valueFn func(oldValue V, loaded bool) (V, bool),
+	loadIfExists, computeOnly bool,
+) (V, bool) {
 	// Read-only path.
 	if loadIfExists {
 		if v, ok := m.Load(key); ok {
-			return v, true
+			return v, !computeOnly
 		}
 	}
 	// Write path.
 	for {
-	store_attempt:
+	compute_attempt:
 		var (
 			emptyb   *bucketPadded
 			emptyidx int
 		)
+		hintNonEmpty := 0
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
 		hash := m.hasher(table.seed, key)
@@ -179,13 +231,13 @@ func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bo
 		if m.newerTableExists(table) {
 			// Someone resized the table. Go for another attempt.
 			unlockBucket(&rootb.topHashMutex)
-			goto store_attempt
+			goto compute_attempt
 		}
 		if m.resizeInProgress() {
 			// Resize is in progress. Wait, then go for another attempt.
 			unlockBucket(&rootb.topHashMutex)
 			m.waitForResize()
-			goto store_attempt
+			goto compute_attempt
 		}
 		for {
 			topHashes := atomic.LoadUint64(&b.topHashMutex)
@@ -204,56 +256,94 @@ func (m *MapOf[K, V]) doStore(key K, valueFn func() V, loadIfExists bool) (V, bo
 					vp := b.values[i]
 					if loadIfExists {
 						unlockBucket(&rootb.topHashMutex)
-						return derefTypedValue[V](vp), true
+						return derefTypedValue[V](vp), !computeOnly
 					}
-					// In-place update case. We get a copy of the value via an
-					// interface{} on each call, thus the live value pointers are
-					// unique. Otherwise atomic snapshot won't be correct in case
-					// of multiple Store calls using the same value.
-					value := valueFn()
-					var wv interface{} = value
+					// In-place update/delete.
+					// We get a copy of the value via an interface{} on each call,
+					// thus the live value pointers are unique. Otherwise atomic
+					// snapshot won't be correct in case of multiple Store calls
+					// using the same value.
+					oldValue := derefTypedValue[V](vp)
+					newValue, del := valueFn(oldValue, true)
+					if del {
+						// Deletion.
+						// First we update the value, then the key.
+						// This is important for atomic snapshot states.
+						atomic.StoreUint64(&b.topHashMutex, eraseTopHash(topHashes, i))
+						atomic.StorePointer(&b.values[i], nil)
+						atomic.StorePointer(&b.keys[i], nil)
+						leftEmpty := false
+						if hintNonEmpty == 0 {
+							leftEmpty = isEmpty(b)
+						}
+						unlockBucket(&rootb.topHashMutex)
+						table.addSize(bidx, -1)
+						// Might need to shrink the table.
+						if leftEmpty {
+							m.resize(table, mapShrinkHint)
+						}
+						return oldValue, !computeOnly
+					}
+					var wv interface{} = newValue
 					nvp := unsafe.Pointer(&wv)
 					if assertionsEnabled && vp == nvp {
 						panic("non-unique value pointer")
 					}
 					atomic.StorePointer(&b.values[i], nvp)
 					unlockBucket(&rootb.topHashMutex)
+					if computeOnly {
+						// Compute expects the new value to be returned.
+						return newValue, true
+					}
 					// LoadAndStore expects the old value to be returned.
-					return derefTypedValue[V](vp), true
+					return oldValue, true
 				}
+				hintNonEmpty++
 			}
 			if b.next == nil {
 				if emptyb != nil {
-					// Insertion case. First we update the value, then the key.
+					// Insertion into an existing bucket.
+					var zeroedV V
+					newValue, del := valueFn(zeroedV, false)
+					if del {
+						unlockBucket(&rootb.topHashMutex)
+						return zeroedV, false
+					}
+					var wv interface{} = newValue
+					// First we update the value, then the key.
 					// This is important for atomic snapshot states.
 					topHashes = atomic.LoadUint64(&emptyb.topHashMutex)
 					atomic.StoreUint64(&emptyb.topHashMutex, storeTopHash(hash, topHashes, emptyidx))
-					value := valueFn()
-					var wv interface{} = value
 					atomic.StorePointer(&emptyb.values[emptyidx], unsafe.Pointer(&wv))
 					atomic.StorePointer(&emptyb.keys[emptyidx], unsafe.Pointer(&key))
 					unlockBucket(&rootb.topHashMutex)
 					table.addSize(bidx, 1)
-					return value, false
+					return newValue, computeOnly
 				}
 				growThreshold := float64(tableLen) * entriesPerMapBucket * mapLoadFactor
 				if table.sumSize() > int64(growThreshold) {
 					// Need to grow the table. Then go for another attempt.
 					unlockBucket(&rootb.topHashMutex)
 					m.resize(table, mapGrowHint)
-					goto store_attempt
+					goto compute_attempt
 				}
-				// Create and append a new bucket.
+				// Insertion into a new bucket.
+				var zeroedV V
+				newValue, del := valueFn(zeroedV, false)
+				if del {
+					unlockBucket(&rootb.topHashMutex)
+					return newValue, false
+				}
+				var wv interface{} = newValue
+				// Create and append the bucket.
 				newb := new(bucketPadded)
 				newb.keys[0] = unsafe.Pointer(&key)
-				value := valueFn()
-				var wv interface{} = value
 				newb.values[0] = unsafe.Pointer(&wv)
 				newb.topHashMutex = storeTopHash(hash, newb.topHashMutex, 0)
 				atomic.StorePointer(&b.next, unsafe.Pointer(newb))
 				unlockBucket(&rootb.topHashMutex)
 				table.addSize(bidx, 1)
-				return value, false
+				return newValue, computeOnly
 			}
 			b = (*bucketPadded)(b.next)
 		}
@@ -351,71 +441,6 @@ func copyBucketOf[K comparable](b *bucketPadded, destTable *mapTable, hasher fun
 		}
 		b = (*bucketPadded)(b.next)
 	}
-}
-
-// LoadAndDelete deletes the value for a key, returning the previous
-// value if any. The loaded result reports whether the key was
-// present.
-func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool) {
-	for {
-		hintNonEmpty := 0
-		table := (*mapTable)(atomic.LoadPointer(&m.table))
-		hash := m.hasher(table.seed, key)
-		bidx := bucketIdx(table, hash)
-		rootb := &table.buckets[bidx]
-		b := rootb
-		lockBucket(&rootb.topHashMutex)
-		if m.newerTableExists(table) {
-			// Someone resized the table. Go for another attempt.
-			unlockBucket(&rootb.topHashMutex)
-			continue
-		}
-		if m.resizeInProgress() {
-			// Resize is in progress. Wait, then go for another attempt.
-			unlockBucket(&rootb.topHashMutex)
-			m.waitForResize()
-			continue
-		}
-		for {
-			topHashes := atomic.LoadUint64(&b.topHashMutex)
-			for i := 0; i < entriesPerMapBucket; i++ {
-				kp := b.keys[i]
-				if kp == nil || !topHashMatch(hash, topHashes, i) {
-					continue
-				}
-				if key == derefTypedKey[K](kp) {
-					vp := b.values[i]
-					// Deletion case. First we update the value, then the key.
-					// This is important for atomic snapshot states.
-					atomic.StoreUint64(&b.topHashMutex, eraseTopHash(topHashes, i))
-					atomic.StorePointer(&b.values[i], nil)
-					atomic.StorePointer(&b.keys[i], nil)
-					leftEmpty := false
-					if hintNonEmpty == 0 {
-						leftEmpty = isEmpty(b)
-					}
-					unlockBucket(&rootb.topHashMutex)
-					table.addSize(bidx, -1)
-					// Might need to shrink the table.
-					if leftEmpty {
-						m.resize(table, mapShrinkHint)
-					}
-					return derefTypedValue[V](vp), true
-				}
-				hintNonEmpty++
-			}
-			if b.next == nil {
-				unlockBucket(&rootb.topHashMutex)
-				return
-			}
-			b = (*bucketPadded)(b.next)
-		}
-	}
-}
-
-// Delete deletes the value for a key.
-func (m *MapOf[K, V]) Delete(key K) {
-	m.LoadAndDelete(key)
 }
 
 // Range calls f sequentially for each key and value present in the

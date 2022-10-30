@@ -36,6 +36,18 @@ type HashMapOf[K comparable, V any] interface {
 	// was loaded, false if stored.
 	LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
 
+	// Compute either sets the computed new value for the key or deletes
+	// the value for the key. When the delete result of the valueFn function
+	// is set to true, the value will be deleted, if it exists. When delete
+	// is set to false, the value is updated to the newValue.
+	// The ok result indicates whether value was computed and stored, thus, is
+	// present in the map. The actual result contains the new value in cases where
+	// the value was computed and stored. See the example for a few use cases.
+	Compute(
+		key K,
+		valueFn func(oldValue V, loaded bool) (newValue V, delete bool),
+	) (actual V, ok bool)
+
 	// LoadAndDelete deletes the value for a key, returning the previous
 	// value if any. The loaded result reports whether the key was
 	// present.
