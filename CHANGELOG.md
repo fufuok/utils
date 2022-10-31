@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.8.2
+
+**2022-10-31**
+
+- 同步优化 `xsync.Map` `xsync.Counter`
+  - 重大变化, 现在需要: `xsync.NewCounter()` 初始化后使用
+
 ## v0.8.1
 
 **2022-10-28**
