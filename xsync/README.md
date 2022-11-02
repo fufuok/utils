@@ -1,14 +1,6 @@
-# 标准库 `sync` 扩展包
-
-*forked from puzpuzpuz/xsync v20221027*
-
-## 改动:
-
-- 增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash
-
-[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync)
-[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync)
-[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg?token=TR5UFTG9YY)](https://codecov.io/gh/puzpuzpuz/xsync)
+[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v2)
+[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v2)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v2)
+[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg)](https://codecov.io/gh/puzpuzpuz/xsync)
 
 # xsync
 
@@ -16,7 +8,7 @@ Concurrent data structures for Go. Aims to provide more scalable alternatives fo
 
 ### Benchmarks
 
-Benchmark results may be found [here](https://github.com/puzpuzpuz/xsync/blob/main/BENCHMARKS.md).
+Benchmark results may be found [here](BENCHMARKS.md).
 
 ## Counter
 
@@ -50,7 +42,7 @@ CLHT is built around idea to organize the hash table in cache-line-sized buckets
 
 One important difference with `sync.Map` is that only string keys are supported. That's because Golang standard library does not expose the built-in hash functions for `interface{}` values.
 
-`MapOf[V]` is an implementation with parametrized value type. It is available for Go 1.18 or later.
+`MapOf[K, V]` is an implementation with parametrized value type. It is available for Go 1.18 or later. While it's still a CLHT-inspired hash map, `MapOf`'s design is quite different from `Map`. As a result, less GC pressure and less atomic operations on reads.
 
 ```go
 m := xsync.NewMapOf[string]()
