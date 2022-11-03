@@ -1,6 +1,14 @@
-[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v2)
-[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v2)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v2)
-[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg)](https://codecov.io/gh/puzpuzpuz/xsync)
+# 标准库 `sync` 扩展包
+
+*forked from puzpuzpuz/xsync v20221027*
+
+## 改动:
+
+- 增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash
+
+[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync)
+[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync)
+[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg?token=TR5UFTG9YY)](https://codecov.io/gh/puzpuzpuz/xsync)
 
 # xsync
 
@@ -8,7 +16,7 @@ Concurrent data structures for Go. Aims to provide more scalable alternatives fo
 
 ### Benchmarks
 
-Benchmark results may be found [here](BENCHMARKS.md).
+Benchmark results may be found [here](https://github.com/puzpuzpuz/xsync/blob/main/BENCHMARKS.md).
 
 ## Counter
 
