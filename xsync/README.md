@@ -1,6 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20221027*
+*forked from puzpuzpuz/xsync v20221104*
 
 ## 改动:
 
@@ -16,7 +16,7 @@ Concurrent data structures for Go. Aims to provide more scalable alternatives fo
 
 ### Benchmarks
 
-Benchmark results may be found [here](https://github.com/puzpuzpuz/xsync/blob/main/BENCHMARKS.md).
+Benchmark results may be found [here](BENCHMARKS.md).
 
 ## Counter
 
