@@ -1,6 +1,7 @@
 package xsync
 
 import (
+	"hash/maphash"
 	"runtime"
 	_ "unsafe"
 )
@@ -36,6 +37,14 @@ func parallelism() uint32 {
 		return maxProcs
 	}
 	return numCores
+}
+
+// hashString calculates a hash of s with the given seed.
+func hashString(seed maphash.Seed, s string) uint64 {
+	var h maphash.Hash
+	h.SetSeed(seed)
+	h.WriteString(s)
+	return h.Sum64()
 }
 
 //go:noescape

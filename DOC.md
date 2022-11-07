@@ -10,14 +10,8 @@ import "github.com/fufuok/utils"
 
 - [Constants](<#constants>)
 - [Variables](<#variables>)
-- [func AddBytes32(h uint32, b []byte) uint32](<#func-addbytes32>)
-- [func AddBytes64(h uint64, b []byte) uint64](<#func-addbytes64>)
 - [func AddString(s ...string) string](<#func-addstring>)
-- [func AddString32(h uint32, s string) uint32](<#func-addstring32>)
-- [func AddString64(h uint64, s string) uint64](<#func-addstring64>)
 - [func AddStringBytes(s ...string) []byte](<#func-addstringbytes>)
-- [func AddUint32(h, u uint32) uint32](<#func-adduint32>)
-- [func AddUint64(h uint64, u uint64) uint64](<#func-adduint64>)
 - [func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)](<#func-assertequal>)
 - [func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{})](<#func-assertequalf>)
 - [func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)](<#func-assertnotequal>)
@@ -55,7 +49,6 @@ import "github.com/fufuok/utils"
 - [func CopyString(s string) string](<#func-copystring>)
 - [func CutBytes(s, sep []byte) (before, after []byte, found bool)](<#func-cutbytes>)
 - [func CutString(s, sep string) (before, after string, found bool)](<#func-cutstring>)
-- [func Djb33(s string) uint32](<#func-djb33>)
 - [func EncodeUUID(id []byte) []byte](<#func-encodeuuid>)
 - [func EndOfDay(t time.Time) time.Time](<#func-endofday>)
 - [func EndOfHour(t time.Time) time.Time](<#func-endofhour>)
@@ -79,11 +72,6 @@ import "github.com/fufuok/utils"
 - [func FastRandBytes(n int) []byte](<#func-fastrandbytes>)
 - [func FastRandn(n uint32) uint32](<#func-fastrandn>)
 - [func FastRandu() uint](<#func-fastrandu>)
-- [func FnvHash(s string) uint64](<#func-fnvhash>)
-- [func FnvHash32(s string) uint32](<#func-fnvhash32>)
-- [func GenHasher[K comparable]() func(K) uintptr](<#func-genhasher>)
-- [func GenHasher64[K comparable]() func(K) uint64](<#func-genhasher64>)
-- [func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64](<#func-genseedhasher64>)
 - [func GetBytes(v interface{}, defaultVal ...[]byte) []byte](<#func-getbytes>)
 - [func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)](<#func-getipport>)
 - [func GetInt(v interface{}, defaultInt ...int) int](<#func-getint>)
@@ -97,22 +85,6 @@ import "github.com/fufuok/utils"
 - [func GetString(v interface{}, defaultVal ...string) string](<#func-getstring>)
 - [func Gzip(data []byte) ([]byte, error)](<#func-gzip>)
 - [func GzipLevel(data []byte, level int) (dst []byte, err error)](<#func-gziplevel>)
-- [func Hash(b []byte, h hash.Hash) []byte](<#func-hash>)
-- [func HashBytes(b ...[]byte) string](<#func-hashbytes>)
-- [func HashBytes32(b ...[]byte) uint32](<#func-hashbytes32>)
-- [func HashBytes64(b ...[]byte) uint64](<#func-hashbytes64>)
-- [func HashString(s ...string) string](<#func-hashstring>)
-- [func HashString32(s ...string) uint32](<#func-hashstring32>)
-- [func HashString64(s ...string) uint64](<#func-hashstring64>)
-- [func HashUint32(u uint32) uint32](<#func-hashuint32>)
-- [func HashUint64(u uint64) uint64](<#func-hashuint64>)
-- [func Hmac(b []byte, key []byte, h func() hash.Hash) []byte](<#func-hmac>)
-- [func HmacSHA1(b, key []byte) []byte](<#func-hmacsha1>)
-- [func HmacSHA1Hex(s, key string) string](<#func-hmacsha1hex>)
-- [func HmacSHA256(b, key []byte) []byte](<#func-hmacsha256>)
-- [func HmacSHA256Hex(s, key string) string](<#func-hmacsha256hex>)
-- [func HmacSHA512(b, key []byte) []byte](<#func-hmacsha512>)
-- [func HmacSHA512Hex(s, key string) string](<#func-hmacsha512hex>)
 - [func HumanBaseBytes(v uint64, base float64, sizes []string) string](<#func-humanbasebytes>)
 - [func HumanBigBytes(s *big.Int) string](<#func-humanbigbytes>)
 - [func HumanBigIBytes(s *big.Int) string](<#func-humanbigibytes>)
@@ -152,16 +124,7 @@ import "github.com/fufuok/utils"
 - [func Long2IPv4String(n int) string](<#func-long2ipv4string>)
 - [func LongLittle2IPv4(n int) net.IP](<#func-longlittle2ipv4>)
 - [func LongLittle2IPv4String(n int) string](<#func-longlittle2ipv4string>)
-- [func MD5(b []byte) []byte](<#func-md5>)
-- [func MD5BytesHex(bs []byte) string](<#func-md5byteshex>)
-- [func MD5Hex(s string) string](<#func-md5hex>)
-- [func MD5Reader(r io.Reader) (string, error)](<#func-md5reader>)
-- [func MD5Sum(filename string) (string, error)](<#func-md5sum>)
 - [func MaxInt(a, b int) int](<#func-maxint>)
-- [func MemHash(s string) uint64](<#func-memhash>)
-- [func MemHash32(s string) uint32](<#func-memhash32>)
-- [func MemHashb(b []byte) uint64](<#func-memhashb>)
-- [func MemHashb32(b []byte) uint32](<#func-memhashb32>)
 - [func MinInt(a, b int) int](<#func-minint>)
 - [func MustBool(v interface{}) bool](<#func-mustbool>)
 - [func MustInt(v interface{}) int](<#func-mustint>)
@@ -169,7 +132,6 @@ import "github.com/fufuok/utils"
 - [func MustJSONIndent(v interface{}) []byte](<#func-mustjsonindent>)
 - [func MustJSONIndentString(v interface{}) string](<#func-mustjsonindentstring>)
 - [func MustJSONString(v interface{}) string](<#func-mustjsonstring>)
-- [func MustMD5Sum(filename string) string](<#func-mustmd5sum>)
 - [func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int](<#func-mustparsehumanbigbytes>)
 - [func MustParseHumanBytes(s string, defaultVal ...uint64) uint64](<#func-mustparsehumanbytes>)
 - [func MustString(v interface{}, timeLayout ...string) string](<#func-muststring>)
@@ -199,21 +161,11 @@ import "github.com/fufuok/utils"
 - [func SafeGo(fn func(), cb ...RecoveryCallback)](<#func-safego>)
 - [func SearchInt(slice []int, n int) int](<#func-searchint>)
 - [func SearchString(ss []string, s string) int](<#func-searchstring>)
-- [func Sha1(b []byte) []byte](<#func-sha1>)
-- [func Sha1Hex(s string) string](<#func-sha1hex>)
-- [func Sha256(b []byte) []byte](<#func-sha256>)
-- [func Sha256Hex(s string) string](<#func-sha256hex>)
-- [func Sha512(b []byte) []byte](<#func-sha512>)
-- [func Sha512Hex(s string) string](<#func-sha512hex>)
 - [func SplitHostPort(hostPort string) (host, port string)](<#func-splithostport>)
 - [func Str2Bytes(s string) (b []byte)](<#func-str2bytes>)
 - [func StrToBytes(s string) []byte](<#func-strtobytes>)
 - [func String2Bytes(s string) (bs []byte)](<#func-string2bytes>)
 - [func StringToBytes(s string) (b []byte)](<#func-stringtobytes>)
-- [func Sum32(s string) uint32](<#func-sum32>)
-- [func Sum64(s string) uint64](<#func-sum64>)
-- [func SumBytes32(bs []byte) uint32](<#func-sumbytes32>)
-- [func SumBytes64(bs []byte) uint64](<#func-sumbytes64>)
 - [func SumInt(v ...int) int](<#func-sumint>)
 - [func ToLower(b string) string](<#func-tolower>)
 - [func ToLowerBytes(b []byte) []byte](<#func-tolowerbytes>)
@@ -251,12 +203,16 @@ import "github.com/fufuok/utils"
   - [func (x *Bool) Swap(new bool) (old bool)](<#func-bool-swap>)
   - [func (x *Bool) Toggle() (old bool)](<#func-bool-toggle>)
   - [func (x *Bool) UnmarshalJSON(b []byte) error](<#func-bool-unmarshaljson>)
-- [type Hashable](<#type-hashable>)
 - [type NoCmp](<#type-nocmp>)
 - [type NoCopy](<#type-nocopy>)
   - [func (*NoCopy) Lock()](<#func-nocopy-lock>)
   - [func (*NoCopy) Unlock()](<#func-nocopy-unlock>)
 - [type RecoveryCallback](<#type-recoverycallback>)
+- [type TryMutex](<#type-trymutex>)
+  - [func NewTryMutex() *TryMutex](<#func-newtrymutex>)
+  - [func (m *TryMutex) Lock()](<#func-trymutex-lock>)
+  - [func (m *TryMutex) TryLock(timeout ...time.Duration) bool](<#func-trymutex-trylock>)
+  - [func (m *TryMutex) Unlock()](<#func-trymutex-unlock>)
 
 
 ## Constants
@@ -368,22 +324,6 @@ var (
 )
 ```
 
-## func AddBytes32
-
-```go
-func AddBytes32(h uint32, b []byte) uint32
-```
-
-AddBytes32 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
-
-## func AddBytes64
-
-```go
-func AddBytes64(h uint64, b []byte) uint64
-```
-
-AddBytes64 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
-
 ## func AddString
 
 ```go
@@ -392,22 +332,6 @@ func AddString(s ...string) string
 
 AddString 拼接字符串
 
-## func AddString32
-
-```go
-func AddString32(h uint32, s string) uint32
-```
-
-AddString32 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
-
-## func AddString64
-
-```go
-func AddString64(h uint64, s string) uint64
-```
-
-AddString64 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
-
 ## func AddStringBytes
 
 ```go
@@ -415,22 +339,6 @@ func AddStringBytes(s ...string) []byte
 ```
 
 AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
-
-## func AddUint32
-
-```go
-func AddUint32(h, u uint32) uint32
-```
-
-AddUint32 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
-
-## func AddUint64
-
-```go
-func AddUint64(h uint64, u uint64) uint64
-```
-
-AddUint64 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
 
 ## func AssertEqual
 
@@ -724,14 +632,6 @@ func CutString(s, sep string) (before, after string, found bool)
 
 CutString slices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, "", false. Ref: go1.18
 
-## func Djb33
-
-```go
-func Djb33(s string) uint32
-```
-
-Djb33 比 FnvHash32 更快的获取字符串哈希值 djb2 with better shuffling. 5x faster than FNV with the hash.Hash overhead. Ref: patrickmn/go\-cache
-
 ## func EncodeUUID
 
 ```go
@@ -912,42 +812,6 @@ FastRandn 等同于 FastRand\(\) % n, 但更快 See https://lemire.me/blog/2016/
 func FastRandu() uint
 ```
 
-## func FnvHash
-
-```go
-func FnvHash(s string) uint64
-```
-
-FnvHash 获取字符串的哈希值
-
-## func FnvHash32
-
-```go
-func FnvHash32(s string) uint32
-```
-
-FnvHash32 获取字符串的哈希值
-
-## func GenHasher
-
-```go
-func GenHasher[K comparable]() func(K) uintptr
-```
-
-## func GenHasher64
-
-```go
-func GenHasher64[K comparable]() func(K) uint64
-```
-
-GenHasher64 返回哈希函数 Ref: smallnest/safemap, alphadose/haxmap, cornelk/hashmap
-
-## func GenSeedHasher64
-
-```go
-func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64
-```
-
 ## func GetBytes
 
 ```go
@@ -1046,110 +910,6 @@ func Gzip(data []byte) ([]byte, error)
 
 ```go
 func GzipLevel(data []byte, level int) (dst []byte, err error)
-```
-
-## func Hash
-
-```go
-func Hash(b []byte, h hash.Hash) []byte
-```
-
-## func HashBytes
-
-```go
-func HashBytes(b ...[]byte) string
-```
-
-HashBytes 合并 Bytes, 得到字符串哈希
-
-## func HashBytes32
-
-```go
-func HashBytes32(b ...[]byte) uint32
-```
-
-## func HashBytes64
-
-```go
-func HashBytes64(b ...[]byte) uint64
-```
-
-## func HashString
-
-```go
-func HashString(s ...string) string
-```
-
-HashString 合并一串文本, 得到字符串哈希
-
-## func HashString32
-
-```go
-func HashString32(s ...string) uint32
-```
-
-## func HashString64
-
-```go
-func HashString64(s ...string) uint64
-```
-
-## func HashUint32
-
-```go
-func HashUint32(u uint32) uint32
-```
-
-HashUint32 returns the hash of u. Ref: segmentio/fasthash
-
-## func HashUint64
-
-```go
-func HashUint64(u uint64) uint64
-```
-
-HashUint64 returns the hash of u. Ref: segmentio/fasthash
-
-## func Hmac
-
-```go
-func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
-```
-
-## func HmacSHA1
-
-```go
-func HmacSHA1(b, key []byte) []byte
-```
-
-## func HmacSHA1Hex
-
-```go
-func HmacSHA1Hex(s, key string) string
-```
-
-## func HmacSHA256
-
-```go
-func HmacSHA256(b, key []byte) []byte
-```
-
-## func HmacSHA256Hex
-
-```go
-func HmacSHA256Hex(s, key string) string
-```
-
-## func HmacSHA512
-
-```go
-func HmacSHA512(b, key []byte) []byte
-```
-
-## func HmacSHA512Hex
-
-```go
-func HmacSHA512Hex(s, key string) string
 ```
 
 ## func HumanBaseBytes
@@ -1489,42 +1249,6 @@ func LongLittle2IPv4String(n int) string
 
 LongLittle2IPv4String 数值\(小端\)转 IPv4 字符串
 
-## func MD5
-
-```go
-func MD5(b []byte) []byte
-```
-
-## func MD5BytesHex
-
-```go
-func MD5BytesHex(bs []byte) string
-```
-
-## func MD5Hex
-
-```go
-func MD5Hex(s string) string
-```
-
-MD5Hex 字符串 MD5
-
-## func MD5Reader
-
-```go
-func MD5Reader(r io.Reader) (string, error)
-```
-
-MD5Reader 计算 MD5
-
-## func MD5Sum
-
-```go
-func MD5Sum(filename string) (string, error)
-```
-
-MD5Sum 文件 MD5
-
 ## func MaxInt
 
 ```go
@@ -1532,38 +1256,6 @@ func MaxInt(a, b int) int
 ```
 
 MaxInt 整数取大值
-
-## func MemHash
-
-```go
-func MemHash(s string) uint64
-```
-
-MemHash 使用内置的 memhash 获取字符串哈希值
-
-## func MemHash32
-
-```go
-func MemHash32(s string) uint32
-```
-
-MemHash32 使用内置的 memhash 获取字符串哈希值
-
-## func MemHashb
-
-```go
-func MemHashb(b []byte) uint64
-```
-
-MemHashb 使用内置的 memhash 获取哈希值
-
-## func MemHashb32
-
-```go
-func MemHashb32(b []byte) uint32
-```
-
-MemHashb32 使用内置的 memhash 获取哈希值
 
 ## func MinInt
 
@@ -1620,12 +1312,6 @@ func MustJSONString(v interface{}) string
 ```
 
 MustJSONString 转 json 返回 string
-
-## func MustMD5Sum
-
-```go
-func MustMD5Sum(filename string) string
-```
 
 ## func MustParseHumanBigBytes
 
@@ -1863,42 +1549,6 @@ func SearchString(ss []string, s string) int
 
 SearchString 搜索字符串位置\(左, 第一个\)
 
-## func Sha1
-
-```go
-func Sha1(b []byte) []byte
-```
-
-## func Sha1Hex
-
-```go
-func Sha1Hex(s string) string
-```
-
-## func Sha256
-
-```go
-func Sha256(b []byte) []byte
-```
-
-## func Sha256Hex
-
-```go
-func Sha256Hex(s string) string
-```
-
-## func Sha512
-
-```go
-func Sha512(b []byte) []byte
-```
-
-## func Sha512Hex
-
-```go
-func Sha512Hex(s string) string
-```
-
 ## func SplitHostPort
 
 ```go
@@ -1936,38 +1586,6 @@ func StringToBytes(s string) (b []byte)
 ```
 
 StringToBytes Ref: csdn.u010853261
-
-## func Sum32
-
-```go
-func Sum32(s string) uint32
-```
-
-Sum32 获取字符串的哈希值
-
-## func Sum64
-
-```go
-func Sum64(s string) uint64
-```
-
-Sum64 获取字符串的哈希值
-
-## func SumBytes32
-
-```go
-func SumBytes32(bs []byte) uint32
-```
-
-SumBytes32 获取 bytes 的哈希值
-
-## func SumBytes64
-
-```go
-func SumBytes64(bs []byte) uint64
-```
-
-SumBytes64 获取 bytes 的哈希值
 
 ## func SumInt
 
@@ -2241,16 +1859,6 @@ Toggle atomically negates the Boolean and returns the previous value
 func (x *Bool) UnmarshalJSON(b []byte) error
 ```
 
-## type Hashable
-
-Hashable allowed map key types constraint
-
-```go
-type Hashable interface {
-    // contains filtered or unexported methods
-}
-```
-
 ## type NoCmp
 
 NoCmp is an uncomparable struct. Embed this inside another struct to make it uncomparable.
@@ -2297,6 +1905,40 @@ RecoveryCallback 自定义恢复信息回调
 
 ```go
 type RecoveryCallback func(err interface{}, trace []byte)
+```
+
+## type TryMutex
+
+```go
+type TryMutex struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func NewTryMutex
+
+```go
+func NewTryMutex() *TryMutex
+```
+
+### func \(\*TryMutex\) Lock
+
+```go
+func (m *TryMutex) Lock()
+```
+
+### func \(\*TryMutex\) TryLock
+
+```go
+func (m *TryMutex) TryLock(timeout ...time.Duration) bool
+```
+
+TryLock 实现可选等待时间尝试获取锁
+
+### func \(\*TryMutex\) Unlock
+
+```go
+func (m *TryMutex) Unlock()
 ```
 
 

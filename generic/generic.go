@@ -4,8 +4,8 @@
 package generic
 
 import (
-	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/generic/constraints"
+	"github.com/fufuok/utils/xhash"
 )
 
 // EqualsFn is a function that returns whether 'a' and 'b' are equal.
@@ -88,17 +88,17 @@ func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T {
 }
 
 func HashInt(i int) uint64 {
-	return utils.HashUint64(uint64(i))
+	return xhash.HashUint64(uint64(i))
 }
 
 func HashUint64(u uint64) uint64 {
-	return utils.HashUint64(u)
+	return xhash.HashUint64(u)
 }
 
 func HashString(s string) uint64 {
-	return utils.Sum64(s)
+	return xhash.Sum64(s)
 }
 
 func HashBytes(b []byte) uint64 {
-	return utils.SumBytes64(b)
+	return xhash.SumBytes64(b)
 }

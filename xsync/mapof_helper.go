@@ -6,7 +6,7 @@ package xsync
 import (
 	"hash/maphash"
 
-	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/xhash"
 )
 
 type HashMapOf[K comparable, V any] interface {
@@ -90,5 +90,5 @@ func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) H
 	if len(hasher) > 0 {
 		return NewTypedMapOf[K, V](hasher[0])
 	}
-	return NewTypedMapOf[K, V](utils.GenSeedHasher64[K]())
+	return NewTypedMapOf[K, V](xhash.GenSeedHasher64[K]())
 }

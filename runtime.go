@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
-	"unsafe"
+	_ "unsafe"
 )
 
 const (
@@ -117,7 +117,3 @@ func CPUTicks() int64
 //
 //go:linkname NanoTime runtime.nanotime
 func NanoTime() int64
-
-//go:noescape
-//go:linkname memhash runtime.memhash
-func memhash(p unsafe.Pointer, h, s uintptr) uintptr

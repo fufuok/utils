@@ -1,4 +1,4 @@
-package utils
+package xhash
 
 import (
 	"bufio"
@@ -10,11 +10,14 @@ import (
 	"encoding/hex"
 	"hash"
 	"hash/fnv"
+	"hash/maphash"
 	"io"
 	"os"
 	"reflect"
 	"strconv"
 	"unsafe"
+
+	"github.com/fufuok/utils"
 )
 
 const (
@@ -28,7 +31,7 @@ const (
 )
 
 func Sha256Hex(s string) string {
-	return hex.EncodeToString(Sha256(S2B(s)))
+	return hex.EncodeToString(Sha256(utils.S2B(s)))
 }
 
 func Sha256(b []byte) []byte {
@@ -36,7 +39,7 @@ func Sha256(b []byte) []byte {
 }
 
 func Sha512Hex(s string) string {
-	return hex.EncodeToString(Sha512(S2B(s)))
+	return hex.EncodeToString(Sha512(utils.S2B(s)))
 }
 
 func Sha512(b []byte) []byte {
@@ -44,7 +47,7 @@ func Sha512(b []byte) []byte {
 }
 
 func Sha1Hex(s string) string {
-	return hex.EncodeToString(Sha1(S2B(s)))
+	return hex.EncodeToString(Sha1(utils.S2B(s)))
 }
 
 func Sha1(b []byte) []byte {
@@ -52,7 +55,7 @@ func Sha1(b []byte) []byte {
 }
 
 func HmacSHA256Hex(s, key string) string {
-	return hex.EncodeToString(HmacSHA256(S2B(s), S2B(key)))
+	return hex.EncodeToString(HmacSHA256(utils.S2B(s), utils.S2B(key)))
 }
 
 func HmacSHA256(b, key []byte) []byte {
@@ -60,7 +63,7 @@ func HmacSHA256(b, key []byte) []byte {
 }
 
 func HmacSHA512Hex(s, key string) string {
-	return hex.EncodeToString(HmacSHA512(S2B(s), S2B(key)))
+	return hex.EncodeToString(HmacSHA512(utils.S2B(s), utils.S2B(key)))
 }
 
 func HmacSHA512(b, key []byte) []byte {
@@ -68,7 +71,7 @@ func HmacSHA512(b, key []byte) []byte {
 }
 
 func HmacSHA1Hex(s, key string) string {
-	return hex.EncodeToString(HmacSHA1(S2B(s), S2B(key)))
+	return hex.EncodeToString(HmacSHA1(utils.S2B(s), utils.S2B(key)))
 }
 
 func HmacSHA1(b, key []byte) []byte {
@@ -77,7 +80,7 @@ func HmacSHA1(b, key []byte) []byte {
 
 // MD5Hex 字符串 MD5
 func MD5Hex(s string) string {
-	b := md5.Sum(S2B(s))
+	b := md5.Sum(utils.S2B(s))
 	return hex.EncodeToString(b[:])
 }
 
@@ -218,7 +221,7 @@ func MemHash32(s string) uint32 {
 func Djb33(s string) uint32 {
 	var (
 		l = uint32(len(s))
-		d = 5381 + Seed + l
+		d = 5381 + utils.Seed + l
 		i = uint32(0)
 	)
 	// Why is all this 5x faster than a for loop?
@@ -252,11 +255,11 @@ func HashString(s ...string) string {
 }
 
 func HashString64(s ...string) uint64 {
-	return Sum64(AddString(s...))
+	return Sum64(utils.AddString(s...))
 }
 
 func HashString32(s ...string) uint32 {
-	return Sum32(AddString(s...))
+	return Sum32(utils.AddString(s...))
 }
 
 // HashBytes 合并 Bytes, 得到字符串哈希
@@ -265,11 +268,11 @@ func HashBytes(b ...[]byte) string {
 }
 
 func HashBytes64(b ...[]byte) uint64 {
-	return SumBytes64(JoinBytes(b...))
+	return SumBytes64(utils.JoinBytes(b...))
 }
 
 func HashBytes32(b ...[]byte) uint32 {
-	return SumBytes32(JoinBytes(b...))
+	return SumBytes32(utils.JoinBytes(b...))
 }
 
 // HashUint64 returns the hash of u.
@@ -460,3 +463,22 @@ func AddUint32(h, u uint32) uint32 {
 	h = (h ^ ((u >> 0) & 0xFF)) * prime32
 	return h
 }
+
+// HashSeedString calculates a hash of s with the given seed.
+func HashSeedString(seed maphash.Seed, s string) uint64 {
+	return hashString(seed, s)
+}
+
+// HashSeedUint64 calculates a hash of n with the given seed.
+func HashSeedUint64(seed maphash.Seed, n uint64) uint64 {
+	// Java's Long standard hash function.
+	n = n ^ (n >> 32)
+	nseed := *(*uint64)(unsafe.Pointer(&seed))
+	// 64-bit variation of boost's hash_combine.
+	nseed ^= n + 0x9e3779b97f4a7c15 + (nseed << 12) + (nseed >> 4)
+	return nseed
+}
+
+//go:noescape
+//go:linkname memhash runtime.memhash
+func memhash(p unsafe.Pointer, h, s uintptr) uintptr

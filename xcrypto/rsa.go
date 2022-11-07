@@ -8,7 +8,7 @@ import (
 	"encoding/pem"
 	"fmt"
 
-	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/xhash"
 )
 
 // GenRSAKey 生成 RSA 密钥对
@@ -77,7 +77,7 @@ func RSASign(data, privateKey []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	hashed := utils.Sha256(data)
+	hashed := xhash.Sha256(data)
 
 	return rsa.SignPSS(rand.Reader, priv, crypto.SHA256, hashed, nil)
 }
@@ -88,7 +88,7 @@ func RSASignVerify(data, publicKey, sig []byte) error {
 	if err != nil {
 		return err
 	}
-	hashed := utils.Sha256(data)
+	hashed := xhash.Sha256(data)
 
 	return rsa.VerifyPSS(pub, crypto.SHA256, hashed, sig, nil)
 }
