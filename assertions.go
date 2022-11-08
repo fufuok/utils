@@ -12,7 +12,13 @@ import (
 )
 
 func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{}) {
-	AssertNotEqual(tb, left, right, fmt.Sprintf(description, a...))
+	if tb != nil {
+		tb.Helper()
+	}
+	if !reflect.DeepEqual(left, right) {
+		return
+	}
+	assertLog(tb, left, right, false, fmt.Sprintf(description, a...))
 }
 
 func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string) {
@@ -26,7 +32,13 @@ func AssertNotEqual(tb testing.TB, left, right interface{}, description ...strin
 }
 
 func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{}) {
-	AssertEqual(tb, expected, actual, fmt.Sprintf(description, a...))
+	if tb != nil {
+		tb.Helper()
+	}
+	if reflect.DeepEqual(expected, actual) {
+		return
+	}
+	assertLog(tb, expected, actual, true, fmt.Sprintf(description, a...))
 }
 
 // AssertEqual checks if values are equal
@@ -64,13 +76,13 @@ func assertLog(tb testing.TB, a, b interface{}, isEqual bool, description ...str
 		testName = fmt.Sprintf("%s(%s)", tb.Name(), testName)
 	}
 
-	_, file, line, _ := runtime.Caller(1)
+	_, file, line, _ := runtime.Caller(2)
 
 	var buf bytes.Buffer
 	w := tabwriter.NewWriter(&buf, 0, 0, 5, ' ', 0)
 	_, _ = fmt.Fprintf(w, "\nTest:\t%s", testName)
 	_, _ = fmt.Fprintf(w, "\nTrace:\t%s:%d", filepath.Base(file), line)
-	if len(description) > 0 {
+	if len(description) > 0 && description[0] != "" {
 		_, _ = fmt.Fprintf(w, "\nDescription:\t%s", description[0])
 	}
 	_, _ = fmt.Fprintf(w, "\n%s:\t%v\t(%s)", leftTitle, a, aType)
