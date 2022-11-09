@@ -33,6 +33,8 @@ const (
 	// minimal table size, i.e. number of buckets; thus, minimal map
 	// capacity can be calculated as entriesPerMapBucket*minMapTableLen
 	minMapTableLen = 32
+	// minimal table capacity
+	minMapTableCap = minMapTableLen * entriesPerMapBucket
 	// minimum counter stripes to use
 	minMapCounterLen = 8
 	// maximum counter stripes to use; stands for around 4KB of memory
@@ -120,16 +122,28 @@ type rangeEntry struct {
 
 // NewMap creates a new Map instance.
 func NewMap() *Map {
+	return NewMapPresized(minMapTableCap)
+}
+
+// NewMapPresized creates a new Map instance with capacity enough to hold
+// sizeHint entries. If sizeHint is zero or negative, the value is ignored.
+func NewMapPresized(sizeHint int) *Map {
 	m := &Map{}
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
-	table := newMapTable(minMapTableLen)
+	var table *mapTable
+	if sizeHint <= minMapTableCap {
+		table = newMapTable(minMapTableLen)
+	} else {
+		tableLen := nextPowOf2(uint32(sizeHint / entriesPerMapBucket))
+		table = newMapTable(int(tableLen))
+	}
 	atomic.StorePointer(&m.table, unsafe.Pointer(table))
 	return m
 }
 
-func newMapTable(size int) *mapTable {
-	buckets := make([]bucketPadded, size)
-	counterLen := size >> 10
+func newMapTable(tableLen int) *mapTable {
+	buckets := make([]bucketPadded, tableLen)
+	counterLen := tableLen >> 10
 	if counterLen < minMapCounterLen {
 		counterLen = minMapCounterLen
 	} else if counterLen > maxMapCounterLen {
@@ -293,16 +307,15 @@ func (m *Map) doCompute(
 	for {
 	compute_attempt:
 		var (
-			emptyb   *bucketPadded
-			emptyidx int
+			emptyb       *bucketPadded
+			emptyidx     int
+			hintNonEmpty int
 		)
-		hintNonEmpty := 0
 		table := (*mapTable)(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
 		hash := hashString(table.seed, key)
 		bidx := uint64(len(table.buckets)-1) & hash
 		rootb := &table.buckets[bidx]
-		b := rootb
 		lockBucket(&rootb.topHashMutex)
 		if m.newerTableExists(table) {
 			// Someone resized the table. Go for another attempt.
@@ -315,6 +328,7 @@ func (m *Map) doCompute(
 			m.waitForResize()
 			goto compute_attempt
 		}
+		b := rootb
 		for {
 			topHashes := atomic.LoadUint64(&b.topHashMutex)
 			for i := 0; i < entriesPerMapBucket; i++ {
@@ -568,51 +582,45 @@ func isEmptyBucket(rootb *bucketPadded) bool {
 // concurrent modification rule apply, i.e. the changes may be not
 // reflected in the subsequently iterated entries.
 func (m *Map) Range(f func(key string, value interface{}) bool) {
-	var bentries [entriesPerMapBucket]rangeEntry
+	var zeroEntry rangeEntry
+	// Pre-allocate array big enough to fit entries for most hash tables.
+	bentries := make([]rangeEntry, 0, 16*entriesPerMapBucket)
 	tablep := atomic.LoadPointer(&m.table)
 	table := *(*mapTable)(tablep)
 	for i := range table.buckets {
-		b := &table.buckets[i]
+		rootb := &table.buckets[i]
+		b := rootb
+		// Prevent concurrent modifications and copy all entries into
+		// the intermediate slice.
+		lockBucket(&rootb.topHashMutex)
 		for {
-			n := copyRangeEntries(b, &bentries)
-			for j := 0; j < n; j++ {
-				k := derefKey(bentries[j].key)
-				v := derefValue(bentries[j].value)
-				if !f(k, v) {
-					return
+			for i := 0; i < entriesPerMapBucket; i++ {
+				if b.keys[i] != nil {
+					bentries = append(bentries, rangeEntry{
+						key:   b.keys[i],
+						value: b.values[i],
+					})
 				}
 			}
-			bptr := atomic.LoadPointer(&b.next)
-			if bptr == nil {
+			if b.next == nil {
+				unlockBucket(&rootb.topHashMutex)
 				break
 			}
-			b = (*bucketPadded)(bptr)
+			b = (*bucketPadded)(b.next)
 		}
-	}
-}
-
-func copyRangeEntries(b *bucketPadded, destEntries *[entriesPerMapBucket]rangeEntry) int {
-	n := 0
-	for i := 0; i < entriesPerMapBucket; i++ {
-	atomic_snapshot:
-		// Start atomic snapshot.
-		vp := atomic.LoadPointer(&b.values[i])
-		kp := atomic.LoadPointer(&b.keys[i])
-		if kp != nil && vp != nil {
-			if uintptr(vp) == uintptr(atomic.LoadPointer(&b.values[i])) {
-				// Atomic snapshot succeeded.
-				destEntries[n] = rangeEntry{
-					key:   kp,
-					value: vp,
-				}
-				n++
-				continue
+		// Call the function for all copied entries.
+		for j := range bentries {
+			k := derefKey(bentries[j].key)
+			v := derefValue(bentries[j].value)
+			if !f(k, v) {
+				return
 			}
-			// Concurrent update/remove. Go for another spin.
-			goto atomic_snapshot
+			// Remove the reference to avoid preventing the copied
+			// entries from being GCed until this method finishes.
+			bentries[j] = zeroEntry
 		}
+		bentries = bentries[:0]
 	}
-	return n
 }
 
 // Clear deletes all keys and values currently stored in the map.

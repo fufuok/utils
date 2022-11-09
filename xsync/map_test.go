@@ -26,10 +26,10 @@ var benchmarkCases = []struct {
 	name           string
 	readPercentage int
 }{
-	{"reads=100%", 100},     // 100% loads,    0% stores,    0% deletes
-	{"reads=99%", 99},       //  99% loads,  0.5% stores,  0.5% deletes
-	{"reads=90%-reads", 90}, //  90% loads,    5% stores,    5% deletes
-	{"reads=75%-reads", 75}, //  75% loads, 12.5% stores, 12.5% deletes
+	{"reads=100%", 100}, // 100% loads,    0% stores,    0% deletes
+	{"reads=99%", 99},   //  99% loads,  0.5% stores,  0.5% deletes
+	{"reads=90%", 90},   //  90% loads,    5% stores,    5% deletes
+	{"reads=75%", 75},   //  75% loads, 12.5% stores, 12.5% deletes
 }
 
 var benchmarkKeys []string
@@ -251,7 +251,7 @@ func TestMapRange(t *testing.T) {
 	}
 	for i := 0; i < numEntries; i++ {
 		if c := met[strconv.Itoa(i)]; c != 1 {
-			t.Fatalf("range did not iterate correctly over %d: %d", i, c)
+			t.Fatalf("met key %d multiple times: %d", i, c)
 		}
 	}
 }
@@ -532,6 +532,20 @@ func TestMapClear(t *testing.T) {
 	if rsize != 0 {
 		t.Fatalf("zero number of entries in Range was expected, got: %d", rsize)
 	}
+}
+
+func assertMapCapacity(t *testing.T, m *Map, expectedCap int) {
+	stats := CollectMapStats(m)
+	if stats.Capacity != expectedCap {
+		t.Fatalf("capacity was different from %d: %d", expectedCap, stats.Capacity)
+	}
+}
+
+func TestNewMapPresized(t *testing.T) {
+	assertMapCapacity(t, NewMap(), MinMapTableCap)
+	assertMapCapacity(t, NewMapPresized(1000), 1536)
+	assertMapCapacity(t, NewMapPresized(0), MinMapTableCap)
+	assertMapCapacity(t, NewMapPresized(-1), MinMapTableCap)
 }
 
 func TestMapResize(t *testing.T) {
@@ -872,6 +886,65 @@ func TestMapParallelComputes(t *testing.T) {
 	}
 }
 
+func parallelRangeStorer(t *testing.T, m *Map, numEntries int, stopFlag *int64, cdone chan bool) {
+	for {
+		for i := 0; i < numEntries; i++ {
+			m.Store(strconv.Itoa(i), i)
+		}
+		if atomic.LoadInt64(stopFlag) != 0 {
+			break
+		}
+	}
+	cdone <- true
+}
+
+func parallelRangeDeleter(t *testing.T, m *Map, numEntries int, stopFlag *int64, cdone chan bool) {
+	for {
+		for i := 0; i < numEntries; i++ {
+			m.Delete(strconv.Itoa(i))
+		}
+		if atomic.LoadInt64(stopFlag) != 0 {
+			break
+		}
+	}
+	cdone <- true
+}
+
+func TestMapParallelRange(t *testing.T) {
+	const numEntries = 10_000
+	m := NewMap()
+	for i := 0; i < numEntries; i++ {
+		m.Store(strconv.Itoa(i), i)
+	}
+	// Start goroutines that would be storing and deleting items in parallel.
+	cdone := make(chan bool)
+	stopFlag := int64(0)
+	go parallelRangeStorer(t, m, numEntries, &stopFlag, cdone)
+	go parallelRangeDeleter(t, m, numEntries, &stopFlag, cdone)
+	// Iterate the map and verify that no duplicate keys were met.
+	met := make(map[string]int)
+	m.Range(func(key string, value interface{}) bool {
+		if key != strconv.Itoa(value.(int)) {
+			t.Fatalf("got unexpected value for key %s: %v", key, value)
+			return false
+		}
+		met[key] += 1
+		return true
+	})
+	if len(met) == 0 {
+		t.Fatal("no entries were met when iterating")
+	}
+	for k, c := range met {
+		if c != 1 {
+			t.Fatalf("met key %s multiple times: %d", k, c)
+		}
+	}
+	// Make sure that both goroutines finish.
+	atomic.StoreInt64(&stopFlag, 1)
+	<-cdone
+	<-cdone
+}
+
 func TestMapTopHashMutex(t *testing.T) {
 	const (
 		numLockers    = 4
@@ -1002,11 +1075,6 @@ func testMapTopHashMutex_StoreAfterErase(t *testing.T, topHashes *uint64) {
 	}
 }
 
-type SyncMap interface {
-	Load(key string) (value interface{}, ok bool)
-	Store(key string, value interface{})
-}
-
 func BenchmarkMap_NoWarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		if bc.readPercentage == 100 {
@@ -1048,10 +1116,11 @@ func BenchmarkMapStandard_NoWarmUp(b *testing.B) {
 func BenchmarkMap_WarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		b.Run(bc.name, func(b *testing.B) {
-			m := NewMap()
+			m := NewMapPresized(benchmarkNumEntries)
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(benchmarkKeyPrefix+strconv.Itoa(i), i)
 			}
+			b.ResetTimer()
 			benchmarkMap(b, func(k string) (interface{}, bool) {
 				return m.Load(k)
 			}, func(k string, v interface{}) {
@@ -1072,6 +1141,7 @@ func BenchmarkMapStandard_WarmUp(b *testing.B) {
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(benchmarkKeyPrefix+strconv.Itoa(i), i)
 			}
+			b.ResetTimer()
 			benchmarkMap(b, func(k string) (interface{}, bool) {
 				return m.Load(k)
 			}, func(k string, v interface{}) {
@@ -1113,6 +1183,7 @@ func BenchmarkMapRange(b *testing.B) {
 	for i := 0; i < benchmarkNumEntries; i++ {
 		m.Store(benchmarkKeys[i], i)
 	}
+	b.ResetTimer()
 	runParallel(b, func(pb *testing.PB) {
 		foo := 0
 		for pb.Next() {
@@ -1133,6 +1204,7 @@ func BenchmarkMapRangeStandard(b *testing.B) {
 	for i := 0; i < benchmarkNumEntries; i++ {
 		m.Store(benchmarkKeys[i], i)
 	}
+	b.ResetTimer()
 	runParallel(b, func(pb *testing.PB) {
 		foo := 0
 		for pb.Next() {

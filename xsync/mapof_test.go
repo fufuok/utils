@@ -10,12 +10,28 @@ import (
 	"math/rand"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 	"unsafe"
 
 	. "github.com/fufuok/utils/xsync"
 )
+
+type point struct {
+	x int32
+	y int32
+}
+
+func pointHash(seed maphash.Seed, p point) uint64 {
+	var h maphash.Hash
+	h.SetSeed(seed)
+	binary.Write(&h, binary.LittleEndian, p.x)
+	hash := h.Sum64()
+	h.Reset()
+	binary.Write(&h, binary.LittleEndian, p.y)
+	return 31*hash + h.Sum64()
+}
 
 func TestMap_BucketOfStructSize(t *testing.T) {
 	size := unsafe.Sizeof(BucketOfPadded{})
@@ -235,25 +251,13 @@ func TestIntegerMapOfStore(t *testing.T) {
 }
 
 func TestTypedMapOfStore_StructKeys_IntValues(t *testing.T) {
-	type foo struct {
-		x int32
-		y int32
-	}
 	const numEntries = 128
-	m := NewTypedMapOf[foo, int](func(seed maphash.Seed, f foo) uint64 {
-		var h maphash.Hash
-		h.SetSeed(seed)
-		binary.Write(&h, binary.LittleEndian, f.x)
-		hash := h.Sum64()
-		h.Reset()
-		binary.Write(&h, binary.LittleEndian, f.y)
-		return 31*hash + h.Sum64()
-	})
+	m := NewTypedMapOf[point, int](pointHash)
 	for i := 0; i < numEntries; i++ {
-		m.Store(foo{int32(i), -int32(i)}, i)
+		m.Store(point{int32(i), -int32(i)}, i)
 	}
 	for i := 0; i < numEntries; i++ {
-		v, ok := m.Load(foo{int32(i), -int32(i)})
+		v, ok := m.Load(point{int32(i), -int32(i)})
 		if !ok {
 			t.Fatalf("value not found for %d", i)
 		}
@@ -264,25 +268,13 @@ func TestTypedMapOfStore_StructKeys_IntValues(t *testing.T) {
 }
 
 func TestTypedMapOfStore_StructKeys_StructValues(t *testing.T) {
-	type foo struct {
-		x int32
-		y int32
-	}
 	const numEntries = 128
-	m := NewTypedMapOf[foo, foo](func(seed maphash.Seed, f foo) uint64 {
-		var h maphash.Hash
-		h.SetSeed(seed)
-		binary.Write(&h, binary.LittleEndian, f.x)
-		hash := h.Sum64()
-		h.Reset()
-		binary.Write(&h, binary.LittleEndian, f.y)
-		return 31*hash + h.Sum64()
-	})
+	m := NewTypedMapOf[point, point](pointHash)
 	for i := 0; i < numEntries; i++ {
-		m.Store(foo{int32(i), -int32(i)}, foo{-int32(i), int32(i)})
+		m.Store(point{int32(i), -int32(i)}, point{-int32(i), int32(i)})
 	}
 	for i := 0; i < numEntries; i++ {
-		v, ok := m.Load(foo{int32(i), -int32(i)})
+		v, ok := m.Load(point{int32(i), -int32(i)})
 		if !ok {
 			t.Fatalf("value not found for %d", i)
 		}
@@ -477,26 +469,14 @@ func TestIntegerMapOfStoreThenDelete(t *testing.T) {
 }
 
 func TestTypedMapOfStoreThenDelete(t *testing.T) {
-	type foo struct {
-		x int32
-		y int32
-	}
 	const numEntries = 1000
-	m := NewTypedMapOf[foo, string](func(seed maphash.Seed, f foo) uint64 {
-		var h maphash.Hash
-		h.SetSeed(seed)
-		binary.Write(&h, binary.LittleEndian, f.x)
-		hash := h.Sum64()
-		h.Reset()
-		binary.Write(&h, binary.LittleEndian, f.y)
-		return 31*hash + h.Sum64()
-	})
+	m := NewTypedMapOf[point, string](pointHash)
 	for i := 0; i < numEntries; i++ {
-		m.Store(foo{int32(i), 42}, strconv.Itoa(i))
+		m.Store(point{int32(i), 42}, strconv.Itoa(i))
 	}
 	for i := 0; i < numEntries; i++ {
-		m.Delete(foo{int32(i), 42})
-		if _, ok := m.Load(foo{int32(i), 42}); ok {
+		m.Delete(point{int32(i), 42})
+		if _, ok := m.Load(point{int32(i), 42}); ok {
 			t.Fatalf("value was not expected for %d", i)
 		}
 	}
@@ -535,28 +515,16 @@ func TestIntegerMapOfStoreThenLoadAndDelete(t *testing.T) {
 }
 
 func TestTypedMapOfStoreThenLoadAndDelete(t *testing.T) {
-	type foo struct {
-		x int32
-		y int32
-	}
 	const numEntries = 1000
-	m := NewTypedMapOf[foo, int](func(seed maphash.Seed, f foo) uint64 {
-		var h maphash.Hash
-		h.SetSeed(seed)
-		binary.Write(&h, binary.LittleEndian, f.x)
-		hash := h.Sum64()
-		h.Reset()
-		binary.Write(&h, binary.LittleEndian, f.y)
-		return 31*hash + h.Sum64()
-	})
+	m := NewTypedMapOf[point, int](pointHash)
 	for i := 0; i < numEntries; i++ {
-		m.Store(foo{42, int32(i)}, i)
+		m.Store(point{42, int32(i)}, i)
 	}
 	for i := 0; i < numEntries; i++ {
-		if _, loaded := m.LoadAndDelete(foo{42, int32(i)}); !loaded {
+		if _, loaded := m.LoadAndDelete(point{42, int32(i)}); !loaded {
 			t.Fatalf("value was not found for %d", i)
 		}
-		if _, ok := m.Load(foo{42, int32(i)}); ok {
+		if _, ok := m.Load(point{42, int32(i)}); ok {
 			t.Fatalf("value was not expected for %d", i)
 		}
 	}
@@ -624,6 +592,30 @@ func TestMapOfClear(t *testing.T) {
 	if rsize != 0 {
 		t.Fatalf("zero number of entries in Range was expected, got: %d", rsize)
 	}
+}
+
+func assertMapOfCapacity[K comparable, V any](t *testing.T, m *MapOf[K, V], expectedCap int) {
+	stats := CollectMapOfStats(m)
+	if stats.Capacity != expectedCap {
+		t.Fatalf("capacity was different from %d: %d", expectedCap, stats.Capacity)
+	}
+}
+
+func TestNewMapOfPresized(t *testing.T) {
+	assertMapOfCapacity(t, NewMapOf[string](), MinMapTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string](0), MinMapTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string](-100), MinMapTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string](500), 768)
+
+	assertMapOfCapacity(t, NewIntegerMapOf[int, int](), MinMapTableCap)
+	assertMapOfCapacity(t, NewIntegerMapOfPresized[int, int](0), MinMapTableCap)
+	assertMapOfCapacity(t, NewIntegerMapOfPresized[int, int](-1), MinMapTableCap)
+	assertMapOfCapacity(t, NewIntegerMapOfPresized[int, int](1_000_000), 1_572_864)
+
+	assertMapOfCapacity(t, NewTypedMapOf[point, point](pointHash), MinMapTableCap)
+	assertMapOfCapacity(t, NewTypedMapOfPresized[point, point](pointHash, 0), MinMapTableCap)
+	assertMapOfCapacity(t, NewTypedMapOfPresized[point, point](pointHash, -42), MinMapTableCap)
+	assertMapOfCapacity(t, NewTypedMapOfPresized[point, point](pointHash, 100), 192)
 }
 
 func TestMapOfResize(t *testing.T) {
@@ -961,6 +953,65 @@ func TestMapOfParallelComputes(t *testing.T) {
 	}
 }
 
+func parallelTypedRangeStorer(t *testing.T, m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
+	for {
+		for i := 0; i < numEntries; i++ {
+			m.Store(i, i)
+		}
+		if atomic.LoadInt64(stopFlag) != 0 {
+			break
+		}
+	}
+	cdone <- true
+}
+
+func parallelTypedRangeDeleter(t *testing.T, m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
+	for {
+		for i := 0; i < numEntries; i++ {
+			m.Delete(i)
+		}
+		if atomic.LoadInt64(stopFlag) != 0 {
+			break
+		}
+	}
+	cdone <- true
+}
+
+func TestMapOfParallelRange(t *testing.T) {
+	const numEntries = 10_000
+	m := NewIntegerMapOfPresized[int, int](numEntries)
+	for i := 0; i < numEntries; i++ {
+		m.Store(i, i)
+	}
+	// Start goroutines that would be storing and deleting items in parallel.
+	cdone := make(chan bool)
+	stopFlag := int64(0)
+	go parallelTypedRangeStorer(t, m, numEntries, &stopFlag, cdone)
+	go parallelTypedRangeDeleter(t, m, numEntries, &stopFlag, cdone)
+	// Iterate the map and verify that no duplicate keys were met.
+	met := make(map[int]int)
+	m.Range(func(key int, value int) bool {
+		if key != value {
+			t.Fatalf("got unexpected value for key %d: %d", key, value)
+			return false
+		}
+		met[key] += 1
+		return true
+	})
+	if len(met) == 0 {
+		t.Fatal("no entries were met when iterating")
+	}
+	for k, c := range met {
+		if c != 1 {
+			t.Fatalf("met key %d multiple times: %d", k, c)
+		}
+	}
+	// Make sure that both goroutines finish.
+	atomic.StoreInt64(&stopFlag, 1)
+	<-cdone
+	<-cdone
+}
+
 func BenchmarkMapOf_NoWarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		if bc.readPercentage == 100 {
@@ -983,10 +1034,11 @@ func BenchmarkMapOf_NoWarmUp(b *testing.B) {
 func BenchmarkMapOf_WarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		b.Run(bc.name, func(b *testing.B) {
-			m := NewMapOf[int]()
+			m := NewMapOfPresized[int](benchmarkNumEntries)
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(benchmarkKeyPrefix+strconv.Itoa(i), i)
 			}
+			b.ResetTimer()
 			benchmarkMapOfStringKeys(b, func(k string) (int, bool) {
 				return m.Load(k)
 			}, func(k string, v int) {
@@ -1045,10 +1097,11 @@ func BenchmarkIntegerMapOf_NoWarmUp(b *testing.B) {
 func BenchmarkIntegerMapOf_WarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		b.Run(bc.name, func(b *testing.B) {
-			m := NewIntegerMapOf[int, int]()
+			m := NewIntegerMapOfPresized[int, int](benchmarkNumEntries)
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(i, i)
 			}
+			b.ResetTimer()
 			benchmarkMapOfIntegerKeys(b, func(k int) (int, bool) {
 				return m.Load(k)
 			}, func(k int, v int) {
@@ -1093,6 +1146,7 @@ func BenchmarkIntegerMapStandard_WarmUp(b *testing.B) {
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(i, i)
 			}
+			b.ResetTimer()
 			benchmarkMapOfIntegerKeys(b, func(k int) (value int, ok bool) {
 				v, ok := m.Load(k)
 				if ok {
@@ -1135,10 +1189,11 @@ func benchmarkMapOfIntegerKeys(
 }
 
 func BenchmarkMapOfRange(b *testing.B) {
-	m := NewMapOf[int]()
+	m := NewMapOfPresized[int](benchmarkNumEntries)
 	for i := 0; i < benchmarkNumEntries; i++ {
 		m.Store(benchmarkKeys[i], i)
 	}
+	b.ResetTimer()
 	runParallel(b, func(pb *testing.PB) {
 		foo := 0
 		for pb.Next() {

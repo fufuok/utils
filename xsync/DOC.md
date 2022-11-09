@@ -8,8 +8,6 @@ import "github.com/fufuok/utils/xsync"
 
 ## Index
 
-- [func HashSeedString(seed maphash.Seed, s string) uint64](<#func-hashseedstring>)
-- [func HashSeedUint64(seed maphash.Seed, v uint64) uint64](<#func-hashseeduint64>)
 - [type Counter](<#type-counter>)
   - [func NewCounter() *Counter](<#func-newcounter>)
   - [func (c *Counter) Add(delta int64)](<#func-counter-add>)
@@ -19,6 +17,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (c *Counter) Value() int64](<#func-counter-value>)
 - [type HashMapOf](<#type-hashmapof>)
   - [func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapof>)
+  - [func NewHashMapOfPresized[K comparable, V any](sizeHint int, hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapofpresized>)
 - [type IntegerConstraint](<#type-integerconstraint>)
 - [type MPMCQueue](<#type-mpmcqueue>)
   - [func NewMPMCQueue(capacity int) *MPMCQueue](<#func-newmpmcqueue>)
@@ -28,6 +27,7 @@ import "github.com/fufuok/utils/xsync"
   - [func (q *MPMCQueue) TryEnqueue(item interface{}) bool](<#func-mpmcqueue-tryenqueue>)
 - [type Map](<#type-map>)
   - [func NewMap() *Map](<#func-newmap>)
+  - [func NewMapPresized(sizeHint int) *Map](<#func-newmappresized>)
   - [func (m *Map) Clear()](<#func-map-clear>)
   - [func (m *Map) Compute(key string, valueFn func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool)) (actual interface{}, ok bool)](<#func-map-compute>)
   - [func (m *Map) Delete(key string)](<#func-map-delete>)
@@ -41,8 +41,11 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *Map) Store(key string, value interface{})](<#func-map-store>)
 - [type MapOf](<#type-mapof>)
   - [func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]](<#func-newintegermapof>)
+  - [func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V]](<#func-newintegermapofpresized>)
   - [func NewMapOf[V any]() *MapOf[string, V]](<#func-newmapof>)
+  - [func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V]](<#func-newmapofpresized>)
   - [func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
+  - [func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V]](<#func-newtypedmapofpresized>)
   - [func (m *MapOf[K, V]) Clear()](<#func-mapofk-v-clear>)
   - [func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newValue V, delete bool)) (actual V, ok bool)](<#func-mapofk-v-compute>)
   - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
@@ -62,22 +65,6 @@ import "github.com/fufuok/utils/xsync"
   - [func (mu *RBMutex) Unlock()](<#func-rbmutex-unlock>)
 - [type RToken](<#type-rtoken>)
 
-
-## func HashSeedString
-
-```go
-func HashSeedString(seed maphash.Seed, s string) uint64
-```
-
-HashSeedString calculates a hash of s with the given seed.
-
-## func HashSeedUint64
-
-```go
-func HashSeedUint64(seed maphash.Seed, v uint64) uint64
-```
-
-HashSeedUint64 calculates a hash of v with the given seed.
 
 ## type Counter
 
@@ -228,6 +215,12 @@ type Hashable interface {
 }
 ```
 
+### func NewHashMapOfPresized
+
+```go
+func NewHashMapOfPresized[K comparable, V any](sizeHint int, hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
+```
+
 ## type IntegerConstraint
 
 IntegerConstraint represents any integer type.
@@ -317,6 +310,14 @@ func NewMap() *Map
 ```
 
 NewMap creates a new Map instance.
+
+### func NewMapPresized
+
+```go
+func NewMapPresized(sizeHint int) *Map
+```
+
+NewMapPresized creates a new Map instance with capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
 
 ### func \(\*Map\) Clear
 
@@ -434,13 +435,29 @@ func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]
 
 NewIntegerMapOf creates a new MapOf instance with integer typed keys.
 
+### func NewIntegerMapOfPresized
+
+```go
+func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V]
+```
+
+NewIntegerMapOfPresized creates a new MapOf instance with integer typed keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
+
 ### func NewMapOf
 
 ```go
 func NewMapOf[V any]() *MapOf[string, V]
 ```
 
-NewMapOf creates a new MapOf instance with string keys
+NewMapOf creates a new MapOf instance with string keys.
+
+### func NewMapOfPresized
+
+```go
+func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V]
+```
+
+NewMapOfPresized creates a new MapOf instance with string keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
 
 ### func NewTypedMapOf
 
@@ -448,7 +465,9 @@ NewMapOf creates a new MapOf instance with string keys
 func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]
 ```
 
-NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys. Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
+NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
+
+Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
 
 <details><summary>Example</summary>
 <p>
@@ -490,6 +509,16 @@ func main() {
 
 </p>
 </details>
+
+### func NewTypedMapOfPresized
+
+```go
+func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V]
+```
+
+NewTypedMapOfPresized creates a new MapOf instance with arbitrarily typed keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
+
+Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
 
 ### func \(\*MapOf\[K, V\]\) Clear
 

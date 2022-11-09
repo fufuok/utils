@@ -68,9 +68,16 @@ type entryOf[K comparable, V any] struct {
 	value V
 }
 
-// NewMapOf creates a new MapOf instance with string keys
+// NewMapOf creates a new MapOf instance with string keys.
 func NewMapOf[V any]() *MapOf[string, V] {
-	return NewTypedMapOf[string, V](hashString)
+	return NewTypedMapOfPresized[string, V](hashString, minMapTableCap)
+}
+
+// NewMapOfPresized creates a new MapOf instance with string keys and capacity
+// enough to hold sizeHint entries. If sizeHint is zero or negative, the value
+// is ignored.
+func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V] {
+	return NewTypedMapOfPresized[string, V](hashString, sizeHint)
 }
 
 // IntegerConstraint represents any integer type.
@@ -82,25 +89,50 @@ type IntegerConstraint interface {
 
 // NewIntegerMapOf creates a new MapOf instance with integer typed keys.
 func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V] {
-	return NewTypedMapOf[K, V](hashUint64[K])
+	return NewTypedMapOfPresized[K, V](hashUint64[K], minMapTableCap)
+}
+
+// NewIntegerMapOfPresized creates a new MapOf instance with integer typed keys
+// and capacity enough to hold sizeHint entries. If sizeHint is zero or
+// negative, the value is ignored.
+func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V] {
+	return NewTypedMapOfPresized[K, V](hashUint64[K], sizeHint)
 }
 
 // NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
+//
 // Keys are hashed to uint64 using the hasher function. It is strongly
 // recommended to use the hash/maphash package to implement hasher. See the
 // example for how to do that.
 func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V] {
+	return NewTypedMapOfPresized[K, V](hasher, minMapTableCap)
+}
+
+// NewTypedMapOfPresized creates a new MapOf instance with arbitrarily typed
+// keys and capacity enough to hold sizeHint entries. If sizeHint is zero or
+// negative, the value is ignored.
+//
+// Keys are hashed to uint64 using the hasher function. It is strongly
+// recommended to use the hash/maphash package to implement hasher. See the
+// example for how to do that.
+func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V] {
 	m := &MapOf[K, V]{}
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
 	m.hasher = hasher
-	table := newMapOfTable[K, V](minMapTableLen)
+	var table *mapOfTable[K, V]
+	if sizeHint <= minMapTableCap {
+		table = newMapOfTable[K, V](minMapTableLen)
+	} else {
+		tableLen := nextPowOf2(uint32(sizeHint / entriesPerMapBucket))
+		table = newMapOfTable[K, V](int(tableLen))
+	}
 	atomic.StorePointer(&m.table, unsafe.Pointer(table))
 	return m
 }
 
-func newMapOfTable[K comparable, V any](size int) *mapOfTable[K, V] {
-	buckets := make([]bucketOfPadded, size)
-	counterLen := size >> 10
+func newMapOfTable[K comparable, V any](tableLen int) *mapOfTable[K, V] {
+	buckets := make([]bucketOfPadded, tableLen)
+	counterLen := tableLen >> 10
 	if counterLen < minMapCounterLen {
 		counterLen = minMapCounterLen
 	} else if counterLen > maxMapCounterLen {
@@ -260,16 +292,15 @@ func (m *MapOf[K, V]) doCompute(
 	for {
 	compute_attempt:
 		var (
-			emptyb   *bucketOfPadded
-			emptyidx int
+			emptyb       *bucketOfPadded
+			emptyidx     int
+			hintNonEmpty int
 		)
-		hintNonEmpty := 0
 		table := (*mapOfTable[K, V])(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
 		hash := shiftHash(m.hasher(table.seed, key))
 		bidx := uint64(len(table.buckets)-1) & hash
 		rootb := &table.buckets[bidx]
-		b := rootb
 		rootb.mu.Lock()
 		if m.newerTableExists(table) {
 			// Someone resized the table. Go for another attempt.
@@ -282,6 +313,7 @@ func (m *MapOf[K, V]) doCompute(
 			m.waitForResize()
 			goto compute_attempt
 		}
+		b := rootb
 		for {
 			for i := 0; i < entriesPerMapBucket; i++ {
 				h := atomic.LoadUint64(&b.hashes[i])
@@ -501,26 +533,40 @@ func copyBucketOf[K comparable, V any](
 // concurrent modification rule apply, i.e. the changes may be not
 // reflected in the subsequently iterated entries.
 func (m *MapOf[K, V]) Range(f func(key K, value V) bool) {
+	var zeroPtr unsafe.Pointer
+	// Pre-allocate array big enough to fit entries for most hash tables.
+	bentries := make([]unsafe.Pointer, 0, 16*entriesPerMapBucket)
 	tablep := atomic.LoadPointer(&m.table)
 	table := *(*mapOfTable[K, V])(tablep)
 	for i := range table.buckets {
-		b := &table.buckets[i]
+		rootb := &table.buckets[i]
+		b := rootb
+		// Prevent concurrent modifications and copy all entries into
+		// the intermediate slice.
+		rootb.mu.Lock()
 		for {
 			for i := 0; i < entriesPerMapBucket; i++ {
-				eptr := atomic.LoadPointer(&b.entries[i])
-				if eptr != nil {
-					e := (*entryOf[K, V])(eptr)
-					if !f(e.key, e.value) {
-						return
-					}
+				if b.entries[i] != nil {
+					bentries = append(bentries, b.entries[i])
 				}
 			}
-			bptr := atomic.LoadPointer(&b.next)
-			if bptr == nil {
+			if b.next == nil {
+				rootb.mu.Unlock()
 				break
 			}
-			b = (*bucketOfPadded)(bptr)
+			b = (*bucketOfPadded)(b.next)
 		}
+		// Call the function for all copied entries.
+		for j := range bentries {
+			entry := (*entryOf[K, V])(bentries[j])
+			if !f(entry.key, entry.value) {
+				return
+			}
+			// Remove the reference to avoid preventing the copied
+			// entries from being GCed until this method finishes.
+			bentries[j] = zeroPtr
+		}
+		bentries = bentries[:0]
 	}
 }
 

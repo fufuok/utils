@@ -44,7 +44,7 @@ func TestHashMapOf_StructKey_GenHasher(t *testing.T) {
 	}
 	// Warning: panic: unsupported key type xsync_test.location of kind struct
 	// m := NewHashMapOf[location, int]()
-	m := NewHashMapOf[*location, int]()
+	m := NewHashMapOfPresized[*location, int](num)
 	keys := make([]*location, 0, num)
 
 	for i := 0; i < num; i++ {
