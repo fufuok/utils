@@ -1,8 +1,12 @@
 # 可排序全局唯一 ID 生成器
 
-*forked from rs/xid v20210503*
+*forked from rs/xid v20221108*
 
 比 UUID 更快, 更短, 无需配置, 生成 20 个字符 (`[0-9a-v]{20}`), 可排序
+
+## 改动
+
+- 增加助手函数: `xid.NewString()` `xid.NewBytes()`
 
 ## 安装
 
@@ -21,6 +25,8 @@ for i:=0; i<100; i++{
     fmt.Println(xid.NewString())
 }
 ```
+
+
 
 # Globally Unique ID Generator
 

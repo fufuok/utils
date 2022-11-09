@@ -28,14 +28,8 @@ var BigSIByte ...
 var Rand = NewRand() ...
 var ErrInvalidHostPort = errors.New("invalid Host or Port")
 var StackTraceBufferSize = 4 << 10
-func AddBytes32(h uint32, b []byte) uint32
-func AddBytes64(h uint64, b []byte) uint64
 func AddString(s ...string) string
-func AddString32(h uint32, s string) uint32
-func AddString64(h uint64, s string) uint64
 func AddStringBytes(s ...string) []byte
-func AddUint32(h, u uint32) uint32
-func AddUint64(h uint64, u uint64) uint64
 func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
 func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, ...)
 func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)
@@ -73,7 +67,6 @@ func CopyS2B(s string) []byte
 func CopyString(s string) string
 func CutBytes(s, sep []byte) (before, after []byte, found bool)
 func CutString(s, sep string) (before, after string, found bool)
-func Djb33(s string) uint32
 func EncodeUUID(id []byte) []byte
 func EndOfDay(t time.Time) time.Time
 func EndOfHour(t time.Time) time.Time
@@ -97,11 +90,6 @@ func FastRand64() uint64
 func FastRandBytes(n int) []byte
 func FastRandn(n uint32) uint32
 func FastRandu() uint
-func FnvHash(s string) uint64
-func FnvHash32(s string) uint32
-func GenHasher[K comparable]() func(K) uintptr
-func GenHasher64[K comparable]() func(K) uint64
-func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
@@ -115,22 +103,6 @@ func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
 func Gzip(data []byte) ([]byte, error)
 func GzipLevel(data []byte, level int) (dst []byte, err error)
-func Hash(b []byte, h hash.Hash) []byte
-func HashBytes(b ...[]byte) string
-func HashBytes32(b ...[]byte) uint32
-func HashBytes64(b ...[]byte) uint64
-func HashString(s ...string) string
-func HashString32(s ...string) uint32
-func HashString64(s ...string) uint64
-func HashUint32(u uint32) uint32
-func HashUint64(u uint64) uint64
-func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
-func HmacSHA1(b, key []byte) []byte
-func HmacSHA1Hex(s, key string) string
-func HmacSHA256(b, key []byte) []byte
-func HmacSHA256Hex(s, key string) string
-func HmacSHA512(b, key []byte) []byte
-func HmacSHA512Hex(s, key string) string
 func HumanBaseBytes(v uint64, base float64, sizes []string) string
 func HumanBigBytes(s *big.Int) string
 func HumanBigIBytes(s *big.Int) string
@@ -170,16 +142,7 @@ func Long2IPv4(n int) net.IP
 func Long2IPv4String(n int) string
 func LongLittle2IPv4(n int) net.IP
 func LongLittle2IPv4String(n int) string
-func MD5(b []byte) []byte
-func MD5BytesHex(bs []byte) string
-func MD5Hex(s string) string
-func MD5Reader(r io.Reader) (string, error)
-func MD5Sum(filename string) (string, error)
 func MaxInt(a, b int) int
-func MemHash(s string) uint64
-func MemHash32(s string) uint32
-func MemHashb(b []byte) uint64
-func MemHashb32(b []byte) uint32
 func MinInt(a, b int) int
 func MustBool(v interface{}) bool
 func MustInt(v interface{}) int
@@ -187,7 +150,6 @@ func MustJSON(v interface{}) []byte
 func MustJSONIndent(v interface{}) []byte
 func MustJSONIndentString(v interface{}) string
 func MustJSONString(v interface{}) string
-func MustMD5Sum(filename string) string
 func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 func MustString(v interface{}, timeLayout ...string) string
@@ -217,21 +179,11 @@ func S2B(s string) []byte
 func SafeGo(fn func(), cb ...RecoveryCallback)
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
-func Sha1(b []byte) []byte
-func Sha1Hex(s string) string
-func Sha256(b []byte) []byte
-func Sha256Hex(s string) string
-func Sha512(b []byte) []byte
-func Sha512Hex(s string) string
 func SplitHostPort(hostPort string) (host, port string)
 func Str2Bytes(s string) (b []byte)
 func StrToBytes(s string) []byte
 func String2Bytes(s string) (bs []byte)
 func StringToBytes(s string) (b []byte)
-func Sum32(s string) uint32
-func Sum64(s string) uint64
-func SumBytes32(bs []byte) uint32
-func SumBytes64(bs []byte) uint64
 func SumInt(v ...int) int
 func ToLower(b string) string
 func ToLowerBytes(b []byte) []byte
@@ -258,10 +210,11 @@ type Bool struct{ ... }
     func NewBool(val bool) *Bool
     func NewFalse() *Bool
     func NewTrue() *Bool
-type Hashable interface{ ... }
 type NoCmp [0]func()
 type NoCopy struct{}
 type RecoveryCallback func(err interface{}, trace []byte)
+type TryMutex struct{ ... }
+    func NewTryMutex() *TryMutex
 ```
 </details>
 
@@ -927,6 +880,7 @@ import (
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xcrypto"
+	"github.com/fufuok/utils/xhash"
 	"github.com/fufuok/utils/xid"
 	"github.com/fufuok/utils/xjson/jsongen"
 	"github.com/fufuok/utils/xsync"
@@ -1066,7 +1020,19 @@ func main() {
 
 	fmt.Println(utils.CutString("test@fufuok.com", "@")) // test fufuok.com true
 
-	var count xsync.Counter
+	fmt.Println(xhash.Sum64("test"))  // 18007334074686647077
+	fmt.Println(xhash.MD5Hex("test")) // 098f6bcd4621d373cade4e832627b4f6
+
+	lock := utils.NewTryMutex()
+	lock.Lock()
+	ok := lock.TryLock(20 * time.Millisecond)
+	fmt.Println(ok) // false
+	lock.Unlock()
+	ok = lock.TryLock(20 * time.Millisecond)
+	fmt.Println(ok) // true
+	lock.Unlock()
+
+	count := xsync.NewCounter()
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
 	for i := 0; i < 30; i++ {
 		bus.Add(1)
