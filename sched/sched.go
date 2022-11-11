@@ -20,8 +20,8 @@ type Pool struct {
 
 type funcdata struct {
 	fn func()
-	fg func(interface{})
-	ar interface{}
+	fg func(...interface{})
+	ar []interface{}
 }
 
 // Option is a scheduler option.
@@ -68,7 +68,7 @@ func New(opts ...Option) *Pool {
 				if d.fn != nil {
 					d.fn()
 				} else {
-					d.fg(d.ar)
+					d.fg(d.ar...)
 				}
 				p.complete()
 			}
@@ -85,7 +85,7 @@ func (p *Pool) Run(f ...func()) {
 	}
 }
 
-func (p *Pool) RunWithArgs(f func(args interface{}), args interface{}) {
+func (p *Pool) RunWithArgs(f func(args ...interface{}), args ...interface{}) {
 	p.tasks <- funcdata{fg: f, ar: args}
 }
 

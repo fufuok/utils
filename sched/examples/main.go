@@ -9,12 +9,12 @@ import (
 )
 
 func main() {
-	var count xsync.Counter
+	count := xsync.NewCounter()
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
 	for i := 0; i < 30; i++ {
 		bus.Add(1)
-		bus.RunWithArgs(func(n interface{}) {
-			count.Add(int64(n.(int)))
+		bus.RunWithArgs(func(n ...interface{}) {
+			count.Add(int64(n[0].(int)))
 		}, i)
 	}
 	bus.Wait()

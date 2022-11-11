@@ -113,8 +113,8 @@ func HostPreferred(hosts []string) *HostResponse {
 	s := sched.New()
 	for _, host := range hosts {
 		s.Add(1)
-		s.RunWithArgs(func(v interface{}) {
-			host := v.(string)
+		s.RunWithArgs(func(v ...interface{}) {
+			host := v[0].(string)
 			if resp := GetResponse(host); resp != nil {
 				m.Store(host, resp)
 			}

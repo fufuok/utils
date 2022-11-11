@@ -478,6 +478,70 @@ func Encode(b []byte) string
 ```
 </details>
 
+### 高性能 Hash 方法及生成器
+
+见: [xhash](xhash)
+
+<details>
+  <summary>DOC</summary>
+
+```go
+package xhash // import "github.com/fufuok/utils/xhash"
+
+func AddBytes32(h uint32, b []byte) uint32
+func AddBytes64(h uint64, b []byte) uint64
+func AddString32(h uint32, s string) uint32
+func AddString64(h uint64, s string) uint64
+func AddUint32(h, u uint32) uint32
+func AddUint64(h uint64, u uint64) uint64
+func Djb33(s string) uint32
+func FnvHash(s string) uint64
+func FnvHash32(s string) uint32
+func GenHasher[K comparable]() func(K) uintptr
+func GenHasher64[K comparable]() func(K) uint64
+func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64
+func Hash(b []byte, h hash.Hash) []byte
+func HashBytes(b ...[]byte) string
+func HashBytes32(b ...[]byte) uint32
+func HashBytes64(b ...[]byte) uint64
+func HashSeedString(seed maphash.Seed, s string) uint64
+func HashSeedUint64(seed maphash.Seed, n uint64) uint64
+func HashString(s ...string) string
+func HashString32(s ...string) uint32
+func HashString64(s ...string) uint64
+func HashUint32(u uint32) uint32
+func HashUint64(u uint64) uint64
+func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
+func HmacSHA1(b, key []byte) []byte
+func HmacSHA1Hex(s, key string) string
+func HmacSHA256(b, key []byte) []byte
+func HmacSHA256Hex(s, key string) string
+func HmacSHA512(b, key []byte) []byte
+func HmacSHA512Hex(s, key string) string
+func MD5(b []byte) []byte
+func MD5BytesHex(bs []byte) string
+func MD5Hex(s string) string
+func MD5Reader(r io.Reader) (string, error)
+func MD5Sum(filename string) (string, error)
+func MemHash(s string) uint64
+func MemHash32(s string) uint32
+func MemHashb(b []byte) uint64
+func MemHashb32(b []byte) uint32
+func MustMD5Sum(filename string) string
+func Sha1(b []byte) []byte
+func Sha1Hex(s string) string
+func Sha256(b []byte) []byte
+func Sha256Hex(s string) string
+func Sha512(b []byte) []byte
+func Sha512Hex(s string) string
+func Sum32(s string) uint32
+func Sum64(s string) uint64
+func SumBytes32(bs []byte) uint32
+func SumBytes64(bs []byte) uint64
+type Hashable interface{ ... }
+```
+</details>
+
 ### 可排序全局唯一 ID 生成器
 
 比 UUID 更快, 更短
@@ -1036,8 +1100,8 @@ func main() {
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
 	for i := 0; i < 30; i++ {
 		bus.Add(1)
-		bus.RunWithArgs(func(n interface{}) {
-			count.Add(int64(n.(int)))
+		bus.RunWithArgs(func(n ...interface{}) {
+			count.Add(int64(n[0].(int)))
 		}, i)
 	}
 	bus.Wait()

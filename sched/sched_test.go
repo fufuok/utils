@@ -16,13 +16,31 @@ func TestSched(t *testing.T) {
 	s.Add(10)
 	sum := uint32(0)
 	for i := 0; i < 10; i++ {
-		s.RunWithArgs(func(n interface{}) {
-			atomic.AddUint32(&sum, uint32(n.(int)))
-		}, i)
+		s.RunWithArgs(func(n ...interface{}) {
+			atomic.AddUint32(&sum, uint32(n[0].(int)))
+			atomic.AddUint32(&sum, -uint32(n[1].(int)))
+		}, i, i)
+	}
+	s.Wait()
+	if sum != 0 {
+		t.Fatalf("wrong sum, expect: %d, want %d", 0, sum)
+	}
+
+	s.Add(10)
+	sum = uint32(0)
+	for i := 0; i < 10; i++ {
+		ii := uint32(i)
+		s.RunWithArgs(func(_ ...interface{}) {
+			atomic.AddUint32(&sum, ii)
+		})
 	}
 	s.Wait()
 	if sum != 45 {
 		t.Fatalf("wrong sum, expect: %d, want %d", 45, sum)
+	}
+
+	if s.Running() != 0 {
+		t.Fatalf("wrong counter inside the pool")
 	}
 
 	s.Add(10)
@@ -87,8 +105,8 @@ func BenchmarkSched(b *testing.B) {
 		b.ReportAllocs()
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
-			l.RunWithArgs(func(x interface{}) {
-				_ = x
+			l.RunWithArgs(func(x ...interface{}) {
+				_ = x[0]
 			}, 42)
 		}
 		l.Wait()

@@ -17,7 +17,7 @@ import "github.com/fufuok/utils/sched"
   - [func (p *Pool) IsRunning() bool](<#func-pool-isrunning>)
   - [func (p *Pool) Release()](<#func-pool-release>)
   - [func (p *Pool) Run(f ...func())](<#func-pool-run>)
-  - [func (p *Pool) RunWithArgs(f func(args interface{}), args interface{})](<#func-pool-runwithargs>)
+  - [func (p *Pool) RunWithArgs(f func(args ...interface{}), args ...interface{})](<#func-pool-runwithargs>)
   - [func (p *Pool) Running() uint64](<#func-pool-running>)
   - [func (p *Pool) Wait()](<#func-pool-wait>)
   - [func (p *Pool) WaitAndRelease()](<#func-pool-waitandrelease>)
@@ -94,7 +94,7 @@ Run runs f in the current pool.
 ### func \(\*Pool\) RunWithArgs
 
 ```go
-func (p *Pool) RunWithArgs(f func(args interface{}), args interface{})
+func (p *Pool) RunWithArgs(f func(args ...interface{}), args ...interface{})
 ```
 
 ### func \(\*Pool\) Running
