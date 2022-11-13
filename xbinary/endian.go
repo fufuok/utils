@@ -6,8 +6,8 @@ import (
 
 // IsLittleEndian 判断系统是否为小端序
 func IsLittleEndian() bool {
-	var i int32 = 1
-	return *(*byte)(unsafe.Pointer(&i)) == 1
+	i := uint16(1)
+	return (*(*[2]byte)(unsafe.Pointer(&i)))[0] == 1
 }
 
 // SwapEndianUint32 大小端交换
