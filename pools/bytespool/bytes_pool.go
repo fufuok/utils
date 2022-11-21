@@ -70,6 +70,18 @@ func (p *CapacityPools) New(size int) (buf []byte) {
 	return
 }
 
+// NewBytes returns a byte slice of the specified content.
+func (p *CapacityPools) NewBytes(bs []byte) []byte {
+	buf := p.Make(len(bs))
+	return append(buf, bs...)
+}
+
+// NewString returns a byte slice of the specified content.
+func (p *CapacityPools) NewString(s string) []byte {
+	buf := p.Make(len(s))
+	return append(buf, s...)
+}
+
 // Append 与内置的 append 功能相同, 当底层数组需要重建时, 会回收原数组
 func (p *CapacityPools) Append(buf []byte, elems ...byte) []byte {
 	return p.AppendString(buf, *(*string)(unsafe.Pointer(&elems)))
@@ -122,6 +134,14 @@ func Get(size int) []byte {
 
 func New(size int) []byte {
 	return defaultCapacityPools.New(size)
+}
+
+func NewBytes(bs []byte) []byte {
+	return defaultCapacityPools.NewBytes(bs)
+}
+
+func NewString(s string) []byte {
+	return defaultCapacityPools.NewString(s)
 }
 
 func Append(buf []byte, elems ...byte) []byte {

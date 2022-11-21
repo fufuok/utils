@@ -158,6 +158,27 @@ func TestCapacityPools_Default(t *testing.T) {
 	SetMaxSize(defaultBufferSize)
 }
 
+func TestNewBytesString(t *testing.T) {
+	s := "Fufu 中文-123"
+	bs := []byte(s)
+
+	buf := NewString(s)
+	if cap(buf) != 16 {
+		t.Fatalf("expect buffer cap is 16, but got %d", cap(buf))
+	}
+	if string(buf) != s {
+		t.Fatalf("expect buf to be equal to %s, but not", s)
+	}
+
+	buf = NewBytes(bs)
+	if cap(buf) != 16 {
+		t.Fatalf("expect buffer cap is 16, but got %d", cap(buf))
+	}
+	if !bytes.Equal(buf, bs) {
+		t.Fatalf("expect buf to be equal to %s, but not", bs)
+	}
+}
+
 func TestUnalignedCapacity(t *testing.T) {
 	bs := make([]byte, 0, 7)
 	bs = append(bs, "123"...)
