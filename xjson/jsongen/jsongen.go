@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"strconv"
 	"unsafe"
+
+	"github.com/fufuok/utils/pools/bytespool"
 )
 
 // Value 表示将要序列化到`json`字符串中的值
@@ -74,8 +76,8 @@ func NewArray() *Array {
 
 // Serialize 将`a`序列化为字符串，追加到`buf`后，返回新的`buf`
 func (a Array) Serialize(buf []byte) []byte {
-	if len(buf) == 0 {
-		buf = make([]byte, 0, a.Size())
+	if cap(buf) == 0 {
+		buf = bytespool.Make(a.Size())
 	}
 
 	buf = append(buf, '[')
@@ -231,8 +233,8 @@ type Map struct {
 
 // Serialize 将`m`序列化为字符串，追加到`buf`后，返回新的`buf`
 func (m Map) Serialize(buf []byte) []byte {
-	if len(buf) == 0 {
-		buf = make([]byte, 0, m.Size())
+	if cap(buf) == 0 {
+		buf = bytespool.Make(m.Size())
 	}
 
 	buf = append(buf, '{')
