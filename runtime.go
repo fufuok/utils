@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"syscall"
 	_ "unsafe"
 )
 
@@ -88,9 +89,10 @@ func SafeGo(fn func(), cb ...RecoveryCallback) {
 }
 
 // WaitSignal 等待系统信号
+// 默认捕获退出类信息
 func WaitSignal(sig ...os.Signal) os.Signal {
 	if len(sig) == 0 {
-		sig = []os.Signal{os.Interrupt}
+		sig = []os.Signal{syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT}
 	}
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, sig...)
