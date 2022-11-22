@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute+10*time.Millisecond)
 	defer cancel()
 	clockOffsetChan := ntp.ClockOffsetChan(ctx, 20*time.Second)
-	timeChan := ntp.TimeChan(ctx, 15*time.Second, "ntp.ntsc.ac.cn", "time.nist.gov")
+	timeChan := ntp.TimeChan(ctx, 20*time.Second, "ntp.ntsc.ac.cn", "time.nist.gov")
 	for {
 		select {
 		case dur := <-clockOffsetChan:

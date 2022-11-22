@@ -2,10 +2,22 @@ package ntp
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xsync"
+)
+
+const (
+	// 特殊值: 无效的 ClockOffset 响应
+	invalidClockOffset = 123456 * time.Hour
+
+	// 缺省的请求间隔, 每 3 次返回 1 次结果
+	defaultInterval = 2 * time.Hour
+
+	// 最少请求间隔
+	defaultMinInterval = 20 * time.Second
 )
 
 var (
@@ -18,12 +30,6 @@ var (
 		"time.apple.com",
 		"pool.ntp.org",
 	}
-
-	// 缺省的请求间隔
-	defaultInterval = 2 * time.Minute
-
-	// 最少请求间隔
-	defaultMinInterval = 10 * time.Second
 )
 
 type HostResponse struct {
@@ -33,9 +39,12 @@ type HostResponse struct {
 
 // ClockOffsetChan 启动 Simple NTP (SNTP), 周期性获取时钟偏移值
 func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Duration {
-	if interval < defaultMinInterval {
+	if interval == 0 {
 		interval = defaultInterval
+	} else if interval < defaultMinInterval {
+		interval = defaultMinInterval
 	}
+	var offsets []int
 	ch := make(chan time.Duration, 1)
 	go func() {
 		host := ""
@@ -50,15 +59,25 @@ func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...strin
 			case <-ctx.Done():
 				return
 			}
+			offset := invalidClockOffset
 			if host == "" {
 				hs := HostPreferred(hosts)
 				if hs != nil {
 					host = hs.Host
-					ch <- hs.Resp.ClockOffset
+					offset = hs.Resp.ClockOffset
 				}
 			} else {
 				if resp := GetResponse(host); resp != nil {
-					ch <- resp.ClockOffset
+					offset = resp.ClockOffset
+				}
+			}
+			if offset != invalidClockOffset {
+				offsets = append(offsets, int(offset))
+				if len(offsets) == 3 {
+					// 去头尾, 取中间值
+					sort.Ints(offsets)
+					ch <- time.Duration(offsets[1])
+					offsets = offsets[:0]
 				}
 			}
 			<-ticker.C
@@ -69,8 +88,10 @@ func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...strin
 
 // TimeChan 启动 Simple NTP (SNTP), 周期性获取最新时间
 func TimeChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Time {
-	if interval < time.Second {
+	if interval == 0 {
 		interval = defaultInterval
+	} else if interval < defaultMinInterval {
+		interval = defaultMinInterval
 	}
 	ch := make(chan time.Time, 1)
 	go func() {
