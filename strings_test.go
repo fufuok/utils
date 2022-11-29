@@ -97,11 +97,11 @@ func BenchmarkCopyB2S(b *testing.B) {
 // BenchmarkCopyB2S/Std-8                  11875660                96.93 ns/op          288 B/op          1 allocs/op
 // BenchmarkCopyB2S/Std-8                  12063805               100.8 ns/op           288 B/op          1 allocs/op
 
-func TestAddString(t *testing.T) {
+func TestJoinString(t *testing.T) {
 	t.Parallel()
 	val := []string{"a", "b", "c"}
-	AssertEqual(t, strings.Join(val, ""), AddString(val...))
-	AssertEqual(t, "1,2/3", AddString("1", ",", "2", "/", "3"))
+	AssertEqual(t, strings.Join(val, ""), JoinString(val...))
+	AssertEqual(t, "1,2/3", JoinString("1", ",", "2", "/", "3"))
 }
 
 func TestSearchString(t *testing.T) {
@@ -146,9 +146,9 @@ func BenchmarkStringPlusLarge(b *testing.B) {
 			_ = a + e + t + e + c + e + d
 		}
 	})
-	b.Run("AddString", func(b *testing.B) {
+	b.Run("JoinString", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			_ = AddString(a, e, t, e, c, e, d)
+			_ = JoinString(a, e, t, e, c, e, d)
 		}
 	})
 	b.Run("Sprintf", func(b *testing.B) {
@@ -173,9 +173,9 @@ func BenchmarkStringPlus(b *testing.B) {
 			_ = a + c + a + c + a + c
 		}
 	})
-	b.Run("AddString", func(b *testing.B) {
+	b.Run("JoinString", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			_ = AddString(a, c, a, c, a, c)
+			_ = JoinString(a, c, a, c, a, c)
 		}
 	})
 	b.Run("Sprintf", func(b *testing.B) {
@@ -190,7 +190,7 @@ func BenchmarkStringPlus(b *testing.B) {
 	})
 }
 
-// AddString 最优, 一次性 + 号拼接性能也不错, 特别是大字符串拼接
+// JoinString 最优, 一次性 + 号拼接性能也不错, 特别是大字符串拼接
 // go test -run=^$ -benchmem -benchtime=1s -count=3 -bench=BenchmarkStringPlus
 // goos: linux
 // goarch: amd64
@@ -199,9 +199,9 @@ func BenchmarkStringPlus(b *testing.B) {
 // BenchmarkStringPlusLarge/a+b-8           6230061               202.0 ns/op           384 B/op          1 allocs/op
 // BenchmarkStringPlusLarge/a+b-8           6117298               190.1 ns/op           384 B/op          1 allocs/op
 // BenchmarkStringPlusLarge/a+b-8           6460974               196.4 ns/op           384 B/op          1 allocs/op
-// BenchmarkStringPlusLarge/AddString-8     6311520               175.9 ns/op           384 B/op          1 allocs/op
-// BenchmarkStringPlusLarge/AddString-8     7053520               177.1 ns/op           384 B/op          1 allocs/op
-// BenchmarkStringPlusLarge/AddString-8     6110152               178.1 ns/op           384 B/op          1 allocs/op
+// BenchmarkStringPlusLarge/JoinString-8     6311520               175.9 ns/op           384 B/op          1 allocs/op
+// BenchmarkStringPlusLarge/JoinString-8     7053520               177.1 ns/op           384 B/op          1 allocs/op
+// BenchmarkStringPlusLarge/JoinString-8     6110152               178.1 ns/op           384 B/op          1 allocs/op
 // BenchmarkStringPlusLarge/Sprintf-8       1660620              1126 ns/op             496 B/op          8 allocs/op
 // BenchmarkStringPlusLarge/Sprintf-8       1703002               717.8 ns/op           496 B/op          8 allocs/op
 // BenchmarkStringPlusLarge/Sprintf-8       1635656               698.6 ns/op           496 B/op          8 allocs/op
@@ -211,9 +211,9 @@ func BenchmarkStringPlus(b *testing.B) {
 // BenchmarkStringPlus/a+b-8               10656237               117.6 ns/op            96 B/op          1 allocs/op
 // BenchmarkStringPlus/a+b-8               10076886               115.7 ns/op            96 B/op          1 allocs/op
 // BenchmarkStringPlus/a+b-8               11085562               114.9 ns/op            96 B/op          1 allocs/op
-// BenchmarkStringPlus/AddString-8         13749231                91.51 ns/op           96 B/op          1 allocs/op
-// BenchmarkStringPlus/AddString-8         12951004                89.82 ns/op           96 B/op          1 allocs/op
-// BenchmarkStringPlus/AddString-8         13045179                91.75 ns/op           96 B/op          1 allocs/op
+// BenchmarkStringPlus/JoinString-8         13749231                91.51 ns/op           96 B/op          1 allocs/op
+// BenchmarkStringPlus/JoinString-8         12951004                89.82 ns/op           96 B/op          1 allocs/op
+// BenchmarkStringPlus/JoinString-8         13045179                91.75 ns/op           96 B/op          1 allocs/op
 // BenchmarkStringPlus/Sprintf-8            2197731               539.0 ns/op           192 B/op          7 allocs/op
 // BenchmarkStringPlus/Sprintf-8            2252364               539.5 ns/op           192 B/op          7 allocs/op
 // BenchmarkStringPlus/Sprintf-8            2269317               542.7 ns/op           192 B/op          7 allocs/op

@@ -74,8 +74,8 @@ func CopyB2S(b []byte) string {
 	return B2S(CopyBytes(b))
 }
 
-// AddStringBytes 拼接字符串, 返回 bytes from bytes.Join()
-func AddStringBytes(s ...string) []byte {
+// JoinStringBytes 拼接字符串, 返回 bytes from bytes.Join()
+func JoinStringBytes(s ...string) []byte {
 	switch len(s) {
 	case 0:
 		return []byte{}
@@ -97,16 +97,28 @@ func AddStringBytes(s ...string) []byte {
 	return b
 }
 
-// AddString 拼接字符串
-func AddString(s ...string) string {
+// AddStringBytes 拼接字符串, 返回 bytes from bytes.Join()
+// Deprecated: this function simply calls utils.JoinStringBytes.
+func AddStringBytes(s ...string) []byte {
+	return JoinStringBytes(s...)
+}
+
+// JoinString 拼接字符串
+func JoinString(s ...string) string {
 	switch len(s) {
 	case 0:
 		return ""
 	case 1:
 		return s[0]
 	default:
-		return B2S(AddStringBytes(s...))
+		return B2S(JoinStringBytes(s...))
 	}
+}
+
+// AddString 拼接字符串
+// Deprecated: this function simply calls utils.JoinStringBytes.
+func AddString(s ...string) string {
+	return JoinString(s...)
 }
 
 // SearchString 搜索字符串位置(左, 第一个)
