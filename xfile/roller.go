@@ -39,7 +39,7 @@ type Options struct {
 	// 日志处理器
 	Logger Logger
 
-	// 每次打开的文件是否删除后重建
+	// 每次(实例启动时除外)滚动的文件是否删除后重建
 	Rebuild bool
 
 	// 刷新到磁盘的大小和时间间隔, 默认 1MiB, 1秒
@@ -57,9 +57,10 @@ type Roller struct {
 	maker  FilenameMaker
 	logger Logger
 
-	file    *os.File
-	writer  *bufio.Writer
-	rebuild bool
+	file      *os.File
+	writer    *bufio.Writer
+	rebuild   bool
+	firstOpen bool
 
 	flushSizeLimit int
 	flushInterval  time.Duration
@@ -73,7 +74,8 @@ func NewRoller(filename string, opt *Options) (*Roller, error) {
 		return nil, ErrFilename
 	}
 	r := &Roller{
-		name: filename,
+		name:      filename,
+		firstOpen: true,
 	}
 	if err := r.openNewFile(); err != nil {
 		return nil, err
@@ -165,7 +167,8 @@ func (r *Roller) WriteString(s string) (int, error) {
 }
 
 func (r *Roller) openNewFile() error {
-	if r.rebuild {
+	if r.rebuild && !r.firstOpen {
+		r.firstOpen = false
 		if err := os.Remove(r.name); err != nil {
 			r.logger.Errorf("rebuild file: %s, err: %v", r.name, err)
 		}
