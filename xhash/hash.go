@@ -159,7 +159,7 @@ func MD5Reader(r io.Reader) (string, error) {
 
 // Sum64 获取字符串的哈希值
 func Sum64(s string) uint64 {
-	return JoinString64(offset64, s)
+	return AddString64(offset64, s)
 }
 
 // SumBytes64 获取 bytes 的哈希值
@@ -169,7 +169,7 @@ func SumBytes64(bs []byte) uint64 {
 
 // Sum32 获取字符串的哈希值
 func Sum32(s string) uint32 {
-	return JoinString32(offset32, s)
+	return AddString32(offset32, s)
 }
 
 // SumBytes32 获取 bytes 的哈希值
@@ -287,9 +287,9 @@ func HashUint32(u uint32) uint32 {
 	return AddUint32(offset32, u)
 }
 
-// JoinString64 adds the hash of s to the precomputed hash value h.
+// AddString64 adds the hash of s to the precomputed hash value h.
 // Ref: segmentio/fasthash
-func JoinString64(h uint64, s string) uint64 {
+func AddString64(h uint64, s string) uint64 {
 	/*
 		This is an unrolled version of this algorithm:
 		for _, c := range s {
@@ -382,9 +382,9 @@ func AddUint64(h uint64, u uint64) uint64 {
 	return h
 }
 
-// JoinString32 adds the hash of s to the precomputed hash value h.
+// AddString32 adds the hash of s to the precomputed hash value h.
 // Ref: segmentio/fasthash
-func JoinString32(h uint32, s string) uint32 {
+func AddString32(h uint32, s string) uint32 {
 	for len(s) >= 8 {
 		h = (h ^ uint32(s[0])) * prime32
 		h = (h ^ uint32(s[1])) * prime32
