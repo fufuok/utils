@@ -105,9 +105,6 @@ import "github.com/fufuok/utils"
 - [func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnetstring>)
 - [func InInts(slice []int, n int) bool](<#func-inints>)
 - [func InStrings(ss []string, s string) bool](<#func-instrings>)
-- [func IsDir(s string) bool](<#func-isdir>)
-- [func IsExist(s string) bool](<#func-isexist>)
-- [func IsFile(s string) bool](<#func-isfile>)
 - [func IsIP(ip string) bool](<#func-isip>)
 - [func IsIPv4(ip string) bool](<#func-isipv4>)
 - [func IsIPv6(ip string) bool](<#func-isipv6>)
@@ -117,6 +114,8 @@ import "github.com/fufuok/utils"
 - [func IsPrivateIP(ip net.IP) bool](<#func-isprivateip>)
 - [func IsPrivateIPString(ip string) bool](<#func-isprivateipstring>)
 - [func JoinBytes(b ...[]byte) []byte](<#func-joinbytes>)
+- [func JoinString(s ...string) string](<#func-joinstring>)
+- [func JoinStringBytes(s ...string) []byte](<#func-joinstringbytes>)
 - [func LeftPad(s, pad string, n int) string](<#func-leftpad>)
 - [func LeftPadBytes(b, pad []byte, n int) []byte](<#func-leftpadbytes>)
 - [func Logn(n, b float64) float64](<#func-logn>)
@@ -330,7 +329,7 @@ var (
 func AddString(s ...string) string
 ```
 
-AddString 拼接字符串
+AddString 拼接字符串 Deprecated: this function simply calls utils.JoinStringBytes.
 
 ## func AddStringBytes
 
@@ -338,7 +337,7 @@ AddString 拼接字符串
 func AddStringBytes(s ...string) []byte
 ```
 
-AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
+AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\) Deprecated: this function simply calls utils.JoinStringBytes.
 
 ## func AssertEqual
 
@@ -1080,30 +1079,6 @@ func InStrings(ss []string, s string) bool
 
 InStrings 检查字符串是否存在于 slice
 
-## func IsDir
-
-```go
-func IsDir(s string) bool
-```
-
-IsDir 目录是否存在
-
-## func IsExist
-
-```go
-func IsExist(s string) bool
-```
-
-IsExist 文件或目录是否存在
-
-## func IsFile
-
-```go
-func IsFile(s string) bool
-```
-
-IsFile 文件是否存在
-
 ## func IsIP
 
 ```go
@@ -1194,6 +1169,22 @@ func JoinBytes(b ...[]byte) []byte
 ```
 
 JoinBytes 拼接 \[\]byte
+
+## func JoinString
+
+```go
+func JoinString(s ...string) string
+```
+
+JoinString 拼接字符串
+
+## func JoinStringBytes
+
+```go
+func JoinStringBytes(s ...string) []byte
+```
+
+JoinStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
 
 ## func LeftPad
 
@@ -1741,7 +1732,7 @@ WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitSignal(sig ...os.Signal) os.Signal
 ```
 
-WaitSignal 等待系统信号
+WaitSignal 等待系统信号 默认捕获退出类信息
 
 ## func Zip
 

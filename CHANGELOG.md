@@ -1,5 +1,31 @@
 # Go-Utils
 
+## v0.9.5
+
+**2022-12-02**
+
+- 增加 `xfile` 包: 带写入缓冲的简单滚动日志记录器
+
+## v0.9.4
+
+**2022-11-29**
+
+- 优化函数名: `AddString` `AddStringBytes` 改为 `JoinString` `JoinStringBytes`
+
+## v0.9.3
+
+**2022-11-22**
+
+- 优化 `ntpdate`: 默认时间间隔改为 `2` 小时, 每 `3` 次返回一次中间结果 
+
+## v0.9.2
+
+**2022-11-21**
+
+- `WaitSignal` 默认捕获所有退出类信号
+- `bytespool` 增加 `NewString` `NewBytes`
+- `jsongen.Serialize` 使用字节池
+
 ## v0.9.1
 
 **2022-11-11**
