@@ -30,6 +30,7 @@ import "github.com/fufuok/utils"
 - [func BeginOfMonth(t time.Time) time.Time](<#func-beginofmonth>)
 - [func BeginOfNextMonth(t time.Time) time.Time](<#func-beginofnextmonth>)
 - [func BeginOfNextWeek(t time.Time) time.Time](<#func-beginofnextweek>)
+- [func BeginOfSecond(t time.Time) time.Time](<#func-beginofsecond>)
 - [func BeginOfTomorrow(t time.Time) time.Time](<#func-beginoftomorrow>)
 - [func BeginOfWeek(t time.Time) time.Time](<#func-beginofweek>)
 - [func BeginOfYear(t time.Time) time.Time](<#func-beginofyear>)
@@ -58,6 +59,7 @@ import "github.com/fufuok/utils"
 - [func EndOfMonth(t time.Time) time.Time](<#func-endofmonth>)
 - [func EndOfNextMonth(t time.Time) time.Time](<#func-endofnextmonth>)
 - [func EndOfNextWeek(t time.Time) time.Time](<#func-endofnextweek>)
+- [func EndOfSecond(t time.Time) time.Time](<#func-endofsecond>)
 - [func EndOfTomorrow(t time.Time) time.Time](<#func-endoftomorrow>)
 - [func EndOfWeek(t time.Time) time.Time](<#func-endofweek>)
 - [func EndOfYear(t time.Time) time.Time](<#func-endofyear>)
@@ -184,6 +186,9 @@ import "github.com/fufuok/utils"
 - [func Unzip(data []byte) (src []byte, err error)](<#func-unzip>)
 - [func ValidOptionalPort(port string) bool](<#func-validoptionalport>)
 - [func WaitNextMinute(t ...time.Time)](<#func-waitnextminute>)
+- [func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)](<#func-waitnextminutewithtime>)
+- [func WaitNextSecond(t ...time.Time)](<#func-waitnextsecond>)
+- [func WaitNextSecondWithTime(t ...time.Time) (now time.Time)](<#func-waitnextsecondwithtime>)
 - [func WaitSignal(sig ...os.Signal) os.Signal](<#func-waitsignal>)
 - [func Zip(data []byte) ([]byte, error)](<#func-zip>)
 - [func ZipLevel(data []byte, level int) (dst []byte, err error)](<#func-ziplevel>)
@@ -477,6 +482,14 @@ func BeginOfNextWeek(t time.Time) time.Time
 
 BeginOfNextWeek 下周一 0 点
 
+## func BeginOfSecond
+
+```go
+func BeginOfSecond(t time.Time) time.Time
+```
+
+BeginOfSecond 0 毫秒
+
 ## func BeginOfTomorrow
 
 ```go
@@ -702,6 +715,14 @@ func EndOfNextWeek(t time.Time) time.Time
 ```
 
 EndOfNextWeek 下周一最后一刻
+
+## func EndOfSecond
+
+```go
+func EndOfSecond(t time.Time) time.Time
+```
+
+EndOfSecond 最后一毫秒
 
 ## func EndOfTomorrow
 
@@ -1725,6 +1746,30 @@ func WaitNextMinute(t ...time.Time)
 ```
 
 WaitNextMinute 下一分钟, 对齐时间, 0 秒
+
+## func WaitNextMinuteWithTime
+
+```go
+func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)
+```
+
+WaitNextMinuteWithTime 下一分钟, 对齐时间, 0 秒
+
+## func WaitNextSecond
+
+```go
+func WaitNextSecond(t ...time.Time)
+```
+
+WaitNextSecond 下一秒, 对齐时间, 0 毫秒 \(近似\)
+
+## func WaitNextSecondWithTime
+
+```go
+func WaitNextSecondWithTime(t ...time.Time) (now time.Time)
+```
+
+WaitNextSecondWithTime 下一秒, 对齐时间, 0 毫秒 \(近似\)
 
 ## func WaitSignal
 

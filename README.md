@@ -48,6 +48,7 @@ func BeginOfMinute(t time.Time) time.Time
 func BeginOfMonth(t time.Time) time.Time
 func BeginOfNextMonth(t time.Time) time.Time
 func BeginOfNextWeek(t time.Time) time.Time
+func BeginOfSecond(t time.Time) time.Time
 func BeginOfTomorrow(t time.Time) time.Time
 func BeginOfWeek(t time.Time) time.Time
 func BeginOfYear(t time.Time) time.Time
@@ -76,6 +77,7 @@ func EndOfMinute(t time.Time) time.Time
 func EndOfMonth(t time.Time) time.Time
 func EndOfNextMonth(t time.Time) time.Time
 func EndOfNextWeek(t time.Time) time.Time
+func EndOfSecond(t time.Time) time.Time
 func EndOfTomorrow(t time.Time) time.Time
 func EndOfWeek(t time.Time) time.Time
 func EndOfYear(t time.Time) time.Time
@@ -123,9 +125,6 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
-func IsDir(s string) bool
-func IsExist(s string) bool
-func IsFile(s string) bool
 func IsIP(ip string) bool
 func IsIPv4(ip string) bool
 func IsIPv6(ip string) bool
@@ -135,6 +134,8 @@ func IsNil(i interface{}) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
+func JoinString(s ...string) string
+func JoinStringBytes(s ...string) []byte
 func LeftPad(s, pad string, n int) string
 func LeftPadBytes(b, pad []byte, n int) []byte
 func Logn(n, b float64) float64
@@ -203,6 +204,9 @@ func Ungzip(data []byte) (src []byte, err error)
 func Unzip(data []byte) (src []byte, err error)
 func ValidOptionalPort(port string) bool
 func WaitNextMinute(t ...time.Time)
+func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)
+func WaitNextSecond(t ...time.Time)
+func WaitNextSecondWithTime(t ...time.Time) (now time.Time)
 func WaitSignal(sig ...os.Signal) os.Signal
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
@@ -899,6 +903,12 @@ type Pool struct{ ... }
 
 默认优选 NTP Host, 周期性返回时钟偏移值或当前时间, 也可指定 Host 单次请求
 
+### 简单的日志文件滚动
+
+示例: [xfile/examples](xfile/examples)
+
+带文件写入 Buffer 的日志文件滚动器, 比如按日期滚动生成新文件
+
 <details>
   <summary>DOC</summary>
 
@@ -958,7 +968,7 @@ func main() {
 	s = utils.GetString([]byte("ff"))   // "ff"
 	s = utils.GetString(true)           // "true"
 
-	x := utils.AddString(s, "OK") // "trueOK"
+	x := utils.JoinString(s, "OK") // "trueOK"
 
 	b := []byte("trueOK")
 	s = utils.B2S(b[0:1])                                     // "t"
@@ -1095,6 +1105,10 @@ func main() {
 	ok = lock.TryLock(20 * time.Millisecond)
 	fmt.Println(ok) // true
 	lock.Unlock()
+
+	// 等待下一秒 0 毫秒 (近似)
+	now = utils.WaitNextSecondWithTime()
+	fmt.Println("hour:minute:second.00*ms", now)
 
 	count := xsync.NewCounter()
 	bus := sched.New() // 默认并发数: runtime.NumCPU()

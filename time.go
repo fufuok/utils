@@ -2,15 +2,48 @@ package utils
 
 import (
 	"time"
+
+	"github.com/fufuok/utils/pools/timerpool"
 )
 
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitNextMinute(t ...time.Time) {
-	now := time.Now()
+	_ = WaitNextMinuteWithTime(t...)
+}
+
+// WaitNextMinuteWithTime 下一分钟, 对齐时间, 0 秒
+func WaitNextMinuteWithTime(t ...time.Time) (now time.Time) {
+	var start time.Time
 	if len(t) > 0 {
-		now = t[0]
+		start = t[0]
+	} else {
+		start = time.Now()
 	}
-	<-time.After(BeginOfMinute(now.Add(time.Minute)).Sub(now))
+	now = BeginOfSecond(start.Add(time.Minute))
+	timer := timerpool.New(now.Sub(start))
+	<-timer.C
+	timerpool.Release(timer)
+	return
+}
+
+// WaitNextSecond 下一秒, 对齐时间, 0 毫秒 (近似)
+func WaitNextSecond(t ...time.Time) {
+	_ = WaitNextSecondWithTime(t...)
+}
+
+// WaitNextSecondWithTime 下一秒, 对齐时间, 0 毫秒 (近似)
+func WaitNextSecondWithTime(t ...time.Time) (now time.Time) {
+	var start time.Time
+	if len(t) > 0 {
+		start = t[0]
+	} else {
+		start = time.Now()
+	}
+	now = BeginOfSecond(start.Add(time.Second))
+	timer := timerpool.New(now.Sub(start))
+	<-timer.C
+	timerpool.Release(timer)
+	return
 }
 
 // BeginOfDay 当天 0 点
@@ -42,6 +75,17 @@ func BeginOfTomorrow(t time.Time) time.Time {
 // EndOfTomorrow 明天 0 点
 func EndOfTomorrow(t time.Time) time.Time {
 	return EndOfDay(t.AddDate(0, 0, 1))
+}
+
+// BeginOfSecond 0 毫秒
+func BeginOfSecond(t time.Time) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, t.Hour(), t.Minute(), t.Second(), 0, t.Location())
+}
+
+// EndOfSecond 最后一毫秒
+func EndOfSecond(t time.Time) time.Time {
+	return BeginOfSecond(t).Add(time.Second - time.Nanosecond)
 }
 
 // BeginOfMinute 0 秒

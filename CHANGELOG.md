@@ -1,5 +1,13 @@
 # Go-Utils
 
+## v0.9.6
+
+**2022-12-03**
+
+- 优化 `WaitNextMinute`
+- 增加 `WaitNextMinuteWithTime` `WaitNextSecond` `WaitNextSecondWithTime`
+- 增加 `BeginOfSecond` `EndOfSecond`
+
 ## v0.9.5
 
 **2022-12-02**
