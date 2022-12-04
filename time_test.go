@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"context"
+	"errors"
 	"testing"
 	"time"
 )
@@ -49,4 +51,16 @@ func TestWaitNextSecondWithTime(t *testing.T) {
 	now := time.Date(2020, 2, 18, 12, 13, 14, 123456789, time.UTC)
 	now = WaitNextSecondWithTime(now)
 	AssertEqual(t, "2020-02-18T12:13:15", now.Format("2006-01-02T15:04:05"))
+}
+
+func TestSleep(t *testing.T) {
+	dur := 50 * time.Millisecond
+	ctx := context.Background()
+	err := Sleep(ctx, dur)
+	AssertEqual(t, nil, err)
+
+	ctx, cancel := context.WithCancel(ctx)
+	cancel()
+	err = Sleep(ctx, dur)
+	AssertEqual(t, true, errors.Is(err, context.Canceled))
 }

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"time"
 
 	"github.com/fufuok/utils/pools/timerpool"
@@ -188,4 +189,17 @@ func BeginOfYear(t time.Time) time.Time {
 // EndOfYear 本年最后一刻
 func EndOfYear(t time.Time) time.Time {
 	return BeginOfYear(t).AddDate(1, 0, 0).Add(-time.Nanosecond)
+}
+
+// Sleep 支持上下文中断的 time.Sleep
+func Sleep(ctx context.Context, interval time.Duration) error {
+	timer := timerpool.New(interval)
+	select {
+	case <-ctx.Done():
+		timerpool.Release(timer)
+		return ctx.Err()
+	case <-timer.C:
+		timerpool.Release(timer)
+		return nil
+	}
 }
