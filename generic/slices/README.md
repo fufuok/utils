@@ -21,9 +21,11 @@ Note that the less function in IsSortedFunc, SortFunc, SortStableFunc requires a
 - [func Compare[E constraints.Ordered](s1, s2 []E) int](<#func-compare>)
 - [func CompareFunc[E1, E2 any](s1 []E1, s2 []E2, cmp func(E1, E2) int) int](<#func-comparefunc>)
 - [func Contains[E comparable](s []E, v E) bool](<#func-contains>)
+- [func Deduplication[E comparable](s []E) []E](<#func-deduplication>)
 - [func Delete[S ~[]E, E any](s S, i, j int) S](<#func-delete>)
 - [func Equal[E comparable](s1, s2 []E) bool](<#func-equal>)
 - [func EqualFunc[E1, E2 any](s1 []E1, s2 []E2, eq func(E1, E2) bool) bool](<#func-equalfunc>)
+- [func Filter[E any, S ~[]E](s S, pred func(E) bool) S](<#func-filter>)
 - [func Grow[S ~[]E, E any](s S, n int) S](<#func-grow>)
 - [func Index[E comparable](s []E, v E) int](<#func-index>)
 - [func IndexFunc[E any](s []E, f func(E) bool) int](<#func-indexfunc>)
@@ -74,7 +76,7 @@ Clone returns a copy of the slice. The elements are copied using assignment, so 
 func Compact[S ~[]E, E comparable](s S) S
 ```
 
-Compact replaces consecutive runs of equal elements with a single copy. This is like the uniq command found on Unix. Compact modifies the contents of the slice s; it does not create a new slice.
+Compact replaces consecutive runs of equal elements with a single copy. This is like the uniq command found on Unix. Compact modifies the contents of the slice s; it does not create a new slice. When Compact discards m elements in total, it might not modify the elements s\[len\(s\)\-m:len\(s\)\]. If those elements contain pointers you might consider zeroing those elements so that objects they reference can be garbage collected.
 
 ## func CompactFunc
 
@@ -108,6 +110,14 @@ func Contains[E comparable](s []E, v E) bool
 
 Contains reports whether v is present in s.
 
+## func Deduplication
+
+```go
+func Deduplication[E comparable](s []E) []E
+```
+
+Deduplication removes repeatable elements from s.
+
 ## func Delete
 
 ```go
@@ -131,6 +141,14 @@ func EqualFunc[E1, E2 any](s1 []E1, s2 []E2, eq func(E1, E2) bool) bool
 ```
 
 EqualFunc reports whether two slices are equal using a comparison function on each pair of elements. If the lengths are different, EqualFunc returns false. Otherwise, the elements are compared in increasing index order, and the comparison stops at the first index for which eq returns false.
+
+## func Filter
+
+```go
+func Filter[E any, S ~[]E](s S, pred func(E) bool) S
+```
+
+Filter removes any elements from s for which pred\(element\) is false.
 
 ## func Grow
 
