@@ -30,11 +30,6 @@ var ErrInvalidHostPort = errors.New("invalid Host or Port")
 var StackTraceBufferSize = 4 << 10
 func AddString(s ...string) string
 func AddStringBytes(s ...string) []byte
-func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
-func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, ...)
-func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)
-func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{})
-func AssertPanics(t *testing.T, title string, f func())
 func B2S(b []byte) string
 func B64Decode(s string) []byte
 func B64Encode(b []byte) string
@@ -130,7 +125,6 @@ func IsIPv4(ip string) bool
 func IsIPv6(ip string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
-func IsNil(i interface{}) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
@@ -180,6 +174,7 @@ func S2B(s string) []byte
 func SafeGo(fn func(), cb ...RecoveryCallback)
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
+func Sleep(ctx context.Context, interval time.Duration) error
 func SplitHostPort(hostPort string) (host, port string)
 func Str2Bytes(s string) (b []byte)
 func StrToBytes(s string) []byte

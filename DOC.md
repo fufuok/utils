@@ -12,11 +12,6 @@ import "github.com/fufuok/utils"
 - [Variables](<#variables>)
 - [func AddString(s ...string) string](<#func-addstring>)
 - [func AddStringBytes(s ...string) []byte](<#func-addstringbytes>)
-- [func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)](<#func-assertequal>)
-- [func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{})](<#func-assertequalf>)
-- [func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)](<#func-assertnotequal>)
-- [func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{})](<#func-assertnotequalf>)
-- [func AssertPanics(t *testing.T, title string, f func())](<#func-assertpanics>)
 - [func B2S(b []byte) string](<#func-b2s>)
 - [func B64Decode(s string) []byte](<#func-b64decode>)
 - [func B64Encode(b []byte) string](<#func-b64encode>)
@@ -112,7 +107,6 @@ import "github.com/fufuok/utils"
 - [func IsIPv6(ip string) bool](<#func-isipv6>)
 - [func IsInternalIPv4(ip net.IP) bool](<#func-isinternalipv4>)
 - [func IsInternalIPv4String(ip string) bool](<#func-isinternalipv4string>)
-- [func IsNil(i interface{}) bool](<#func-isnil>)
 - [func IsPrivateIP(ip net.IP) bool](<#func-isprivateip>)
 - [func IsPrivateIPString(ip string) bool](<#func-isprivateipstring>)
 - [func JoinBytes(b ...[]byte) []byte](<#func-joinbytes>)
@@ -162,6 +156,7 @@ import "github.com/fufuok/utils"
 - [func SafeGo(fn func(), cb ...RecoveryCallback)](<#func-safego>)
 - [func SearchInt(slice []int, n int) int](<#func-searchint>)
 - [func SearchString(ss []string, s string) int](<#func-searchstring>)
+- [func Sleep(ctx context.Context, interval time.Duration) error](<#func-sleep>)
 - [func SplitHostPort(hostPort string) (host, port string)](<#func-splithostport>)
 - [func Str2Bytes(s string) (b []byte)](<#func-str2bytes>)
 - [func StrToBytes(s string) []byte](<#func-strtobytes>)
@@ -343,40 +338,6 @@ func AddStringBytes(s ...string) []byte
 ```
 
 AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\) Deprecated: this function simply calls utils.JoinStringBytes.
-
-## func AssertEqual
-
-```go
-func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string)
-```
-
-AssertEqual checks if values are equal Ref: gofiber/utils
-
-## func AssertEqualf
-
-```go
-func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{})
-```
-
-## func AssertNotEqual
-
-```go
-func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string)
-```
-
-## func AssertNotEqualf
-
-```go
-func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{})
-```
-
-## func AssertPanics
-
-```go
-func AssertPanics(t *testing.T, title string, f func())
-```
-
-AssertPanics 断言 panic
 
 ## func B2S
 
@@ -1140,33 +1101,6 @@ func IsInternalIPv4String(ip string) bool
 
 IsInternalIPv4String 是否为内网 IPv4
 
-## func IsNil
-
-```go
-func IsNil(i interface{}) bool
-```
-
-IsNil 判断对象\(pointer, channel, func, interface, map, slice\)是否为 nil nil 是一个 Type 类型的变量, Type 类型是基于 int 的类型 var 若变量本身是指针, 占用 8 字节, 指向类型内部结构体并置 0, 仅定义了变量本身, 此时为 nil
-
-```
-指针是非复合类型, 赋值 nil 时, 将 8 字节置 0, 即没有指向任何值的指针 0x0
-map, channel: var 时仅定义了指针, 需要 make 初始化内部结构后才能使用, make 后非 nil
-```
-
-var 若变量非指针, 如 struct, int, 非 nil slice:
-
-```
-type slice struct, 占用 24 字节, 1 指针(array unsafe.Pointer) 2 个整型字段(len, cap int)
-var 定义后即可使用, 置 0 并分配, 此时 array 指针为 0 即没有实际数据时为 nil
-```
-
-interface:
-
-```
-type iface struct(interface 类型), type eface struct(空接口), 占用 16 字节
-判断 data 指针为 0 即为 nil, 初始化后即非 0
-```
-
 ## func IsPrivateIP
 
 ```go
@@ -1560,6 +1494,14 @@ func SearchString(ss []string, s string) int
 ```
 
 SearchString 搜索字符串位置\(左, 第一个\)
+
+## func Sleep
+
+```go
+func Sleep(ctx context.Context, interval time.Duration) error
+```
+
+Sleep 支持上下文中断的 time.Sleep
 
 ## func SplitHostPort
 

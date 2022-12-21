@@ -1,5 +1,19 @@
 # Go-Utils
 
+## v0.9.8
+
+**2022-12-21**
+
+- 调整测试助手函数, 简化版: `stretchr/testify`
+- 修正 `xfile.Roller` 写盘时机判断
+- 增加 `slices.Filter`
+
+## v0.9.7
+
+**2022-12-20**
+
+- 增加 `slices.Deduplication`
+
 ## v0.9.6
 
 **2022-12-03**
