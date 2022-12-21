@@ -3,6 +3,7 @@ package assert
 import (
 	"bytes"
 	"testing"
+	"unsafe"
 )
 
 func TestAssertEqual(t *testing.T) {
@@ -99,6 +100,9 @@ func TestIsNil(t *testing.T) {
 	NotNil(t, s)
 	var iface5 interface{} = s
 	NotNil(t, iface5)
+
+	var n unsafe.Pointer = nil
+	Nil(t, n)
 
 	// var nil1 = (*int)(unsafe.Pointer(uintptr(0x0)))
 	// Equal(t, true, IsNil(nil1))
