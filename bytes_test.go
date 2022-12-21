@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"strings"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestGetBytes(t *testing.T) {
@@ -23,10 +25,10 @@ func TestGetBytes(t *testing.T) {
 		{testString, nil, testBytes},
 		{[]int{0, 2, 1}, nil, []byte("[0 2 1]")},
 	} {
-		AssertEqual(t, v.out, GetBytes(v.in, v.def))
+		assert.Equal(t, v.out, GetBytes(v.in, v.def))
 	}
-	AssertEqual(t, 0, len(GetBytes(nil)))
-	AssertEqual(t, []byte{}, GetSafeBytes(nil))
+	assert.Equal(t, 0, len(GetBytes(nil)))
+	assert.Equal(t, []byte{}, GetSafeBytes(nil))
 }
 
 func TestGetSafeBytes(t *testing.T) {
@@ -37,33 +39,33 @@ func TestGetSafeBytes(t *testing.T) {
 	safeB2 := GetSafeS2B(s)
 	safeB3 := GetSafeBytes(b)
 	safeB4 := CopyBytes(b)
-	AssertEqual(t, "Fufu", s)
+	assert.Equal(t, "Fufu", s)
 
 	b[0] = 'X'
 
-	AssertEqual(t, "Xufu", s)
-	AssertEqual(t, []byte("Fufu"), safeB1)
-	AssertEqual(t, []byte("Fufu"), safeB2)
-	AssertEqual(t, []byte("Fufu"), safeB3)
-	AssertEqual(t, []byte("Fufu"), safeB4)
+	assert.Equal(t, "Xufu", s)
+	assert.Equal(t, []byte("Fufu"), safeB1)
+	assert.Equal(t, []byte("Fufu"), safeB2)
+	assert.Equal(t, []byte("Fufu"), safeB3)
+	assert.Equal(t, []byte("Fufu"), safeB4)
 
-	AssertEqual(t, []byte("default"), GetSafeS2B("", []byte("default")))
+	assert.Equal(t, []byte("default"), GetSafeS2B("", []byte("default")))
 }
 
 func TestCopyBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, testBytes, CopyBytes(testBytes))
+	assert.Equal(t, testBytes, CopyBytes(testBytes))
 }
 
 func TestCopyS2B(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, testBytes, CopyS2B(testString))
+	assert.Equal(t, testBytes, CopyS2B(testString))
 }
 
 func TestJoinBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, []byte("1,2,3"), JoinBytes([]byte("1"), []byte(","), []byte("2"), []byte(","), []byte("3")))
-	AssertEqual(
+	assert.Equal(t, []byte("1,2,3"), JoinBytes([]byte("1"), []byte(","), []byte("2"), []byte(","), []byte("3")))
+	assert.Equal(
 		t,
 		bytes.Join([][]byte{[]byte("1"), []byte("2"), []byte("3")}, []byte(",")),
 		JoinBytes([]byte("1"), []byte(","), []byte("2"), []byte(","), []byte("3")),
@@ -109,10 +111,10 @@ func BenchmarkCopyS2B(b *testing.B) {
 
 func TestToLowerBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, bytes.ToLower([]byte("A")), ToLowerBytes([]byte("A")))
-	AssertEqual(t, bytes.ToLower([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/")))
-	AssertEqual(t, true, bytes.Equal(bytes.ToLower([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/"))))
-	AssertEqual(t, false, bytes.Equal(bytes.ToUpper([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/"))))
+	assert.Equal(t, bytes.ToLower([]byte("A")), ToLowerBytes([]byte("A")))
+	assert.Equal(t, bytes.ToLower([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/")))
+	assert.Equal(t, true, bytes.Equal(bytes.ToLower([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/"))))
+	assert.Equal(t, false, bytes.Equal(bytes.ToUpper([]byte("/TesT/")), ToLowerBytes([]byte("/TesT/"))))
 }
 
 func BenchmarkToLowerBytes(b *testing.B) {
@@ -142,10 +144,10 @@ func BenchmarkToLowerBytes(b *testing.B) {
 
 func TestToUpperBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, bytes.ToUpper([]byte("a")), ToUpperBytes([]byte("a")))
-	AssertEqual(t, bytes.ToUpper([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/")))
-	AssertEqual(t, true, bytes.Equal(bytes.ToUpper([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/"))))
-	AssertEqual(t, false, bytes.Equal(bytes.ToLower([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/"))))
+	assert.Equal(t, bytes.ToUpper([]byte("a")), ToUpperBytes([]byte("a")))
+	assert.Equal(t, bytes.ToUpper([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/")))
+	assert.Equal(t, true, bytes.Equal(bytes.ToUpper([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/"))))
+	assert.Equal(t, false, bytes.Equal(bytes.ToLower([]byte("/TesT/")), ToUpperBytes([]byte("/TesT/"))))
 }
 
 func BenchmarkToUpperBytes(b *testing.B) {
@@ -175,12 +177,12 @@ func BenchmarkToUpperBytes(b *testing.B) {
 
 func TestTrimLeftBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, []byte("test/////"), TrimLeftBytes([]byte("/////test/////"), '/'))
-	AssertEqual(t, []byte("test/"), TrimLeftBytes([]byte("/test/"), '/'))
-	AssertEqual(t, 0, len(TrimLeftBytes([]byte(" "), ' ')))
-	AssertEqual(t, 0, len(TrimLeftBytes([]byte("  "), ' ')))
-	AssertEqual(t, 0, len(TrimLeftBytes([]byte(""), ' ')))
-	AssertEqual(t, bytes.TrimLeft([]byte("  TesT  "), " "), TrimLeftBytes([]byte("  TesT  "), ' '))
+	assert.Equal(t, []byte("test/////"), TrimLeftBytes([]byte("/////test/////"), '/'))
+	assert.Equal(t, []byte("test/"), TrimLeftBytes([]byte("/test/"), '/'))
+	assert.Equal(t, 0, len(TrimLeftBytes([]byte(" "), ' ')))
+	assert.Equal(t, 0, len(TrimLeftBytes([]byte("  "), ' ')))
+	assert.Equal(t, 0, len(TrimLeftBytes([]byte(""), ' ')))
+	assert.Equal(t, bytes.TrimLeft([]byte("  TesT  "), " "), TrimLeftBytes([]byte("  TesT  "), ' '))
 }
 
 func BenchmarkTrimLeftBytes(b *testing.B) {
@@ -210,12 +212,12 @@ func BenchmarkTrimLeftBytes(b *testing.B) {
 
 func TestTrimRightBytes(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, []byte("/////test"), TrimRightBytes([]byte("/////test/////"), '/'))
-	AssertEqual(t, []byte("/test"), TrimRightBytes([]byte("/test/"), '/'))
-	AssertEqual(t, 0, len(TrimRightBytes([]byte(" "), ' ')))
-	AssertEqual(t, 0, len(TrimRightBytes([]byte("  "), ' ')))
-	AssertEqual(t, 0, len(TrimRightBytes([]byte(""), ' ')))
-	AssertEqual(t, bytes.TrimRight([]byte("  TesT  "), " "), TrimRightBytes([]byte("  TesT  "), ' '))
+	assert.Equal(t, []byte("/////test"), TrimRightBytes([]byte("/////test/////"), '/'))
+	assert.Equal(t, []byte("/test"), TrimRightBytes([]byte("/test/"), '/'))
+	assert.Equal(t, 0, len(TrimRightBytes([]byte(" "), ' ')))
+	assert.Equal(t, 0, len(TrimRightBytes([]byte("  "), ' ')))
+	assert.Equal(t, 0, len(TrimRightBytes([]byte(""), ' ')))
+	assert.Equal(t, bytes.TrimRight([]byte("  TesT  "), " "), TrimRightBytes([]byte("  TesT  "), ' '))
 }
 
 func BenchmarkTrimRightBytes(b *testing.B) {
@@ -244,13 +246,13 @@ func BenchmarkTrimRightBytes(b *testing.B) {
 // BenchmarkTrimRightBytes/default-8               18744405                65.73 ns/op           24 B/op          1 allocs/op
 
 func TestTrimBytes(t *testing.T) {
-	AssertEqual(t, []byte("test"), TrimBytes([]byte("/////test/////"), '/'))
-	AssertEqual(t, []byte("test"), TrimBytes([]byte("/test/"), '/'))
-	AssertEqual(t, []byte("test"), TrimBytes([]byte("test"), '/'))
-	AssertEqual(t, 0, len(TrimBytes([]byte(" "), ' ')))
-	AssertEqual(t, 0, len(TrimBytes([]byte("  "), ' ')))
-	AssertEqual(t, 0, len(TrimBytes([]byte(""), ' ')))
-	AssertEqual(t, bytes.Trim([]byte("  TesT  "), " "), TrimBytes([]byte("  TesT  "), ' '))
+	assert.Equal(t, []byte("test"), TrimBytes([]byte("/////test/////"), '/'))
+	assert.Equal(t, []byte("test"), TrimBytes([]byte("/test/"), '/'))
+	assert.Equal(t, []byte("test"), TrimBytes([]byte("test"), '/'))
+	assert.Equal(t, 0, len(TrimBytes([]byte(" "), ' ')))
+	assert.Equal(t, 0, len(TrimBytes([]byte("  "), ' ')))
+	assert.Equal(t, 0, len(TrimBytes([]byte(""), ' ')))
+	assert.Equal(t, bytes.Trim([]byte("  TesT  "), " "), TrimBytes([]byte("  TesT  "), ' '))
 }
 
 func BenchmarkTrimBytes(b *testing.B) {
@@ -288,10 +290,10 @@ func BenchmarkTrimBytes(b *testing.B) {
 
 func TestEqualFoldBytes(t *testing.T) {
 	res := []byte("  tESt  ")
-	AssertEqual(t, true, EqualFoldBytes(res, ToUpperBytes([]byte("  TesT  "))))
-	AssertEqual(t, true, EqualFoldBytes(ToLowerBytes(res), ToUpperBytes([]byte("  TesT  "))))
-	AssertEqual(t, false, EqualFoldBytes(res, TrimBytes([]byte("  TesT  "), ' ')))
-	AssertEqual(t, false, EqualFoldBytes([]byte("\na"), []byte("*A")))
+	assert.Equal(t, true, EqualFoldBytes(res, ToUpperBytes([]byte("  TesT  "))))
+	assert.Equal(t, true, EqualFoldBytes(ToLowerBytes(res), ToUpperBytes([]byte("  TesT  "))))
+	assert.Equal(t, false, EqualFoldBytes(res, TrimBytes([]byte("  TesT  "), ' ')))
+	assert.Equal(t, false, EqualFoldBytes([]byte("\na"), []byte("*A")))
 }
 
 func BenchmarkEqualFoldBytes(b *testing.B) {
@@ -301,13 +303,13 @@ func BenchmarkEqualFoldBytes(b *testing.B) {
 	b.Run("utils", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			ok = EqualFoldBytes(s, t)
-			AssertEqual(b, true, ok)
+			assert.Equal(b, true, ok)
 		}
 	})
 	b.Run("default", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			ok = bytes.EqualFold(s, t)
-			AssertEqual(b, true, ok)
+			assert.Equal(b, true, ok)
 		}
 	})
 }

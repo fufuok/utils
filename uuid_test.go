@@ -3,6 +3,7 @@ package utils
 import (
 	"testing"
 
+	"github.com/fufuok/utils/assert"
 	"github.com/fufuok/utils/xid"
 )
 
@@ -14,8 +15,8 @@ func TestUUIDString(t *testing.T) {
 			t.Error("duplicated UUID:", id)
 		}
 		m[id] = true
-		AssertEqual(t, uint8(4), UUID()[6]>>4)
-		AssertEqual(t, uint8(0x80), UUID()[8]&0xc0)
+		assert.Equal(t, uint8(4), UUID()[6]>>4)
+		assert.Equal(t, uint8(0x80), UUID()[8]&0xc0)
 	}
 }
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 var (
@@ -30,11 +32,11 @@ func TestGetString(t *testing.T) {
 		{testBytes, "", testString},
 		{[]int{0, 2, 1}, "", "[0 2 1]"},
 	} {
-		AssertEqual(t, v.out, GetString(v.in, v.def))
-		AssertEqual(t, v.out, GetSafeString(MustString(v.in), v.def))
+		assert.Equal(t, v.out, GetString(v.in, v.def))
+		assert.Equal(t, v.out, GetSafeString(MustString(v.in), v.def))
 	}
-	AssertEqual(t, "default", GetString(nil, "default"))
-	AssertEqual(t, "default", GetSafeString("", "default"))
+	assert.Equal(t, "default", GetString(nil, "default"))
+	assert.Equal(t, "default", GetSafeString("", "default"))
 }
 
 func TestGetSafeString(t *testing.T) {
@@ -45,27 +47,27 @@ func TestGetSafeString(t *testing.T) {
 	safeS2 := GetSafeB2S(b, "optional default")
 	safeS3 := GetSafeString(s, "optional default")
 	safeS4 := CopyString(s)
-	AssertEqual(t, "Fufu", s)
+	assert.Equal(t, "Fufu", s)
 
 	b[0] = 'X'
 
-	AssertEqual(t, "Xufu", s)
-	AssertEqual(t, "Fufu", safeS1)
-	AssertEqual(t, "Fufu", safeS2)
-	AssertEqual(t, "Fufu", safeS3)
-	AssertEqual(t, "Fufu", safeS4)
+	assert.Equal(t, "Xufu", s)
+	assert.Equal(t, "Fufu", safeS1)
+	assert.Equal(t, "Fufu", safeS2)
+	assert.Equal(t, "Fufu", safeS3)
+	assert.Equal(t, "Fufu", safeS4)
 
-	AssertEqual(t, "default", GetSafeB2S(nil, "default"))
+	assert.Equal(t, "default", GetSafeB2S(nil, "default"))
 }
 
 func TestCopyString(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, testString, CopyString(testString))
+	assert.Equal(t, testString, CopyString(testString))
 }
 
 func TestCopyB2S(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, testString, CopyB2S(testBytes))
+	assert.Equal(t, testString, CopyB2S(testBytes))
 }
 
 func BenchmarkCopyB2S(b *testing.B) {
@@ -100,24 +102,24 @@ func BenchmarkCopyB2S(b *testing.B) {
 func TestJoinString(t *testing.T) {
 	t.Parallel()
 	val := []string{"a", "b", "c"}
-	AssertEqual(t, strings.Join(val, ""), JoinString(val...))
-	AssertEqual(t, "1,2/3", JoinString("1", ",", "2", "/", "3"))
+	assert.Equal(t, strings.Join(val, ""), JoinString(val...))
+	assert.Equal(t, "1,2/3", JoinString("1", ",", "2", "/", "3"))
 }
 
 func TestSearchString(t *testing.T) {
 	t.Parallel()
 	val := []string{"a", "b", "c"}
-	AssertEqual(t, 0, SearchString(val, "a"))
-	AssertEqual(t, 1, SearchString(val, "b"))
-	AssertEqual(t, 2, SearchString(val, "c"))
-	AssertEqual(t, -1, SearchString(val, "d"))
+	assert.Equal(t, 0, SearchString(val, "a"))
+	assert.Equal(t, 1, SearchString(val, "b"))
+	assert.Equal(t, 2, SearchString(val, "c"))
+	assert.Equal(t, -1, SearchString(val, "d"))
 }
 
 func TestInStrings(t *testing.T) {
 	t.Parallel()
 	val := []string{"a", "b", "c"}
-	AssertEqual(t, true, InStrings(val, "a"))
-	AssertEqual(t, false, InStrings(val, "d"))
+	assert.Equal(t, true, InStrings(val, "a"))
+	assert.Equal(t, false, InStrings(val, "d"))
 }
 
 func TestRemoveString(t *testing.T) {
@@ -125,12 +127,12 @@ func TestRemoveString(t *testing.T) {
 	ok := false
 	val := []string{"a", "b", "c"}
 	val, ok = RemoveString(val, "b")
-	AssertEqual(t, true, ok)
-	AssertEqual(t, []string{"a", "c"}, val)
+	assert.Equal(t, true, ok)
+	assert.Equal(t, []string{"a", "c"}, val)
 
 	val, ok = RemoveString(val, "b")
-	AssertEqual(t, false, ok)
-	AssertEqual(t, []string{"a", "c"}, val)
+	assert.Equal(t, false, ok)
+	assert.Equal(t, []string{"a", "c"}, val)
 }
 
 func BenchmarkStringPlusLarge(b *testing.B) {
@@ -223,8 +225,8 @@ func BenchmarkStringPlus(b *testing.B) {
 
 func TestToLower(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, strings.ToLower("A"), ToLower("A"))
-	AssertEqual(t, strings.ToLower(testString), ToLower(testString))
+	assert.Equal(t, strings.ToLower("A"), ToLower("A"))
+	assert.Equal(t, strings.ToLower(testString), ToLower(testString))
 }
 
 func BenchmarkToLower(b *testing.B) {
@@ -254,8 +256,8 @@ func BenchmarkToLower(b *testing.B) {
 
 func TestToUpper(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, strings.ToUpper("a"), ToUpper("a"))
-	AssertEqual(t, strings.ToUpper(testString), ToUpper(testString))
+	assert.Equal(t, strings.ToUpper("a"), ToUpper("a"))
+	assert.Equal(t, strings.ToUpper(testString), ToUpper(testString))
 }
 
 func BenchmarkToUpper(b *testing.B) {
@@ -285,12 +287,12 @@ func BenchmarkToUpper(b *testing.B) {
 
 func TestTrimLeft(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "test/////", TrimLeft("/////test/////", '/'))
-	AssertEqual(t, "test/", TrimLeft("/test/", '/'))
-	AssertEqual(t, "", TrimLeft(" ", ' '))
-	AssertEqual(t, "", TrimLeft("  ", ' '))
-	AssertEqual(t, "", TrimLeft("", ' '))
-	AssertEqual(t, strings.TrimLeft(testString, " "), TrimLeft(testString, ' '))
+	assert.Equal(t, "test/////", TrimLeft("/////test/////", '/'))
+	assert.Equal(t, "test/", TrimLeft("/test/", '/'))
+	assert.Equal(t, "", TrimLeft(" ", ' '))
+	assert.Equal(t, "", TrimLeft("  ", ' '))
+	assert.Equal(t, "", TrimLeft("", ' '))
+	assert.Equal(t, strings.TrimLeft(testString, " "), TrimLeft(testString, ' '))
 }
 
 func BenchmarkTrimLeft(b *testing.B) {
@@ -320,12 +322,12 @@ func BenchmarkTrimLeft(b *testing.B) {
 
 func TestTrimRight(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "/////test", TrimRight("/////test/////", '/'))
-	AssertEqual(t, "/test", TrimRight("/test/", '/'))
-	AssertEqual(t, "", TrimRight(" ", ' '))
-	AssertEqual(t, "", TrimRight("  ", ' '))
-	AssertEqual(t, "", TrimRight("", ' '))
-	AssertEqual(t, strings.TrimRight(testString, " "), TrimRight(testString, ' '))
+	assert.Equal(t, "/////test", TrimRight("/////test/////", '/'))
+	assert.Equal(t, "/test", TrimRight("/test/", '/'))
+	assert.Equal(t, "", TrimRight(" ", ' '))
+	assert.Equal(t, "", TrimRight("  ", ' '))
+	assert.Equal(t, "", TrimRight("", ' '))
+	assert.Equal(t, strings.TrimRight(testString, " "), TrimRight(testString, ' '))
 }
 
 func BenchmarkTrimRight(b *testing.B) {
@@ -355,13 +357,13 @@ func BenchmarkTrimRight(b *testing.B) {
 
 func TestTrim(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "test", Trim("/////test/////", '/'))
-	AssertEqual(t, "test", Trim("/test/", '/'))
-	AssertEqual(t, "test", Trim("test", '/'))
-	AssertEqual(t, "", Trim(" ", ' '))
-	AssertEqual(t, "", Trim("  ", ' '))
-	AssertEqual(t, "", Trim("", ' '))
-	AssertEqual(t, strings.Trim(testString, " "), Trim(testString, ' '))
+	assert.Equal(t, "test", Trim("/////test/////", '/'))
+	assert.Equal(t, "test", Trim("/test/", '/'))
+	assert.Equal(t, "test", Trim("test", '/'))
+	assert.Equal(t, "", Trim(" ", ' '))
+	assert.Equal(t, "", Trim("  ", ' '))
+	assert.Equal(t, "", Trim("", ' '))
+	assert.Equal(t, strings.Trim(testString, " "), Trim(testString, ' '))
 }
 
 func BenchmarkTrim(b *testing.B) {
@@ -399,10 +401,10 @@ func BenchmarkTrim(b *testing.B) {
 
 func TestEqualFold(t *testing.T) {
 	res := CopyString(testString)
-	AssertEqual(t, true, EqualFold(res, ToUpper(testString)))
-	AssertEqual(t, true, EqualFold(ToLower(res), ToUpper(testString)))
-	AssertEqual(t, false, EqualFold(res, Trim(testString, ' ')))
-	AssertEqual(t, false, EqualFold("\na", "*A"))
+	assert.Equal(t, true, EqualFold(res, ToUpper(testString)))
+	assert.Equal(t, true, EqualFold(ToLower(res), ToUpper(testString)))
+	assert.Equal(t, false, EqualFold(res, Trim(testString, ' ')))
+	assert.Equal(t, false, EqualFold("\na", "*A"))
 }
 
 func BenchmarkEqualFold(b *testing.B) {
@@ -413,13 +415,13 @@ func BenchmarkEqualFold(b *testing.B) {
 	b.Run("utils", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			ok = EqualFold(s, t)
-			AssertEqual(b, true, ok)
+			assert.Equal(b, true, ok)
 		}
 	})
 	b.Run("default", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			ok = strings.EqualFold(s, t)
-			AssertEqual(b, true, ok)
+			assert.Equal(b, true, ok)
 		}
 	})
 }

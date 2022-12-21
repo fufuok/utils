@@ -2,6 +2,8 @@ package utils
 
 import (
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestHumanBaseBytes(t *testing.T) {
@@ -104,10 +106,10 @@ func TestParseHumanBytes(t *testing.T) {
 }
 
 func TestMustParseHumanBytes(t *testing.T) {
-	AssertEqual(t, uint64(44564480), MustParseHumanBytes("42.5Mi"))
-	AssertEqual(t, uint64(123), MustParseHumanBytes("-42.5Mi", 123))
-	AssertEqual(t, uint64(0), MustParseHumanBytes("x"))
-	AssertEqual(t, uint64(0), MustParseHumanBytes(""))
+	assert.Equal(t, uint64(44564480), MustParseHumanBytes("42.5Mi"))
+	assert.Equal(t, uint64(123), MustParseHumanBytes("-42.5Mi", 123))
+	assert.Equal(t, uint64(0), MustParseHumanBytes("x"))
+	assert.Equal(t, uint64(0), MustParseHumanBytes(""))
 }
 
 func TestParseHumanBytesErrors(t *testing.T) {
@@ -187,7 +189,7 @@ func TestHumanBytes(t *testing.T) {
 		{"HumanKbps(1024)", HumanKbps(1024), "1.0 Kbps"},
 		{"HumanIntKbps(5.5GB)", HumanIntKbps(5.5 * GByte), "5.5 Gbps"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 

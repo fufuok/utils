@@ -1,4 +1,4 @@
-package utils
+package assert
 
 import (
 	"bytes"
@@ -11,49 +11,49 @@ import (
 	"text/tabwriter"
 )
 
-func AssertNotEqualf(tb testing.TB, left, right interface{}, description string, a ...interface{}) {
+func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if !IsNil(right) {
+		return
+	}
+	assertLog(tb, nil, right, false, msgAndArgs...)
+}
+
+func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if IsNil(actual) {
+		return
+	}
+	assertLog(tb, nil, actual, true, msgAndArgs...)
+}
+
+func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
 	if !reflect.DeepEqual(left, right) {
 		return
 	}
-	assertLog(tb, left, right, false, fmt.Sprintf(description, a...))
+	assertLog(tb, left, right, false, msgAndArgs...)
 }
 
-func AssertNotEqual(tb testing.TB, left, right interface{}, description ...string) {
-	if tb != nil {
-		tb.Helper()
-	}
-	if !reflect.DeepEqual(left, right) {
-		return
-	}
-	assertLog(tb, left, right, false, description...)
-}
-
-func AssertEqualf(tb testing.TB, expected, actual interface{}, description string, a ...interface{}) {
-	if tb != nil {
-		tb.Helper()
-	}
-	if reflect.DeepEqual(expected, actual) {
-		return
-	}
-	assertLog(tb, expected, actual, true, fmt.Sprintf(description, a...))
-}
-
-// AssertEqual checks if values are equal
+// Equal checks if values are equal
 // Ref: gofiber/utils
-func AssertEqual(tb testing.TB, expected, actual interface{}, description ...string) {
+func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
 	if reflect.DeepEqual(expected, actual) {
 		return
 	}
-	assertLog(tb, expected, actual, true, description...)
+	assertLog(tb, expected, actual, true, msgAndArgs...)
 }
 
-func assertLog(tb testing.TB, a, b interface{}, isEqual bool, description ...string) {
+func assertLog(tb testing.TB, a, b interface{}, isEqual bool, msgAndArgs ...interface{}) {
 	aType := "<nil>"
 	bType := "<nil>"
 
@@ -64,11 +64,11 @@ func assertLog(tb testing.TB, a, b interface{}, isEqual bool, description ...str
 		bType = reflect.TypeOf(b).String()
 	}
 
-	testName := "AssertEqual"
-	leftTitle := "Expect"
-	rightTitle := "Result"
+	testName := "Equal"
+	leftTitle := "Expected"
+	rightTitle := "Actual"
 	if !isEqual {
-		testName = "AssertNotEqual"
+		testName = "NotEqual"
 		leftTitle = "Left"
 		rightTitle = "Right"
 	}
@@ -82,8 +82,9 @@ func assertLog(tb testing.TB, a, b interface{}, isEqual bool, description ...str
 	w := tabwriter.NewWriter(&buf, 0, 0, 5, ' ', 0)
 	_, _ = fmt.Fprintf(w, "\nTest:\t%s", testName)
 	_, _ = fmt.Fprintf(w, "\nTrace:\t%s:%d", filepath.Base(file), line)
-	if len(description) > 0 && description[0] != "" {
-		_, _ = fmt.Fprintf(w, "\nDescription:\t%s", description[0])
+	message := messageFromMsgAndArgs(msgAndArgs...)
+	if message != "" {
+		_, _ = fmt.Fprintf(w, "\nDescription:\t%s", message)
 	}
 	_, _ = fmt.Fprintf(w, "\n%s:\t%v\t(%s)", leftTitle, a, aType)
 	_, _ = fmt.Fprintf(w, "\n%s:\t%v\t(%s)", rightTitle, b, bType)
@@ -102,8 +103,8 @@ func assertLog(tb testing.TB, a, b interface{}, isEqual bool, description ...str
 	}
 }
 
-// AssertPanics 断言 panic
-func AssertPanics(t *testing.T, title string, f func()) {
+// Panics 断言 panic
+func Panics(t *testing.T, title string, f func()) {
 	defer func() {
 		if r := recover(); r == nil {
 			if t != nil {
@@ -113,7 +114,6 @@ func AssertPanics(t *testing.T, title string, f func()) {
 			}
 		}
 	}()
-
 	f()
 }
 
@@ -134,14 +134,55 @@ func AssertPanics(t *testing.T, title string, f func()) {
 //
 //	type iface struct(interface 类型), type eface struct(空接口), 占用 16 字节
 //	判断 data 指针为 0 即为 nil, 初始化后即非 0
-func IsNil(i interface{}) bool {
-	if i == nil {
+//
+// Ref: stretchr/testify
+func IsNil(o interface{}) bool {
+	if o == nil {
 		return true
 	}
 
-	defer func() {
-		recover()
-	}()
+	value := reflect.ValueOf(o)
+	kind := value.Kind()
+	isNilableKind := containsKind(
+		[]reflect.Kind{
+			reflect.Chan, reflect.Func,
+			reflect.Interface, reflect.Map,
+			reflect.Ptr, reflect.Slice},
+		kind)
 
-	return reflect.ValueOf(i).IsNil()
+	if isNilableKind && value.IsNil() {
+		return true
+	}
+
+	return false
+}
+
+// containsKind checks if a specified kind in the slice of kinds.
+// Ref: stretchr/testify
+func containsKind(kinds []reflect.Kind, kind reflect.Kind) bool {
+	for i := 0; i < len(kinds); i++ {
+		if kind == kinds[i] {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Ref: stretchr/testify
+func messageFromMsgAndArgs(msgAndArgs ...interface{}) string {
+	if len(msgAndArgs) == 0 || msgAndArgs == nil {
+		return ""
+	}
+	if len(msgAndArgs) == 1 {
+		msg := msgAndArgs[0]
+		if msgAsStr, ok := msg.(string); ok {
+			return msgAsStr
+		}
+		return fmt.Sprintf("%+v", msg)
+	}
+	if len(msgAndArgs) > 1 {
+		return fmt.Sprintf(msgAndArgs[0].(string), msgAndArgs[1:]...)
+	}
+	return ""
 }

@@ -3,6 +3,8 @@ package utils
 import (
 	"net/url"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestReplaceHost(t *testing.T) {
@@ -26,6 +28,6 @@ func TestReplaceHost(t *testing.T) {
 		{"[fe77::1]:77", "[fe88::1]", "[fe88::1]:77"},
 		{"[fe77::1]", "[fe88::1]", "[fe88::1]"},
 	} {
-		AssertEqual(t, v.out, ReplaceHost(v.a, v.b))
+		assert.Equal(t, v.out, ReplaceHost(v.a, v.b))
 	}
 }

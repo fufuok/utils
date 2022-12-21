@@ -4,40 +4,42 @@ import (
 	"math"
 	"math/big"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestMinInt(t *testing.T) {
-	AssertEqual(t, -1, MinInt(1, -1))
-	AssertEqual(t, 0, MinInt(0, 1))
+	assert.Equal(t, -1, MinInt(1, -1))
+	assert.Equal(t, 0, MinInt(0, 1))
 }
 
 func TestMaxInt(t *testing.T) {
-	AssertEqual(t, 1, MaxInt(1, -1))
-	AssertEqual(t, 1, MaxInt(0, 1))
+	assert.Equal(t, 1, MaxInt(1, -1))
+	assert.Equal(t, 1, MaxInt(0, 1))
 }
 
 func TestGetInt(t *testing.T) {
-	AssertEqual(t, 1, GetInt("1"))
-	AssertEqual(t, 1, GetInt("1", 2))
-	AssertEqual(t, 1, GetInt(nil, 1))
-	AssertEqual(t, 1, GetInt(0, 1))
-	AssertEqual(t, 1, GetInt(-1, 1))
-	AssertEqual(t, 0, GetInt(-1, 0))
-	AssertEqual(t, -1, GetInt(-1))
+	assert.Equal(t, 1, GetInt("1"))
+	assert.Equal(t, 1, GetInt("1", 2))
+	assert.Equal(t, 1, GetInt(nil, 1))
+	assert.Equal(t, 1, GetInt(0, 1))
+	assert.Equal(t, 1, GetInt(-1, 1))
+	assert.Equal(t, 0, GetInt(-1, 0))
+	assert.Equal(t, -1, GetInt(-1))
 }
 
 func TestSearchInt(t *testing.T) {
 	val := []int{1, 2, 3}
-	AssertEqual(t, 0, SearchInt(val, 1))
-	AssertEqual(t, 1, SearchInt(val, 2))
-	AssertEqual(t, 2, SearchInt(val, 3))
-	AssertEqual(t, -1, SearchInt(val, 4))
+	assert.Equal(t, 0, SearchInt(val, 1))
+	assert.Equal(t, 1, SearchInt(val, 2))
+	assert.Equal(t, 2, SearchInt(val, 3))
+	assert.Equal(t, -1, SearchInt(val, 4))
 }
 
 func TestInInts(t *testing.T) {
 	val := []int{1, 2, 3}
-	AssertEqual(t, true, InInts(val, 1))
-	AssertEqual(t, false, InInts(val, 4))
+	assert.Equal(t, true, InInts(val, 1))
+	assert.Equal(t, false, InInts(val, 4))
 }
 
 // Ref: dustin/go-humanize
@@ -75,7 +77,7 @@ func TestComma(t *testing.T) {
 
 		{"123,456,789", Commai(123456789), "123,456,789"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 
@@ -110,15 +112,15 @@ func TestBigComma(t *testing.T) {
 		{"-100", BigComma(big.NewInt(-100)), "-100"},
 		{"-10", BigComma(big.NewInt(-10)), "-10"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 
 func TestCommau(t *testing.T) {
 	var u0 uint64
 	var u1 uint64 = 1111111111
-	AssertEqual(t, Commau(u0), "0")
-	AssertEqual(t, Commau(u1), "1,111,111,111")
+	assert.Equal(t, Commau(u0), "0")
+	assert.Equal(t, Commau(u1), "1,111,111,111")
 }
 
 func BenchmarkComma(b *testing.B) {

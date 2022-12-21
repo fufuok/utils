@@ -5,68 +5,70 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestCompressZip(t *testing.T) {
 	data := bytes.Repeat(testBytes, 100)
 
 	dst, err := Zip(data)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), zlib.BestSpeed, len(dst))
 
 	src, err := Unzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 
 	dst, err = ZipLevel(data, zlib.BestCompression)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), zlib.BestCompression, len(dst))
 
 	src, err = Unzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 
 	dst, err = ZipLevel(data, 6)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), zlib.DefaultCompression, len(dst))
 
 	src, err = Unzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 }
 
 func TestCompressGzip(t *testing.T) {
 	data := bytes.Repeat(testBytes, 100)
 
 	dst, err := Gzip(data)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), gzip.BestSpeed, len(dst))
 
 	src, err := Ungzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 
 	dst, err = GzipLevel(data, gzip.BestCompression)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), gzip.BestCompression, len(dst))
 
 	src, err = Ungzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 
 	dst, err = GzipLevel(data, 6)
-	AssertEqual(t, true, err == nil, "failed to zip")
+	assert.Equal(t, true, err == nil, "failed to zip")
 	t.Logf("origin len: %d, zipped(level: %d) len: %d", len(data), gzip.DefaultCompression, len(dst))
 
 	src, err = Ungzip(dst)
-	AssertEqual(t, true, err == nil, "failed to unzip")
+	assert.Equal(t, true, err == nil, "failed to unzip")
 
-	AssertEqual(t, true, bytes.Equal(data, src), "data != src")
+	assert.Equal(t, true, bytes.Equal(data, src), "data != src")
 }
 
 func BenchmarkCompress_Zip(b *testing.B) {

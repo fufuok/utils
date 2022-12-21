@@ -3,6 +3,8 @@ package utils
 import (
 	"math/big"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 // Ref: dustin/go-humanize
@@ -65,8 +67,8 @@ func TestHumanBigByteParsing(t *testing.T) {
 }
 
 func TestMustParseHumanBigBytes(t *testing.T) {
-	AssertEqual(t, uint64(44564480), MustParseHumanBigBytes("42.5Mi").Uint64())
-	AssertEqual(t, (&big.Int{}).SetUint64(123), MustParseHumanBigBytes("-42.5Mi", (&big.Int{}).SetUint64(123)))
+	assert.Equal(t, uint64(44564480), MustParseHumanBigBytes("42.5Mi").Uint64())
+	assert.Equal(t, (&big.Int{}).SetUint64(123), MustParseHumanBigBytes("-42.5Mi", (&big.Int{}).SetUint64(123)))
 }
 
 func TestHumanBigByteErrors(t *testing.T) {
@@ -150,7 +152,7 @@ func TestHumanBigBytes(t *testing.T) {
 		{"HumanBigKbps(1024)", HumanBigKbps((&big.Int{}).SetUint64(1024)), "1.0 Kbps"},
 		{"HumanBigKbps(5.5GB)", HumanBigKbps((&big.Int{}).SetUint64(5.5 * GByte)), "5.5 Gbps"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 

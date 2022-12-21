@@ -3,6 +3,8 @@ package utils
 import (
 	"net"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestIsPrivateIPString(t *testing.T) {
@@ -20,7 +22,7 @@ func TestIsPrivateIPString(t *testing.T) {
 		{"192.168.0.0", true},
 		{"192.169.0.0", false},
 	} {
-		AssertEqual(t, v.flag, IsPrivateIPString(v.ip))
+		assert.Equal(t, v.flag, IsPrivateIPString(v.ip))
 	}
 }
 
@@ -47,8 +49,8 @@ func TestGetNotInternalIPv4(t *testing.T) {
 		{"192.168.1.1", defIP4, defIP4, true},
 		{"192.168.1.1", "192.168.1.1", "", true},
 	} {
-		AssertEqual(t, v.out, GetNotInternalIPv4String(v.in, v.def, v.flag))
-		AssertEqual(t, net.ParseIP(v.out), GetNotInternalIPv4(net.ParseIP(v.in), net.ParseIP(v.def), v.flag))
+		assert.Equal(t, v.out, GetNotInternalIPv4String(v.in, v.def, v.flag))
+		assert.Equal(t, net.ParseIP(v.out), GetNotInternalIPv4(net.ParseIP(v.in), net.ParseIP(v.def), v.flag))
 	}
 }
 
@@ -64,41 +66,41 @@ func TestIPv4AndLong(t *testing.T) {
 		{"255.255.255.255", 4294967295},
 		{"", -1},
 	} {
-		AssertEqual(t, v.long, IPv4String2Long(v.ipv4))
-		AssertEqual(t, v.ipv4, Long2IPv4String(v.long))
+		assert.Equal(t, v.long, IPv4String2Long(v.ipv4))
+		assert.Equal(t, v.ipv4, Long2IPv4String(v.long))
 	}
 
 	// go1.17 net.ParseIP("009.001.01.1") == nil
 	// Reject non-zero components with leading zeroes.
-	// AssertEqual(t, 151060737, IPv4String2Long("009.001.01.1"))
-	AssertEqual(t, -1, IPv4String2Long("ff"))
-	AssertEqual(t, -1, IPv4String2Long("255.255.255.256"))
-	AssertEqual(t, "", Long2IPv4String(4294967296))
+	// Equal(t, 151060737, IPv4String2Long("009.001.01.1"))
+	assert.Equal(t, -1, IPv4String2Long("ff"))
+	assert.Equal(t, -1, IPv4String2Long("255.255.255.256"))
+	assert.Equal(t, "", Long2IPv4String(4294967296))
 }
 
 func TestInIPNetString(t *testing.T) {
 	_, ipNet, _ := net.ParseCIDR("1.1.1.1/24")
 	ipNets := map[*net.IPNet]struct{}{ipNet: {}}
-	AssertEqual(t, false, InIPNetString("abc", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, false, InIPNetString("::1", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, false, InIPNetString("0.0.0.0", map[*net.IPNet]struct{}{}))
-	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
-	AssertEqual(t, false, InIPNetString("1.1.2.1", ipNets))
-	AssertEqual(t, true, InIPNetString("1.1.1.255", ipNets))
+	assert.Equal(t, false, InIPNetString("abc", map[*net.IPNet]struct{}{}))
+	assert.Equal(t, false, InIPNetString("::1", map[*net.IPNet]struct{}{}))
+	assert.Equal(t, false, InIPNetString("0.0.0.0", map[*net.IPNet]struct{}{}))
+	assert.Equal(t, true, InIPNetString("1.1.1.1", ipNets))
+	assert.Equal(t, false, InIPNetString("1.1.2.1", ipNets))
+	assert.Equal(t, true, InIPNetString("1.1.1.255", ipNets))
 
 	_, ipNet, _ = net.ParseCIDR("0.0.0.0/0")
 	ipNets = map[*net.IPNet]struct{}{ipNet: {}}
-	AssertEqual(t, false, InIPNetString("abc", ipNets))
-	AssertEqual(t, false, InIPNetString("::1", ipNets))
-	AssertEqual(t, true, InIPNetString("0.0.0.0", ipNets))
-	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
-	AssertEqual(t, true, InIPNetString("1.1.1.1", ipNets))
-	AssertEqual(t, true, InIPNetString("1.1.2.1", ipNets))
-	AssertEqual(t, true, InIPNetString("1.1.1.255", ipNets))
+	assert.Equal(t, false, InIPNetString("abc", ipNets))
+	assert.Equal(t, false, InIPNetString("::1", ipNets))
+	assert.Equal(t, true, InIPNetString("0.0.0.0", ipNets))
+	assert.Equal(t, true, InIPNetString("1.1.1.1", ipNets))
+	assert.Equal(t, true, InIPNetString("1.1.1.1", ipNets))
+	assert.Equal(t, true, InIPNetString("1.1.2.1", ipNets))
+	assert.Equal(t, true, InIPNetString("1.1.1.255", ipNets))
 
 	_, ipNet, _ = net.ParseCIDR("2001:db8::/32")
 	ipNets = map[*net.IPNet]struct{}{ipNet: {}}
-	AssertEqual(t, true, InIPNetString("2001:db8::1", ipNets))
+	assert.Equal(t, true, InIPNetString("2001:db8::1", ipNets))
 }
 
 func BenchmarkGetNotInternalIPv4String(b *testing.B) {
@@ -163,17 +165,17 @@ func TestGetIPPort(t *testing.T) {
 		Port: PORT,
 	}
 	ip, port, err := GetIPPort(&addr)
-	AssertEqual(t, IP, ip.String())
-	AssertEqual(t, IP, ip.To16().String())
-	AssertEqual(t, true, ip.To4() == nil)
-	AssertEqual(t, PORT, port)
-	AssertEqual(t, true, err == nil)
+	assert.Equal(t, IP, ip.String())
+	assert.Equal(t, IP, ip.To16().String())
+	assert.Equal(t, true, ip.To4() == nil)
+	assert.Equal(t, PORT, port)
+	assert.Equal(t, true, err == nil)
 
 	udpAddr := net.UDPAddr{}
 	ip, port, err = GetIPPort(&udpAddr)
-	AssertEqual(t, 0, len(ip))
-	AssertEqual(t, 0, port)
-	AssertEqual(t, true, err == nil)
+	assert.Equal(t, 0, len(ip))
+	assert.Equal(t, 0, port)
+	assert.Equal(t, true, err == nil)
 }
 
 func TestIsIP(t *testing.T) {
@@ -188,26 +190,26 @@ func TestIsIP(t *testing.T) {
 		{"2001:4860:4860::8888", false},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.v4, IsIPv4(v.ip), v.ip)
-		AssertEqual(t, !v.v4, IsIPv6(v.ip), v.ip)
-		AssertEqual(t, true, IsIP(v.ip), v.ip)
+		assert.Equal(t, v.v4, IsIPv4(v.ip), v.ip)
+		assert.Equal(t, !v.v4, IsIPv6(v.ip), v.ip)
+		assert.Equal(t, true, IsIP(v.ip), v.ip)
 
 		ip, isIPv6 := ParseIP(v.ip)
-		AssertEqual(t, true, ip != nil)
-		AssertEqual(t, !v.v4, isIPv6)
+		assert.Equal(t, true, ip != nil)
+		assert.Equal(t, !v.v4, isIPv6)
 	}
-	AssertEqual(t, false, IsIPv4("123"))
-	AssertEqual(t, false, IsIPv6("123"))
+	assert.Equal(t, false, IsIPv4("123"))
+	assert.Equal(t, false, IsIPv6("123"))
 	ip, isIPv6 := ParseIP("123")
-	AssertEqual(t, false, ip != nil)
-	AssertEqual(t, false, isIPv6)
+	assert.Equal(t, false, ip != nil)
+	assert.Equal(t, false, isIPv6)
 }
 
 func TestIPv42LongLittle(t *testing.T) {
 	ipv4 := "1.2.3.4"
 	longLittle := IPv4String2LongLittle(ipv4)
-	AssertEqual(t, "4.3.2.1", Long2IPv4String(longLittle))
-	AssertEqual(t, ipv4, LongLittle2IPv4String(longLittle))
+	assert.Equal(t, "4.3.2.1", Long2IPv4String(longLittle))
+	assert.Equal(t, ipv4, LongLittle2IPv4String(longLittle))
 }
 
 func TestParseHostPort(t *testing.T) {
@@ -225,13 +227,13 @@ func TestParseHostPort(t *testing.T) {
 	}
 	for _, v := range tests {
 		host, port, isv6, err := ParseHostPort(v.s)
-		AssertEqual(t, true, host != nil)
-		AssertEqual(t, v.ip, host.String())
-		AssertEqual(t, v.port, port)
-		AssertEqual(t, v.v6, isv6)
-		AssertEqual(t, nil, err)
+		assert.Equal(t, true, host != nil)
+		assert.Equal(t, v.ip, host.String())
+		assert.Equal(t, v.port, port)
+		assert.Equal(t, v.v6, isv6)
+		assert.Equal(t, nil, err)
 	}
 	host, _, _, err := ParseHostPort("0:1")
-	AssertEqual(t, false, host != nil)
-	AssertEqual(t, false, err == nil)
+	assert.Equal(t, false, host != nil)
+	assert.Equal(t, false, err == nil)
 }

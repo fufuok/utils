@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/assert"
 )
 
 func TestID(t *testing.T) {
 	a := utils.ID()
 	b := utils.ID()
-	utils.AssertEqual(t, b, a+1)
+	assert.Equal(t, b, a+1)
 }

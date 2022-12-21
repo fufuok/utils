@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"testing"
 	"time"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestSafeGo(t *testing.T) {
@@ -17,8 +19,8 @@ func TestSafeGo(t *testing.T) {
 	}
 	SafeGo(testFn2, rcb)
 	time.Sleep(5 * time.Millisecond)
-	AssertEqual(t, "fn1", err)
-	AssertEqual(t, true, bytes.Contains(trace, []byte("panic")))
+	assert.Equal(t, "fn1", err)
+	assert.Equal(t, true, bytes.Contains(trace, []byte("panic")))
 }
 
 var (

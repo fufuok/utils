@@ -23,6 +23,8 @@ package utils
 import (
 	"reflect"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestNoCmpComparability(t *testing.T) {
@@ -52,8 +54,7 @@ func TestNoCmpComparability(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			typ := reflect.TypeOf(tt.give)
-			AssertEqualf(t, tt.comparable, typ.Comparable(),
-				"type %v comparablity mismatch", typ)
+			assert.Equal(t, tt.comparable, typ.Comparable(), "type %v comparablity mismatch", typ)
 		})
 	}
 }
@@ -71,7 +72,7 @@ func TestNoCmpSize(t *testing.T) {
 
 	after := reflect.TypeOf(y{}).Size()
 
-	AssertEqual(t, before, after,
+	assert.Equal(t, before, after,
 		"expected NoCmp to have no effect on struct size")
 }
 
@@ -79,8 +80,8 @@ func TestNoCmpSize(t *testing.T) {
 //
 // We need to allow this so that users can do,
 //
-//   var x atomic.Int32
-//   x = atomic.NewInt32(1)
+//	var x atomic.Int32
+//	x = atomic.NewInt32(1)
 func TestNoCmpCopy(t *testing.T) {
 	type foo struct{ _ NoCmp }
 

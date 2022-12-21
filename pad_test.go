@@ -3,6 +3,8 @@ package utils
 import (
 	"fmt"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestPad(t *testing.T) {
@@ -25,7 +27,7 @@ func TestPad(t *testing.T) {
 		{"123", "1231" + src + "123", 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, Pad(src, v.pad, v.n))
+		assert.Equal(t, v.want, Pad(src, v.pad, v.n))
 	}
 }
 
@@ -47,10 +49,10 @@ func TestLeftPad(t *testing.T) {
 		{"123", "1231231" + src, 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, LeftPad(src, v.pad, v.n))
+		assert.Equal(t, v.want, LeftPad(src, v.pad, v.n))
 	}
-	AssertEqual(t, fmt.Sprintf("%32s", src), LeftPad(src, " ", 32))
-	AssertEqual(t, fmt.Sprintf("%032s", "111"), LeftPad("111", "0", 32))
+	assert.Equal(t, fmt.Sprintf("%32s", src), LeftPad(src, " ", 32))
+	assert.Equal(t, fmt.Sprintf("%032s", "111"), LeftPad("111", "0", 32))
 }
 
 func TestRightPad(t *testing.T) {
@@ -71,10 +73,10 @@ func TestRightPad(t *testing.T) {
 		{"123", src + "1231231", 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, RightPad(src, v.pad, v.n))
+		assert.Equal(t, v.want, RightPad(src, v.pad, v.n))
 	}
-	AssertEqual(t, fmt.Sprintf("%-32s", src), RightPad(src, " ", 32))
-	AssertEqual(t, fmt.Sprintf("%s%032s", "111", "")[:32], RightPad("111", "0", 32))
+	assert.Equal(t, fmt.Sprintf("%-32s", src), RightPad(src, " ", 32))
+	assert.Equal(t, fmt.Sprintf("%s%032s", "111", "")[:32], RightPad("111", "0", 32))
 }
 
 func TestPadBytes(t *testing.T) {
@@ -97,7 +99,7 @@ func TestPadBytes(t *testing.T) {
 		{[]byte("123"), JoinBytes([]byte("1231"), src, []byte("123")), 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, PadBytes(src, v.pad, v.n))
+		assert.Equal(t, v.want, PadBytes(src, v.pad, v.n))
 	}
 }
 
@@ -119,7 +121,7 @@ func TestLeftPadBytes(t *testing.T) {
 		{[]byte("123"), JoinBytes([]byte("1231231"), src), 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, LeftPadBytes(src, v.pad, v.n))
+		assert.Equal(t, v.want, LeftPadBytes(src, v.pad, v.n))
 	}
 }
 
@@ -141,7 +143,7 @@ func TestRightPadBytes(t *testing.T) {
 		{[]byte("123"), JoinBytes(src, []byte("1231231")), 11},
 	}
 	for _, v := range tests {
-		AssertEqual(t, v.want, RightPadBytes(src, v.pad, v.n))
+		assert.Equal(t, v.want, RightPadBytes(src, v.pad, v.n))
 	}
 }
 

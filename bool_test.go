@@ -3,43 +3,45 @@ package utils
 import (
 	"encoding/json"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestBool_NewBool(t *testing.T) {
 	v := new(Bool)
-	AssertEqual(t, false, v.Load())
+	assert.Equal(t, false, v.Load())
 	v.Toggle()
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, true, v.Load())
 
 	v = NewBool(false)
-	AssertEqual(t, false, v.Load())
+	assert.Equal(t, false, v.Load())
 	v = NewBool(true)
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, true, v.Load())
 
 	v = NewTrue()
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, true, v.Load())
 	v = NewFalse()
-	AssertEqual(t, false, v.Load())
+	assert.Equal(t, false, v.Load())
 }
 
 func TestBool_Store(t *testing.T) {
 	var v Bool
 	v.Store(true)
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, true, v.Load())
 	v.StoreFalse()
-	AssertEqual(t, false, v.Load())
+	assert.Equal(t, false, v.Load())
 	v.StoreTrue()
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, true, v.Load())
 }
 
 func TestBool_Swap(t *testing.T) {
 	var v Bool
-	AssertEqual(t, v.Swap(false), false)
-	AssertEqual(t, false, v.Load())
-	AssertEqual(t, v.Swap(true), false)
-	AssertEqual(t, true, v.Load())
-	AssertEqual(t, v.Swap(false), true)
-	AssertEqual(t, false, v.Load())
+	assert.Equal(t, v.Swap(false), false)
+	assert.Equal(t, false, v.Load())
+	assert.Equal(t, v.Swap(true), false)
+	assert.Equal(t, true, v.Load())
+	assert.Equal(t, v.Swap(false), true)
+	assert.Equal(t, false, v.Load())
 }
 
 func TestBool_CAS(t *testing.T) {
@@ -61,31 +63,31 @@ func TestBool_CAS(t *testing.T) {
 	}
 	for _, d := range tests {
 		v := NewBool(d.init)
-		AssertEqual(t, d.result, v.CAS(d.oldV, d.newV), "CAS")
-		AssertEqual(t, d.store, v.Load(), "Store")
+		assert.Equal(t, d.result, v.CAS(d.oldV, d.newV), "CAS")
+		assert.Equal(t, d.store, v.Load(), "Store")
 	}
 }
 
 func TestBool_Toggle(t *testing.T) {
 	var v Bool
-	AssertEqual(t, false, v.Toggle())
-	AssertEqual(t, true, v.Toggle())
-	AssertEqual(t, false, v.Toggle())
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, false, v.Toggle())
+	assert.Equal(t, true, v.Toggle())
+	assert.Equal(t, false, v.Toggle())
+	assert.Equal(t, true, v.Load())
 }
 
 func TestBool_Marshal(t *testing.T) {
 	bs := []byte("true")
 	var v Bool
 	err := json.Unmarshal(bs, &v)
-	AssertEqual(t, nil, err)
-	AssertEqual(t, true, v.Load())
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, v.Load())
 
 	bs, err = json.Marshal(v.Load())
-	AssertEqual(t, nil, err)
-	AssertEqual(t, []byte("true"), bs)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte("true"), bs)
 
-	AssertEqual(t, "true", v.String())
+	assert.Equal(t, "true", v.String())
 }
 
 func BenchmarkBool(b *testing.B) {

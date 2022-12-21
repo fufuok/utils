@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/assert"
 )
 
 var (
@@ -19,39 +20,39 @@ var (
 
 func TestSha256Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "ed3772cefd8991edac6d198df7b62c224b92038e2d435a9a1e2734211e5b5e0b",
+	assert.Equal(t, "ed3772cefd8991edac6d198df7b62c224b92038e2d435a9a1e2734211e5b5e0b",
 		Sha256Hex(tmpS))
 }
 
 func TestSha512Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "c3b70022a04f57c1ad335256d2adb2aeec825c6641b2576b48f64abf1bb2c3210dff1087b9f"+
+	assert.Equal(t, "c3b70022a04f57c1ad335256d2adb2aeec825c6641b2576b48f64abf1bb2c3210dff1087b9f"+
 		"27261e4062779e64f29fc39d555164c5a2ea6eb3fd6d8b19ed1d1",
 		Sha512Hex(tmpS))
 }
 
 func TestSha1Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "ad4ebd7a388c536ff4fcb494ffb36c047151f751",
+	assert.Equal(t, "ad4ebd7a388c536ff4fcb494ffb36c047151f751",
 		Sha1Hex(tmpS))
 }
 
 func TestHmacSHA256Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "6d502095be042aab03ac7ae36dd0ca504e54eb72569547dca4e16e5de605ae7c",
+	assert.Equal(t, "6d502095be042aab03ac7ae36dd0ca504e54eb72569547dca4e16e5de605ae7c",
 		HmacSHA256Hex(tmpS, "Fufu"))
 }
 
 func TestHmacSHA512Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "516825116f0c14c563f0fdd377729dd0a2024fb9f16f0dc81d83450e97114683ece5c8886"+
+	assert.Equal(t, "516825116f0c14c563f0fdd377729dd0a2024fb9f16f0dc81d83450e97114683ece5c8886"+
 		"aaa912af970b1a40505333fb16e770e6b9df1826556e5fac680782b",
 		HmacSHA512Hex(tmpS, "Fufu"))
 }
 
 func TestHmacSHA1Hex(t *testing.T) {
 	t.Parallel()
-	utils.AssertEqual(t, "e6720f969c4aa396324845bed13e3cbf550b0d6d",
+	assert.Equal(t, "e6720f969c4aa396324845bed13e3cbf550b0d6d",
 		HmacSHA1Hex(tmpS, "Fufu"))
 }
 
@@ -63,9 +64,9 @@ func TestMD5Hex(t *testing.T) {
 		{testString, "8d47309acf79aa15378c82475c167865"},
 		{"Fufu 中　文", "0ab5820207b25880bc0a1d09ed64f10c"},
 	} {
-		utils.AssertEqual(t, v.out, MD5Hex(v.in))
-		utils.AssertEqual(t, v.out, MD5BytesHex([]byte(v.in)))
-		utils.AssertEqual(t, v.out, hex.EncodeToString(MD5([]byte(v.in))))
+		assert.Equal(t, v.out, MD5Hex(v.in))
+		assert.Equal(t, v.out, MD5BytesHex([]byte(v.in)))
+		assert.Equal(t, v.out, hex.EncodeToString(MD5([]byte(v.in))))
 	}
 }
 
@@ -78,8 +79,8 @@ func TestMD5Sum(t *testing.T) {
 		// Result on github windows (LF would be replaced by CRLF, Maybe core.autocrlf is true)
 		"cd5c4d3bd8efa894619c1f3eab8a9174",
 	}
-	utils.AssertEqual(t, true, utils.InStrings(expected, res))
-	utils.AssertEqual(t, true, utils.InStrings(expected, MustMD5Sum("LICENSE")))
+	assert.Equal(t, true, utils.InStrings(expected, res))
+	assert.Equal(t, true, utils.InStrings(expected, MustMD5Sum("LICENSE")))
 }
 
 func TestHashString(t *testing.T) {
@@ -91,8 +92,8 @@ func TestHashString(t *testing.T) {
 		{testString, "13467076781014605639"},
 		{"Fufu 中　文", "1485575821508720008"},
 	} {
-		utils.AssertEqual(t, v.out, HashString(v.in))
-		utils.AssertEqual(t, v.out, HashBytes([]byte(v.in)))
+		assert.Equal(t, v.out, HashString(v.in))
+		assert.Equal(t, v.out, HashBytes([]byte(v.in)))
 	}
 
 	for _, v := range []struct {
@@ -104,8 +105,8 @@ func TestHashString(t *testing.T) {
 		{testString, 475021159},
 		{"Fufu 中　文", 2300112168},
 	} {
-		utils.AssertEqual(t, v.out, HashString32(v.in))
-		utils.AssertEqual(t, v.out, HashBytes32([]byte(v.in)))
+		assert.Equal(t, v.out, HashString32(v.in))
+		assert.Equal(t, v.out, HashBytes32([]byte(v.in)))
 	}
 }
 
@@ -119,7 +120,7 @@ func TestHashUint(t *testing.T) {
 		{prime64, 14714463944532698764},
 		{math.MaxUint64, 10157053723145373757},
 	} {
-		utils.AssertEqual(t, v.out, HashUint64(v.in))
+		assert.Equal(t, v.out, HashUint64(v.in))
 	}
 
 	for _, v := range []struct {
@@ -131,38 +132,38 @@ func TestHashUint(t *testing.T) {
 		{prime32, 2389395716},
 		{math.MaxUint32, 3809873841},
 	} {
-		utils.AssertEqual(t, v.out, HashUint32(v.in))
+		assert.Equal(t, v.out, HashUint32(v.in))
 	}
 }
 
 func TestHashStringToInt(t *testing.T) {
-	utils.AssertEqual(t, uint64(offset64), Sum64(""))
-	utils.AssertEqual(t, uint32(offset32), Sum32(""))
-	utils.AssertEqual(t, uint64(offset64), FnvHash(""))
-	utils.AssertEqual(t, uint32(offset32), FnvHash32(""))
-	utils.AssertEqual(t, uint64(13467076781014605639), Sum64(testString))
-	utils.AssertEqual(t, uint32(475021159), Sum32(testString))
-	utils.AssertEqual(t, uint64(13467076781014605639), FnvHash(testString))
-	utils.AssertEqual(t, uint32(475021159), FnvHash32(testString))
+	assert.Equal(t, uint64(offset64), Sum64(""))
+	assert.Equal(t, uint32(offset32), Sum32(""))
+	assert.Equal(t, uint64(offset64), FnvHash(""))
+	assert.Equal(t, uint32(offset32), FnvHash32(""))
+	assert.Equal(t, uint64(13467076781014605639), Sum64(testString))
+	assert.Equal(t, uint32(475021159), Sum32(testString))
+	assert.Equal(t, uint64(13467076781014605639), FnvHash(testString))
+	assert.Equal(t, uint32(475021159), FnvHash32(testString))
 
 	v := MemHash(testString)
 	for i := 0; i < 100000; i++ {
-		utils.AssertEqual(t, v, MemHash(testString))
+		assert.Equal(t, v, MemHash(testString))
 	}
 
 	v = MemHashb(testBytes)
 	for i := 0; i < 100000; i++ {
-		utils.AssertEqual(t, v, MemHashb(testBytes))
+		assert.Equal(t, v, MemHashb(testBytes))
 	}
 
 	v32 := MemHash32(testString)
 	for i := 0; i < 100000; i++ {
-		utils.AssertEqual(t, v32, MemHash32(testString))
+		assert.Equal(t, v32, MemHash32(testString))
 	}
 
 	v32 = Djb33(testString)
 	for i := 0; i < 100000; i++ {
-		utils.AssertEqual(t, v32, Djb33(testString))
+		assert.Equal(t, v32, Djb33(testString))
 	}
 }
 

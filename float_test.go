@@ -4,6 +4,8 @@ import (
 	"math"
 	"math/big"
 	"testing"
+
+	"github.com/fufuok/utils/assert"
 )
 
 // Ref: thinkeridea/go-extend
@@ -57,7 +59,7 @@ func TestRound(t *testing.T) {
 		expected := []float64{cases.pm1, cases.p0, cases.p1, cases.p2, cases.p3, cases.p4, cases.p5, cases.p6, cases.p7}
 		for precision := -1; precision < 8; precision++ {
 			actual := Round(cases.v, precision)
-			AssertEqual(t, false,
+			assert.Equal(t, false,
 				actual != expected[precision+1] && !(math.IsNaN(actual) && math.IsNaN(expected[precision+1])))
 		}
 	}
@@ -67,7 +69,7 @@ func TestRound(t *testing.T) {
 			cases.pm5, cases.pm6, cases.pm7}
 		for i, precision := range []int{1, 0, -1, -2, -3, -4, -5, -6, -7} {
 			actual := Round(cases.v, precision)
-			AssertEqual(t, false, actual != expected[i])
+			assert.Equal(t, false, actual != expected[i])
 		}
 	}
 }
@@ -104,7 +106,7 @@ func TestCommaf(t *testing.T) {
 		{"-100.11", Commaf(-100.11), "-100.11"},
 		{"-10", Commaf(-10), "-10"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 
@@ -140,7 +142,7 @@ func TestBigCommaf(t *testing.T) {
 		{"-100.11", BigCommaf(big.NewFloat(-100.11)), "-100.11"},
 		{"-10", BigCommaf(big.NewFloat(-10)), "-10"},
 	} {
-		AssertEqual(t, v.expected, v.actual, v.title)
+		assert.Equal(t, v.expected, v.actual, v.title)
 	}
 }
 

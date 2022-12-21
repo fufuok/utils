@@ -7,36 +7,37 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/fufuok/utils/assert"
 )
 
 func TestRandInt(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, true, RandInt(1, 2) == 1)
-	AssertEqual(t, true, RandInt(-1, 0) == -1)
-	AssertEqual(t, true, RandInt(0, 5) >= 0)
-	AssertEqual(t, true, RandInt(0, 5) < 5)
-	AssertEqual(t, 2, RandInt(2, 2))
-	AssertEqual(t, 2, RandInt(3, 2))
+	assert.Equal(t, true, RandInt(1, 2) == 1)
+	assert.Equal(t, true, RandInt(-1, 0) == -1)
+	assert.Equal(t, true, RandInt(0, 5) >= 0)
+	assert.Equal(t, true, RandInt(0, 5) < 5)
+	assert.Equal(t, 2, RandInt(2, 2))
+	assert.Equal(t, 2, RandInt(3, 2))
 }
 
 func TestRandUint32(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, true, RandUint32(1, 2) == 1)
-	AssertEqual(t, true, RandUint32(0, 5) < 5)
-	AssertEqual(t, uint32(2), RandUint32(2, 2))
-	AssertEqual(t, uint32(2), RandUint32(3, 2))
+	assert.Equal(t, true, RandUint32(1, 2) == 1)
+	assert.Equal(t, true, RandUint32(0, 5) < 5)
+	assert.Equal(t, uint32(2), RandUint32(2, 2))
+	assert.Equal(t, uint32(2), RandUint32(3, 2))
 }
 
 func TestFastIntn(t *testing.T) {
 	t.Parallel()
 	for i := 1; i < 10000; i++ {
-		AssertEqual(t, true, FastRandn(uint32(i)) < uint32(i))
-		AssertEqual(t, true, FastIntn(i) < i)
+		assert.Equal(t, true, FastRandn(uint32(i)) < uint32(i))
+		assert.Equal(t, true, FastIntn(i) < i)
 	}
-	AssertEqual(t, 0, FastIntn(-2))
-	AssertEqual(t, 0, FastIntn(0))
-	AssertEqual(t, true, FastIntn(math.MaxUint32) < math.MaxUint32)
-	AssertEqual(t, true, FastIntn(math.MaxInt64) < math.MaxInt64)
+	assert.Equal(t, 0, FastIntn(-2))
+	assert.Equal(t, 0, FastIntn(0))
+	assert.Equal(t, true, FastIntn(math.MaxUint32) < math.MaxUint32)
+	assert.Equal(t, true, FastIntn(math.MaxInt64) < math.MaxInt64)
 }
 
 func BenchmarkRandInt(b *testing.B) {
@@ -111,31 +112,31 @@ func BenchmarkRandIntParallel(b *testing.B) {
 func TestRandString(t *testing.T) {
 	t.Parallel()
 	a, b := RandString(777), RandString(777)
-	AssertEqual(t, 777, len(a))
-	AssertEqual(t, false, a == b)
-	AssertEqual(t, "", RandString(-1))
+	assert.Equal(t, 777, len(a))
+	assert.Equal(t, false, a == b)
+	assert.Equal(t, "", RandString(-1))
 }
 
 func TestRandBytes(t *testing.T) {
 	t.Parallel()
 	a, b := RandBytes(777), RandBytes(777)
-	AssertEqual(t, 777, len(a))
-	AssertEqual(t, 777, len(b))
-	AssertEqual(t, false, bytes.Equal(a, b))
+	assert.Equal(t, 777, len(a))
+	assert.Equal(t, 777, len(b))
+	assert.Equal(t, false, bytes.Equal(a, b))
 }
 
 func TestFastRandBytes(t *testing.T) {
 	t.Parallel()
 	a, b := FastRandBytes(777), FastRandBytes(777)
-	AssertEqual(t, 777, len(a))
-	AssertEqual(t, 777, len(b))
-	AssertEqual(t, false, bytes.Equal(a, b))
+	assert.Equal(t, 777, len(a))
+	assert.Equal(t, 777, len(b))
+	assert.Equal(t, false, bytes.Equal(a, b))
 }
 
 func TestRandHex(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, 32, len(RandHex(16)))
-	AssertEqual(t, 14, len(RandHex(7)))
+	assert.Equal(t, 32, len(RandHex(16)))
+	assert.Equal(t, 14, len(RandHex(7)))
 }
 
 func BenchmarkRandBytes(b *testing.B) {

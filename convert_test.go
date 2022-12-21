@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/fufuok/utils/assert"
 )
 
 func TestStringToBytes(t *testing.T) {
@@ -12,13 +14,13 @@ func TestStringToBytes(t *testing.T) {
 		s := RandString(64)
 		expected := []byte(s)
 		actual := StringToBytes(s)
-		AssertEqual(t, expected, actual)
-		AssertEqual(t, len(expected), len(actual))
+		assert.Equal(t, expected, actual)
+		assert.Equal(t, len(expected), len(actual))
 	}
 
 	expected := testString
 	actual := StringToBytes(expected)
-	AssertEqual(t, []byte(expected), actual)
+	assert.Equal(t, []byte(expected), actual)
 }
 
 func TestString2Bytes(t *testing.T) {
@@ -27,13 +29,13 @@ func TestString2Bytes(t *testing.T) {
 		s := RandString(64)
 		expected := []byte(s)
 		actual := String2Bytes(s)
-		AssertEqual(t, expected, actual)
-		AssertEqual(t, len(expected), len(actual))
+		assert.Equal(t, expected, actual)
+		assert.Equal(t, len(expected), len(actual))
 	}
 
 	expected := testString
 	actual := String2Bytes(expected)
-	AssertEqual(t, []byte(expected), actual)
+	assert.Equal(t, []byte(expected), actual)
 }
 
 func TestStr2Bytes(t *testing.T) {
@@ -42,13 +44,13 @@ func TestStr2Bytes(t *testing.T) {
 		s := RandString(64)
 		expected := []byte(s)
 		actual := Str2Bytes(s)
-		AssertEqual(t, expected, actual)
-		AssertEqual(t, len(expected), len(actual))
+		assert.Equal(t, expected, actual)
+		assert.Equal(t, len(expected), len(actual))
 	}
 
 	expected := testString
 	actual := Str2Bytes(expected)
-	AssertEqual(t, []byte(expected), actual)
+	assert.Equal(t, []byte(expected), actual)
 }
 
 func TestStrToBytes(t *testing.T) {
@@ -57,13 +59,13 @@ func TestStrToBytes(t *testing.T) {
 		s := RandString(64)
 		expected := []byte(s)
 		actual := StrToBytes(s)
-		AssertEqual(t, expected, actual)
-		AssertEqual(t, len(expected), len(actual))
+		assert.Equal(t, expected, actual)
+		assert.Equal(t, len(expected), len(actual))
 	}
 
 	expected := testString
 	actual := StrToBytes(expected)
-	AssertEqual(t, []byte(expected), actual)
+	assert.Equal(t, []byte(expected), actual)
 }
 
 func TestS2B(t *testing.T) {
@@ -72,31 +74,31 @@ func TestS2B(t *testing.T) {
 		s := RandString(64)
 		expected := []byte(s)
 		actual := S2B(s)
-		AssertEqual(t, expected, actual)
-		AssertEqual(t, len(expected), len(actual))
+		assert.Equal(t, expected, actual)
+		assert.Equal(t, len(expected), len(actual))
 	}
 
 	expected := testString
 	actual := S2B(expected)
-	AssertEqual(t, []byte(expected), actual)
+	assert.Equal(t, []byte(expected), actual)
 
-	AssertEqual(t, true, S2B("") == nil)
-	AssertEqual(t, testBytes, S2B(testString))
+	assert.Equal(t, true, S2B("") == nil)
+	assert.Equal(t, testBytes, S2B(testString))
 }
 
 func TestB2S(t *testing.T) {
 	t.Parallel()
 	for i := 0; i < 100; i++ {
 		b := RandBytes(64)
-		AssertEqual(t, string(b), B2S(b))
+		assert.Equal(t, string(b), B2S(b))
 	}
 
 	expected := testString
 	actual := B2S([]byte(expected))
-	AssertEqual(t, expected, actual)
+	assert.Equal(t, expected, actual)
 
-	AssertEqual(t, true, B2S(nil) == "")
-	AssertEqual(t, testString, B2S(testBytes))
+	assert.Equal(t, true, B2S(nil) == "")
+	assert.Equal(t, testString, B2S(testBytes))
 }
 
 func TestMustJSONString(t *testing.T) {
@@ -108,12 +110,12 @@ func TestMustJSONString(t *testing.T) {
 	}
 	actual := MustJSONString(&js)
 
-	AssertEqual(t, true, strings.Contains(actual, `"a":true`))
-	AssertEqual(t, true, strings.Contains(actual, `"b":1.23`))
-	AssertEqual(t, true, strings.Contains(actual, `"_c":"中 文"`))
+	assert.Equal(t, true, strings.Contains(actual, `"a":true`))
+	assert.Equal(t, true, strings.Contains(actual, `"b":1.23`))
+	assert.Equal(t, true, strings.Contains(actual, `"_c":"中 文"`))
 
 	actualIndent := MustJSONIndentString(&js)
-	AssertEqual(t, true, strings.Contains(actualIndent, "  "))
+	assert.Equal(t, true, strings.Contains(actualIndent, "  "))
 }
 
 func TestMustString(t *testing.T) {
@@ -134,9 +136,9 @@ func TestMustString(t *testing.T) {
 		{now, "2022-01-02 03:04:05"},
 		{&Bool{}, "false"},
 	} {
-		AssertEqual(t, v.out, MustString(v.in))
+		assert.Equal(t, v.out, MustString(v.in))
 	}
-	AssertEqual(t, "2022-01-02T03:04:05Z", MustString(now, time.RFC3339))
+	assert.Equal(t, "2022-01-02T03:04:05Z", MustString(now, time.RFC3339))
 }
 
 func TestMustInt(t *testing.T) {
@@ -161,7 +163,7 @@ func TestMustInt(t *testing.T) {
 		{1.005, 1},
 		{nil, 0},
 	} {
-		AssertEqual(t, v.out, MustInt(v.in))
+		assert.Equal(t, v.out, MustInt(v.in))
 	}
 }
 
@@ -188,23 +190,23 @@ func TestMustBool(t *testing.T) {
 		{nil, false},
 		{"TrUe", false},
 	} {
-		AssertEqual(t, v.out, MustBool(v.in))
+		assert.Equal(t, v.out, MustBool(v.in))
 	}
 }
 
 func TestB64Encode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode(S2B("解码/编码~ 顶替&#")))
+	assert.Equal(t, "6Kej56CBL+e8lueggX4g6aG25pu/JiM=", B64Encode(S2B("解码/编码~ 顶替&#")))
 }
 
 func TestB64UrlEncode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode(S2B("解码/编码~ 顶替&#")))
+	assert.Equal(t, "6Kej56CBL-e8lueggX4g6aG25pu_JiM=", B64UrlEncode(S2B("解码/编码~ 顶替&#")))
 }
 
 func TestB64Decode(t *testing.T) {
 	t.Parallel()
-	AssertEqual(t, []byte("解码/编码~ 顶替&#"), B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
+	assert.Equal(t, []byte("解码/编码~ 顶替&#"), B64Decode("6Kej56CBL+e8lueggX4g6aG25pu/JiM="))
 }
 
 func TestB64UrlDecode(t *testing.T) {
@@ -215,7 +217,7 @@ func TestB64UrlDecode(t *testing.T) {
 		{"6Kej56CBL-e8lueggX4g6aG25pu_JiM=", []byte("解码/编码~ 顶替&#")},
 		{"123", nil},
 	} {
-		AssertEqual(t, v.out, B64UrlDecode(v.in))
+		assert.Equal(t, v.out, B64UrlDecode(v.in))
 	}
 }
 

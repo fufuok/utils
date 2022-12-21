@@ -3,7 +3,7 @@ package xcrypto
 import (
 	"testing"
 
-	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/assert"
 )
 
 func TestRSABase(t *testing.T) {
@@ -13,13 +13,13 @@ func TestRSABase(t *testing.T) {
 		t.Fatal(err)
 	}
 	decrypted, _ := RSADecrypt(encrypted, priv)
-	utils.AssertEqual(t, tmpB, decrypted)
+	assert.Equal(t, tmpB, decrypted)
 
 	sig, err := RSASign(tmpB, priv)
 	if err != nil {
 		t.Fatal(err)
 	}
-	utils.AssertEqual(t, nil, RSASignVerify(tmpB, pub, sig))
+	assert.Equal(t, nil, RSASignVerify(tmpB, pub, sig))
 
 	privateKey := `-----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQDJIaZyj/Ikk8zEK6SkoPV2UXkhv7LkXuIyAnWivREd88WNaoI/
@@ -47,5 +47,5 @@ mPPpoW3klbQf0q83CwIDAQAB
 		t.Fatal(err)
 	}
 	plaintext, _ := RSADecrypt(chipertext, []byte(privateKey))
-	utils.AssertEqual(t, tmpB, plaintext)
+	assert.Equal(t, tmpB, plaintext)
 }

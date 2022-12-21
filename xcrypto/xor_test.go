@@ -4,40 +4,40 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/assert"
 )
 
 func TestXOREnStringHex(t *testing.T) {
 	actual := XOREnStringHex("1", []byte("1"))
-	utils.AssertEqual(t, "51", actual)
+	assert.Equal(t, "51", actual)
 
 	res := XOREnStringHex("", tmpK)
-	utils.AssertEqual(t, "", XORDeStringHex(res, tmpK))
+	assert.Equal(t, "", XORDeStringHex(res, tmpK))
 
 	res = XOREnStringHex(tmpS, tmpK)
-	utils.AssertEqual(t, tmpS, XORDeStringHex(res, tmpK))
+	assert.Equal(t, tmpS, XORDeStringHex(res, tmpK))
 }
 
 func TestXOREnStringB64(t *testing.T) {
 	actual := XOREnStringB64("1", []byte("1"))
-	utils.AssertEqual(t, "UQ==", actual)
+	assert.Equal(t, "UQ==", actual)
 
 	res := XOREnStringB64("", tmpK)
-	utils.AssertEqual(t, "", XORDeStringB64(res, tmpK))
+	assert.Equal(t, "", XORDeStringB64(res, tmpK))
 
 	res = XOREnStringB64(tmpS, tmpK)
-	utils.AssertEqual(t, tmpS, XORDeStringB64(res, tmpK))
+	assert.Equal(t, tmpS, XORDeStringB64(res, tmpK))
 }
 
 func TestXOREnStringB58(t *testing.T) {
 	actual := XOREnStringB58("1", []byte("1"))
-	utils.AssertEqual(t, "2Q", actual)
+	assert.Equal(t, "2Q", actual)
 
 	res := XOREnStringB58("", tmpK)
-	utils.AssertEqual(t, "", XORDeStringB58(res, tmpK))
+	assert.Equal(t, "", XORDeStringB58(res, tmpK))
 
 	res = XOREnStringB58(tmpS, tmpK)
-	utils.AssertEqual(t, tmpS, XORDeStringB58(res, tmpK))
+	assert.Equal(t, tmpS, XORDeStringB58(res, tmpK))
 }
 
 func BenchmarkEnDeXOR(b *testing.B) {
