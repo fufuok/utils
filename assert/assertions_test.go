@@ -6,6 +6,14 @@ import (
 	"unsafe"
 )
 
+func TestAssertTrue(t *testing.T) {
+	t.Parallel()
+	True(nil, true)
+	True(t, true)
+	False(nil, false)
+	False(t, false)
+}
+
 func TestAssertEqual(t *testing.T) {
 	t.Parallel()
 	Equal(nil, []string{}, []string{})

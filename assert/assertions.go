@@ -11,6 +11,26 @@ import (
 	"text/tabwriter"
 )
 
+func True(tb testing.TB, actual bool, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if actual {
+		return
+	}
+	assertLog(tb, true, actual, true, msgAndArgs...)
+}
+
+func False(tb testing.TB, actual bool, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if !actual {
+		return
+	}
+	assertLog(tb, false, actual, true, msgAndArgs...)
+}
+
 func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
