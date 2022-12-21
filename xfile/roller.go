@@ -138,7 +138,7 @@ func (r *Roller) flushTimer() {
 func (r *Roller) flush() {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	if r.writer.Size() == 0 {
+	if r.writer.Buffered() == 0 {
 		return
 	}
 	if err := r.writer.Flush(); err != nil {
