@@ -1,5 +1,13 @@
 # Go-Utils
 
+## v0.9.9
+
+**2022-12-23**
+
+- 增加 `assert.True` `assert.False`
+- 增加 `generic/orderedmap`, 来自: `@elliotchance`, 保持添加顺序的 map
+- `generic/queue` 合并来自 `@jilleJr` 的优化
+
 ## v0.9.8
 
 **2022-12-21**
