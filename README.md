@@ -245,6 +245,7 @@ type TryMutex struct{ ... }
 - [set](generic/set): a Set.
 - [stack](generic/stack): a LIFO stack.
 - [trie](generic/trie): a ternary search trie.
+- [orderedmap](generic/orderedmap): a ordered map in Go with amortized O(1) for Set, Get, Delete and Len.
 
 ### 加解密小工具
 
