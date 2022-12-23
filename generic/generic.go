@@ -1,6 +1,7 @@
 //go:build go1.18
 // +build go1.18
 
+// Package generic Ref: zyedidia/generic
 package generic
 
 import (

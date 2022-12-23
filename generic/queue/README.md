@@ -34,7 +34,78 @@ Package queue provides an implementation of a First In First Out \(FIFO\) queue.
 </p>
 </details>
 
-<details><summary>Example (Dequeue)</summary>
+## Index
+
+- [type Queue](<#type-queue>)
+  - [func New[T any]() *Queue[T]](<#func-new>)
+  - [func Of[S ~[]E, E any](slice S) *Queue[E]](<#func-of>)
+  - [func (q *Queue[T]) Clear()](<#func-queuet-clear>)
+  - [func (q *Queue[T]) Copy() *Queue[T]](<#func-queuet-copy>)
+  - [func (q *Queue[T]) Dequeue() T](<#func-queuet-dequeue>)
+  - [func (q *Queue[T]) DequeueAll() []T](<#func-queuet-dequeueall>)
+  - [func (q *Queue[T]) Each(fn func(t T))](<#func-queuet-each>)
+  - [func (q *Queue[T]) Empty() bool](<#func-queuet-empty>)
+  - [func (q *Queue[T]) Enqueue(value T)](<#func-queuet-enqueue>)
+  - [func (q *Queue[T]) Len() int](<#func-queuet-len>)
+  - [func (q *Queue[T]) Peek() T](<#func-queuet-peek>)
+  - [func (q *Queue[T]) PeekAll() []T](<#func-queuet-peekall>)
+  - [func (q *Queue[T]) TryDequeue() (T, bool)](<#func-queuet-trydequeue>)
+  - [func (q *Queue[T]) TryPeek() (T, bool)](<#func-queuet-trypeek>)
+
+
+## type Queue
+
+Queue is a simple First In First Out \(FIFO\) queue.
+
+```go
+type Queue[T any] struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func New
+
+```go
+func New[T any]() *Queue[T]
+```
+
+New returns an empty First In First Out \(FIFO\) queue.
+
+### func Of
+
+```go
+func Of[S ~[]E, E any](slice S) *Queue[E]
+```
+
+Of returns a First In First Out \(FIFO\) queue that has been populated with values from an existing slice.
+
+### func \(\*Queue\[T\]\) Clear
+
+```go
+func (q *Queue[T]) Clear()
+```
+
+Clear empties the queue, resetting it to zero elements.
+
+### func \(\*Queue\[T\]\) Copy
+
+```go
+func (q *Queue[T]) Copy() *Queue[T]
+```
+
+Copy returns a shallow copy of this queue.
+
+### func \(\*Queue\[T\]\) Dequeue
+
+```go
+func (q *Queue[T]) Dequeue() T
+```
+
+Dequeue removes and returns the item at the front of the queue.
+
+A panic occurs if the queue is Empty.
+
+<details><summary>Example</summary>
 <p>
 
 ```go
@@ -56,7 +127,31 @@ Package queue provides an implementation of a First In First Out \(FIFO\) queue.
 </p>
 </details>
 
-<details><summary>Example (Empty_empty)</summary>
+### func \(\*Queue\[T\]\) DequeueAll
+
+```go
+func (q *Queue[T]) DequeueAll() []T
+```
+
+DequeueAll removes and returns all the items in the queue.
+
+### func \(\*Queue\[T\]\) Each
+
+```go
+func (q *Queue[T]) Each(fn func(t T))
+```
+
+Each calls 'fn' on every item in the queue, starting with the least recently pushed element.
+
+### func \(\*Queue\[T\]\) Empty
+
+```go
+func (q *Queue[T]) Empty() bool
+```
+
+Empty returns true if the queue is empty.
+
+<details><summary>Example (Empty)</summary>
 <p>
 
 ```go
@@ -77,7 +172,7 @@ true
 </p>
 </details>
 
-<details><summary>Example (Empty_nonempty)</summary>
+<details><summary>Example (Nonempty)</summary>
 <p>
 
 ```go
@@ -99,7 +194,15 @@ false
 </p>
 </details>
 
-<details><summary>Example (Enqueue)</summary>
+### func \(\*Queue\[T\]\) Enqueue
+
+```go
+func (q *Queue[T]) Enqueue(value T)
+```
+
+Enqueue inserts 'value' to the end of the queue.
+
+<details><summary>Example</summary>
 <p>
 
 ```go
@@ -112,7 +215,25 @@ false
 </p>
 </details>
 
-<details><summary>Example (Peek)</summary>
+### func \(\*Queue\[T\]\) Len
+
+```go
+func (q *Queue[T]) Len() int
+```
+
+Len returns the number of items currently in the queue.
+
+### func \(\*Queue\[T\]\) Peek
+
+```go
+func (q *Queue[T]) Peek() T
+```
+
+Peek returns the item at the front of the queue without removing it.
+
+A panic occurs if the queue is Empty.
+
+<details><summary>Example</summary>
 <p>
 
 ```go
@@ -134,78 +255,33 @@ false
 </p>
 </details>
 
-## Index
-
-- [type Queue](<#type-queue>)
-  - [func New[T any]() *Queue[T]](<#func-new>)
-  - [func (q *Queue[T]) Dequeue() T](<#func-queuet-dequeue>)
-  - [func (q *Queue[T]) Each(fn func(t T))](<#func-queuet-each>)
-  - [func (q *Queue[T]) Empty() bool](<#func-queuet-empty>)
-  - [func (q *Queue[T]) Enqueue(value T)](<#func-queuet-enqueue>)
-  - [func (q *Queue[T]) Peek() T](<#func-queuet-peek>)
-
-
-## type Queue
-
-Queue is a simple First In First Out \(FIFO\) queue.
+### func \(\*Queue\[T\]\) PeekAll
 
 ```go
-type Queue[T any] struct {
-    // contains filtered or unexported fields
-}
+func (q *Queue[T]) PeekAll() []T
 ```
 
-### func New
+PeekAll returns all the items in the queue without removing them.
+
+### func \(\*Queue\[T\]\) TryDequeue
 
 ```go
-func New[T any]() *Queue[T]
+func (q *Queue[T]) TryDequeue() (T, bool)
 ```
 
-New returns an empty First In First Out \(FIFO\) queue.
+TryDequeue tries to remove and return the item at the front of the queue.
 
-### func \(\*Queue\[T\]\) Dequeue
+If the queue is empty, then false is returned as the second return value.
+
+### func \(\*Queue\[T\]\) TryPeek
 
 ```go
-func (q *Queue[T]) Dequeue() T
+func (q *Queue[T]) TryPeek() (T, bool)
 ```
 
-Dequeue removes and returns the item at the front of the queue.
+TryPeek tries to return the item at the front of the queue without removing it.
 
-A panic occurs if the queue is Empty.
-
-### func \(\*Queue\[T\]\) Each
-
-```go
-func (q *Queue[T]) Each(fn func(t T))
-```
-
-Each calls 'fn' on every item in the queue, starting with the least recently pushed element.
-
-### func \(\*Queue\[T\]\) Empty
-
-```go
-func (q *Queue[T]) Empty() bool
-```
-
-Empty returns true if the queue is empty.
-
-### func \(\*Queue\[T\]\) Enqueue
-
-```go
-func (q *Queue[T]) Enqueue(value T)
-```
-
-Enqueue inserts 'value' to the end of the queue.
-
-### func \(\*Queue\[T\]\) Peek
-
-```go
-func (q *Queue[T]) Peek() T
-```
-
-Peek returns the item at the front of the queue without removing it.
-
-A panic occurs if the queue is Empty.
+If the queue is empty, then false is returned as the second return value.
 
 
 
