@@ -55,7 +55,7 @@ func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{})
 	if tb != nil {
 		tb.Helper()
 	}
-	if !reflect.DeepEqual(left, right) {
+	if !DeepEqual(left, right) {
 		return
 	}
 	assertLog(tb, left, right, false, msgAndArgs...)
