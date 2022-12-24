@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.9.10
+
+**2022-12-24**
+
+- 增加 `xcrypto.GetCertificate`, 用于获取域名对应的证书信息
+- 优化低版本 go 对 `[]byte` 的断言细节, 增加 `assert.DeepEqual`
+
 ## v0.9.9
 
 **2022-12-23**
