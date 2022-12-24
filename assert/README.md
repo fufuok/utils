@@ -9,11 +9,14 @@ import "github.com/fufuok/utils/assert"
 ## Index
 
 - [func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{})](<#func-equal>)
+- [func False(tb testing.TB, actual bool, msgAndArgs ...interface{})](<#func-false>)
 - [func IsNil(o interface{}) bool](<#func-isnil>)
-- [func Nil(tb testing.TB, right interface{}, msgAndArgs ...interface{})](<#func-nil>)
+- [func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{})](<#func-nil>)
 - [func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{})](<#func-notequal>)
 - [func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{})](<#func-notnil>)
+- [func ObjectsAreEqual(expected, actual interface{}) bool](<#func-objectsareequal>)
 - [func Panics(t *testing.T, title string, f func())](<#func-panics>)
+- [func True(tb testing.TB, actual bool, msgAndArgs ...interface{})](<#func-true>)
 
 
 ## func Equal
@@ -23,6 +26,12 @@ func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{
 ```
 
 Equal checks if values are equal Ref: gofiber/utils
+
+## func False
+
+```go
+func False(tb testing.TB, actual bool, msgAndArgs ...interface{})
+```
 
 ## func IsNil
 
@@ -56,7 +65,7 @@ Ref: stretchr/testify
 ## func Nil
 
 ```go
-func Nil(tb testing.TB, right interface{}, msgAndArgs ...interface{})
+func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{})
 ```
 
 ## func NotEqual
@@ -71,6 +80,14 @@ func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{})
 func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{})
 ```
 
+## func ObjectsAreEqual
+
+```go
+func ObjectsAreEqual(expected, actual interface{}) bool
+```
+
+ObjectsAreEqual Ref: stretchr/testify
+
 ## func Panics
 
 ```go
@@ -78,6 +95,12 @@ func Panics(t *testing.T, title string, f func())
 ```
 
 Panics 断言 panic
+
+## func True
+
+```go
+func True(tb testing.TB, actual bool, msgAndArgs ...interface{})
+```
 
 
 

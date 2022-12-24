@@ -17,9 +17,22 @@ func TestAssertTrue(t *testing.T) {
 func TestAssertEqual(t *testing.T) {
 	t.Parallel()
 	Equal(nil, []string{}, []string{})
+	Equal(t, []byte{}, []byte{})
+	Equal(t, []byte{0, 1, 2}, []byte{0, 1, 2})
+	Equal(t, map[int]int{1: 2}, map[int]int{1: 2})
 	Equal(t, []string{}, []string{})
+	Equal(t, &struct{}{}, &struct{}{})
+
+	var bs []byte
+	NotEqual(t, bs, []byte{})
+	NotEqual(t, []byte(nil), []byte{})
+	NotEqual(t, []byte{0, 2, 1}, []byte{0, 1, 2})
+	NotEqual(t, map[int]int{2: 2}, map[int]int{1: 2})
 	NotEqual(t, []string{"f"}, []string{}, "desc: %s", "abc")
 	NotEqual(t, nil, []string{})
+	NotEqual(t, func() {}, func() {})
+	NotEqual(t, 'f', "f")
+	NotEqual(t, 10, uint(10))
 }
 
 func TestAssertPanics(t *testing.T) {

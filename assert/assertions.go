@@ -67,10 +67,31 @@ func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{
 	if tb != nil {
 		tb.Helper()
 	}
-	if reflect.DeepEqual(expected, actual) {
+	if DeepEqual(expected, actual) {
 		return
 	}
 	assertLog(tb, expected, actual, true, msgAndArgs...)
+}
+
+// DeepEqual Ref: stretchr/testify
+func DeepEqual(expected, actual interface{}) bool {
+	if expected == nil || actual == nil {
+		return expected == actual
+	}
+
+	exp, ok := expected.([]byte)
+	if !ok {
+		return reflect.DeepEqual(expected, actual)
+	}
+
+	act, ok := actual.([]byte)
+	if !ok {
+		return false
+	}
+	if exp == nil || act == nil {
+		return exp == nil && act == nil
+	}
+	return bytes.Equal(exp, act)
 }
 
 func assertLog(tb testing.TB, a, b interface{}, isEqual bool, msgAndArgs ...interface{}) {
