@@ -11,74 +11,81 @@ import (
 	"text/tabwriter"
 )
 
-func True(tb testing.TB, actual bool, msgAndArgs ...interface{}) {
+func True(tb testing.TB, value bool, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if actual {
+	if value {
 		return
 	}
-	assertLog(tb, true, actual, true, msgAndArgs...)
+	result := "Should be true"
+	assertLog(tb, nil, value, "True", result, msgAndArgs...)
 }
 
-func False(tb testing.TB, actual bool, msgAndArgs ...interface{}) {
+func False(tb testing.TB, value bool, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if !actual {
+	if !value {
 		return
 	}
-	assertLog(tb, false, actual, true, msgAndArgs...)
+	result := "Should be false"
+	assertLog(tb, nil, value, "False", result, msgAndArgs...)
 }
 
-func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{}) {
+func NotNil(tb testing.TB, value interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if !IsNil(right) {
+	if !IsNil(value) {
 		return
 	}
-	assertLog(tb, nil, right, false, msgAndArgs...)
+	result := "Expected value not to be nil."
+	assertLog(tb, nil, value, "NotNil", result, msgAndArgs...)
 }
 
-func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{}) {
+func Nil(tb testing.TB, value interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if IsNil(actual) {
+	if IsNil(value) {
 		return
 	}
-	assertLog(tb, nil, actual, true, msgAndArgs...)
+	result := fmt.Sprintf("Expected nil, but got: %#v", value)
+	assertLog(tb, nil, value, "Nil", result, msgAndArgs...)
 }
 
-func NotEmpty(tb testing.TB, right interface{}, msgAndArgs ...interface{}) {
+func NotEmpty(tb testing.TB, value interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if !IsEmpty(right) {
+	if !IsEmpty(value) {
 		return
 	}
-	assertLog(tb, nil, right, false, msgAndArgs...)
+	result := fmt.Sprintf("Should NOT be empty, but was %v", value)
+	assertLog(tb, nil, value, "NotEmpty", result, msgAndArgs...)
 }
 
-func Empty(tb testing.TB, actual interface{}, msgAndArgs ...interface{}) {
+func Empty(tb testing.TB, value interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if IsEmpty(actual) {
+	if IsEmpty(value) {
 		return
 	}
-	assertLog(tb, nil, actual, true, msgAndArgs...)
+	result := fmt.Sprintf("Should be empty, but was %v", value)
+	assertLog(tb, nil, value, "Empty", result, msgAndArgs...)
 }
 
-func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{}) {
+func NotEqual(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
 	}
-	if !DeepEqual(left, right) {
+	if !DeepEqual(expected, actual) {
 		return
 	}
-	assertLog(tb, left, right, false, msgAndArgs...)
+	result := fmt.Sprintf("Should not be: %#v\n", actual)
+	assertLog(tb, expected, actual, "NotEqual", result, msgAndArgs...)
 }
 
 // Equal checks if values are equal
@@ -90,7 +97,7 @@ func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{
 	if DeepEqual(expected, actual) {
 		return
 	}
-	assertLog(tb, expected, actual, true, msgAndArgs...)
+	assertLog(tb, expected, actual, "Equal", "", msgAndArgs...)
 }
 
 // DeepEqual Ref: stretchr/testify
@@ -114,53 +121,48 @@ func DeepEqual(expected, actual interface{}) bool {
 	return bytes.Equal(exp, act)
 }
 
-func assertLog(tb testing.TB, a, b interface{}, isEqual bool, msgAndArgs ...interface{}) {
-	aType := "<nil>"
-	bType := "<nil>"
-
-	if a != nil {
-		aType = reflect.TypeOf(a).String()
-	}
-	if b != nil {
-		bType = reflect.TypeOf(b).String()
-	}
-
-	testName := "Equal"
-	leftTitle := "Expected"
-	rightTitle := "Actual"
-	if !isEqual {
-		testName = "NotEqual"
-		leftTitle = "Left"
-		rightTitle = "Right"
-	}
+func assertLog(tb testing.TB, a, b interface{}, testType, result string, msgAndArgs ...interface{}) {
 	if tb != nil {
-		testName = fmt.Sprintf("%s(%s)", tb.Name(), testName)
+		testType = fmt.Sprintf("%s(%s)", tb.Name(), testType)
 	}
 
 	_, file, line, _ := runtime.Caller(2)
 
 	var buf bytes.Buffer
 	w := tabwriter.NewWriter(&buf, 0, 0, 5, ' ', 0)
-	_, _ = fmt.Fprintf(w, "\nTest:\t%s", testName)
+	_, _ = fmt.Fprintf(w, "\nTest:\t%s", testType)
 	_, _ = fmt.Fprintf(w, "\nTrace:\t%s:%d", filepath.Base(file), line)
 	message := messageFromMsgAndArgs(msgAndArgs...)
 	if message != "" {
 		_, _ = fmt.Fprintf(w, "\nDescription:\t%s", message)
 	}
-	_, _ = fmt.Fprintf(w, "\n%s:\t%v\t(%s)", leftTitle, a, aType)
-	_, _ = fmt.Fprintf(w, "\n%s:\t%v\t(%s)", rightTitle, b, bType)
-
-	result := ""
-	if err := w.Flush(); err != nil {
-		result = err.Error()
+	if result != "" {
+		_, _ = fmt.Fprintf(w, "\nResult:\t%s", result)
 	} else {
-		result = buf.String()
+		aType := "<nil>"
+		bType := "<nil>"
+		if a != nil {
+			aType = reflect.TypeOf(a).String()
+		}
+		if b != nil {
+			bType = reflect.TypeOf(b).String()
+		}
+		_, _ = fmt.Fprintf(w, "\nResult:\tNot equal")
+		_, _ = fmt.Fprintf(w, "\nExpected:\t%v\t(%s)", a, aType)
+		_, _ = fmt.Fprintf(w, "\nActual:\t%v\t(%s)", b, bType)
+	}
+
+	msg := ""
+	if err := w.Flush(); err != nil {
+		msg = err.Error()
+	} else {
+		msg = buf.String()
 	}
 
 	if tb != nil {
-		tb.Fatal(result)
+		tb.Fatal(msg)
 	} else {
-		log.Fatal(result)
+		log.Fatal(msg)
 	}
 }
 
