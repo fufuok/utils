@@ -51,6 +51,26 @@ func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{}) {
 	assertLog(tb, nil, actual, true, msgAndArgs...)
 }
 
+func NotEmpty(tb testing.TB, right interface{}, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if !IsEmpty(right) {
+		return
+	}
+	assertLog(tb, nil, right, false, msgAndArgs...)
+}
+
+func Empty(tb testing.TB, actual interface{}, msgAndArgs ...interface{}) {
+	if tb != nil {
+		tb.Helper()
+	}
+	if IsEmpty(actual) {
+		return
+	}
+	assertLog(tb, nil, actual, true, msgAndArgs...)
+}
+
 func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{}) {
 	if tb != nil {
 		tb.Helper()
@@ -196,6 +216,34 @@ func IsNil(o interface{}) bool {
 	}
 
 	return false
+}
+
+// IsEmpty gets whether the specified object is considered empty or not.
+// Ref: stretchr/testify
+func IsEmpty(o interface{}) bool {
+	// get nil case out of the way
+	if o == nil {
+		return true
+	}
+
+	v := reflect.ValueOf(o)
+	switch v.Kind() {
+	// collection types are empty when they have no element
+	case reflect.Chan, reflect.Map, reflect.Slice:
+		return v.Len() == 0
+	// pointers are empty if nil or if the value they point to is empty
+	case reflect.Ptr:
+		if v.IsNil() {
+			return true
+		}
+		deref := v.Elem().Interface()
+		return IsEmpty(deref)
+	// for all other types, compare against the zero value
+	// array types are empty when they match their zero-initialized state
+	default:
+		zero := reflect.Zero(v.Type())
+		return reflect.DeepEqual(o, zero.Interface())
+	}
 }
 
 // containsKind checks if a specified kind in the slice of kinds.

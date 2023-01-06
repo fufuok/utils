@@ -2,7 +2,10 @@ package assert
 
 import (
 	"bytes"
+	"errors"
+	"os"
 	"testing"
+	"time"
 	"unsafe"
 )
 
@@ -127,4 +130,77 @@ func TestIsNil(t *testing.T) {
 
 	// var nil1 = (*int)(unsafe.Pointer(uintptr(0x0)))
 	// Equal(t, true, IsNil(nil1))
+}
+
+// Ref: stretchr/testify
+func Test_IsEmpty(t *testing.T) {
+	chWithValue := make(chan struct{}, 1)
+	chWithValue <- struct{}{}
+
+	True(t, IsEmpty(struct{}{}))
+	True(t, IsEmpty(""))
+	True(t, IsEmpty(nil))
+	True(t, IsEmpty([]string{}))
+	True(t, IsEmpty(0))
+	True(t, IsEmpty(int32(0)))
+	True(t, IsEmpty(int64(0)))
+	True(t, IsEmpty(false))
+	True(t, IsEmpty(map[string]string{}))
+	True(t, IsEmpty(new(time.Time)))
+	True(t, IsEmpty(time.Time{}))
+	True(t, IsEmpty(make(chan struct{})))
+	True(t, IsEmpty([1]int{}))
+
+	False(t, IsEmpty("something"))
+	False(t, IsEmpty(errors.New("something")))
+	False(t, IsEmpty([]string{"something"}))
+	False(t, IsEmpty(1))
+	False(t, IsEmpty(true))
+	False(t, IsEmpty(map[string]string{"Hello": "World"}))
+	False(t, IsEmpty(chWithValue))
+	False(t, IsEmpty([1]int{42}))
+}
+
+// Ref: stretchr/testify
+func TestEmpty(t *testing.T) {
+	chWithValue := make(chan struct{}, 1)
+	chWithValue <- struct{}{}
+	var tiP *time.Time
+	var tiNP time.Time
+	var s *string
+	var f *os.File
+	sP := &s
+	x := 1
+	xP := &x
+
+	type TString string
+	type TStruct struct {
+		x int
+	}
+
+	Empty(t, "", "Empty string is empty")
+	Empty(t, nil, "Nil is empty")
+	Empty(t, []string{}, "Empty string array is empty")
+	Empty(t, 0, "Zero int value is empty")
+	Empty(t, false, "False value is empty")
+	Empty(t, make(chan struct{}), "Channel without values is empty")
+	Empty(t, s, "Nil string pointer is empty")
+	Empty(t, f, "Nil os.File pointer is empty")
+	Empty(t, tiP, "Nil time.Time pointer is empty")
+	Empty(t, tiNP, "time.Time is empty")
+	Empty(t, TStruct{}, "struct with zero values is empty")
+	Empty(t, TString(""), "empty aliased string is empty")
+	Empty(t, sP, "ptr to nil value is empty")
+	Empty(t, [1]int{}, "array is state")
+
+	NotEmpty(t, "something", "Non Empty string is not empty")
+	NotEmpty(t, errors.New("something"), "Non nil object is not empty")
+	NotEmpty(t, []string{"something"}, "Non empty string array is not empty")
+	NotEmpty(t, 1, "Non-zero int value is not empty")
+	NotEmpty(t, true, "True value is not empty")
+	NotEmpty(t, chWithValue, "Channel with values is not empty")
+	NotEmpty(t, TStruct{x: 1}, "struct with initialized values is empty")
+	NotEmpty(t, TString("abc"), "non-empty aliased string is empty")
+	NotEmpty(t, xP, "ptr to non-nil value is not empty")
+	NotEmpty(t, [1]int{42}, "array is not state")
 }
