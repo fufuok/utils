@@ -8,16 +8,33 @@ import "github.com/fufuok/utils/assert"
 
 ## Index
 
+- [func DeepEqual(expected, actual interface{}) bool](<#func-deepequal>)
+- [func Empty(tb testing.TB, value interface{}, msgAndArgs ...interface{})](<#func-empty>)
 - [func Equal(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{})](<#func-equal>)
-- [func False(tb testing.TB, actual bool, msgAndArgs ...interface{})](<#func-false>)
+- [func False(tb testing.TB, value bool, msgAndArgs ...interface{})](<#func-false>)
+- [func IsEmpty(o interface{}) bool](<#func-isempty>)
 - [func IsNil(o interface{}) bool](<#func-isnil>)
-- [func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{})](<#func-nil>)
-- [func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{})](<#func-notequal>)
-- [func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{})](<#func-notnil>)
-- [func ObjectsAreEqual(expected, actual interface{}) bool](<#func-objectsareequal>)
+- [func Nil(tb testing.TB, value interface{}, msgAndArgs ...interface{})](<#func-nil>)
+- [func NotEmpty(tb testing.TB, value interface{}, msgAndArgs ...interface{})](<#func-notempty>)
+- [func NotEqual(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{})](<#func-notequal>)
+- [func NotNil(tb testing.TB, value interface{}, msgAndArgs ...interface{})](<#func-notnil>)
 - [func Panics(t *testing.T, title string, f func())](<#func-panics>)
-- [func True(tb testing.TB, actual bool, msgAndArgs ...interface{})](<#func-true>)
+- [func True(tb testing.TB, value bool, msgAndArgs ...interface{})](<#func-true>)
 
+
+## func DeepEqual
+
+```go
+func DeepEqual(expected, actual interface{}) bool
+```
+
+DeepEqual Ref: stretchr/testify
+
+## func Empty
+
+```go
+func Empty(tb testing.TB, value interface{}, msgAndArgs ...interface{})
+```
 
 ## func Equal
 
@@ -30,8 +47,16 @@ Equal checks if values are equal Ref: gofiber/utils
 ## func False
 
 ```go
-func False(tb testing.TB, actual bool, msgAndArgs ...interface{})
+func False(tb testing.TB, value bool, msgAndArgs ...interface{})
 ```
+
+## func IsEmpty
+
+```go
+func IsEmpty(o interface{}) bool
+```
+
+IsEmpty gets whether the specified object is considered empty or not. Ref: stretchr/testify
 
 ## func IsNil
 
@@ -65,28 +90,26 @@ Ref: stretchr/testify
 ## func Nil
 
 ```go
-func Nil(tb testing.TB, actual interface{}, msgAndArgs ...interface{})
+func Nil(tb testing.TB, value interface{}, msgAndArgs ...interface{})
+```
+
+## func NotEmpty
+
+```go
+func NotEmpty(tb testing.TB, value interface{}, msgAndArgs ...interface{})
 ```
 
 ## func NotEqual
 
 ```go
-func NotEqual(tb testing.TB, left, right interface{}, msgAndArgs ...interface{})
+func NotEqual(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{})
 ```
 
 ## func NotNil
 
 ```go
-func NotNil(tb testing.TB, right interface{}, msgAndArgs ...interface{})
+func NotNil(tb testing.TB, value interface{}, msgAndArgs ...interface{})
 ```
-
-## func ObjectsAreEqual
-
-```go
-func ObjectsAreEqual(expected, actual interface{}) bool
-```
-
-ObjectsAreEqual Ref: stretchr/testify
 
 ## func Panics
 
@@ -99,7 +122,7 @@ Panics 断言 panic
 ## func True
 
 ```go
-func True(tb testing.TB, actual bool, msgAndArgs ...interface{})
+func True(tb testing.TB, value bool, msgAndArgs ...interface{})
 ```
 
 

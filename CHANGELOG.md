@@ -2,10 +2,11 @@
 
 ## v0.9.10
 
-**2022-12-24**
+**2023-01-06**
 
 - 增加 `xcrypto.GetCertificate`, 用于获取域名对应的证书信息
 - 优化低版本 go 对 `[]byte` 的断言细节, 增加 `assert.DeepEqual`
+- 优化断言失败的消息展示, 增加: `assert.Empty` `assert.NotEmpty`
 
 ## v0.9.9
 
