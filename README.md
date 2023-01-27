@@ -247,6 +247,70 @@ type TryMutex struct{ ... }
 - [trie](generic/trie): a ternary search trie.
 - [orderedmap](generic/orderedmap): a ordered map in Go with amortized O(1) for Set, Get, Delete and Len.
 
+### 数据类型转换函数集
+
+见: [conv](conv)
+
+<details>
+  <summary>DOC</summary>
+
+```go
+package conv // import "github.com/fufuok/utils/conv"
+
+func Atof(a string) float64
+func Atoi(a string) int64
+func Atot(a string) bool
+func Atou(a string) uint64
+func Atov(a string) interface{}
+func Ftoa(f float64) string
+func Ftoi(f float64) int64
+func Ftot(f float64) bool
+func Ftou(f float64) uint64
+func Ftov(f float64) interface{}
+func Itoa(i int64) string
+func Itof(i int64) float64
+func Itot(i int64) bool
+func Itou(i int64) uint64
+func Itov(i int64) interface{}
+func Ttoa(t bool) string
+func Ttof(t bool) float64
+func Ttoi(t bool) int64
+func Ttou(t bool) uint64
+func Ttov(t bool) interface{}
+func Utoa(u uint64) string
+func Utof(u uint64) float64
+func Utoi(u uint64) int64
+func Utot(u uint64) bool
+func Utov(u uint64) interface{}
+func Vtoa(v interface{}) string
+func Vtof(v interface{}) float64
+func Vtoi(v interface{}) int64
+func Vtot(v interface{}) bool
+func Vtou(v interface{}) uint64
+type Value struct{ ... }
+    func Any(v interface{}) Value
+    func Bool(t bool) Value
+    func Byte(x byte) Value
+    func Bytes(b []byte) Value
+    func CustomBits(x uint64) Value
+    func Float32(x float32) Value
+    func Float64(f float64) Value
+    func Int(x int) Value
+    func Int16(x int16) Value
+    func Int32(x int32) Value
+    func Int64(x int64) Value
+    func Int8(x int8) Value
+    func Nil() Value
+    func String(s string) Value
+    func StringWithTag(s string, tag uint16) Value
+    func Uint(x uint) Value
+    func Uint16(x uint16) Value
+    func Uint32(x uint32) Value
+    func Uint64(x uint64) Value
+    func Uint8(x uint8) Value
+```
+</details>
+
 ### 加解密小工具
 
 见: [envtools](envtools)
@@ -945,8 +1009,10 @@ import (
 	"time"
 
 	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/assert"
 	"github.com/fufuok/utils/base58"
 	"github.com/fufuok/utils/base62"
+	"github.com/fufuok/utils/conv"
 	"github.com/fufuok/utils/pools/bufferpool"
 	"github.com/fufuok/utils/sched"
 	"github.com/fufuok/utils/xcrypto"
@@ -963,6 +1029,18 @@ func main() {
 	s = utils.GetString(nil, "default") // "default"
 	s = utils.GetString([]byte("ff"))   // "ff"
 	s = utils.GetString(true)           // "true"
+
+	s = conv.Any(123.45).String()       // "123.45"
+	s = conv.Any(nil).String()          // ""
+	s = conv.Any([]byte("ff")).String() // "ff"
+	s = conv.Any(true).String()         // "true"
+
+	s = conv.Float64(123.45).String()     // "123.45"
+	s = conv.Bytes([]byte("ff")).String() // "ff"
+
+	s = conv.Ftoa(123.45) // "123.45"
+	s = conv.Vtoa(nil)    // ""
+	s = conv.Ttoa(true)   // "true"
 
 	x := utils.JoinString(s, "OK") // "trueOK"
 
@@ -1035,7 +1113,14 @@ func main() {
 
 	var nilN struct{}
 	var nilY *struct{}
-	fmt.Println(utils.IsNil(nilN), utils.IsNil(nilY)) // false true
+	var nilY2 *struct{}
+	var nilY3 = (*struct{})(nil)
+	fmt.Println(assert.IsNil(nilN), assert.IsNil(nilY))                     // false true
+	fmt.Println(assert.IsNil(nilY2), assert.IsNil(nilY3))                   // true true
+	fmt.Println(assert.DeepEqual(nil, nilY), assert.DeepEqual(nilY2, nilY)) // false true
+	fmt.Println(assert.DeepEqual(nilY3, nilY), nilY3 == nil)                // true true
+	fmt.Println(nilY == nil, nilY == nilY2, nilY == nilY3)                  // true true true
+	fmt.Println(assert.IsEmpty(nilN), assert.IsEmpty(nilY))                 // true true
 
 	public, private := xcrypto.GenRSAKey(1024)
 	fmt.Println(string(public))
