@@ -63,17 +63,20 @@ func TestQueuePeek(t *testing.T) {
 func TestQueueTryPeek(t *testing.T) {
 	t.Run("panics on empty queue", func(t *testing.T) {
 		value, got := emptyQueue().TryPeek()
-		if got != false {
-			t.Errorf("got %v, want %v; unexpected value: %v", got, false, value)
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v; unexpected value: %v", got, want, value)
 		}
 	})
 
 	t.Run("non-empty queue", func(t *testing.T) {
 		gotValue, gotOk := nonEmptyQueue().TryPeek()
 		wantValue := 1
+		wantOk := true
 
 		if gotOk != gotOk {
-			t.Errorf("got ok %v, want ok %v", gotOk, true)
+			t.Errorf("got ok %v, want ok %v", gotOk, wantOk)
 		}
 		if gotValue != wantValue {
 			t.Errorf("got value %v, want value %v", gotValue, wantValue)
@@ -104,7 +107,7 @@ func TestQueueEnqueue(t *testing.T) {
 		}
 
 		if q.list.Front != q.list.Back {
-			t.Error("front and back are not the same")
+			t.Error(("front and back are not the same"))
 		}
 	})
 
@@ -184,9 +187,10 @@ func TestQueueDequeue(t *testing.T) {
 func TestQueueTryDequeue(t *testing.T) {
 	t.Run("false on empty queue", func(t *testing.T) {
 		value, got := emptyQueue().TryDequeue()
+		want := false
 
-		if got != false {
-			t.Errorf("got %v, want %v; unexpected value: %v", got, false, value)
+		if got != want {
+			t.Errorf("got %v, want %v; unexpected value: %v", got, want, value)
 		}
 	})
 
