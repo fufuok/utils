@@ -7,6 +7,26 @@ import (
 	"github.com/fufuok/utils/pools/timerpool"
 )
 
+// InitCSTLocation 初始化默认时区为中国东八区(GMT+8)
+// 返回值:
+// name: "Asia/Shanghai" 或本地时区名称
+// loc: 优先尝试解析中国时区, 失败(Windows)后使用本地时区(time.Local)
+// cst: 强制偏移的中国时区, !!!注意: 无法使用 time.LoadLocation(CSTTimeLocation.String()) 二次加载
+// ok: false 表示 local 不一定是中国时区
+func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool) {
+	var err error
+	name = "Asia/Shanghai"
+	loc, err = time.LoadLocation(name)
+	ok = err == nil
+	if !ok {
+		loc = time.Local
+	}
+	time.Local = loc
+	name = loc.String()
+	cst = time.FixedZone("CST", 8*60*60)
+	return
+}
+
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitNextMinute(t ...time.Time) {
 	_ = WaitNextMinuteWithTime(t...)
@@ -202,4 +222,17 @@ func Sleep(ctx context.Context, interval time.Duration) error {
 		timerpool.Release(timer)
 		return nil
 	}
+}
+
+// IsLeapYear 判断是否为闰年
+func IsLeapYear(year int) bool {
+	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
+}
+
+// DaysInYear 返回年份天数
+func DaysInYear(year int) int {
+	if IsLeapYear(year) {
+		return 366
+	}
+	return 365
 }

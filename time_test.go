@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -65,4 +66,23 @@ func TestSleep(t *testing.T) {
 	cancel()
 	err = Sleep(ctx, dur)
 	assert.Equal(t, true, errors.Is(err, context.Canceled))
+}
+
+func TestDaysInYear(t *testing.T) {
+	assert.Equal(t, 365, DaysInYear(1900))
+	assert.Equal(t, 365, DaysInYear(2021))
+	assert.Equal(t, 366, DaysInYear(2000))
+	assert.Equal(t, 366, DaysInYear(2020))
+}
+
+func TestInitCSTLocation(t *testing.T) {
+	name, loc, cst, _ := InitCSTLocation()
+	assert.NotEmpty(t, name)
+	assert.NotNil(t, loc)
+	assert.NotNil(t, cst)
+	assert.Equal(t, time.Local, loc)
+	assert.Equal(t, "CST", cst.String())
+
+	ts := time.Now().In(cst).Format(time.RFC3339)
+	assert.True(t, strings.Contains(ts, "+08:00"))
 }
