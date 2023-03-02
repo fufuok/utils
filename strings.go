@@ -146,6 +146,22 @@ func RemoveString(ss []string, s string) ([]string, bool) {
 	return ss, false
 }
 
+// TrimSlice 清除 slice 中各元素的空白, 并删除空白项
+func TrimSlice(ss []string) []string {
+	if len(ss) == 0 {
+		return ss
+	}
+	idx := 0
+	for _, v := range ss {
+		v := strings.TrimSpace(v)
+		if v != "" {
+			ss[idx] = v
+			idx++
+		}
+	}
+	return ss[:idx]
+}
+
 // ToLower converts ascii string to lower-case
 // Ref: fiber
 func ToLower(b string) string {

@@ -135,6 +135,19 @@ func TestRemoveString(t *testing.T) {
 	assert.Equal(t, []string{"a", "c"}, val)
 }
 
+func TestTrimSpace(t *testing.T) {
+	t.Parallel()
+	val := []string{" a", "", "   ", "\t", "\n", "\t\r\n ", "b ", "   ", "  c  "}
+	got := TrimSlice(val)
+	assert.Equal(t, []string{"a", "b", "c"}, got)
+	assert.Equal(t, cap(val), cap(got))
+
+	val = make([]string, 0, 7)
+	got = TrimSlice(val)
+	assert.Equal(t, []string{}, got)
+	assert.Equal(t, cap(val), cap(got))
+}
+
 func BenchmarkStringPlusLarge(b *testing.B) {
 	a := "apiname"
 	t := "2021-04-11T12:00:00+08:00"
