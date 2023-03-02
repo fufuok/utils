@@ -63,6 +63,7 @@ func CopyS2B(s string) []byte
 func CopyString(s string) string
 func CutBytes(s, sep []byte) (before, after []byte, found bool)
 func CutString(s, sep string) (before, after string, found bool)
+func DaysInYear(year int) int
 func EncodeUUID(id []byte) []byte
 func EndOfDay(t time.Time) time.Time
 func EndOfHour(t time.Time) time.Time
@@ -120,11 +121,14 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
+func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)
+func InitLocation(name string) (*time.Location, bool)
 func IsIP(ip string) bool
 func IsIPv4(ip string) bool
 func IsIPv6(ip string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
+func IsLeapYear(year int) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
@@ -191,6 +195,7 @@ func TrimLeft(s string, cutset byte) string
 func TrimLeftBytes(b []byte, cutset byte) []byte
 func TrimRight(s string, cutset byte) string
 func TrimRightBytes(b []byte, cutset byte) []byte
+func TrimSlice(ss []string) []string
 func UUID() []byte
 func UUIDShort() string
 func UUIDSimple() string
