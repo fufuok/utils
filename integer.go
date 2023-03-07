@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"math"
 	"math/big"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -161,4 +163,50 @@ func Bigoom(n, b *big.Int) (float64, int) {
 		mag++
 	}
 	return float64(n.Int64()) + (float64(m.Int64()) / float64(b.Int64())), mag
+}
+
+// ParseInts 解析字符串, 得到去重并排序后的数字列表
+// "5,0-3, 3" => [0,1,2,3,5]
+func ParseInts(s string) ([]int, error) {
+	var (
+		r []int
+		e error
+	)
+	set := make(map[int]struct{})
+	blocks := strings.Split(s, ",")
+	for _, v := range blocks {
+		ss := strings.Split(v, "-")
+		if len(ss) == 1 {
+			i, err := strconv.Atoi(strings.TrimSpace(ss[0]))
+			if err != nil {
+				e = err
+				continue
+			}
+			set[i] = struct{}{}
+		} else if len(ss) == 2 {
+			start, err := strconv.Atoi(strings.TrimSpace(ss[0]))
+			if err != nil {
+				e = err
+				continue
+			}
+			end, err := strconv.Atoi(strings.TrimSpace(ss[1]))
+			if err != nil {
+				e = err
+				continue
+			}
+			for i := start; i <= end; i++ {
+				set[i] = struct{}{}
+			}
+		}
+	}
+
+	if len(set) == 0 {
+		return nil, fmt.Errorf("invalid integer range")
+	}
+
+	for n := range set {
+		r = append(r, n)
+	}
+	sort.Ints(r)
+	return r, e
 }

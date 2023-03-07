@@ -134,3 +134,20 @@ func BenchmarkBigComma(b *testing.B) {
 		BigComma(big.NewInt(1234567890))
 	}
 }
+
+func TestParseInts(t *testing.T) {
+	var empty []int
+	for _, v := range []struct {
+		s    string
+		want []int
+		ok   bool
+	}{
+		{"", empty, false},
+		{"3,1,3", []int{1, 3}, true},
+		{"3  \t\n,1- 5, 3\r-4", []int{1, 2, 3, 4, 5}, true},
+	} {
+		got, err := ParseInts(v.s)
+		assert.Equal(t, v.want, got)
+		assert.Equal(t, v.ok, err == nil)
+	}
+}
