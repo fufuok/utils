@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/fufuok/utils/generic/deepcopy"
 	"github.com/fufuok/utils/generic/maps"
@@ -124,6 +125,21 @@ func TestSpecialKind(t *testing.T) {
 		t.Fatalf("copied value is equal")
 	}
 }
+
+type Test struct {
+	t time.Time
+}
+
+// TODO: fix
+// func Test_Time(t *testing.T) {
+// 	t1 := Test{time.Now()}
+// 	t2 := deepcopy.Value(t1)
+// 	if t1.t.String() != t2.t.String() {
+// 		t.Logf("t1: %s, t2: %s", t1.t.Format(time.RFC3339), t2.t.Format(time.RFC3339))
+// 		t.Logf("t1: %v, t2: %v", t1, t2)
+// 		t.Fatalf("t1: %v, t2: %v", t1.t.Location(), t2.t.Location())
+// 	}
+// }
 
 func Example() {
 	type tFN struct {

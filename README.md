@@ -226,36 +226,17 @@ type TryMutex struct{ ... }
 
 具体使用见各目录下的文档或测试
 
-- [`deepcopy`](generic/deepcopy) 任意对象深拷贝.
 - [`constraints`](generic/constraints) golang exp 的 constraints.
 - [`slices`](generic/slices) golang exp 的 slices.
 - [`maps`](generic/maps) golang exp 的 maps.
-- [`orderedmap`](generic/orderedmap): a ordered map in Go with amortized O(1) for Set, Get, Delete and Len.
-- [`atox`](generic/atox): a generic wrapper for the Parse* functions in the strconv package.
-- [`array2d`](generic/array2d): a 2-dimensional array.
-- [`avl`](generic/avl): an AVL tree.
-- [`bimap`](generic/bimap): a bi-directional map; a map that allows lookups on both keys and values.
-- [`btree`](generic/btree): a B-tree.
-- [`cache`](generic/cache): a wrapper around `map[K]V` that uses a maximum size and evicts
-  elements using LRU when full.
-- [`hashmap`](generic/hashmap): a hashmap with linear probing. The main feature is that
-  the hashmap can be efficiently copied, using copy-on-write under the hood.
-- [`hashset`](generic/hashset): a hashset that uses the hashmap as the underlying storage.
-- [`heap`](generic/heap): a binary heap.
-- [`interval`](generic/interval): an interval tree, implemented as an augmented AVL tree.
-- [`list`](generic/list): a doubly-linked list.
-- [`mapset`](generic/mapset): a set that uses Go's built-in map as the underlying storage.
-- [`multimap`](generic/multimap): an associative container that permits multiple entries with the same key.
-- [`queue`](generic/queue): a First In First Out (FIFO) queue.
-- [`rope`](generic/rope): a generic rope, which is similar to an array but supports efficient
-  insertion and deletion from anywhere in the array. Ropes are typically used
-  for arrays of bytes, but this rope is generic.
-- [`stack`](generic/stack): a LIFO stack.
-- [`trie`](generic/trie): a ternary search trie.
+- [`deepcopy`](generic/deepcopy) 任意对象深拷贝 (已知: `time.Time` 会丢失时区). ([@changkun](https://github.com/changkun))
+- [`orderedmap`](generic/orderedmap): a ordered map in Go with amortized O(1) for Set, Get, Delete and Len. ([@elliotchance](https://github.com/elliotchance))
+- [`atox`](generic/atox): a generic wrapper for the Parse* functions in the strconv package. ([@josharian](https://github.com/josharian))
+- 更多泛型方法可参考: [zyedidia/generic](https://github.com/zyedidia/generic)
 
 ### 数据类型转换函数集
 
-见: [conv](conv)
+见: [conv](conv) ([@tidwall](https://github.com/tidwall/conv))
 
 <details>
   <summary>DOC</summary>
@@ -474,7 +455,7 @@ func LocalIPv4s() (ips []string)
 
 ### 编码解码 base62
 
-见: [base62](base62)
+见: [base62](base62) ([@jxskiss](https://github.com/jxskiss/base62))
 
 或: https://github.com/fufuok/basex
 
@@ -620,7 +601,7 @@ type Hashable interface{ ... }
 
 - 要使用程序运行时自增 ID 可以使用 `utils.ID()`
 
-见: [xid](xid)
+见: [xid](xid) ([@rs](https://github.com/rs/xid))
 
 或: http://github.com/fufuok/xid
 
@@ -644,7 +625,7 @@ type ID [rawLen]byte
 
 ### 自守护进程和后台运行
 
-见: [xdaemon](xdaemon)
+见: [xdaemon](xdaemon) ([@zh-five](https://github.com/zh-five/xdaemon))
 
 或: https://github.com/fufuok/xdaemon
 
@@ -664,7 +645,7 @@ type Daemon struct{ ... }
 
 ### 高性能并发安全同步扩展库
 
-见: [xsync](xsync)
+见: [xsync](xsync) ([@puzpuzpuz](https://github.com/puzpuzpuz/xsync))
 
 或: https://github.com/fufuok/xsync
 
@@ -728,19 +709,11 @@ type RToken struct { ... }
 ```
 </details>
 
-### Go 同步扩展库
-
-方便引用, 克隆自 [golang/sync: mirror concurrency primitives (github.com)](https://github.com/golang/sync)
-
-- github.com/fufuok/utils/sync/errgroup
-- github.com/fufuok/utils/sync/semaphore
-- github.com/fufuok/utils/sync/singleflight
-
 ### 高效的 JSON 字符串操作库集
 
 1. **只有 `1` 次内存分配的 JSON 字符串生成器**
 
-见: [jsongen](xjson/jsongen)
+见: [jsongen](xjson/jsongen) ([@darjun](https://github.com/darjun/json-gen))
 
 或: [https://github.com/fufuok/jsongen](https://github.com/fufuok/jsongen)
 
@@ -767,9 +740,7 @@ type Value interface{ ... }
 
 2. **超高效的 JSON 字符串解析和字段搜索**
 
-来自: `tidwall/gjson`
-
-见: [gjson](xjson/gjson)
+见: [gjson](xjson/gjson) ([@tidwall](https://github.com/tidwall/gjson))
 
 <details>
   <summary>DOC</summary>
@@ -818,9 +789,7 @@ type Type int
 
 3. **JSON 字符串字段修改和删除**
 
-来自: `tidwall/sjson`
-
-见: [sjson](xjson/sjson)
+见: [sjson](xjson/sjson) ([@tidwall](https://github.com/tidwall/sjson))
 
 <details>
   <summary>DOC</summary>
@@ -846,9 +815,7 @@ type Options struct{ ... }
 
 4. **JSON 字符串格式化和校验**
 
-来自: `tidwall/pretty`
-
-见: [pretty](xjson/pretty)
+见: [pretty](xjson/pretty) ([@tidwall](https://github.com/tidwall/pretty))
 
 <details>
   <summary>DOC</summary>
@@ -872,9 +839,7 @@ type Style struct{ ... }
 
 5. 字符串模式匹配(`*?`通配符搜索)
 
-来自: `tidwall/match`
-
-见: [match](xjson/match)
+见: [match](xjson/match) ([@tidwall](https://github.com/tidwall/match))
 
 <details>
   <summary>DOC</summary>
