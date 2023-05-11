@@ -1,5 +1,11 @@
 # Go-Utils
 
+## v0.10.1
+
+**2023-05-11**
+
+- `myip.LocalIP(exclude ...string) string` 支持指定要排除的接口名
+
 ## v0.10.0
 
 **2023-03-20**
