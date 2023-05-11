@@ -6,21 +6,22 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/fufuok/utils"
 )
 
 var externalIPAPI = map[string][]string{
 	"ipv4": {
-		"https://ipv4.ipw.cn/api/ip/myip",
+		"https://4.ipw.cn",
 		"https://api-ipv4.ip.sb/ip",
 		"https://api.ipify.org",
-		"http://ip-api.com/line/?fields=query",
 		"http://ifconfig.me/ip",
 		"http://ident.me",
 		"http://myexternalip.com/raw",
 		"http://ip.42.pl/short",
 	},
 	"ipv6": {
-		"https://ipv6.ipw.cn/api/ip/myip",
+		"https://6.ipw.cn",
 		"https://api-ipv6.ip.sb/ip",
 		"https://api64.ipify.org",
 	},
@@ -150,18 +151,36 @@ func InternalIP(dstAddr, network string) string {
 	return ip
 }
 
-// LocalIP 获取本地地址 (第一个)
-func LocalIP() string {
-	addrs, err := net.InterfaceAddrs()
-	if err == nil {
+// LocalIP 获取本地地址 (第一个), 可指定要排除的接口, 比如: "lo", "vpp"
+func LocalIP(exclude ...string) string {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return ""
+	}
+
+	var ip net.IP
+	for _, i := range ifaces {
+		if utils.InStrings(exclude, i.Name) {
+			continue
+		}
+		addrs, err := i.Addrs()
+		if err != nil {
+			return ""
+		}
 		for _, addr := range addrs {
-			if ipnet, ok := addr.(*net.IPNet); ok &&
-				!ipnet.IP.IsLinkLocalUnicast() && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
-				return ipnet.IP.String()
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			default:
+				ip = net.IPv4zero
+			}
+			if !ip.IsLinkLocalUnicast() && !ip.IsLoopback() && ip.To4() != nil {
+				return ip.String()
 			}
 		}
 	}
-
 	return ""
 }
 

@@ -16,7 +16,7 @@ import "github.com/fufuok/utils/myip"
 - [func InternalIP(dstAddr, network string) string](<#func-internalip>)
 - [func InternalIPv4() string](<#func-internalipv4>)
 - [func InternalIPv6() string](<#func-internalipv6>)
-- [func LocalIP() string](<#func-localip>)
+- [func LocalIP(exclude ...string) string](<#func-localip>)
 - [func LocalIPv4s() (ips []string)](<#func-localipv4s>)
 
 
@@ -87,10 +87,10 @@ InternalIPv6 获取内网地址 \(临时 IPv6 地址\)
 ## func LocalIP
 
 ```go
-func LocalIP() string
+func LocalIP(exclude ...string) string
 ```
 
-LocalIP 获取本地地址 \(第一个\)
+LocalIP 获取本地地址 \(第一个\), 可指定要排除的接口, 比如: \[\]string\{"lo", "vpp"\}
 
 ## func LocalIPv4s
 
