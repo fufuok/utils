@@ -147,6 +147,7 @@ func RemoveString(ss []string, s string) ([]string, bool) {
 }
 
 // TrimSlice 清除 slice 中各元素的空白, 并删除空白项
+// 注意: 原切片将被修改
 func TrimSlice(ss []string) []string {
 	if len(ss) == 0 {
 		return ss
@@ -238,7 +239,7 @@ func EqualFold(b, s string) bool {
 	return true
 }
 
-// CutString slices s around the first instance of sep,
+// CutString xslices s around the first instance of sep,
 // returning the text before and after sep.
 // The found result reports whether sep appears in s.
 // If sep does not appear in s, cut returns s, "", false.

@@ -1,5 +1,13 @@
 # Go-Utils
 
+## v0.11.0
+
+**2023-08-11**
+
+- 移除 `slices`, `maps`, `constraints` 包, 增加 `xslices` 扩展包
+- 使用 `smallnest/deepcopy` 
+- 更新 `xid`
+
 ## v0.10.3
 
 **2023-08-03**
