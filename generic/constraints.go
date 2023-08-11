@@ -5,9 +5,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package constraints defines a set of useful constraints to be used
+// Package generic defines a set of useful constraints to be used
 // with type parameters.
-package constraints
+// Ref: golang/exp/constraints/constraints.go
+package generic
 
 // Signed is a constraint that permits any signed integer type.
 // If future releases of Go add new predeclared signed integer types,

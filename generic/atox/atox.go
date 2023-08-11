@@ -8,15 +8,15 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/fufuok/utils/generic/constraints"
+	"github.com/fufuok/utils/generic"
 )
 
-func Must[T constraints.Float | constraints.Integer](s string) T {
+func Must[T generic.Float | generic.Integer](s string) T {
 	t, _ := N[T](s)
 	return t
 }
 
-func N[T constraints.Float | constraints.Integer](s string) (T, error) {
+func N[T generic.Float | generic.Integer](s string) (T, error) {
 	var z T
 	rt := reflect.TypeOf(z)
 	switch rt.Kind() {
