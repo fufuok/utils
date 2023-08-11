@@ -191,7 +191,7 @@ IsNil Returns true if this is a "nil" ID
 func (id ID) IsZero() bool
 ```
 
-IsZero Alias of IsNil
+Alias of IsNil
 
 ### func \(ID\) Machine
 

@@ -1,6 +1,6 @@
 # 可排序全局唯一 ID 生成器
 
-*forked from rs/xid v20221108*
+*forked from rs/xid v20230809*
 
 比 UUID 更快, 更短, 无需配置, 生成 20 个字符 (`[0-9a-v]{20}`), 可排序
 
@@ -34,7 +34,7 @@ for i:=0; i<100; i++{
 
 Package xid is a globally unique id generator library, ready to safely be used directly in your server code.
 
-Xid uses the Mongo Object ID algorithm to generate globally unique ids with a different serialization (base64) to make it shorter when transported as a string:
+Xid uses the Mongo Object ID algorithm to generate globally unique ids with a different serialization ([base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10)) to make it shorter when transported as a string:
 https://docs.mongodb.org/manual/reference/object-id/
 
 - 4-byte value representing the seconds since the Unix epoch,
@@ -43,7 +43,7 @@ https://docs.mongodb.org/manual/reference/object-id/
 - 3-byte counter, starting with a random value.
 
 The binary representation of the id is compatible with Mongo 12 bytes Object IDs.
-The string representation is using base32 hex (w/o padding) for better space efficiency
+The string representation is using [base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10) (w/o padding) for better space efficiency
 when stored in that form (20 bytes). The hex variant of base32 is used to retain the
 sortable property of the id.
 
@@ -99,6 +99,11 @@ References:
 - Rust port by [Jérôme Renard](https://github.com/jeromer/): https://github.com/jeromer/libxid
 - Ruby port by [Valar](https://github.com/valarpirai/): https://github.com/valarpirai/ruby_xid
 - Java port by [0xShamil](https://github.com/0xShamil/): https://github.com/0xShamil/java-xid
+- Dart port by [Peter Bwire](https://github.com/pitabwire): https://pub.dev/packages/xid
+- PostgreSQL port by [Rasmus Holm](https://github.com/crholm): https://github.com/modfin/pg-xid
+- Swift port by [Uditha Atukorala](https://github.com/uatuko): https://github.com/uatuko/swift-xid
+- C++ port by [Uditha Atukorala](https://github.com/uatuko): https://github.com/uatuko/libxid
+- Typescript & Javascript port by [Yiwen AI](https://github.com/yiwen-ai): https://github.com/yiwen-ai/xid-ts
 
 ## Install
 
