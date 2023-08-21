@@ -1,14 +1,14 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20221109*
+*forked from puzpuzpuz/xsync v20230821*
 
 ## 改动:
 
 - 增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash
 
-[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync)
-[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync)
-[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg?token=TR5UFTG9YY)](https://codecov.io/gh/puzpuzpuz/xsync)
+[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v2)
+[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v2)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v2)
+[![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg)](https://codecov.io/gh/puzpuzpuz/xsync)
 
 # xsync
 
@@ -31,6 +31,8 @@ import (
 	"github.com/puzpuzpuz/xsync/v2"
 )
 ```
+
+*Note for v1 users*: v1 support is discontinued, so please upgrade to v2. While the API has some breaking changes, the migration should be trivial.
 
 ### Counter
 
@@ -105,12 +107,20 @@ q.Enqueue("foo")
 // optimistic insertion attempt; doesn't block
 inserted := q.TryEnqueue("bar")
 // consumer obtains an item from the queue
-item := q.Dequeue()
+item := q.Dequeue() // interface{} pointing to a string
 // optimistic obtain attempt; doesn't block
 item, ok := q.TryDequeue()
 ```
 
-Based on the algorithm from the [MPMCQueue](https://github.com/rigtorp/MPMCQueue) C++ library which in its turn references D.Vyukov's [MPMC queue](https://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue). According to the following [classification](https://www.1024cores.net/home/lock-free-algorithms/queues), the queue is array-based, fails on overflow, provides causal FIFO, has blocking producers and consumers.
+`MPMCQueueOf[I]` is an implementation with parametrized item type. It is available for Go 1.19 or later.
+
+```go
+q := xsync.NewMPMCQueueOf[string](1024)
+q.Enqueue("foo")
+item := q.Dequeue() // string
+```
+
+The queue is based on the algorithm from the [MPMCQueue](https://github.com/rigtorp/MPMCQueue) C++ library which in its turn references D.Vyukov's [MPMC queue](https://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue). According to the following [classification](https://www.1024cores.net/home/lock-free-algorithms/queues), the queue is array-based, fails on overflow, provides causal FIFO, has blocking producers and consumers.
 
 The idea of the algorithm is to allow parallelism for concurrent producers and consumers by introducing the notion of tickets, i.e. values of two counters, one per producers/consumers. An atomic increment of one of those counters is the only noticeable contention point in queue operations. The rest of the operation avoids contention on writes thanks to the turn-based read/write access for each of the queue items.
 
