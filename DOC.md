@@ -45,6 +45,8 @@ import "github.com/fufuok/utils"
 - [func CopyString(s string) string](<#func-copystring>)
 - [func CutBytes(s, sep []byte) (before, after []byte, found bool)](<#func-cutbytes>)
 - [func CutString(s, sep string) (before, after string, found bool)](<#func-cutstring>)
+- [func DaysInMonth(year int, m time.Month) int](<#func-daysinmonth>)
+- [func DaysInYear(year int) int](<#func-daysinyear>)
 - [func EncodeUUID(id []byte) []byte](<#func-encodeuuid>)
 - [func EndOfDay(t time.Time) time.Time](<#func-endofday>)
 - [func EndOfHour(t time.Time) time.Time](<#func-endofhour>)
@@ -102,11 +104,14 @@ import "github.com/fufuok/utils"
 - [func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnetstring>)
 - [func InInts(slice []int, n int) bool](<#func-inints>)
 - [func InStrings(ss []string, s string) bool](<#func-instrings>)
+- [func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)](<#func-initcstlocation>)
+- [func InitLocation(name string) (*time.Location, bool)](<#func-initlocation>)
 - [func IsIP(ip string) bool](<#func-isip>)
 - [func IsIPv4(ip string) bool](<#func-isipv4>)
 - [func IsIPv6(ip string) bool](<#func-isipv6>)
 - [func IsInternalIPv4(ip net.IP) bool](<#func-isinternalipv4>)
 - [func IsInternalIPv4String(ip string) bool](<#func-isinternalipv4string>)
+- [func IsLeapYear(year int) bool](<#func-isleapyear>)
 - [func IsPrivateIP(ip net.IP) bool](<#func-isprivateip>)
 - [func IsPrivateIPString(ip string) bool](<#func-isprivateipstring>)
 - [func JoinBytes(b ...[]byte) []byte](<#func-joinbytes>)
@@ -140,6 +145,7 @@ import "github.com/fufuok/utils"
 - [func ParseIP(s string) (net.IP, bool)](<#func-parseip>)
 - [func ParseIPv4(ip string) net.IP](<#func-parseipv4>)
 - [func ParseIPv6(ip string) net.IP](<#func-parseipv6>)
+- [func ParseInts(s string) ([]int, error)](<#func-parseints>)
 - [func RandBytes(n int) []byte](<#func-randbytes>)
 - [func RandHex(nHalf int) string](<#func-randhex>)
 - [func RandInt(min, max int) int](<#func-randint>)
@@ -173,6 +179,7 @@ import "github.com/fufuok/utils"
 - [func TrimLeftBytes(b []byte, cutset byte) []byte](<#func-trimleftbytes>)
 - [func TrimRight(s string, cutset byte) string](<#func-trimright>)
 - [func TrimRightBytes(b []byte, cutset byte) []byte](<#func-trimrightbytes>)
+- [func TrimSlice(ss []string) []string](<#func-trimslice>)
 - [func UUID() []byte](<#func-uuid>)
 - [func UUIDShort() string](<#func-uuidshort>)
 - [func UUIDSimple() string](<#func-uuidsimple>)
@@ -603,7 +610,23 @@ Cut returns slices of the original slice s, not copies. Ref: go1.18
 func CutString(s, sep string) (before, after string, found bool)
 ```
 
-CutString slices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, "", false. Ref: go1.18
+CutString xslices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, "", false. Ref: go1.18
+
+## func DaysInMonth
+
+```go
+func DaysInMonth(year int, m time.Month) int
+```
+
+DaysInMonth 返回月份天数
+
+## func DaysInYear
+
+```go
+func DaysInYear(year int) int
+```
+
+DaysInYear 返回年份天数
 
 ## func EncodeUUID
 
@@ -1061,6 +1084,22 @@ func InStrings(ss []string, s string) bool
 
 InStrings 检查字符串是否存在于 slice
 
+## func InitCSTLocation
+
+```go
+func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)
+```
+
+InitCSTLocation 初始化默认时区为中国东八区\(GMT\+8\) 返回值: name: "Asia/Shanghai" 或本地时区名称 loc: 优先尝试解析中国时区, 失败\(Windows\)后使用本地时区\(time.Local\) cst: 强制偏移的中国时区, \!\!\!注意: 无法使用 time.LoadLocation\(cst.String\(\)\) 二次加载 ok: true 表示初始化中国时区成功, false 表示 local 不一定是中国时区
+
+## func InitLocation
+
+```go
+func InitLocation(name string) (*time.Location, bool)
+```
+
+InitLocation 解析并初始化本地时区
+
 ## func IsIP
 
 ```go
@@ -1100,6 +1139,14 @@ func IsInternalIPv4String(ip string) bool
 ```
 
 IsInternalIPv4String 是否为内网 IPv4
+
+## func IsLeapYear
+
+```go
+func IsLeapYear(year int) bool
+```
+
+IsLeapYear 判断是否为闰年
 
 ## func IsPrivateIP
 
@@ -1367,6 +1414,14 @@ func ParseIPv6(ip string) net.IP
 
 ParseIPv6 判断是否为合法 IPv6 并解析
 
+## func ParseInts
+
+```go
+func ParseInts(s string) ([]int, error)
+```
+
+ParseInts 解析字符串, 得到去重并排序后的数字列表 "5,0\-3, 3" =\> \[0,1,2,3,5\]
+
 ## func RandBytes
 
 ```go
@@ -1628,6 +1683,14 @@ func TrimRightBytes(b []byte, cutset byte) []byte
 ```
 
 TrimRightBytes is the equivalent of bytes.TrimRight Ref: fiber
+
+## func TrimSlice
+
+```go
+func TrimSlice(ss []string) []string
+```
+
+TrimSlice 清除 slice 中各元素的空白, 并删除空白项 注意: 原切片将被修改
 
 ## func UUID
 

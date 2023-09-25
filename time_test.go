@@ -75,6 +75,14 @@ func TestDaysInYear(t *testing.T) {
 	assert.Equal(t, 366, DaysInYear(2020))
 }
 
+func TestDaysInMonth(t *testing.T) {
+	m := time.Month(2)
+	assert.Equal(t, 28, DaysInMonth(1900, m))
+	assert.Equal(t, 31, DaysInMonth(2021, 7))
+	assert.Equal(t, 29, DaysInMonth(2000, m))
+	assert.Equal(t, 29, DaysInMonth(2020, m))
+}
+
 func TestInitCSTLocation(t *testing.T) {
 	name, loc, cst, _ := InitCSTLocation()
 	assert.NotEmpty(t, name)

@@ -240,3 +240,13 @@ func DaysInYear(year int) int {
 	}
 	return 365
 }
+
+var daysInMonth = [13]int{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+
+// DaysInMonth 返回月份天数
+func DaysInMonth(year int, m time.Month) int {
+	if m == time.February && IsLeapYear(year) {
+		return 29
+	}
+	return daysInMonth[m]
+}
