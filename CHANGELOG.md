@@ -1,5 +1,12 @@
 # Go-Utils
 
+## v0.11.1
+
+**2023-09-27**
+
+- 同步 `puzpuzpuz/xsync v2.5.1`, 添加支持泛型的并发队列(MPMCQueueOf), 优化 Hash 速度
+- 添加 `DaysInMonth`
+
 ## v0.11.0
 
 **2023-08-11**
