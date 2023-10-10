@@ -467,9 +467,84 @@ var cutTests = []struct {
 }
 
 func TestCutString(t *testing.T) {
+	t.Parallel()
 	for _, tt := range cutTests {
 		if before, after, found := CutString(tt.s, tt.sep); before != tt.before || after != tt.after || found != tt.found {
 			t.Errorf("Cut(%q, %q) = %q, %q, %v, want %q, %q, %v", tt.s, tt.sep, before, after, found, tt.before, tt.after, tt.found)
 		}
+	}
+}
+
+func TestRuneReverse(t *testing.T) {
+	t.Parallel()
+	for _, tt := range []struct {
+		in, want string
+	}{
+		{"Hello, world", "dlrow ,olleH"},
+		{"Hello, 世界", "界世 ,olleH"},
+		{"H", "H"},
+		{"", ""},
+	} {
+		got := RuneReverse(tt.in)
+		assert.Equal(t, tt.want, got)
+	}
+}
+
+func TestReverse(t *testing.T) {
+	t.Parallel()
+	for _, tt := range []struct {
+		in, want string
+	}{
+		{"Hello, world", "dlrow ,olleH"},
+		{"H", "H"},
+		{"", ""},
+	} {
+		got := Reverse(tt.in)
+		assert.Equal(t, tt.want, got)
+	}
+
+	s1 := "Hello, 世界"
+	s2 := "界世 ,olleH"
+	s3 := Reverse(s1)
+	assert.NotEqual(t, s2, s3)
+}
+
+func TestSubString(t *testing.T) {
+	t.Parallel()
+	s := "Go 常用的助手函数"
+	for _, tt := range []struct {
+		length           int
+		in, suffix, want string
+	}{
+		{0, "", "", ""},
+		{0, s, "", ""},
+		{1, s, "", "G"},
+		{4, s, "", "Go 常"},
+		{-1, s, "", "数"},
+		{-2, s, "", "函数"},
+		{100, "", "", ""},
+		{9, s, "", "Go 常用的助手函"},
+		{10, s, "", s},
+		{100, s, "", s},
+		{-9, s, "", "o 常用的助手函数"},
+		{-10, s, "", s},
+		{-100, s, "", s},
+
+		{0, "", "..", ""},
+		{0, s, "..", ""},
+		{1, s, "..", "G.."},
+		{4, s, "..", "Go 常.."},
+		{-1, s, "..", "..数"},
+		{-2, s, "..", "..函数"},
+		{100, "", "..", ""},
+		{9, s, "..", "Go 常用的助手函.."},
+		{10, s, "", s},
+		{100, s, "", s},
+		{-9, s, "..", "..o 常用的助手函数"},
+		{-10, s, "", s},
+		{-100, s, "", s},
+	} {
+		got := RuneSubString(tt.in, tt.length, tt.suffix)
+		assert.Equal(t, tt.want, got, fmt.Sprintf("RuneSubString(%q, %d, %q)", tt.in, tt.length, tt.suffix))
 	}
 }

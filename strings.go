@@ -2,6 +2,7 @@ package utils
 
 import (
 	"strings"
+	"unicode/utf8"
 )
 
 const (
@@ -249,4 +250,65 @@ func CutString(s, sep string) (before, after string, found bool) {
 		return s[:i], s[i+len(sep):], true
 	}
 	return s, "", false
+}
+
+// RuneSubString 多字节字符串截取
+// 长度支持 0(空字符串) / >0(正常截取) / <0(从结尾处往前截取)
+// 长度等于或超过字符串长度, 返回原字符串值, 此时忽略 suffix 参数
+func RuneSubString(s string, length int, suffix string) string {
+	if s == "" || length == 0 {
+		return ""
+	}
+
+	n := 0
+	m := length
+	if length < 0 {
+		m = -m
+	}
+	for range s {
+		n++
+	}
+	if m >= n {
+		return s
+	}
+
+	if length < 0 {
+		s = RuneReverse(s)
+	}
+
+	n = 0
+	i := 0
+	for i = range s {
+		if n == m {
+			break
+		}
+		n++
+	}
+	r := s[:i]
+	if length < 0 {
+		return suffix + RuneReverse(r)
+	}
+	return r + suffix
+}
+
+// RuneReverse 反转多字节字符串
+func RuneReverse(s string) string {
+	var i, n, m int
+	b := make([]byte, len(s))
+	for m < len(s) {
+		_, n = utf8.DecodeRuneInString(s[i:])
+		m = i + n
+		copy(b[len(b)-m:], s[i:m])
+		i = m
+	}
+	return B2S(b)
+}
+
+// Reverse 反转字符串
+func Reverse(s string) string {
+	b := []byte(s)
+	for i, j := 0, len(b)-1; i < len(b)/2; i, j = i+1, j-1 {
+		b[i], b[j] = b[j], b[i]
+	}
+	return B2S(b)
 }
