@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 	"text/tabwriter"
 )
@@ -75,6 +76,18 @@ func Empty(tb testing.TB, value interface{}, msgAndArgs ...interface{}) {
 	}
 	result := fmt.Sprintf("Should be empty, but was %v", value)
 	assertLog(tb, nil, value, "Empty", result, msgAndArgs...)
+}
+
+func Contains(tb testing.TB, value string, msgAndArgs ...string) {
+	if tb != nil {
+		tb.Helper()
+	}
+	for _, s := range msgAndArgs {
+		if ok := strings.Contains(s, value); !ok {
+			result := fmt.Sprintf("%s does not contain %s", s, value)
+			assertLog(tb, nil, nil, "Contains", result, msgAndArgs)
+		}
+	}
 }
 
 func NotEqual(tb testing.TB, expected, actual interface{}, msgAndArgs ...interface{}) {
@@ -153,12 +166,12 @@ func messageFromMsgAndArgs(msgAndArgs ...interface{}) string {
 	if len(msgAndArgs) == 1 {
 		msg := msgAndArgs[0]
 		if msgAsStr, ok := msg.(string); ok {
-			return msgAsStr
+			return runeSubString(msgAsStr, 300, "..")
 		}
-		return fmt.Sprintf("%+v", msg)
+		return runeSubString(fmt.Sprintf("%+v", msg), 300, "..")
 	}
 	if len(msgAndArgs) > 1 {
-		return fmt.Sprintf(msgAndArgs[0].(string), msgAndArgs[1:]...)
+		return runeSubString(fmt.Sprintf(msgAndArgs[0].(string), msgAndArgs[1:]...), 300, "..")
 	}
 	return ""
 }

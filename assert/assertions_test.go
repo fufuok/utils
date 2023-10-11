@@ -204,3 +204,8 @@ func TestEmpty(t *testing.T) {
 	NotEmpty(t, xP, "ptr to non-nil value is not empty")
 	NotEmpty(t, [1]int{42}, "array is not state")
 }
+
+func TestAssertContains(t *testing.T) {
+	t.Parallel()
+	Contains(t, "ab", "ab", "abc", "aabc", "babca")
+}
