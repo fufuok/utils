@@ -562,3 +562,28 @@ func BenchmarkIntegerHashMapOf_WarmUp(b *testing.B) {
 		})
 	}
 }
+
+func benchmarkMapOfIntegerKeys(
+	b *testing.B,
+	loadFn func(k int) (int, bool),
+	storeFn func(k int, v int),
+	deleteFn func(k int),
+	readPercentage int,
+) {
+	runParallel(b, func(pb *testing.PB) {
+		// convert percent to permille to support 99% case
+		storeThreshold := 10 * readPercentage
+		deleteThreshold := 10*readPercentage + ((1000 - 10*readPercentage) / 2)
+		for pb.Next() {
+			op := int(Fastrand() % 1000)
+			i := int(Fastrand() % benchmarkNumEntries)
+			if op >= deleteThreshold {
+				deleteFn(i)
+			} else if op >= storeThreshold {
+				storeFn(i, i)
+			} else {
+				loadFn(i)
+			}
+		}
+	})
+}

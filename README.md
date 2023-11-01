@@ -647,6 +647,8 @@ type Daemon struct{ ... }
 
 或: https://github.com/fufuok/xsync
 
+**官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器, 不再需要之前的改动, 直接使用官方原版就好**
+
 <details>
   <summary>DOC</summary>
 

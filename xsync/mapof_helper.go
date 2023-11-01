@@ -5,8 +5,6 @@ package xsync
 
 import (
 	"hash/maphash"
-
-	"github.com/fufuok/utils/xhash"
 )
 
 type HashMapOf[K comparable, V any] interface {
@@ -77,7 +75,7 @@ type HashMapOf[K comparable, V any] interface {
 	Size() int
 }
 
-// NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys.
+// Deprecated: NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys.
 // If no hasher is specified, an automatic generation will be attempted.
 // Hashable allowed map key types constraint.
 // Automatically generated hashes for these types are safe:
@@ -90,12 +88,10 @@ func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) H
 	return NewHashMapOfPresized[K, V](minMapTableCap, hasher...)
 }
 
-func NewHashMapOfPresized[K comparable, V any](sizeHint int, hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V] {
-	if len(hasher) > 0 {
-		return NewTypedMapOf[K, V](hasher[0])
-	}
+// Deprecated: NewHashMapOfPresized 官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器
+func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V] {
 	if sizeHint < minMapTableCap {
 		sizeHint = minMapTableCap
 	}
-	return NewTypedMapOfPresized[K, V](xhash.GenSeedHasher64[K](), sizeHint)
+	return NewMapOfPresized[K, V](sizeHint)
 }

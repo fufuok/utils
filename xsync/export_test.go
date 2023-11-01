@@ -1,7 +1,5 @@
 package xsync
 
-import "hash/maphash"
-
 const (
 	EntriesPerMapBucket = entriesPerMapBucket
 	MapLoadFactor       = mapLoadFactor
@@ -50,14 +48,18 @@ func DisableAssertions() {
 	assertionsEnabled = false
 }
 
-func HashString(seed maphash.Seed, s string) uint64 {
-	return hashString(seed, s)
-}
-
 func Fastrand() uint32 {
-	return fastrand()
+	return runtime_fastrand()
 }
 
 func NextPowOf2(v uint32) uint32 {
 	return nextPowOf2(v)
+}
+
+func MakeSeed() uint64 {
+	return makeSeed()
+}
+
+func HashString(s string, seed uint64) uint64 {
+	return hashString(s, seed)
 }

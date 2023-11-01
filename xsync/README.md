@@ -1,13 +1,15 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20230927*
+*forked from puzpuzpuz/xsync v20231023 v3.0.0*
 
 ## 改动:
 
-- 增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash
+- ~~增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash~~
 
-[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v2)
-[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v2)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v2)
+**官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器, 不再需要上面的改动, 直接使用官方原版就好**
+
+[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v3)
+[![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v3)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v3)
 [![codecov](https://codecov.io/gh/puzpuzpuz/xsync/branch/main/graph/badge.svg)](https://codecov.io/gh/puzpuzpuz/xsync)
 
 # xsync
@@ -18,32 +20,32 @@ Covered with tests following the approach described [here](https://puzpuzpuz.dev
 
 ## Benchmarks
 
-Benchmark results may be found [here](BENCHMARKS.md). I'd like to thank [@felixge](https://github.com/felixge) who kindly run the benchmarks on a beefy multicore machine.
+Benchmark results may be found [here](BENCHMARKS.md). I'd like to thank [@felixge](https://github.com/felixge) who kindly ran the benchmarks on a beefy multicore machine.
 
 Also, a non-scientific, unfair benchmark comparing Java's [j.u.c.ConcurrentHashMap](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html) and `xsync.MapOf` is available [here](https://puzpuzpuz.dev/concurrent-map-in-go-vs-java-yet-another-meaningless-benchmark).
 
 ## Usage
 
-The latest xsync major version is v2, so `/v2` suffix should be used when importing the library:
+The latest xsync major version is v3, so `/v3` suffix should be used when importing the library:
 
 ```go
 import (
-	"github.com/puzpuzpuz/xsync/v2"
+	"github.com/fufuok/utils/xsync"
 )
 ```
 
-*Note for v1 users*: v1 support is discontinued, so please upgrade to v2. While the API has some breaking changes, the migration should be trivial.
+*Note for v1 and v2 users*: v1 and v2 support is discontinued, so please upgrade to v3. While the API has some breaking changes, the migration should be trivial.
 
 ### Counter
 
-A `Counter` is a striped `int64` counter inspired by the `j.u.c.a.LongAdder` class from Java standard library.
+A `Counter` is a striped `int64` counter inspired by the `j.u.c.a.LongAdder` class from the Java standard library.
 
 ```go
 c := xsync.NewCounter()
 // increment and decrement the counter
 c.Inc()
 c.Dec()
-// read the current value 
+// read the current value
 v := c.Value()
 ```
 
@@ -51,7 +53,7 @@ Works better in comparison with a single atomically updated `int64` counter in h
 
 ### Map
 
-A `Map` is like a concurrent hash table based map. It follows the interface of `sync.Map` with a number of valuable extensions like `Compute` or `Size`.
+A `Map` is like a concurrent hash table-based map. It follows the interface of `sync.Map` with a number of valuable extensions like `Compute` or `Size`.
 
 ```go
 m := xsync.NewMap()
@@ -62,14 +64,14 @@ s := m.Size()
 
 `Map` uses a modified version of Cache-Line Hash Table (CLHT) data structure: https://github.com/LPD-EPFL/CLHT
 
-CLHT is built around idea to organize the hash table in cache-line-sized buckets, so that on all modern CPUs update operations complete with minimal cache-line transfer. Also, `Get` operations are obstruction-free and involve no writes to shared memory, hence no mutexes or any other sort of locks. Due to this design, in all considered scenarios `Map` outperforms `sync.Map`.
+CLHT is built around the idea of organizing the hash table in cache-line-sized buckets, so that on all modern CPUs update operations complete with minimal cache-line transfer. Also, `Get` operations are obstruction-free and involve no writes to shared memory, hence no mutexes or any other sort of locks. Due to this design, in all considered scenarios `Map` outperforms `sync.Map`.
 
 One important difference with `sync.Map` is that only string keys are supported. That's because Golang standard library does not expose the built-in hash functions for `interface{}` values.
 
-`MapOf[K, V]` is an implementation with parametrized value type. It is available for Go 1.18 or later. While it's still a CLHT-inspired hash map, `MapOf`'s design is quite different from `Map`. As a result, less GC pressure and less atomic operations on reads.
+`MapOf[K, V]` is an implementation with parametrized key and value types. While it's still a CLHT-inspired hash map, `MapOf`'s design is quite different from `Map`. As a result, less GC pressure and fewer atomic operations on reads.
 
 ```go
-m := xsync.NewMapOf[string]()
+m := xsync.NewMapOf[string, string]()
 m.Store("foo", "bar")
 v, ok := m.Load("foo")
 ```
@@ -81,17 +83,7 @@ type Point struct {
 	x int32
 	y int32
 }
-m := NewTypedMapOf[Point, int](func(seed maphash.Seed, p Point) uint64 {
-	// provide a hash function when creating the MapOf;
-	// we recommend using the hash/maphash package for the function
-	var h maphash.Hash
-	h.SetSeed(seed)
-	binary.Write(&h, binary.LittleEndian, p.x)
-	hash := h.Sum64()
-	h.Reset()
-	binary.Write(&h, binary.LittleEndian, p.y)
-	return 31*hash + h.Sum64()
-})
+m := NewMapOf[Point, int]()
 m.Store(Point{42, 42}, 42)
 v, ok := m.Load(point{42, 42})
 ```
@@ -130,7 +122,7 @@ To get the optimal performance, you may want to set the queue size to be large e
 
 ### RBMutex
 
-A `RBMutex` is a reader biased reader/writer mutual exclusion lock. The lock can be held by an many readers or a single writer.
+A `RBMutex` is a reader-biased reader/writer mutual exclusion lock. The lock can be held by many readers or a single writer.
 
 ```go
 mu := xsync.NewRBMutex()
@@ -145,7 +137,7 @@ mu.Unlock()
 
 `RBMutex` is based on a modified version of BRAVO (Biased Locking for Reader-Writer Locks) algorithm: https://arxiv.org/pdf/1810.01553.pdf
 
-The idea of the algorithm is to build on top of an existing reader-writer mutex and introduce a fast path for readers. On the fast path, reader lock attempts are sharded over an internal array based on the reader identity (a token in case of Golang). This means that readers do not contend over a single atomic counter like it's done in, say, `sync.RWMutex` allowing for better scalability in terms of cores.
+The idea of the algorithm is to build on top of an existing reader-writer mutex and introduce a fast path for readers. On the fast path, reader lock attempts are sharded over an internal array based on the reader identity (a token in the case of Golang). This means that readers do not contend over a single atomic counter like it's done in, say, `sync.RWMutex` allowing for better scalability in terms of cores.
 
 Hence, by the design `RBMutex` is a specialized mutex for scenarios, such as caches, where the vast majority of locks are acquired by readers and write lock acquire attempts are infrequent. In such scenarios, `RBMutex` should perform better than the `sync.RWMutex` on large multicore machines.
 

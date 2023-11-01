@@ -17,14 +17,19 @@ import "github.com/fufuok/utils/xsync"
   - [func (c *Counter) Value() int64](<#func-counter-value>)
 - [type HashMapOf](<#type-hashmapof>)
   - [func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapof>)
-  - [func NewHashMapOfPresized[K comparable, V any](sizeHint int, hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapofpresized>)
-- [type IntegerConstraint](<#type-integerconstraint>)
+  - [func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapofpresized>)
 - [type MPMCQueue](<#type-mpmcqueue>)
   - [func NewMPMCQueue(capacity int) *MPMCQueue](<#func-newmpmcqueue>)
   - [func (q *MPMCQueue) Dequeue() interface{}](<#func-mpmcqueue-dequeue>)
   - [func (q *MPMCQueue) Enqueue(item interface{})](<#func-mpmcqueue-enqueue>)
   - [func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)](<#func-mpmcqueue-trydequeue>)
   - [func (q *MPMCQueue) TryEnqueue(item interface{}) bool](<#func-mpmcqueue-tryenqueue>)
+- [type MPMCQueueOf](<#type-mpmcqueueof>)
+  - [func NewMPMCQueueOf[I any](capacity int) *MPMCQueueOf[I]](<#func-newmpmcqueueof>)
+  - [func (q *MPMCQueueOf[I]) Dequeue() I](<#func-mpmcqueueofi-dequeue>)
+  - [func (q *MPMCQueueOf[I]) Enqueue(item I)](<#func-mpmcqueueofi-enqueue>)
+  - [func (q *MPMCQueueOf[I]) TryDequeue() (item I, ok bool)](<#func-mpmcqueueofi-trydequeue>)
+  - [func (q *MPMCQueueOf[I]) TryEnqueue(item I) bool](<#func-mpmcqueueofi-tryenqueue>)
 - [type Map](<#type-map>)
   - [func NewMap() *Map](<#func-newmap>)
   - [func NewMapPresized(sizeHint int) *Map](<#func-newmappresized>)
@@ -40,12 +45,8 @@ import "github.com/fufuok/utils/xsync"
   - [func (m *Map) Size() int](<#func-map-size>)
   - [func (m *Map) Store(key string, value interface{})](<#func-map-store>)
 - [type MapOf](<#type-mapof>)
-  - [func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]](<#func-newintegermapof>)
-  - [func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V]](<#func-newintegermapofpresized>)
-  - [func NewMapOf[V any]() *MapOf[string, V]](<#func-newmapof>)
-  - [func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V]](<#func-newmapofpresized>)
-  - [func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]](<#func-newtypedmapof>)
-  - [func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V]](<#func-newtypedmapofpresized>)
+  - [func NewMapOf[K comparable, V any]() *MapOf[K, V]](<#func-newmapof>)
+  - [func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]](<#func-newmapofpresized>)
   - [func (m *MapOf[K, V]) Clear()](<#func-mapofk-v-clear>)
   - [func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newValue V, delete bool)) (actual V, ok bool)](<#func-mapofk-v-compute>)
   - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
@@ -206,7 +207,7 @@ type HashMapOf[K comparable, V any] interface {
 func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
 ```
 
-NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys. If no hasher is specified, an automatic generation will be attempted. Hashable allowed map key types constraint. Automatically generated hashes for these types are safe:
+Deprecated: NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys. If no hasher is specified, an automatic generation will be attempted. Hashable allowed map key types constraint. Automatically generated hashes for these types are safe:
 
 ```
 type Hashable interface {
@@ -218,18 +219,10 @@ type Hashable interface {
 ### func NewHashMapOfPresized
 
 ```go
-func NewHashMapOfPresized[K comparable, V any](sizeHint int, hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
+func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
 ```
 
-## type IntegerConstraint
-
-IntegerConstraint represents any integer type.
-
-```go
-type IntegerConstraint interface {
-    // contains filtered or unexported methods
-}
-```
+Deprecated: NewHashMapOfPresized 官方版本: \`v3.0.0\` 已统一了调用方法并内置了 hasher 生成器
 
 ## type MPMCQueue
 
@@ -281,6 +274,60 @@ TryDequeue retrieves and removes the item from the head of the queue. Does not b
 
 ```go
 func (q *MPMCQueue) TryEnqueue(item interface{}) bool
+```
+
+TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
+
+## type MPMCQueueOf
+
+A MPMCQueueOf is a bounded multi\-producer multi\-consumer concurrent queue. It's a generic version of MPMCQueue.
+
+MPMCQueue instances must be created with NewMPMCQueueOf function. A MPMCQueueOf must not be copied after first use.
+
+Based on the data structure from the following C\+\+ library: https://github.com/rigtorp/MPMCQueue
+
+```go
+type MPMCQueueOf[I any] struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func NewMPMCQueueOf
+
+```go
+func NewMPMCQueueOf[I any](capacity int) *MPMCQueueOf[I]
+```
+
+NewMPMCQueueOf creates a new MPMCQueueOf instance with the given capacity.
+
+### func \(\*MPMCQueueOf\[I\]\) Dequeue
+
+```go
+func (q *MPMCQueueOf[I]) Dequeue() I
+```
+
+Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
+
+### func \(\*MPMCQueueOf\[I\]\) Enqueue
+
+```go
+func (q *MPMCQueueOf[I]) Enqueue(item I)
+```
+
+Enqueue inserts the given item into the queue. Blocks, if the queue is full.
+
+### func \(\*MPMCQueueOf\[I\]\) TryDequeue
+
+```go
+func (q *MPMCQueueOf[I]) TryDequeue() (item I, ok bool)
+```
+
+TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
+
+### func \(\*MPMCQueueOf\[I\]\) TryEnqueue
+
+```go
+func (q *MPMCQueueOf[I]) TryEnqueue(item I) bool
 ```
 
 TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
@@ -413,7 +460,7 @@ Store sets the value for a key.
 
 ## type MapOf
 
-MapOf is like a Go map\[string\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map with a number of valuable extensions like Compute or Size.
+MapOf is like a Go map\[K\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map with a number of valuable extensions like Compute or Size.
 
 A MapOf must not be copied after first use.
 
@@ -427,98 +474,21 @@ type MapOf[K comparable, V any] struct {
 }
 ```
 
-### func NewIntegerMapOf
-
-```go
-func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]
-```
-
-NewIntegerMapOf creates a new MapOf instance with integer typed keys.
-
-### func NewIntegerMapOfPresized
-
-```go
-func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V]
-```
-
-NewIntegerMapOfPresized creates a new MapOf instance with integer typed keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
-
 ### func NewMapOf
 
 ```go
-func NewMapOf[V any]() *MapOf[string, V]
+func NewMapOf[K comparable, V any]() *MapOf[K, V]
 ```
 
-NewMapOf creates a new MapOf instance with string keys.
+NewMapOf creates a new MapOf instance.
 
 ### func NewMapOfPresized
 
 ```go
-func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V]
+func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]
 ```
 
-NewMapOfPresized creates a new MapOf instance with string keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
-
-### func NewTypedMapOf
-
-```go
-func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V]
-```
-
-NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
-
-Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
-
-<details><summary>Example</summary>
-<p>
-
-```go
-package main
-
-import (
-	"encoding/binary"
-	"hash/maphash"
-	"time"
-
-	"github.com/fufuok/utils/xsync"
-)
-
-func main() {
-	type Person struct {
-		GivenName   string
-		FamilyName  string
-		YearOfBirth int16
-	}
-	age := xsync.NewTypedMapOf[Person, int](func(seed maphash.Seed, p Person) uint64 {
-		var h maphash.Hash
-		h.SetSeed(seed)
-		h.WriteString(p.GivenName)
-		hash := h.Sum64()
-		h.Reset()
-		h.WriteString(p.FamilyName)
-		hash = 31*hash + h.Sum64()
-		h.Reset()
-		binary.Write(&h, binary.LittleEndian, p.YearOfBirth)
-		return 31*hash + h.Sum64()
-	})
-	Y := time.Now().Year()
-	age.Store(Person{"Ada", "Lovelace", 1815}, Y-1815)
-	age.Store(Person{"Charles", "Babbage", 1791}, Y-1791)
-}
-```
-
-</p>
-</details>
-
-### func NewTypedMapOfPresized
-
-```go
-func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V]
-```
-
-NewTypedMapOfPresized creates a new MapOf instance with arbitrarily typed keys and capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
-
-Keys are hashed to uint64 using the hasher function. It is strongly recommended to use the hash/maphash package to implement hasher. See the example for how to do that.
+NewMapOfPresized creates a new MapOf instance with capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
 
 ### func \(\*MapOf\[K, V\]\) Clear
 
@@ -540,35 +510,25 @@ Compute either sets the computed new value for the key or deletes the value for 
 <p>
 
 ```go
-package main
+{
+	counts := xsync.NewMapOf[int, int]()
 
-import (
-	"fmt"
-
-	"github.com/fufuok/utils/xsync"
-)
-
-func main() {
-	counts := xsync.NewIntegerMapOf[int, int]()
-
-	// Store a new value.
 	v, ok := counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-		// loaded is false here.
+
 		newValue = 42
 		delete = false
 		return
 	})
-	// v: 42, ok: true
+
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
 
-	// Update an existing value.
 	v, ok = counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-		// loaded is true here.
+
 		newValue = oldValue + 42
 		delete = false
 		return
 	})
-	// v: 84, ok: true
+
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
 
 	// Set a new value or keep the old value conditionally.
@@ -585,16 +545,15 @@ func main() {
 		delete = false
 		return
 	})
-	// v: 84, ok: true, oldVal: 84
+
 	fmt.Printf("v: %v, ok: %v, oldVal: %v\n", v, ok, oldVal)
 
-	// Delete an existing value.
 	v, ok = counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-		// loaded is true here.
+
 		delete = true
 		return
 	})
-	// v: 84, ok: false
+
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
 }
 ```

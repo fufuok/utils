@@ -5,14 +5,13 @@ package xsync
 
 import (
 	"fmt"
-	"hash/maphash"
 	"math"
 	"sync"
 	"sync/atomic"
 	"unsafe"
 )
 
-// MapOf is like a Go map[string]V but is safe for concurrent
+// MapOf is like a Go map[K]V but is safe for concurrent
 // use by multiple goroutines without additional locking or
 // coordination. It follows the interface of sync.Map with
 // a number of valuable extensions like Compute or Size.
@@ -35,7 +34,7 @@ type MapOf[K comparable, V any] struct {
 	resizeMu     sync.Mutex     // only used along with resizeCond
 	resizeCond   sync.Cond      // used to wake up resize waiters (concurrent modifications)
 	table        unsafe.Pointer // *mapOfTable
-	hasher       func(maphash.Seed, K) uint64
+	hasher       func(K, uint64) uint64
 }
 
 type mapOfTable[K comparable, V any] struct {
@@ -44,7 +43,7 @@ type mapOfTable[K comparable, V any] struct {
 	// used to determine if a table shrinking is needed
 	// occupies min(buckets_memory/1024, 64KB) of memory
 	size []counterStripe
-	seed maphash.Seed
+	seed uint64
 }
 
 // bucketOfPadded is a CL-sized map bucket holding up to
@@ -68,54 +67,22 @@ type entryOf[K comparable, V any] struct {
 	value V
 }
 
-// NewMapOf creates a new MapOf instance with string keys.
-func NewMapOf[V any]() *MapOf[string, V] {
-	return NewTypedMapOfPresized[string, V](hashString, minMapTableCap)
+// NewMapOf creates a new MapOf instance.
+func NewMapOf[K comparable, V any]() *MapOf[K, V] {
+	return NewMapOfPresized[K, V](minMapTableCap)
 }
 
-// NewMapOfPresized creates a new MapOf instance with string keys and capacity
-// enough to hold sizeHint entries. If sizeHint is zero or negative, the value
+// NewMapOfPresized creates a new MapOf instance with capacity enough
+// to hold sizeHint entries. If sizeHint is zero or negative, the value
 // is ignored.
-func NewMapOfPresized[V any](sizeHint int) *MapOf[string, V] {
-	return NewTypedMapOfPresized[string, V](hashString, sizeHint)
+func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V] {
+	return newMapOfPresized[K, V](makeHasher[K](), sizeHint)
 }
 
-// IntegerConstraint represents any integer type.
-type IntegerConstraint interface {
-	// Recreation of golang.org/x/exp/constraints.Integer to avoid taking a dependency on an
-	// experimental package.
-	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
-}
-
-// NewIntegerMapOf creates a new MapOf instance with integer typed keys.
-func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V] {
-	return NewTypedMapOfPresized[K, V](hashUint64[K], minMapTableCap)
-}
-
-// NewIntegerMapOfPresized creates a new MapOf instance with integer typed keys
-// and capacity enough to hold sizeHint entries. If sizeHint is zero or
-// negative, the value is ignored.
-func NewIntegerMapOfPresized[K IntegerConstraint, V any](sizeHint int) *MapOf[K, V] {
-	return NewTypedMapOfPresized[K, V](hashUint64[K], sizeHint)
-}
-
-// NewTypedMapOf creates a new MapOf instance with arbitrarily typed keys.
-//
-// Keys are hashed to uint64 using the hasher function. It is strongly
-// recommended to use the hash/maphash package to implement hasher. See the
-// example for how to do that.
-func NewTypedMapOf[K comparable, V any](hasher func(maphash.Seed, K) uint64) *MapOf[K, V] {
-	return NewTypedMapOfPresized[K, V](hasher, minMapTableCap)
-}
-
-// NewTypedMapOfPresized creates a new MapOf instance with arbitrarily typed
-// keys and capacity enough to hold sizeHint entries. If sizeHint is zero or
-// negative, the value is ignored.
-//
-// Keys are hashed to uint64 using the hasher function. It is strongly
-// recommended to use the hash/maphash package to implement hasher. See the
-// example for how to do that.
-func NewTypedMapOfPresized[K comparable, V any](hasher func(maphash.Seed, K) uint64, sizeHint int) *MapOf[K, V] {
+func newMapOfPresized[K comparable, V any](
+	hasher func(K, uint64) uint64,
+	sizeHint int,
+) *MapOf[K, V] {
 	m := &MapOf[K, V]{}
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
 	m.hasher = hasher
@@ -142,7 +109,7 @@ func newMapOfTable[K comparable, V any](tableLen int) *mapOfTable[K, V] {
 	t := &mapOfTable[K, V]{
 		buckets: buckets,
 		size:    counter,
-		seed:    maphash.MakeSeed(),
+		seed:    makeSeed(),
 	}
 	return t
 }
@@ -152,7 +119,7 @@ func newMapOfTable[K comparable, V any](tableLen int) *mapOfTable[K, V] {
 // The ok result indicates whether value was found in the map.
 func (m *MapOf[K, V]) Load(key K) (value V, ok bool) {
 	table := (*mapOfTable[K, V])(atomic.LoadPointer(&m.table))
-	hash := shiftHash(m.hasher(table.seed, key))
+	hash := shiftHash(m.hasher(key, table.seed))
 	bidx := uint64(len(table.buckets)-1) & hash
 	b := &table.buckets[bidx]
 	for {
@@ -298,7 +265,7 @@ func (m *MapOf[K, V]) doCompute(
 		)
 		table := (*mapOfTable[K, V])(atomic.LoadPointer(&m.table))
 		tableLen := len(table.buckets)
-		hash := shiftHash(m.hasher(table.seed, key))
+		hash := shiftHash(m.hasher(key, table.seed))
 		bidx := uint64(len(table.buckets)-1) & hash
 		rootb := &table.buckets[bidx]
 		rootb.mu.Lock()
@@ -497,7 +464,7 @@ func (m *MapOf[K, V]) resize(table *mapOfTable[K, V], hint mapResizeHint) {
 func copyBucketOf[K comparable, V any](
 	b *bucketOfPadded,
 	destTable *mapOfTable[K, V],
-	hasher func(maphash.Seed, K) uint64,
+	hasher func(K, uint64) uint64,
 ) (copied int) {
 	rootb := b
 	rootb.mu.Lock()
@@ -505,7 +472,7 @@ func copyBucketOf[K comparable, V any](
 		for i := 0; i < entriesPerMapBucket; i++ {
 			if b.entries[i] != nil {
 				e := (*entryOf[K, V])(b.entries[i])
-				hash := shiftHash(hasher(destTable.seed, e.key))
+				hash := shiftHash(hasher(e.key, destTable.seed))
 				bidx := uint64(len(destTable.buckets)-1) & hash
 				destb := &destTable.buckets[bidx]
 				appendToBucketOf(hash, b.entries[i], destb)
