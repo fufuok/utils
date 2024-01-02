@@ -233,7 +233,7 @@ type TryMutex struct{ ... }
 
 ### 有序字典
 
-见: [orderedmap](orderedmap) ([@iancoleman](https://github.com/fufuok/utils/orderedmap))
+见: [orderedmap](orderedmap) ([@iancoleman](https://github.com/iancoleman/orderedmap))
 
 A golang data type equivalent to python's collections.OrderedDict
 
