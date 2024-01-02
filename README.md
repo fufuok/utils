@@ -228,9 +228,16 @@ type TryMutex struct{ ... }
 
 - [`xslices`](generic/xslices) slices 扩展助手函数.
 - [`deepcopy`](generic/deepcopy) DeepCopy makes deep copies of things: unexported field values are not copied.. [@smallnest](https://github.com/smallnest)
-- [`orderedmap`](generic/orderedmap): a ordered map in Go with amortized O(1) for Set, Get, Delete and Len. [@elliotchance](https://github.com/elliotchance)
 - [`atox`](generic/atox): a generic wrapper for the Parse* functions in the strconv package. [@josharian](https://github.com/josharian)
 - 更多泛型方法可参考: [zyedidia/generic](https://github.com/zyedidia/generic)
+
+### 有序字典
+
+见: [orderedmap](orderedmap) ([@iancoleman](https://github.com/fufuok/utils/orderedmap))
+
+A golang data type equivalent to python's collections.OrderedDict
+
+支持 JSON 序列化, 键/值排序.
 
 ### 数据类型转换函数集
 
