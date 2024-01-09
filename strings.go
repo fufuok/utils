@@ -111,6 +111,10 @@ func JoinString(s ...string) string {
 		return ""
 	case 1:
 		return s[0]
+	case 2:
+		return s[0] + s[1]
+	case 3:
+		return s[0] + s[1] + s[2]
 	default:
 		return B2S(JoinStringBytes(s...))
 	}
