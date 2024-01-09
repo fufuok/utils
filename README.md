@@ -182,7 +182,7 @@ func RuneReverse(s string) string
 func RuneSubString(s string, length int, suffix string) string
 func S2B(s string) []byte
 func SafeGo(fn func(), cb ...RecoveryCallback)
-func SafeGoCommonFunc(ctx context.Context, args interface{}, ...)
+func SafeGoCommonFunc(args interface{}, fn func(args interface{}), cb ...RecoveryCallback)
 func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...RecoveryCallback)
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int

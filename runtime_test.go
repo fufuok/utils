@@ -27,7 +27,7 @@ func TestSafeGo(t *testing.T) {
 	time.Sleep(5 * time.Millisecond)
 	assert.Equal(t, "fn1", err)
 	assert.Equal(t, true, bytes.Contains(trace, []byte("panic")))
-	SafeGoCommonFunc(ctx, nil, testFn4, rcb)
+	SafeGoCommonFunc(ctx, testFn4, rcb)
 	time.Sleep(5 * time.Millisecond)
 	assert.Equal(t, "fn1", err)
 	assert.Equal(t, true, bytes.Contains(trace, []byte("panic")))
@@ -43,7 +43,7 @@ var (
 	testFn3 = func(ctx context.Context) {
 		testFn1()
 	}
-	testFn4 = func(ctx context.Context, args interface{}) {
+	testFn4 = func(args interface{}) {
 		testFn1()
 	}
 )

@@ -96,14 +96,9 @@ func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...
 }
 
 // SafeGoCommonFunc 带 Recover 的 goroutine 运行
-func SafeGoCommonFunc(
-	ctx context.Context,
-	args interface{},
-	fn func(ctx context.Context, args interface{}),
-	cb ...RecoveryCallback,
-) {
+func SafeGoCommonFunc(args interface{}, fn func(args interface{}), cb ...RecoveryCallback) {
 	defer Recover(cb...)
-	fn(ctx, args)
+	fn(args)
 }
 
 // WaitSignal 等待系统信号
