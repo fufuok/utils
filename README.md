@@ -63,6 +63,7 @@ func CopyS2B(s string) []byte
 func CopyString(s string) string
 func CutBytes(s, sep []byte) (before, after []byte, found bool)
 func CutString(s, sep string) (before, after string, found bool)
+func DaysInMonth(year int, m time.Month) int
 func DaysInYear(year int) int
 func EncodeUUID(id []byte) []byte
 func EndOfDay(t time.Time) time.Time
@@ -99,6 +100,7 @@ func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 func GetSafeString(s string, defaultVal ...string) string
 func GetString(v interface{}, defaultVal ...string) string
+func GoroutineID() (uint64, error)
 func Gzip(data []byte) ([]byte, error)
 func GzipLevel(data []byte, level int) (dst []byte, err error)
 func HumanBaseBytes(v uint64, base float64, sizes []string) string
@@ -162,6 +164,7 @@ func ParseHumanBytes(s string) (uint64, error)
 func ParseIP(s string) (net.IP, bool)
 func ParseIPv4(ip string) net.IP
 func ParseIPv6(ip string) net.IP
+func ParseInts(s string) ([]int, error)
 func RandBytes(n int) []byte
 func RandHex(nHalf int) string
 func RandInt(min, max int) int
@@ -170,12 +173,16 @@ func RandUint32(min, max uint32) uint32
 func Recover(cb ...RecoveryCallback)
 func RemoveString(ss []string, s string) ([]string, bool)
 func ReplaceHost(a, b string) string
+func Reverse(s string) string
 func RightPad(s, pad string, n int) string
 func RightPadBytes(b, pad []byte, n int) []byte
 func Round(v float64, precision int) float64
 func RunPath() string
+func RuneReverse(s string) string
+func RuneSubString(s string, length int, suffix string) string
 func S2B(s string) []byte
 func SafeGo(fn func(), cb ...RecoveryCallback)
+func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...RecoveryCallback)
 func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
 func Sleep(ctx context.Context, interval time.Duration) error

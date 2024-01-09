@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
@@ -86,6 +87,12 @@ func Recover(cb ...RecoveryCallback) {
 func SafeGo(fn func(), cb ...RecoveryCallback) {
 	defer Recover(cb...)
 	fn()
+}
+
+// SafeGoWithContext 带 Recover 的 goroutine 运行
+func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...RecoveryCallback) {
+	defer Recover(cb...)
+	fn(ctx)
 }
 
 // WaitSignal 等待系统信号
