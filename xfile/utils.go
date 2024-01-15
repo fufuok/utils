@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/fufuok/utils"
 )
@@ -80,4 +81,13 @@ func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error) {
 		ret = append(ret, strings.Trim(line, "\n"))
 	}
 	return ret, nil
+}
+
+// ModTime 文件最后修改时间
+func ModTime(filename string) time.Time {
+	info, err := os.Stat(filename)
+	if err != nil {
+		return time.Time{}
+	}
+	return info.ModTime()
 }
