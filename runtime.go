@@ -85,20 +85,26 @@ func Recover(cb ...RecoveryCallback) {
 
 // SafeGo 带 Recover 的 goroutine 运行
 func SafeGo(fn func(), cb ...RecoveryCallback) {
-	defer Recover(cb...)
-	fn()
+	go func() {
+		defer Recover(cb...)
+		fn()
+	}()
 }
 
 // SafeGoWithContext 带 Recover 的 goroutine 运行
 func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...RecoveryCallback) {
-	defer Recover(cb...)
-	fn(ctx)
+	go func() {
+		defer Recover(cb...)
+		fn(ctx)
+	}()
 }
 
 // SafeGoCommonFunc 带 Recover 的 goroutine 运行
 func SafeGoCommonFunc(args interface{}, fn func(args interface{}), cb ...RecoveryCallback) {
-	defer Recover(cb...)
-	fn(args)
+	go func() {
+		defer Recover(cb...)
+		fn(args)
+	}()
 }
 
 // WaitSignal 等待系统信号
