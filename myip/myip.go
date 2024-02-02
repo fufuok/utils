@@ -111,7 +111,16 @@ func getAPI(u string) (string, bool) {
 		return ip.String(), true
 	}
 
-	return "", resp.StatusCode == http.StatusOK
+	return "", false
+}
+
+// InternalIPAny 获取内网地址
+func InternalIPAny() string {
+	ip := InternalIPv4()
+	if ip == "" {
+		ip = InternalIPv6()
+	}
+	return ip
 }
 
 // InternalIPv4 获取内网地址 (IPv4)

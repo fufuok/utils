@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/fufuok/utils/myip"
 )
@@ -10,6 +11,7 @@ var (
 	// InternalIPv4 服务器 IP
 	InternalIPv4  string
 	InternalIPv6  string
+	InternalIPAny string
 	ExternalIPv4  string
 	ExternalIPv6  string
 	ExternalIPAny string
@@ -24,6 +26,10 @@ func init() {
 		InternalIPv6 = myip.InternalIPv6()
 	}()
 	go func() {
+		InternalIPAny = myip.InternalIPAny()
+	}()
+
+	go func() {
 		ExternalIPv4 = myip.ExternalIPv4()
 	}()
 	go func() {
@@ -35,8 +41,6 @@ func init() {
 }
 
 func main() {
-	fmt.Println("MyIP(可能为空, 但不阻塞)", InternalIPv4, InternalIPv6, ExternalIPv4, ExternalIPv6, ExternalIPAny)
-
 	fmt.Println("获取外网地址 (IPv4):", myip.ExternalIPv4())
 	fmt.Println("获取外网地址 (IPv6):", myip.ExternalIPv6())
 	fmt.Println("获取外网地址 (出口公网地址, 优先获取 IPv4):", myip.ExternalIP())
@@ -59,4 +63,7 @@ func main() {
 	fmt.Println("所有网络接口地址:", ifAddrs)
 	fmt.Println(myip.InterfaceAddrs("ipv4"))
 	fmt.Println(myip.InterfaceAddrs("ipv6"))
+
+	time.Sleep(2 * time.Second)
+	fmt.Println("MyIP:", InternalIPv4, InternalIPv6, InternalIPAny, ExternalIPv4, ExternalIPv6, ExternalIPAny)
 }
