@@ -19,11 +19,14 @@ var externalIPAPI = map[string][]string{
 		"http://ident.me",
 		"http://myexternalip.com/raw",
 		"http://ip.42.pl/short",
+		"http://ipinfo.io/ip",
 	},
 	"ipv6": {
 		"https://6.ipw.cn",
 		"https://api-ipv6.ip.sb/ip",
 		"https://api64.ipify.org",
+		"http://ifconfig.me/ip",
+		"http://ident.me",
 	},
 }
 
@@ -36,54 +39,58 @@ func ExternalIPAny(retries ...int) string {
 
 	ip := ""
 	for i := 0; i < n; i++ {
-		ip = ExternalIPv4()
+		ip = getExternalIP("ipv4", false)
 		if ip == "" {
-			ip = ExternalIPv6()
+			ip = getExternalIP("ipv6", false)
 		}
 		if ip != "" {
 			break
 		}
 	}
-
 	return ip
-
 }
 
 // ExternalIP 获取外网地址 (出口公网地址)
 func ExternalIP(v ...string) string {
-	if len(v) > 0 && v[0] != "ipv4" {
+	if len(v) > 0 && v[0] == "ipv6" {
 		return ExternalIPv6()
 	}
-
 	return ExternalIPv4()
 }
 
 // ExternalIPv4 获取外网地址 (IPv4)
 func ExternalIPv4() string {
-	return getExternalIP("ipv4")
+	return getExternalIP("ipv4", true)
 }
 
 // ExternalIPv6 获取外网地址 (IPv6)
 func ExternalIPv6() string {
-	if ip := getExternalIP("ipv6"); ip != "" && strings.Count(ip, ":") > 1 {
-		return ip
-	}
-
-	return ""
+	return getExternalIP("ipv6", true)
 }
 
 // 逐项请求外网地址
-func getExternalIP(v string) string {
-	if v != "ipv4" {
-		v = "ipv6"
+func getExternalIP(v string, strict bool) string {
+	if v != "ipv6" {
+		v = "ipv4"
 	}
 
 	for _, u := range externalIPAPI[v] {
 		if ip, ok := getAPI(u); ok {
+			if strict {
+				switch v {
+				case "ipv6":
+					if strings.Count(ip, ":") <= 1 {
+						continue
+					}
+				default:
+					if strings.Count(ip, ":") > 0 || strings.Count(ip, ".") != 3 {
+						continue
+					}
+				}
+			}
 			return ip
 		}
 	}
-
 	return ""
 }
 
@@ -110,7 +117,6 @@ func getAPI(u string) (string, bool) {
 	if ip != nil {
 		return ip.String(), true
 	}
-
 	return "", false
 }
 
@@ -156,7 +162,6 @@ func InternalIP(dstAddr, network string) string {
 	if ip == "<nil>" {
 		ip, _, _ = net.SplitHostPort(addr)
 	}
-
 	return ip
 }
 
@@ -204,7 +209,6 @@ func LocalIPv4s() (ips []string) {
 			}
 		}
 	}
-
 	return
 }
 
