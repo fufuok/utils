@@ -12,6 +12,10 @@ import "github.com/fufuok/utils/orderedmap"
   - [func (a ByPair) Len() int](<#func-bypair-len>)
   - [func (a ByPair) Less(i, j int) bool](<#func-bypair-less>)
   - [func (a ByPair) Swap(i, j int)](<#func-bypair-swap>)
+- [type ByPairOf](<#type-bypairof>)
+  - [func (a ByPairOf[V]) Len() int](<#func-bypairofv-len>)
+  - [func (a ByPairOf[V]) Less(i, j int) bool](<#func-bypairofv-less>)
+  - [func (a ByPairOf[V]) Swap(i, j int)](<#func-bypairofv-swap>)
 - [type OrderedMap](<#type-orderedmap>)
   - [func New() *OrderedMap](<#func-new>)
   - [func (o *OrderedMap) Delete(key string)](<#func-orderedmap-delete>)
@@ -24,9 +28,22 @@ import "github.com/fufuok/utils/orderedmap"
   - [func (o *OrderedMap) SortKeys(sortFunc ...func(keys []string))](<#func-orderedmap-sortkeys>)
   - [func (o *OrderedMap) UnmarshalJSON(b []byte) error](<#func-orderedmap-unmarshaljson>)
   - [func (o *OrderedMap) Values() map[string]interface{}](<#func-orderedmap-values>)
+- [type OrderedMapOf](<#type-orderedmapof>)
+  - [func NewOf[V any]() *OrderedMapOf[V]](<#func-newof>)
+  - [func (o *OrderedMapOf[V]) Delete(key string)](<#func-orderedmapofv-delete>)
+  - [func (o *OrderedMapOf[V]) Get(key string) (V, bool)](<#func-orderedmapofv-get>)
+  - [func (o *OrderedMapOf[V]) Keys() []string](<#func-orderedmapofv-keys>)
+  - [func (o *OrderedMapOf[V]) MustGet(key string) V](<#func-orderedmapofv-mustget>)
+  - [func (o *OrderedMapOf[V]) Set(key string, value V)](<#func-orderedmapofv-set>)
+  - [func (o *OrderedMapOf[V]) Sort(lessFunc func(a *PairOf[V], b *PairOf[V]) bool)](<#func-orderedmapofv-sort>)
+  - [func (o *OrderedMapOf[V]) SortKeys(sortFunc ...func(keys []string))](<#func-orderedmapofv-sortkeys>)
+  - [func (o *OrderedMapOf[V]) Values() map[string]V](<#func-orderedmapofv-values>)
 - [type Pair](<#type-pair>)
   - [func (kv *Pair) Key() string](<#func-pair-key>)
   - [func (kv *Pair) Value() interface{}](<#func-pair-value>)
+- [type PairOf](<#type-pairof>)
+  - [func (kv *PairOf[V]) Key() string](<#func-pairofv-key>)
+  - [func (kv *PairOf[V]) Value() V](<#func-pairofv-value>)
 
 
 ## type ByPair
@@ -54,6 +71,33 @@ func (a ByPair) Less(i, j int) bool
 
 ```go
 func (a ByPair) Swap(i, j int)
+```
+
+## type ByPairOf
+
+```go
+type ByPairOf[V any] struct {
+    Pairs    []*PairOf[V]
+    LessFunc func(a *PairOf[V], j *PairOf[V]) bool
+}
+```
+
+### func \(ByPairOf\[V\]\) Len
+
+```go
+func (a ByPairOf[V]) Len() int
+```
+
+### func \(ByPairOf\[V\]\) Less
+
+```go
+func (a ByPairOf[V]) Less(i, j int) bool
+```
+
+### func \(ByPairOf\[V\]\) Swap
+
+```go
+func (a ByPairOf[V]) Swap(i, j int)
 ```
 
 ## type OrderedMap
@@ -134,6 +178,72 @@ func (o *OrderedMap) UnmarshalJSON(b []byte) error
 func (o *OrderedMap) Values() map[string]interface{}
 ```
 
+## type OrderedMapOf
+
+```go
+type OrderedMapOf[V any] struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func NewOf
+
+```go
+func NewOf[V any]() *OrderedMapOf[V]
+```
+
+### func \(\*OrderedMapOf\[V\]\) Delete
+
+```go
+func (o *OrderedMapOf[V]) Delete(key string)
+```
+
+### func \(\*OrderedMapOf\[V\]\) Get
+
+```go
+func (o *OrderedMapOf[V]) Get(key string) (V, bool)
+```
+
+### func \(\*OrderedMapOf\[V\]\) Keys
+
+```go
+func (o *OrderedMapOf[V]) Keys() []string
+```
+
+### func \(\*OrderedMapOf\[V\]\) MustGet
+
+```go
+func (o *OrderedMapOf[V]) MustGet(key string) V
+```
+
+### func \(\*OrderedMapOf\[V\]\) Set
+
+```go
+func (o *OrderedMapOf[V]) Set(key string, value V)
+```
+
+### func \(\*OrderedMapOf\[V\]\) Sort
+
+```go
+func (o *OrderedMapOf[V]) Sort(lessFunc func(a *PairOf[V], b *PairOf[V]) bool)
+```
+
+Sort the map using your sort func
+
+### func \(\*OrderedMapOf\[V\]\) SortKeys
+
+```go
+func (o *OrderedMapOf[V]) SortKeys(sortFunc ...func(keys []string))
+```
+
+SortKeys Sort the map keys using your sort func
+
+### func \(\*OrderedMapOf\[V\]\) Values
+
+```go
+func (o *OrderedMapOf[V]) Values() map[string]V
+```
+
 ## type Pair
 
 ```go
@@ -152,6 +262,26 @@ func (kv *Pair) Key() string
 
 ```go
 func (kv *Pair) Value() interface{}
+```
+
+## type PairOf
+
+```go
+type PairOf[V any] struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func \(\*PairOf\[V\]\) Key
+
+```go
+func (kv *PairOf[V]) Key() string
+```
+
+### func \(\*PairOf\[V\]\) Value
+
+```go
+func (kv *PairOf[V]) Value() V
 ```
 
 
