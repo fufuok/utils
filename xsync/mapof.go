@@ -35,6 +35,7 @@ type MapOf[K comparable, V any] struct {
 	resizeCond   sync.Cond      // used to wake up resize waiters (concurrent modifications)
 	table        unsafe.Pointer // *mapOfTable
 	hasher       func(K, uint64) uint64
+	minTableLen  int
 }
 
 type mapOfTable[K comparable, V any] struct {
@@ -69,11 +70,13 @@ type entryOf[K comparable, V any] struct {
 
 // NewMapOf creates a new MapOf instance.
 func NewMapOf[K comparable, V any]() *MapOf[K, V] {
-	return NewMapOfPresized[K, V](minMapTableCap)
+	return NewMapOfPresized[K, V](defaultMinMapTableLen * entriesPerMapBucket)
 }
 
 // NewMapOfPresized creates a new MapOf instance with capacity enough
-// to hold sizeHint entries. If sizeHint is zero or negative, the value
+// to hold sizeHint entries. The capacity is treated as the minimal capacity
+// meaning that the underlying hash table will never shrink to
+// a smaller capacity. If sizeHint is zero or negative, the value
 // is ignored.
 func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V] {
 	return newMapOfPresized[K, V](makeHasher[K](), sizeHint)
@@ -87,19 +90,20 @@ func newMapOfPresized[K comparable, V any](
 	m.resizeCond = *sync.NewCond(&m.resizeMu)
 	m.hasher = hasher
 	var table *mapOfTable[K, V]
-	if sizeHint <= minMapTableCap {
-		table = newMapOfTable[K, V](minMapTableLen)
+	if sizeHint <= defaultMinMapTableLen*entriesPerMapBucket {
+		table = newMapOfTable[K, V](defaultMinMapTableLen)
 	} else {
 		tableLen := nextPowOf2(uint32(sizeHint / entriesPerMapBucket))
 		table = newMapOfTable[K, V](int(tableLen))
 	}
+	m.minTableLen = len(table.buckets)
 	atomic.StorePointer(&m.table, unsafe.Pointer(table))
 	return m
 }
 
-func newMapOfTable[K comparable, V any](tableLen int) *mapOfTable[K, V] {
-	buckets := make([]bucketOfPadded, tableLen)
-	counterLen := tableLen >> 10
+func newMapOfTable[K comparable, V any](minTableLen int) *mapOfTable[K, V] {
+	buckets := make([]bucketOfPadded, minTableLen)
+	counterLen := minTableLen >> 10
 	if counterLen < minMapCounterLen {
 		counterLen = minMapCounterLen
 	} else if counterLen > maxMapCounterLen {
@@ -114,8 +118,8 @@ func newMapOfTable[K comparable, V any](tableLen int) *mapOfTable[K, V] {
 	return t
 }
 
-// Load returns the value stored in the map for a key, or nil if no
-// value is present.
+// Load returns the value stored in the map for a key, or zero value
+// of type V if no value is present.
 // The ok result indicates whether value was found in the map.
 func (m *MapOf[K, V]) Load(key K) (value V, ok bool) {
 	table := (*mapOfTable[K, V])(atomic.LoadPointer(&m.table))
@@ -193,6 +197,11 @@ func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool) {
 // Otherwise, it computes the value using the provided function and
 // returns the computed value. The loaded result is true if the value
 // was loaded, false if stored.
+//
+// This call locks a hash table bucket while the compute function
+// is executed. It means that modifications on other entries in
+// the bucket will be blocked until the valueFn executes. Consider
+// this when the function includes long-running operations.
 func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool) {
 	return m.doCompute(
 		key,
@@ -211,6 +220,11 @@ func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded b
 // The ok result indicates whether value was computed and stored, thus, is
 // present in the map. The actual result contains the new value in cases where
 // the value was computed and stored. See the example for a few use cases.
+//
+// This call locks a hash table bucket while the compute function
+// is executed. It means that modifications on other entries in
+// the bucket will be blocked until the valueFn executes. Consider
+// this when the function includes long-running operations.
 func (m *MapOf[K, V]) Compute(
 	key K,
 	valueFn func(oldValue V, loaded bool) (newValue V, delete bool),
@@ -413,7 +427,7 @@ func (m *MapOf[K, V]) resize(knownTable *mapOfTable[K, V], hint mapResizeHint) {
 	// Fast path for shrink attempts.
 	if hint == mapShrinkHint {
 		shrinkThreshold := int64((knownTableLen * entriesPerMapBucket) / mapShrinkFraction)
-		if knownTableLen == minMapTableLen || knownTable.sumSize() > shrinkThreshold {
+		if knownTableLen == m.minTableLen || knownTable.sumSize() > shrinkThreshold {
 			return
 		}
 	}
@@ -433,7 +447,7 @@ func (m *MapOf[K, V]) resize(knownTable *mapOfTable[K, V], hint mapResizeHint) {
 		newTable = newMapOfTable[K, V](tableLen << 1)
 	case mapShrinkHint:
 		shrinkThreshold := int64((tableLen * entriesPerMapBucket) / mapShrinkFraction)
-		if tableLen > minMapTableLen && table.sumSize() <= shrinkThreshold {
+		if tableLen > m.minTableLen && table.sumSize() <= shrinkThreshold {
 			// Shrink the table with factor of 2.
 			atomic.AddInt64(&m.totalShrinks, 1)
 			newTable = newMapOfTable[K, V](tableLen >> 1)
@@ -446,7 +460,7 @@ func (m *MapOf[K, V]) resize(knownTable *mapOfTable[K, V], hint mapResizeHint) {
 			return
 		}
 	case mapClearHint:
-		newTable = newMapOfTable[K, V](minMapTableLen)
+		newTable = newMapOfTable[K, V](m.minTableLen)
 	default:
 		panic(fmt.Sprintf("unexpected resize hint: %d", hint))
 	}
@@ -500,9 +514,10 @@ func copyBucketOf[K comparable, V any](
 // may reflect any mapping for that key from any point during the
 // Range call.
 //
-// It is safe to modify the map while iterating it. However, the
-// concurrent modification rule apply, i.e. the changes may be not
-// reflected in the subsequently iterated entries.
+// It is safe to modify the map while iterating it, including entry
+// creation, modification and deletion. However, the concurrent
+// modification rule apply, i.e. the changes may be not reflected
+// in the subsequently iterated entries.
 func (m *MapOf[K, V]) Range(f func(key K, value V) bool) {
 	var zeroPtr unsafe.Pointer
 	// Pre-allocate array big enough to fit entries for most hash tables.

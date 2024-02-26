@@ -364,7 +364,7 @@ NewMap creates a new Map instance.
 func NewMapPresized(sizeHint int) *Map
 ```
 
-NewMapPresized creates a new Map instance with capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
+NewMapPresized creates a new Map instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
 
 ### func \(\*Map\) Clear
 
@@ -381,6 +381,8 @@ func (m *Map) Compute(key string, valueFn func(oldValue interface{}, loaded bool
 ```
 
 Compute either sets the computed new value for the key or deletes the value for the key. When the delete result of the valueFn function is set to true, the value will be deleted, if it exists. When delete is set to false, the value is updated to the newValue. The ok result indicates whether value was computed and stored, thus, is present in the map. The actual result contains the new value in cases where the value was computed and stored. See the example for a few use cases.
+
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
 ### func \(\*Map\) Delete
 
@@ -422,6 +424,8 @@ func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual inte
 
 LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
 
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
+
 ### func \(\*Map\) LoadOrStore
 
 ```go
@@ -440,7 +444,7 @@ Range calls f sequentially for each key and value present in the map. If f retur
 
 Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
 
-It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
+It is safe to modify the map while iterating it, including entry creation, modification and deletion. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
 ### func \(\*Map\) Size
 
@@ -488,7 +492,7 @@ NewMapOf creates a new MapOf instance.
 func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]
 ```
 
-NewMapOfPresized creates a new MapOf instance with capacity enough to hold sizeHint entries. If sizeHint is zero or negative, the value is ignored.
+NewMapOfPresized creates a new MapOf instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
 
 ### func \(\*MapOf\[K, V\]\) Clear
 
@@ -506,29 +510,42 @@ func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newV
 
 Compute either sets the computed new value for the key or deletes the value for the key. When the delete result of the valueFn function is set to true, the value will be deleted, if it exists. When delete is set to false, the value is updated to the newValue. The ok result indicates whether value was computed and stored, thus, is present in the map. The actual result contains the new value in cases where the value was computed and stored. See the example for a few use cases.
 
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
+
 <details><summary>Example</summary>
 <p>
 
 ```go
-{
+package main
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/fufuok/utils/xsync"
+)
+
+func main() {
 	counts := xsync.NewMapOf[int, int]()
 
+	// Store a new value.
 	v, ok := counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-
+		// loaded is false here.
 		newValue = 42
 		delete = false
 		return
 	})
-
+	// v: 42, ok: true
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
 
+	// Update an existing value.
 	v, ok = counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-
+		// loaded is true here.
 		newValue = oldValue + 42
 		delete = false
 		return
 	})
-
+	// v: 84, ok: true
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
 
 	// Set a new value or keep the old value conditionally.
@@ -545,16 +562,30 @@ Compute either sets the computed new value for the key or deletes the value for 
 		delete = false
 		return
 	})
-
+	// v: 84, ok: true, oldVal: 84
 	fmt.Printf("v: %v, ok: %v, oldVal: %v\n", v, ok, oldVal)
 
+	// Delete an existing value.
 	v, ok = counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
-
+		// loaded is true here.
 		delete = true
 		return
 	})
-
+	// v: 84, ok: false
 	fmt.Printf("v: %v, ok: %v\n", v, ok)
+
+	// Propagate an error from the compute function to the outer scope.
+	var err error
+	v, ok = counts.Compute(42, func(oldValue int, loaded bool) (newValue int, delete bool) {
+		if oldValue == 42 {
+			err = errors.New("something went wrong")
+			return 0, true // no need to create a key/value pair
+		}
+		newValue = 0
+		delete = false
+		return
+	})
+	fmt.Printf("err: %v\n", err)
 }
 ```
 
@@ -575,7 +606,7 @@ Delete deletes the value for a key.
 func (m *MapOf[K, V]) Load(key K) (value V, ok bool)
 ```
 
-Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
+Load returns the value stored in the map for a key, or zero value of type V if no value is present. The ok result indicates whether value was found in the map.
 
 ### func \(\*MapOf\[K, V\]\) LoadAndDelete
 
@@ -601,6 +632,8 @@ func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded b
 
 LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
 
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
+
 ### func \(\*MapOf\[K, V\]\) LoadOrStore
 
 ```go
@@ -619,7 +652,7 @@ Range calls f sequentially for each key and value present in the map. If f retur
 
 Range does not necessarily correspond to any consistent snapshot of the Map's contents: no key will be visited more than once, but if the value for any key is stored or deleted concurrently, Range may reflect any mapping for that key from any point during the Range call.
 
-It is safe to modify the map while iterating it. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
+It is safe to modify the map while iterating it, including entry creation, modification and deletion. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
 ### func \(\*MapOf\[K, V\]\) Size
 

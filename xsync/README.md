@@ -1,10 +1,11 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20231114 v3.0.2*
+*forked from puzpuzpuz/xsync v20240226 v3.1.0*
 
 ## 改动:
 
 - ~~增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash~~
+- 保留了对 go1.18 以下的支持
 
 **官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器, 不再需要上面的改动, 可以直接使用官方原版就好**
 

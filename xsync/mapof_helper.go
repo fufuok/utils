@@ -75,6 +75,10 @@ type HashMapOf[K comparable, V any] interface {
 	Size() int
 }
 
+var (
+	minMapTableCap = defaultMinMapTableLen * entriesPerMapBucket
+)
+
 // Deprecated: NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys.
 // If no hasher is specified, an automatic generation will be attempted.
 // Hashable allowed map key types constraint.
