@@ -2129,10 +2129,10 @@ func TestEncodedQueryString(t *testing.T) {
 	assert(t, Get(json, `friends.#(last=="Murphy").age`).Int() == 47)
 }
 
-func TestBoolConvertQuery(t *testing.T) {
+func TestTildeQueries(t *testing.T) {
 	json := `{
 		"vals": [
-			{ "a": 1, "b": true },
+			{ "a": 1, "b": "data" },
 			{ "a": 2, "b": true },
 			{ "a": 3, "b": false },
 			{ "a": 4, "b": "0" },
@@ -2146,9 +2146,54 @@ func TestBoolConvertQuery(t *testing.T) {
 		]
 	}`
 	trues := Get(json, `vals.#(b==~true)#.a`).Raw
+	truesNOT := Get(json, `vals.#(b!=~true)#.a`).Raw
 	falses := Get(json, `vals.#(b==~false)#.a`).Raw
-	assert(t, trues == "[1,2,6,7,8]")
+	falsesNOT := Get(json, `vals.#(b!=~false)#.a`).Raw
+	nulls := Get(json, `vals.#(b==~null)#.a`).Raw
+	nullsNOT := Get(json, `vals.#(b!=~null)#.a`).Raw
+	exists := Get(json, `vals.#(b==~*)#.a`).Raw
+	existsNOT := Get(json, `vals.#(b!=~*)#.a`).Raw
+
+	assert(t, trues == "[2,6,7,8]")
+	assert(t, truesNOT == "[1,3,4,5,9,10,11]")
 	assert(t, falses == "[3,4,5,9,10,11]")
+	assert(t, falsesNOT == "[1,2,6,7,8]")
+	assert(t, nulls == "[10,11]")
+	assert(t, nullsNOT == "[1,2,3,4,5,6,7,8,9]")
+	assert(t, exists == "[1,2,3,4,5,6,7,8,9,10]")
+	assert(t, existsNOT == "[11]")
+	json = `{
+		"vals": [
+		  { "a": 1, "b": "something" },
+		  { "a": 2, "b": "else" },
+		  { "a": 3, "b": false },
+		  { "a": 4, "b": "0" },
+		  { "a": 5, "b": 0 },
+		  { "a": 6, "b": "1" },
+		  { "a": 7, "b": 1 },
+		  { "a": 8, "b": "true" },
+		  { "a": 9, "b": false },
+		  { "a": 10, "b": null },
+		  { "a": 11 }
+		],
+		"anything": "else"
+	}`
+	trues = Get(json, `vals.#(b==~true)#.a`).Raw
+	truesNOT = Get(json, `vals.#(b!=~true)#.a`).Raw
+	falses = Get(json, `vals.#(b==~false)#.a`).Raw
+	falsesNOT = Get(json, `vals.#(b!=~false)#.a`).Raw
+	nulls = Get(json, `vals.#(b==~null)#.a`).Raw
+	nullsNOT = Get(json, `vals.#(b!=~null)#.a`).Raw
+	exists = Get(json, `vals.#(b==~*)#.a`).Raw
+	existsNOT = Get(json, `vals.#(b!=~*)#.a`).Raw
+	assert(t, trues == "[6,7,8]")
+	assert(t, truesNOT == "[1,2,3,4,5,9,10,11]")
+	assert(t, falses == "[3,4,5,9,10,11]")
+	assert(t, falsesNOT == "[1,2,6,7,8]")
+	assert(t, nulls == "[10,11]")
+	assert(t, nullsNOT == "[1,2,3,4,5,6,7,8,9]")
+	assert(t, exists == "[1,2,3,4,5,6,7,8,9,10]")
+	assert(t, existsNOT == "[11]")
 }
 
 func TestModifierDoubleQuotes(t *testing.T) {
@@ -2533,13 +2578,144 @@ func TestJSONString(t *testing.T) {
 	testJSONString(t, s)
 	testJSONString(t, "R\xfd\xfc\a!\x82eO\x16?_\x0f\x9ab\x1dr")
 	testJSONString(t, "_\xb9\v\xad\xb3|X!\xb6\xd9U&\xa4\x1a\x95\x04")
-	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
-	start := time.Now()
-	var buf [16]byte
-	for time.Since(start) < time.Second*2 {
-		if _, err := rng.Read(buf[:]); err != nil {
-			t.Fatal(err)
+	data, _ := json.Marshal("\b\f")
+	if string(data) == "\"\\b\\f\"" {
+		// Go version 1.22+ encodes "\b" and "\f" correctly.
+		testJSONString(t, "\b\f")
+		rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+		start := time.Now()
+		var buf [16]byte
+		for time.Since(start) < time.Second*2 {
+			if _, err := rng.Read(buf[:]); err != nil {
+				t.Fatal(err)
+			}
+			testJSONString(t, string(buf[:]))
 		}
-		testJSONString(t, string(buf[:]))
 	}
+}
+
+func TestIndexAtSymbol(t *testing.T) {
+	json := `{
+		"@context": {
+		  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		  "@vocab": "http://schema.org/",
+		  "sh": "http://www.w3.org/ns/shacl#"
+		}
+	}`
+	assert(t, Get(json, "@context.@vocab").Index == 85)
+}
+
+func TestDeepModifierWithOptions(t *testing.T) {
+	rawJson := `{"x":[{"y":[{"z":{"b":1, "c": 2, "a": 3}}]}]}`
+	jsonPathExpr := `x.#.y.#.z.@pretty:{"sortKeys":true}`
+	results := GetManyBytes([]byte(rawJson), jsonPathExpr)
+	assert(t, len(results) == 1)
+	actual := results[0].Raw
+	expected := `[[{
+  "a": 3,
+  "b": 1,
+  "c": 2
+}
+]]`
+	if expected != actual {
+		t.Fatal(strconv.Quote(rawJson) + "\n\t" +
+			expected + "\n\t" +
+			actual + "\n\t<<< MISMATCH >>>")
+	}
+}
+
+func TestIssue301(t *testing.T) {
+	json := `{
+		"children": ["Sara","Alex","Jack"],
+		"fav.movie": ["Deer Hunter"]
+	}`
+
+	assert(t, Get(json, `children.0`).String() == "Sara")
+	assert(t, Get(json, `children.[0]`).String() == `["Sara"]`)
+	assert(t, Get(json, `children.1`).String() == "Alex")
+	assert(t, Get(json, `children.[1]`).String() == `["Alex"]`)
+	assert(t, Get(json, `children.[10]`).String() == `[]`)
+	assert(t, Get(json, `fav\.movie.0`).String() == "Deer Hunter")
+	assert(t, Get(json, `fav\.movie.[0]`).String() == `["Deer Hunter"]`)
+	assert(t, Get(json, `fav\.movie.1`).String() == "")
+	assert(t, Get(json, `fav\.movie.[1]`).String() == "[]")
+
+}
+
+func TestModDig(t *testing.T) {
+	json := `
+		{
+
+			"group": {
+				"issues": [
+					{
+						"fields": {
+						"labels": [
+							"milestone_1",
+							"group:foo",
+							"plan:a",
+							"plan:b"
+						]
+						},
+						"refid": "123"
+					},{
+						"fields": {
+						"labels": [
+							"milestone_2",
+							"group:foo",
+							"plan:a",
+							"plan"
+						]
+						},
+						"refid": "456"
+					},[
+						{"extra_deep":[{
+							"fields": {
+							"labels": [
+								"milestone_3",
+								"group:foo",
+								"plan:a",
+								"plan"
+							]
+							},
+							"refid": "789"
+						}]
+					}]
+				]
+			}
+		}
+	`
+	assert(t, Get(json, "group.@dig:#(refid=123)|0.fields.labels.0").String() == "milestone_1")
+	assert(t, Get(json, "group.@dig:#(refid=456)|0.fields.labels.0").String() == "milestone_2")
+	assert(t, Get(json, "group.@dig:#(refid=789)|0.fields.labels.0").String() == "milestone_3")
+	json = `
+	{ "something": {
+		"anything": {
+		  "abcdefg": {
+			  "finally": {
+				"important": {
+					"secret": "password",
+					"name": "jake"
+				}
+			},
+			"name": "melinda"
+		  }
+		}
+	  }
+	}`
+	assert(t, Get(json, "@dig:name").String() == `["melinda","jake"]`)
+	assert(t, Get(json, "@dig:secret").String() == `["password"]`)
+}
+
+func TestEscape(t *testing.T) {
+	json := `{
+		"user":{
+			"first.name": "Janet",
+			"last.name": "Prichard"
+		  }
+	  }`
+	user := Get(json, "user")
+	assert(t, user.Get(Escape("first.name")).String() == "Janet")
+	assert(t, user.Get(Escape("last.name")).String() == "Prichard")
+	assert(t, user.Get("first.name").String() == "")
 }

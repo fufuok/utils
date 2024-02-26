@@ -13,6 +13,7 @@ Package gjson provides searching for json strings.
 - [Variables](<#variables>)
 - [func AddModifier(name string, fn func(json, arg string) string)](<#func-addmodifier>)
 - [func AppendJSONString(dst []byte, s string) []byte](<#func-appendjsonstring>)
+- [func Escape(comp string) string](<#func-escape>)
 - [func ForEachLine(json string, iterator func(line Result) bool)](<#func-foreachline>)
 - [func ModifierExists(name string, fn func(json, arg string) string) bool](<#func-modifierexists>)
 - [func Valid(json string) bool](<#func-valid>)
@@ -70,6 +71,29 @@ func AppendJSONString(dst []byte, s string) []byte
 
 AppendJSONString is a convenience function that converts the provided string to a valid JSON string and appends it to dst.
 
+## func Escape
+
+```go
+func Escape(comp string) string
+```
+
+Escape returns an escaped path component.
+
+```
+json := `{
+  "user":{
+     "first.name": "Janet",
+     "last.name": "Prichard"
+   }
+}`
+user := gjson.Get(json, "user")
+println(user.Get(gjson.Escape("first.name"))
+println(user.Get(gjson.Escape("last.name"))
+// Output:
+// Janet
+// Prichard
+```
+
 ## func ForEachLine
 
 ```go
@@ -94,7 +118,12 @@ func Valid(json string) bool
 
 Valid returns true if the input is valid json.
 
-if \!gjson.Valid\(json\) \{ return errors.New\("invalid json"\) \} value := gjson.Get\(json, "name.last"\)
+```
+if !gjson.Valid(json) {
+	return errors.New("invalid json")
+}
+value := gjson.Get(json, "name.last")
+```
 
 ## func ValidBytes
 
@@ -104,7 +133,12 @@ func ValidBytes(json []byte) bool
 
 ValidBytes returns true if the input is valid json.
 
-if \!gjson.Valid\(json\) \{ return errors.New\("invalid json"\) \} value := gjson.Get\(json, "name.last"\)
+```
+if !gjson.Valid(json) {
+	return errors.New("invalid json")
+}
+value := gjson.Get(json, "name.last")
+```
 
 If working with bytes, this method preferred over ValidBytes\(string\(data\)\)
 
@@ -140,7 +174,25 @@ Get searches json for the specified path. A path is in dot syntax, such as "name
 
 A path is a series of keys separated by a dot. A key may contain special wildcard characters '\*' and '?'. To access an array value use the index as the key. To get the number of elements in an array or to access a child path, use the '\#' character. The dot and wildcard character can be escaped with '\\'.
 
-\{ "name": \{"first": "Tom", "last": "Anderson"\}, "age":37, "children": \["Sara","Alex","Jack"\], "friends": \[ \{"first": "James", "last": "Murphy"\}, \{"first": "Roger", "last": "Craig"\} \] \} "name.last"          \>\> "Anderson" "age"                \>\> 37 "children"           \>\> \["Sara","Alex","Jack"\] "children.\#"         \>\> 3 "children.1"         \>\> "Alex" "child\*.2"           \>\> "Jack" "c?ildren.0"         \>\> "Sara" "friends.\#.first"    \>\> \["James","Roger"\]
+```
+{
+  "name": {"first": "Tom", "last": "Anderson"},
+  "age":37,
+  "children": ["Sara","Alex","Jack"],
+  "friends": [
+    {"first": "James", "last": "Murphy"},
+    {"first": "Roger", "last": "Craig"}
+  ]
+}
+"name.last"          >> "Anderson"
+"age"                >> 37
+"children"           >> ["Sara","Alex","Jack"]
+"children.#"         >> 3
+"children.1"         >> "Alex"
+"child*.2"           >> "Jack"
+"c?ildren.0"         >> "Sara"
+"friends.#.first"    >> ["James","Roger"]
+```
 
 This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first.
 
@@ -210,7 +262,11 @@ func (t Result) Exists() bool
 
 Exists returns true if value exists.
 
-if gjson.Get\(json, "name.last"\).Exists\(\)\{ println\("value exists"\) \}
+```
+if gjson.Get(json, "name.last").Exists(){
+		println("value exists")
+ }
+```
 
 ### func \(Result\) Float
 
@@ -276,7 +332,9 @@ func (t Result) Less(token Result, caseSensitive bool) bool
 
 Less return true if a token is less than another token. The caseSensitive paramater is used when the tokens are Strings. The order when comparing two different type is:
 
-Null \< False \< Number \< String \< True \< JSON
+```
+Null < False < Number < String < True < JSON
+```
 
 ### func \(Result\) Map
 
