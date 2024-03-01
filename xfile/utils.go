@@ -1,10 +1,13 @@
 package xfile
 
 import (
+	"archive/zip"
 	"bufio"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -33,6 +36,16 @@ func IsDir(s string) bool {
 		return false
 	}
 	return info.IsDir()
+}
+
+// ResetDir 清除并重建空目录
+func ResetDir(dirPath string) error {
+	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
+		if err := os.RemoveAll(dirPath); err != nil {
+			return err
+		}
+	}
+	return os.MkdirAll(dirPath, 0755)
 }
 
 // ReadFile reads contents from a file
@@ -90,4 +103,160 @@ func ModTime(filename string) time.Time {
 		return time.Time{}
 	}
 	return info.ModTime()
+}
+
+// CopyDir 目录拷贝
+func CopyDir(srcDir, dstDir string) error {
+	return filepath.Walk(srcDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		relPath, err := filepath.Rel(srcDir, path)
+		if err != nil {
+			return err
+		}
+		dstPath := filepath.Join(dstDir, relPath)
+		if info.IsDir() {
+			return os.MkdirAll(dstPath, os.ModePerm)
+		}
+		return CopyFile(path, dstPath)
+	})
+}
+
+// CopyFile 文件拷贝
+func CopyFile(srcFile, dstFile string) error {
+	src, err := os.Open(srcFile)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = src.Close()
+	}()
+
+	dst, err := os.Create(dstFile)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = dst.Close()
+	}()
+
+	_, err = io.Copy(dst, src)
+	return err
+}
+
+// ZipDir 目录打包为 zip 文件
+func ZipDir(srcDir, zipFilePath string) error {
+	zipFile, err := os.Create(zipFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to create zip file: %w", err)
+	}
+	defer func() {
+		_ = zipFile.Close()
+	}()
+
+	zipWriter := zip.NewWriter(zipFile)
+	defer func() {
+		_ = zipWriter.Close()
+	}()
+
+	err = filepath.Walk(srcDir, func(filePath string, info os.FileInfo, err error) error {
+		if err != nil {
+			return fmt.Errorf("failed to access file: %w", err)
+		}
+
+		// 获取文件在 zip 中的相对路径
+		relPath, err := filepath.Rel(srcDir, filePath)
+		if err != nil {
+			return fmt.Errorf("failed to get relative path for file: %w", err)
+		}
+
+		if relPath == "." {
+			return nil
+		}
+
+		// 创建 zip 文件中的文件或目录
+		if info.IsDir() {
+			// 添加目录条目
+			if _, err := zipWriter.Create(relPath + "/"); err != nil {
+				return fmt.Errorf("failed to create directory entry for %s: %w", relPath, err)
+			}
+			return nil
+		}
+
+		// 添加文件条目
+		file, err := os.Open(filePath)
+		if err != nil {
+			return fmt.Errorf("failed to open file: %w", err)
+		}
+		defer func() {
+			_ = file.Close()
+		}()
+
+		w, err := zipWriter.Create(relPath)
+		if err != nil {
+			return fmt.Errorf("failed to create file entry for %s: %w", relPath, err)
+		}
+		if _, err := io.Copy(w, file); err != nil {
+			return fmt.Errorf("failed to copy file: %w", err)
+		}
+		return nil
+	})
+	return err
+}
+
+// UnzipDir 解压 zip 到目录
+func UnzipDir(zipFile, dstDir string) error {
+	reader, err := zip.OpenReader(zipFile)
+	if err != nil {
+		return fmt.Errorf("failed to open the zip file: %w", err)
+	}
+	defer func() {
+		_ = reader.Close()
+	}()
+
+	for _, file := range reader.File {
+		if strings.Contains(file.Name, "..") {
+			return fmt.Errorf("illegal file path in zip: %v", file.Name)
+		}
+
+		fullPath := filepath.Join(dstDir, file.Name)
+
+		if file.FileInfo().IsDir() {
+			if err := os.MkdirAll(fullPath, file.Mode()); err != nil {
+				return fmt.Errorf("failed to create directory: %w", err)
+			}
+			continue
+		}
+
+		if err := UnzipFile(file, fullPath); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// UnzipFile 解压单个文件
+func UnzipFile(zipFile *zip.File, dstFile string) error {
+	src, err := zipFile.Open()
+	if err != nil {
+		return fmt.Errorf("failed to open zip file: %w", err)
+	}
+	defer func() {
+		_ = src.Close()
+	}()
+
+	dst, err := os.OpenFile(dstFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, zipFile.Mode())
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+	defer func() {
+		_ = dst.Close()
+	}()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		return fmt.Errorf("failed to copy file: %w", err)
+	}
+
+	return nil
 }

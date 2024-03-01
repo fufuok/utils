@@ -10,24 +10,36 @@ import "github.com/fufuok/utils/xfile"
 
 - [Constants](<#constants>)
 - [Variables](<#variables>)
-- [func IsDir(s string) bool](<#func-isdir>)
-- [func IsExist(s string) bool](<#func-isexist>)
-- [func IsFile(s string) bool](<#func-isfile>)
-- [type DefaultFilename](<#type-defaultfilename>)
-  - [func (d *DefaultFilename) MakeFilename(name string) string](<#func-defaultfilename-makefilename>)
-- [type FilenameMaker](<#type-filenamemaker>)
-- [type Logger](<#type-logger>)
-- [type Options](<#type-options>)
-- [type Roller](<#type-roller>)
-  - [func NewRoller(filename string, opt *Options) (*Roller, error)](<#func-newroller>)
-  - [func (r *Roller) Close()](<#func-roller-close>)
-  - [func (r *Roller) Write(p []byte) (int, error)](<#func-roller-write>)
-  - [func (r *Roller) WriteString(s string) (int, error)](<#func-roller-writestring>)
-- [type TimeBasedFilename](<#type-timebasedfilename>)
-  - [func (t *TimeBasedFilename) MakeFilename(name string) string](<#func-timebasedfilename-makefilename>)
+- [func CopyDir\(srcDir, dstDir string\) error](<#CopyDir>)
+- [func CopyFile\(srcFile, dstFile string\) error](<#CopyFile>)
+- [func IsDir\(s string\) bool](<#IsDir>)
+- [func IsExist\(s string\) bool](<#IsExist>)
+- [func IsFile\(s string\) bool](<#IsFile>)
+- [func ModTime\(filename string\) time.Time](<#ModTime>)
+- [func ReadFile\(filename string\) \(string, error\)](<#ReadFile>)
+- [func ReadLines\(filename string\) \(\[\]string, error\)](<#ReadLines>)
+- [func ReadLinesOffsetN\(filename string, offset uint, n int\) \(\[\]string, error\)](<#ReadLinesOffsetN>)
+- [func ResetDir\(dirPath string\) error](<#ResetDir>)
+- [func UnzipDir\(zipFile, dstDir string\) error](<#UnzipDir>)
+- [func UnzipFile\(zipFile \*zip.File, dstFile string\) error](<#UnzipFile>)
+- [func ZipDir\(srcDir, zipFilePath string\) error](<#ZipDir>)
+- [type DefaultFilename](<#DefaultFilename>)
+  - [func \(d \*DefaultFilename\) MakeFilename\(name string\) string](<#DefaultFilename.MakeFilename>)
+- [type FilenameMaker](<#FilenameMaker>)
+- [type Logger](<#Logger>)
+- [type Options](<#Options>)
+- [type Roller](<#Roller>)
+  - [func NewRoller\(filename string, opt \*Options\) \(\*Roller, error\)](<#NewRoller>)
+  - [func \(r \*Roller\) Close\(\)](<#Roller.Close>)
+  - [func \(r \*Roller\) Write\(p \[\]byte\) \(int, error\)](<#Roller.Write>)
+  - [func \(r \*Roller\) WriteString\(s string\) \(int, error\)](<#Roller.WriteString>)
+- [type TimeBasedFilename](<#TimeBasedFilename>)
+  - [func \(t \*TimeBasedFilename\) MakeFilename\(name string\) string](<#TimeBasedFilename.MakeFilename>)
 
 
 ## Constants
+
+<a name="DefaultFlushSizeLimit"></a>
 
 ```go
 const (
@@ -40,12 +52,33 @@ const (
 
 ## Variables
 
+<a name="ErrFilename"></a>
+
 ```go
 var (
     ErrFilename = errors.New("wrong file name")
 )
 ```
 
+<a name="CopyDir"></a>
+## func CopyDir
+
+```go
+func CopyDir(srcDir, dstDir string) error
+```
+
+CopyDir 目录拷贝
+
+<a name="CopyFile"></a>
+## func CopyFile
+
+```go
+func CopyFile(srcFile, dstFile string) error
+```
+
+CopyFile 文件拷贝
+
+<a name="IsDir"></a>
 ## func IsDir
 
 ```go
@@ -54,6 +87,7 @@ func IsDir(s string) bool
 
 IsDir 目录是否存在
 
+<a name="IsExist"></a>
 ## func IsExist
 
 ```go
@@ -62,6 +96,7 @@ func IsExist(s string) bool
 
 IsExist 文件或目录是否存在
 
+<a name="IsFile"></a>
 ## func IsFile
 
 ```go
@@ -70,19 +105,100 @@ func IsFile(s string) bool
 
 IsFile 文件是否存在
 
+<a name="ModTime"></a>
+## func ModTime
+
+```go
+func ModTime(filename string) time.Time
+```
+
+ModTime 文件最后修改时间
+
+<a name="ReadFile"></a>
+## func ReadFile
+
+```go
+func ReadFile(filename string) (string, error)
+```
+
+ReadFile reads contents from a file
+
+<a name="ReadLines"></a>
+## func ReadLines
+
+```go
+func ReadLines(filename string) ([]string, error)
+```
+
+ReadLines reads contents from a file and splits them by new lines. A convenience wrapper to ReadLinesOffsetN\(filename, 0, \-1\).
+
+<a name="ReadLinesOffsetN"></a>
+## func ReadLinesOffsetN
+
+```go
+func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error)
+```
+
+ReadLinesOffsetN reads contents from file and splits them by new line. The offset tells at which line number to start. The count determines the number of lines to read \(starting from offset\): n \>= 0: at most n lines n \< 0: whole file Ref: gopsutil
+
+<a name="ResetDir"></a>
+## func ResetDir
+
+```go
+func ResetDir(dirPath string) error
+```
+
+ResetDir 清除并重建空目录
+
+<a name="UnzipDir"></a>
+## func UnzipDir
+
+```go
+func UnzipDir(zipFile, dstDir string) error
+```
+
+UnzipDir 解压 zip 到目录
+
+<a name="UnzipFile"></a>
+## func UnzipFile
+
+```go
+func UnzipFile(zipFile *zip.File, dstFile string) error
+```
+
+UnzipFile 解压单个文件
+
+<a name="ZipDir"></a>
+## func ZipDir
+
+```go
+func ZipDir(srcDir, zipFilePath string) error
+```
+
+ZipDir 目录打包为 zip 文件
+
+<a name="DefaultFilename"></a>
 ## type DefaultFilename
+
+
 
 ```go
 type DefaultFilename struct{}
 ```
 
+<a name="DefaultFilename.MakeFilename"></a>
 ### func \(\*DefaultFilename\) MakeFilename
 
 ```go
 func (d *DefaultFilename) MakeFilename(name string) string
 ```
 
+
+
+<a name="FilenameMaker"></a>
 ## type FilenameMaker
+
+
 
 ```go
 type FilenameMaker interface {
@@ -90,7 +206,10 @@ type FilenameMaker interface {
 }
 ```
 
+<a name="Logger"></a>
 ## type Logger
+
+
 
 ```go
 type Logger interface {
@@ -98,7 +217,10 @@ type Logger interface {
 }
 ```
 
+<a name="Options"></a>
 ## type Options
+
+
 
 ```go
 type Options struct {
@@ -118,7 +240,10 @@ type Options struct {
 }
 ```
 
+<a name="Roller"></a>
 ## type Roller
+
+
 
 ```go
 type Roller struct {
@@ -126,31 +251,46 @@ type Roller struct {
 }
 ```
 
+<a name="NewRoller"></a>
 ### func NewRoller
 
 ```go
 func NewRoller(filename string, opt *Options) (*Roller, error)
 ```
 
+
+
+<a name="Roller.Close"></a>
 ### func \(\*Roller\) Close
 
 ```go
 func (r *Roller) Close()
 ```
 
+
+
+<a name="Roller.Write"></a>
 ### func \(\*Roller\) Write
 
 ```go
 func (r *Roller) Write(p []byte) (int, error)
 ```
 
+
+
+<a name="Roller.WriteString"></a>
 ### func \(\*Roller\) WriteString
 
 ```go
 func (r *Roller) WriteString(s string) (int, error)
 ```
 
+
+
+<a name="TimeBasedFilename"></a>
 ## type TimeBasedFilename
+
+
 
 ```go
 type TimeBasedFilename struct {
@@ -168,6 +308,7 @@ type TimeBasedFilename struct {
 }
 ```
 
+<a name="TimeBasedFilename.MakeFilename"></a>
 ### func \(\*TimeBasedFilename\) MakeFilename
 
 ```go
