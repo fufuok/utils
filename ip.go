@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"math"
+	"math/big"
 	"net"
 	"strconv"
 	"strings"
@@ -84,6 +85,17 @@ func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string {
 	return ip
 }
 
+// IPv62Int IPv6 转数值
+func IPv62Int(ip net.IP) *big.Int {
+	ip6 := ip.To16()
+	if ip6 == nil {
+		return big.NewInt(-1)
+	}
+	ipInt := big.NewInt(0)
+	ipInt.SetBytes(ip6)
+	return ipInt
+}
+
 // IPv42Long IPv4 转数值
 func IPv42Long(ip net.IP) int {
 	ip4 := ip.To4()
@@ -100,6 +112,28 @@ func IPv42LongLittle(ip net.IP) int {
 		return -1
 	}
 	return int(ip4[3])<<24 | int(ip4[2])<<16 | int(ip4[1])<<8 | int(ip4[0])
+}
+
+// Int2IPv6 数值转 IPv4
+func Int2IPv6(ipInt *big.Int) net.IP {
+	if ipInt.Sign() == -1 {
+		return nil
+	}
+
+	ipBytes := ipInt.Bytes()
+	n := len(ipBytes)
+	if n > 16 {
+		return nil
+	}
+
+	// 前面补零, 补齐 16 位
+	if n < 16 {
+		padding := make([]byte, 16-len(ipBytes))
+		ipBytes = append(padding, ipBytes...)
+	}
+
+	ip := net.IP(ipBytes)
+	return ip
 }
 
 // Long2IPv4 数值转 IPv4
@@ -130,6 +164,11 @@ func LongLittle2IPv4(n int) net.IP {
 	return ip4
 }
 
+// IPv6String2Int IPv6 字符串转数值
+func IPv6String2Int(ip string) *big.Int {
+	return IPv62Int(net.ParseIP(ip))
+}
+
 // IPv4String2Long IPv4 字符串转数值
 func IPv4String2Long(ip string) int {
 	return IPv42Long(net.ParseIP(ip))
@@ -138,6 +177,15 @@ func IPv4String2Long(ip string) int {
 // IPv4String2LongLittle IPv4 字符串转数值(小端)
 func IPv4String2LongLittle(ip string) int {
 	return IPv42LongLittle(net.ParseIP(ip))
+}
+
+// Int2IPv6String 数值转 IPv6 字符串
+func Int2IPv6String(n *big.Int) string {
+	ip6 := Int2IPv6(n)
+	if ip6 == nil {
+		return ""
+	}
+	return ip6.String()
 }
 
 // Long2IPv4String 数值转 IPv4 字符串

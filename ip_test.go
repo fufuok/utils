@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"math/big"
 	"net"
 	"testing"
 
@@ -76,6 +77,34 @@ func TestIPv4AndLong(t *testing.T) {
 	assert.Equal(t, -1, IPv4String2Long("ff"))
 	assert.Equal(t, -1, IPv4String2Long("255.255.255.256"))
 	assert.Equal(t, "", Long2IPv4String(4294967296))
+}
+
+func TestIPv6AndInt(t *testing.T) {
+	i := big.NewInt(0)
+	ipStr := Int2IPv6String(i)
+	ipInt := IPv6String2Int(ipStr)
+	assert.Equal(t, "::", ipStr)
+	assert.True(t, ipInt.Cmp(i) == 0, ipInt)
+
+	i = big.NewInt(0)
+	i.SetString("340282366920938463463374607431768211455", 10)
+	ipStr = Int2IPv6String(i)
+	ipInt = IPv6String2Int(ipStr)
+	assert.Equal(t, "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", ipStr)
+	assert.True(t, ipInt.Cmp(i) == 0, ipInt)
+
+	i = big.NewInt(0)
+	i.SetString("340282366920938463463374607431768211456", 10)
+	ipStr = Int2IPv6String(i)
+	ipInt = IPv6String2Int(ipStr)
+	assert.Equal(t, "", ipStr)
+	assert.True(t, ipInt.Cmp(big.NewInt(-1)) == 0, ipInt)
+
+	i = big.NewInt(-2)
+	ipStr = Int2IPv6String(i)
+	ipInt = IPv6String2Int(ipStr)
+	assert.Equal(t, "", ipStr)
+	assert.True(t, ipInt.Cmp(big.NewInt(-1)) == 0, ipInt)
 }
 
 func TestInIPNetString(t *testing.T) {
