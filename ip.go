@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math"
 	"net"
+	"strconv"
 	"strings"
 )
 
@@ -229,6 +230,32 @@ func ParseIP(s string) (net.IP, bool) {
 		return nil, false
 	}
 	return ip, strings.Contains(s, ":")
+}
+
+// ParseIPx 解析 IP, 包括数字形态
+func ParseIPx(s string) net.IP {
+	if s == "" {
+		return nil
+	}
+
+	allNumeric := true
+	for i := 0; i < len(s); i++ {
+		char := s[i]
+		if char == '.' || char == ':' {
+			return net.ParseIP(s)
+		}
+		if char < '0' || char > '9' {
+			allNumeric = false
+		}
+	}
+
+	// 数字转 IPv4
+	if allNumeric {
+		if n, err := strconv.Atoi(s); err == nil {
+			return Long2IPv4(n)
+		}
+	}
+	return nil
 }
 
 // ParseHostPort 解析 IP 和端口

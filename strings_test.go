@@ -548,3 +548,22 @@ func TestSubString(t *testing.T) {
 		assert.Equal(t, tt.want, got, fmt.Sprintf("RuneSubString(%q, %d, %q)", tt.in, tt.length, tt.suffix))
 	}
 }
+
+func TestIsNumeric(t *testing.T) {
+	t.Parallel()
+	for _, tt := range []struct {
+		s         string
+		isNumeric bool
+	}{
+		{"", false},
+		{" 123", false},
+		{"1 123", false},
+		{"-1", false},
+		{"123０９", false},
+
+		{"1234567890777", true},
+		{"0", true},
+	} {
+		assert.Equal(t, tt.isNumeric, IsNumeric(tt.s))
+	}
+}

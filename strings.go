@@ -316,3 +316,16 @@ func Reverse(s string) string {
 	}
 	return B2S(b)
 }
+
+// IsNumeric 检查字符串是否全是数字: 0-9
+func IsNumeric(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, char := range s {
+		if char < '0' || char > '9' {
+			return false
+		}
+	}
+	return true
+}

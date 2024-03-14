@@ -237,3 +237,27 @@ func TestParseHostPort(t *testing.T) {
 	assert.Equal(t, false, host != nil)
 	assert.Equal(t, false, err == nil)
 }
+
+func TestParseIPx(t *testing.T) {
+	tests := []struct {
+		s     string
+		isNil bool
+	}{
+		{"", true},
+		{" 0.0.0.0", true},
+		{"[2001::]", true},
+		{"4294967296", true},
+		{"-1", true},
+
+		{"0.0.0.0", false},
+		{"255.255.255.255", false},
+		{"::1", false},
+		{"::ffff:0.0.0.0", false},
+		{"2001:4860:4860::8888", false},
+		{"0", false},
+		{"4294967295", false},
+	}
+	for _, v := range tests {
+		assert.Equal(t, v.isNil, ParseIPx(v.s) == nil)
+	}
+}
