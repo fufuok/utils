@@ -64,7 +64,7 @@ func TestIPv4AndLong(t *testing.T) {
 		{"0.0.0.1", 1},
 		{"1.2.3.4", 16909060},
 		{"10.0.0.0", 167772160},
-		{"255.255.255.255", 4294967295},
+		{"255.255.255.255", IPv4Max},
 		{"", -1},
 	} {
 		assert.Equal(t, v.long, IPv4String2Long(v.ipv4))
@@ -76,7 +76,7 @@ func TestIPv4AndLong(t *testing.T) {
 	// Equal(t, 151060737, IPv4String2Long("009.001.01.1"))
 	assert.Equal(t, -1, IPv4String2Long("ff"))
 	assert.Equal(t, -1, IPv4String2Long("255.255.255.256"))
-	assert.Equal(t, "", Long2IPv4String(4294967296))
+	assert.Equal(t, "", Long2IPv4String(IPv4Max+1))
 }
 
 func TestIPv6AndInt(t *testing.T) {
@@ -269,24 +269,52 @@ func TestParseHostPort(t *testing.T) {
 
 func TestParseIPx(t *testing.T) {
 	tests := []struct {
-		s     string
-		isNil bool
+		s      string
+		isNil  bool
+		isIPv6 bool
 	}{
-		{"", true},
-		{" 0.0.0.0", true},
-		{"[2001::]", true},
-		{"4294967296", true},
-		{"-1", true},
+		{"", true, false},
+		{" 0.0.0.0", true, false},
+		{"[2001::]", true, true},
+		{"-1", true, false},
+		{"abc", true, false},
 
-		{"0.0.0.0", false},
-		{"255.255.255.255", false},
-		{"::1", false},
-		{"::ffff:0.0.0.0", false},
-		{"2001:4860:4860::8888", false},
-		{"0", false},
-		{"4294967295", false},
+		{"0.0.0.0", false, false},
+		{"255.255.255.255", false, false},
+		{"::1", false, true},
+		{"::ffff:0.0.0.0", false, true},
+		{"2001:4860:4860::8888", false, true},
+		{"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", false, true},
 	}
 	for _, v := range tests {
-		assert.Equal(t, v.isNil, ParseIPx(v.s) == nil)
+		ip, isIPv6 := ParseIPx(v.s)
+		assert.Equal(t, v.isNil, ip == nil)
+		assert.Equal(t, v.isIPv6, isIPv6)
+
+		ip, isIPv6 = ParseIPxWithNumeric(v.s)
+		assert.Equal(t, v.isNil, ip == nil)
+		assert.Equal(t, v.isIPv6, isIPv6)
+	}
+
+	ip, isIPv6 := ParseIPx("0")
+	assert.Nil(t, ip)
+	assert.False(t, isIPv6)
+
+	tests = []struct {
+		s      string
+		isNil  bool
+		isIPv6 bool
+	}{
+		{"-1", true, false},
+		{"0", false, false},
+		{"4294967295", false, false},
+		{"4294967296", false, true},
+		{"340282366920938463463374607431768211455", false, true},
+		{"340282366920938463463374607431768211456", true, true},
+	}
+	for _, v := range tests {
+		ip, isIPv6 = ParseIPxWithNumeric(v.s)
+		assert.Equal(t, v.isNil, ip == nil)
+		assert.Equal(t, v.isIPv6, isIPv6)
 	}
 }

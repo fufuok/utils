@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+const (
+	IPv4Min = 0
+	IPv4Max = 1<<32 - 1
+)
+
 var (
 	ErrInvalidHostPort = errors.New("invalid Host or Port")
 )
@@ -138,7 +143,7 @@ func Int2IPv6(ipInt *big.Int) net.IP {
 
 // Long2IPv4 数值转 IPv4
 func Long2IPv4(n int) net.IP {
-	if n > 4294967295 || n < 0 {
+	if n > IPv4Max || n < 0 {
 		return nil
 	}
 
@@ -152,7 +157,7 @@ func Long2IPv4(n int) net.IP {
 
 // LongLittle2IPv4 小端数值转 IPv4
 func LongLittle2IPv4(n int) net.IP {
-	if n > 4294967295 || n < 0 {
+	if n > IPv4Max || n < 0 {
 		return nil
 	}
 
@@ -280,30 +285,61 @@ func ParseIP(s string) (net.IP, bool) {
 	return ip, strings.Contains(s, ":")
 }
 
-// ParseIPx 解析 IP, 包括数字形态
-func ParseIPx(s string) net.IP {
+// ParseIPx 解析 IP, 并返回是否为 IPv6
+func ParseIPx(s string) (net.IP, bool) {
 	if s == "" {
-		return nil
+		return nil, false
+	}
+
+	for i := 0; i < len(s); i++ {
+		char := s[i]
+		if char == '.' {
+			return net.ParseIP(s), false
+		}
+		if char == ':' {
+			return net.ParseIP(s), true
+		}
+	}
+	return nil, false
+}
+
+// ParseIPxWithNumeric 解析 IP, 支持数字形态, 并返回是否为 IPv6
+func ParseIPxWithNumeric(s string) (net.IP, bool) {
+	if s == "" {
+		return nil, false
 	}
 
 	allNumeric := true
 	for i := 0; i < len(s); i++ {
 		char := s[i]
-		if char == '.' || char == ':' {
-			return net.ParseIP(s)
+		if char == '.' {
+			return net.ParseIP(s), false
+		}
+		if char == ':' {
+			return net.ParseIP(s), true
 		}
 		if char < '0' || char > '9' {
 			allNumeric = false
 		}
 	}
 
-	// 数字转 IPv4
-	if allNumeric {
-		if n, err := strconv.Atoi(s); err == nil {
-			return Long2IPv4(n)
-		}
+	if !allNumeric {
+		return nil, false
 	}
-	return nil
+
+	// 数字转 IP, 优先转换为 IPv4
+	n, err := strconv.Atoi(s)
+	if err == nil && n <= IPv4Max {
+		return Long2IPv4(n), false
+	}
+
+	if n < 0 {
+		return nil, false
+	}
+
+	i := big.NewInt(0)
+	i.SetString(s, 10)
+	return Int2IPv6(i), true
 }
 
 // ParseHostPort 解析 IP 和端口
