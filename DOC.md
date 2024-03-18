@@ -10,220 +10,229 @@ import "github.com/fufuok/utils"
 
 - [Constants](<#constants>)
 - [Variables](<#variables>)
-- [func AddString(s ...string) string](<#func-addstring>)
-- [func AddStringBytes(s ...string) []byte](<#func-addstringbytes>)
-- [func B2S(b []byte) string](<#func-b2s>)
-- [func B64Decode(s string) []byte](<#func-b64decode>)
-- [func B64Encode(b []byte) string](<#func-b64encode>)
-- [func B64UrlDecode(s string) []byte](<#func-b64urldecode>)
-- [func B64UrlEncode(b []byte) string](<#func-b64urlencode>)
-- [func BeginOfDay(t time.Time) time.Time](<#func-beginofday>)
-- [func BeginOfHour(t time.Time) time.Time](<#func-beginofhour>)
-- [func BeginOfLastMonth(t time.Time) time.Time](<#func-beginoflastmonth>)
-- [func BeginOfLastWeek(t time.Time) time.Time](<#func-beginoflastweek>)
-- [func BeginOfMinute(t time.Time) time.Time](<#func-beginofminute>)
-- [func BeginOfMonth(t time.Time) time.Time](<#func-beginofmonth>)
-- [func BeginOfNextMonth(t time.Time) time.Time](<#func-beginofnextmonth>)
-- [func BeginOfNextWeek(t time.Time) time.Time](<#func-beginofnextweek>)
-- [func BeginOfSecond(t time.Time) time.Time](<#func-beginofsecond>)
-- [func BeginOfTomorrow(t time.Time) time.Time](<#func-beginoftomorrow>)
-- [func BeginOfWeek(t time.Time) time.Time](<#func-beginofweek>)
-- [func BeginOfYear(t time.Time) time.Time](<#func-beginofyear>)
-- [func BeginOfYesterday(t time.Time) time.Time](<#func-beginofyesterday>)
-- [func BigComma(b *big.Int) string](<#func-bigcomma>)
-- [func BigCommaf(v *big.Float) string](<#func-bigcommaf>)
-- [func Bigoom(n, b *big.Int) (float64, int)](<#func-bigoom>)
-- [func CPUTicks() int64](<#func-cputicks>)
-- [func CallPath() string](<#func-callpath>)
-- [func Comma(v int64) string](<#func-comma>)
-- [func Commaf(v float64) string](<#func-commaf>)
-- [func Commai(v int) string](<#func-commai>)
-- [func Commau(v uint64) string](<#func-commau>)
-- [func CopyB2S(b []byte) string](<#func-copyb2s>)
-- [func CopyBytes(b []byte) []byte](<#func-copybytes>)
-- [func CopyS2B(s string) []byte](<#func-copys2b>)
-- [func CopyString(s string) string](<#func-copystring>)
-- [func CutBytes(s, sep []byte) (before, after []byte, found bool)](<#func-cutbytes>)
-- [func CutString(s, sep string) (before, after string, found bool)](<#func-cutstring>)
-- [func DaysInMonth(year int, m time.Month) int](<#func-daysinmonth>)
-- [func DaysInYear(year int) int](<#func-daysinyear>)
-- [func EncodeUUID(id []byte) []byte](<#func-encodeuuid>)
-- [func EndOfDay(t time.Time) time.Time](<#func-endofday>)
-- [func EndOfHour(t time.Time) time.Time](<#func-endofhour>)
-- [func EndOfLastMonth(t time.Time) time.Time](<#func-endoflastmonth>)
-- [func EndOfLastWeek(t time.Time) time.Time](<#func-endoflastweek>)
-- [func EndOfMinute(t time.Time) time.Time](<#func-endofminute>)
-- [func EndOfMonth(t time.Time) time.Time](<#func-endofmonth>)
-- [func EndOfNextMonth(t time.Time) time.Time](<#func-endofnextmonth>)
-- [func EndOfNextWeek(t time.Time) time.Time](<#func-endofnextweek>)
-- [func EndOfSecond(t time.Time) time.Time](<#func-endofsecond>)
-- [func EndOfTomorrow(t time.Time) time.Time](<#func-endoftomorrow>)
-- [func EndOfWeek(t time.Time) time.Time](<#func-endofweek>)
-- [func EndOfYear(t time.Time) time.Time](<#func-endofyear>)
-- [func EndOfYesterday(t time.Time) time.Time](<#func-endofyesterday>)
-- [func EqualFold(b, s string) bool](<#func-equalfold>)
-- [func EqualFoldBytes(b, s []byte) bool](<#func-equalfoldbytes>)
-- [func Executable(evalSymlinks ...bool) string](<#func-executable>)
-- [func ExecutableDir(evalSymlinks ...bool) string](<#func-executabledir>)
-- [func FastIntn(n int) int](<#func-fastintn>)
-- [func FastRand() uint32](<#func-fastrand>)
-- [func FastRand64() uint64](<#func-fastrand64>)
-- [func FastRandBytes(n int) []byte](<#func-fastrandbytes>)
-- [func FastRandn(n uint32) uint32](<#func-fastrandn>)
-- [func FastRandu() uint](<#func-fastrandu>)
-- [func GetBytes(v interface{}, defaultVal ...[]byte) []byte](<#func-getbytes>)
-- [func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)](<#func-getipport>)
-- [func GetInt(v interface{}, defaultInt ...int) int](<#func-getint>)
-- [func GetMonthDays(t time.Time) int](<#func-getmonthdays>)
-- [func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP](<#func-getnotinternalipv4>)
-- [func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string](<#func-getnotinternalipv4string>)
-- [func GetSafeB2S(b []byte, defaultVal ...string) string](<#func-getsafeb2s>)
-- [func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte](<#func-getsafebytes>)
-- [func GetSafeS2B(s string, defaultVal ...[]byte) []byte](<#func-getsafes2b>)
-- [func GetSafeString(s string, defaultVal ...string) string](<#func-getsafestring>)
-- [func GetString(v interface{}, defaultVal ...string) string](<#func-getstring>)
-- [func Gzip(data []byte) ([]byte, error)](<#func-gzip>)
-- [func GzipLevel(data []byte, level int) (dst []byte, err error)](<#func-gziplevel>)
-- [func HumanBaseBytes(v uint64, base float64, sizes []string) string](<#func-humanbasebytes>)
-- [func HumanBigBytes(s *big.Int) string](<#func-humanbigbytes>)
-- [func HumanBigIBytes(s *big.Int) string](<#func-humanbigibytes>)
-- [func HumanBigKbps(s *big.Int) string](<#func-humanbigkbps>)
-- [func HumanBytes(v uint64) string](<#func-humanbytes>)
-- [func HumanGBMB(v uint64) string](<#func-humangbmb>)
-- [func HumanIBytes(v uint64) string](<#func-humanibytes>)
-- [func HumanIntBytes(v int) string](<#func-humanintbytes>)
-- [func HumanIntIBytes(v int) string](<#func-humanintibytes>)
-- [func HumanIntKbps(v int) string](<#func-humanintkbps>)
-- [func HumanKbps(v uint64) string](<#func-humankbps>)
-- [func ID() uint64](<#func-id>)
-- [func IPv42Long(ip net.IP) int](<#func-ipv42long>)
-- [func IPv42LongLittle(ip net.IP) int](<#func-ipv42longlittle>)
-- [func IPv4String2Long(ip string) int](<#func-ipv4string2long>)
-- [func IPv4String2LongLittle(ip string) int](<#func-ipv4string2longlittle>)
-- [func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnet>)
-- [func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool](<#func-inipnetstring>)
-- [func InInts(slice []int, n int) bool](<#func-inints>)
-- [func InStrings(ss []string, s string) bool](<#func-instrings>)
-- [func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)](<#func-initcstlocation>)
-- [func InitLocation(name string) (*time.Location, bool)](<#func-initlocation>)
-- [func IsIP(ip string) bool](<#func-isip>)
-- [func IsIPv4(ip string) bool](<#func-isipv4>)
-- [func IsIPv6(ip string) bool](<#func-isipv6>)
-- [func IsInternalIPv4(ip net.IP) bool](<#func-isinternalipv4>)
-- [func IsInternalIPv4String(ip string) bool](<#func-isinternalipv4string>)
-- [func IsLeapYear(year int) bool](<#func-isleapyear>)
-- [func IsPrivateIP(ip net.IP) bool](<#func-isprivateip>)
-- [func IsPrivateIPString(ip string) bool](<#func-isprivateipstring>)
-- [func JoinBytes(b ...[]byte) []byte](<#func-joinbytes>)
-- [func JoinString(s ...string) string](<#func-joinstring>)
-- [func JoinStringBytes(s ...string) []byte](<#func-joinstringbytes>)
-- [func LeftPad(s, pad string, n int) string](<#func-leftpad>)
-- [func LeftPadBytes(b, pad []byte, n int) []byte](<#func-leftpadbytes>)
-- [func Logn(n, b float64) float64](<#func-logn>)
-- [func Long2IPv4(n int) net.IP](<#func-long2ipv4>)
-- [func Long2IPv4String(n int) string](<#func-long2ipv4string>)
-- [func LongLittle2IPv4(n int) net.IP](<#func-longlittle2ipv4>)
-- [func LongLittle2IPv4String(n int) string](<#func-longlittle2ipv4string>)
-- [func MaxInt(a, b int) int](<#func-maxint>)
-- [func MinInt(a, b int) int](<#func-minint>)
-- [func MustBool(v interface{}) bool](<#func-mustbool>)
-- [func MustInt(v interface{}) int](<#func-mustint>)
-- [func MustJSON(v interface{}) []byte](<#func-mustjson>)
-- [func MustJSONIndent(v interface{}) []byte](<#func-mustjsonindent>)
-- [func MustJSONIndentString(v interface{}) string](<#func-mustjsonindentstring>)
-- [func MustJSONString(v interface{}) string](<#func-mustjsonstring>)
-- [func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int](<#func-mustparsehumanbigbytes>)
-- [func MustParseHumanBytes(s string, defaultVal ...uint64) uint64](<#func-mustparsehumanbytes>)
-- [func MustString(v interface{}, timeLayout ...string) string](<#func-muststring>)
-- [func NanoTime() int64](<#func-nanotime>)
-- [func NewRand(seed ...int64) *rand.Rand](<#func-newrand>)
-- [func Pad(s, pad string, n int) string](<#func-pad>)
-- [func PadBytes(s, pad []byte, n int) []byte](<#func-padbytes>)
-- [func ParseHostPort(s string) (net.IP, uint16, bool, error)](<#func-parsehostport>)
-- [func ParseHumanBigBytes(s string) (*big.Int, error)](<#func-parsehumanbigbytes>)
-- [func ParseHumanBytes(s string) (uint64, error)](<#func-parsehumanbytes>)
-- [func ParseIP(s string) (net.IP, bool)](<#func-parseip>)
-- [func ParseIPv4(ip string) net.IP](<#func-parseipv4>)
-- [func ParseIPv6(ip string) net.IP](<#func-parseipv6>)
-- [func ParseInts(s string) ([]int, error)](<#func-parseints>)
-- [func RandBytes(n int) []byte](<#func-randbytes>)
-- [func RandHex(nHalf int) string](<#func-randhex>)
-- [func RandInt(min, max int) int](<#func-randint>)
-- [func RandString(n int) string](<#func-randstring>)
-- [func RandUint32(min, max uint32) uint32](<#func-randuint32>)
-- [func Recover(cb ...RecoveryCallback)](<#func-recover>)
-- [func RemoveString(ss []string, s string) ([]string, bool)](<#func-removestring>)
-- [func ReplaceHost(a, b string) string](<#func-replacehost>)
-- [func RightPad(s, pad string, n int) string](<#func-rightpad>)
-- [func RightPadBytes(b, pad []byte, n int) []byte](<#func-rightpadbytes>)
-- [func Round(v float64, precision int) float64](<#func-round>)
-- [func RunPath() string](<#func-runpath>)
-- [func S2B(s string) []byte](<#func-s2b>)
-- [func SafeGo(fn func(), cb ...RecoveryCallback)](<#func-safego>)
-- [func SearchInt(slice []int, n int) int](<#func-searchint>)
-- [func SearchString(ss []string, s string) int](<#func-searchstring>)
-- [func Sleep(ctx context.Context, interval time.Duration) error](<#func-sleep>)
-- [func SplitHostPort(hostPort string) (host, port string)](<#func-splithostport>)
-- [func Str2Bytes(s string) (b []byte)](<#func-str2bytes>)
-- [func StrToBytes(s string) []byte](<#func-strtobytes>)
-- [func String2Bytes(s string) (bs []byte)](<#func-string2bytes>)
-- [func StringToBytes(s string) (b []byte)](<#func-stringtobytes>)
-- [func SumInt(v ...int) int](<#func-sumint>)
-- [func ToLower(b string) string](<#func-tolower>)
-- [func ToLowerBytes(b []byte) []byte](<#func-tolowerbytes>)
-- [func ToUpper(b string) string](<#func-toupper>)
-- [func ToUpperBytes(b []byte) []byte](<#func-toupperbytes>)
-- [func Trim(s string, cutset byte) string](<#func-trim>)
-- [func TrimBytes(b []byte, cutset byte) []byte](<#func-trimbytes>)
-- [func TrimLeft(s string, cutset byte) string](<#func-trimleft>)
-- [func TrimLeftBytes(b []byte, cutset byte) []byte](<#func-trimleftbytes>)
-- [func TrimRight(s string, cutset byte) string](<#func-trimright>)
-- [func TrimRightBytes(b []byte, cutset byte) []byte](<#func-trimrightbytes>)
-- [func TrimSlice(ss []string) []string](<#func-trimslice>)
-- [func UUID() []byte](<#func-uuid>)
-- [func UUIDShort() string](<#func-uuidshort>)
-- [func UUIDSimple() string](<#func-uuidsimple>)
-- [func UUIDString() string](<#func-uuidstring>)
-- [func Ungzip(data []byte) (src []byte, err error)](<#func-ungzip>)
-- [func Unzip(data []byte) (src []byte, err error)](<#func-unzip>)
-- [func ValidOptionalPort(port string) bool](<#func-validoptionalport>)
-- [func WaitNextMinute(t ...time.Time)](<#func-waitnextminute>)
-- [func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)](<#func-waitnextminutewithtime>)
-- [func WaitNextSecond(t ...time.Time)](<#func-waitnextsecond>)
-- [func WaitNextSecondWithTime(t ...time.Time) (now time.Time)](<#func-waitnextsecondwithtime>)
-- [func WaitSignal(sig ...os.Signal) os.Signal](<#func-waitsignal>)
-- [func Zip(data []byte) ([]byte, error)](<#func-zip>)
-- [func ZipLevel(data []byte, level int) (dst []byte, err error)](<#func-ziplevel>)
-- [type Bool](<#type-bool>)
-  - [func NewBool(val bool) *Bool](<#func-newbool>)
-  - [func NewFalse() *Bool](<#func-newfalse>)
-  - [func NewTrue() *Bool](<#func-newtrue>)
-  - [func (x *Bool) CAS(old, new bool) bool](<#func-bool-cas>)
-  - [func (x *Bool) CompareAndSwap(old, new bool) (swapped bool)](<#func-bool-compareandswap>)
-  - [func (x *Bool) Load() bool](<#func-bool-load>)
-  - [func (x *Bool) MarshalJSON() ([]byte, error)](<#func-bool-marshaljson>)
-  - [func (x *Bool) Store(val bool)](<#func-bool-store>)
-  - [func (x *Bool) StoreFalse()](<#func-bool-storefalse>)
-  - [func (x *Bool) StoreTrue()](<#func-bool-storetrue>)
-  - [func (x *Bool) String() string](<#func-bool-string>)
-  - [func (x *Bool) Swap(new bool) (old bool)](<#func-bool-swap>)
-  - [func (x *Bool) Toggle() (old bool)](<#func-bool-toggle>)
-  - [func (x *Bool) UnmarshalJSON(b []byte) error](<#func-bool-unmarshaljson>)
-- [type NoCmp](<#type-nocmp>)
-- [type NoCopy](<#type-nocopy>)
-  - [func (*NoCopy) Lock()](<#func-nocopy-lock>)
-  - [func (*NoCopy) Unlock()](<#func-nocopy-unlock>)
-- [type RecoveryCallback](<#type-recoverycallback>)
-- [type TryMutex](<#type-trymutex>)
-  - [func NewTryMutex() *TryMutex](<#func-newtrymutex>)
-  - [func (m *TryMutex) Lock()](<#func-trymutex-lock>)
-  - [func (m *TryMutex) TryLock(timeout ...time.Duration) bool](<#func-trymutex-trylock>)
-  - [func (m *TryMutex) Unlock()](<#func-trymutex-unlock>)
+- [func AddString\(s ...string\) string](<#AddString>)
+- [func AddStringBytes\(s ...string\) \[\]byte](<#AddStringBytes>)
+- [func B2S\(b \[\]byte\) string](<#B2S>)
+- [func B64Decode\(s string\) \[\]byte](<#B64Decode>)
+- [func B64Encode\(b \[\]byte\) string](<#B64Encode>)
+- [func B64UrlDecode\(s string\) \[\]byte](<#B64UrlDecode>)
+- [func B64UrlEncode\(b \[\]byte\) string](<#B64UrlEncode>)
+- [func BeginOfDay\(t time.Time\) time.Time](<#BeginOfDay>)
+- [func BeginOfHour\(t time.Time\) time.Time](<#BeginOfHour>)
+- [func BeginOfLastMonth\(t time.Time\) time.Time](<#BeginOfLastMonth>)
+- [func BeginOfLastWeek\(t time.Time\) time.Time](<#BeginOfLastWeek>)
+- [func BeginOfMinute\(t time.Time\) time.Time](<#BeginOfMinute>)
+- [func BeginOfMonth\(t time.Time\) time.Time](<#BeginOfMonth>)
+- [func BeginOfNextMonth\(t time.Time\) time.Time](<#BeginOfNextMonth>)
+- [func BeginOfNextWeek\(t time.Time\) time.Time](<#BeginOfNextWeek>)
+- [func BeginOfSecond\(t time.Time\) time.Time](<#BeginOfSecond>)
+- [func BeginOfTomorrow\(t time.Time\) time.Time](<#BeginOfTomorrow>)
+- [func BeginOfWeek\(t time.Time\) time.Time](<#BeginOfWeek>)
+- [func BeginOfYear\(t time.Time\) time.Time](<#BeginOfYear>)
+- [func BeginOfYesterday\(t time.Time\) time.Time](<#BeginOfYesterday>)
+- [func BigComma\(b \*big.Int\) string](<#BigComma>)
+- [func BigCommaf\(v \*big.Float\) string](<#BigCommaf>)
+- [func Bigoom\(n, b \*big.Int\) \(float64, int\)](<#Bigoom>)
+- [func CPUTicks\(\) int64](<#CPUTicks>)
+- [func CallPath\(\) string](<#CallPath>)
+- [func Comma\(v int64\) string](<#Comma>)
+- [func Commaf\(v float64\) string](<#Commaf>)
+- [func Commai\(v int\) string](<#Commai>)
+- [func Commau\(v uint64\) string](<#Commau>)
+- [func CopyB2S\(b \[\]byte\) string](<#CopyB2S>)
+- [func CopyBytes\(b \[\]byte\) \[\]byte](<#CopyBytes>)
+- [func CopyS2B\(s string\) \[\]byte](<#CopyS2B>)
+- [func CopyString\(s string\) string](<#CopyString>)
+- [func CutBytes\(s, sep \[\]byte\) \(before, after \[\]byte, found bool\)](<#CutBytes>)
+- [func CutString\(s, sep string\) \(before, after string, found bool\)](<#CutString>)
+- [func DaysInMonth\(year int, m time.Month\) int](<#DaysInMonth>)
+- [func DaysInYear\(year int\) int](<#DaysInYear>)
+- [func EncodeUUID\(id \[\]byte\) \[\]byte](<#EncodeUUID>)
+- [func EndOfDay\(t time.Time\) time.Time](<#EndOfDay>)
+- [func EndOfHour\(t time.Time\) time.Time](<#EndOfHour>)
+- [func EndOfLastMonth\(t time.Time\) time.Time](<#EndOfLastMonth>)
+- [func EndOfLastWeek\(t time.Time\) time.Time](<#EndOfLastWeek>)
+- [func EndOfMinute\(t time.Time\) time.Time](<#EndOfMinute>)
+- [func EndOfMonth\(t time.Time\) time.Time](<#EndOfMonth>)
+- [func EndOfNextMonth\(t time.Time\) time.Time](<#EndOfNextMonth>)
+- [func EndOfNextWeek\(t time.Time\) time.Time](<#EndOfNextWeek>)
+- [func EndOfSecond\(t time.Time\) time.Time](<#EndOfSecond>)
+- [func EndOfTomorrow\(t time.Time\) time.Time](<#EndOfTomorrow>)
+- [func EndOfWeek\(t time.Time\) time.Time](<#EndOfWeek>)
+- [func EndOfYear\(t time.Time\) time.Time](<#EndOfYear>)
+- [func EndOfYesterday\(t time.Time\) time.Time](<#EndOfYesterday>)
+- [func EqualFold\(b, s string\) bool](<#EqualFold>)
+- [func EqualFoldBytes\(b, s \[\]byte\) bool](<#EqualFoldBytes>)
+- [func Executable\(evalSymlinks ...bool\) string](<#Executable>)
+- [func ExecutableDir\(evalSymlinks ...bool\) string](<#ExecutableDir>)
+- [func FastIntn\(n int\) int](<#FastIntn>)
+- [func FastRand\(\) uint32](<#FastRand>)
+- [func FastRand64\(\) uint64](<#FastRand64>)
+- [func FastRandBytes\(n int\) \[\]byte](<#FastRandBytes>)
+- [func FastRandn\(n uint32\) uint32](<#FastRandn>)
+- [func FastRandu\(\) uint](<#FastRandu>)
+- [func GetBytes\(v interface\{\}, defaultVal ...\[\]byte\) \[\]byte](<#GetBytes>)
+- [func GetIPPort\(addr net.Addr\) \(ip net.IP, port int, err error\)](<#GetIPPort>)
+- [func GetInt\(v interface\{\}, defaultInt ...int\) int](<#GetInt>)
+- [func GetMonthDays\(t time.Time\) int](<#GetMonthDays>)
+- [func GetNotInternalIPv4\(ip, defaultIP net.IP, flag ...bool\) net.IP](<#GetNotInternalIPv4>)
+- [func GetNotInternalIPv4String\(ip, defaultIP string, flag ...bool\) string](<#GetNotInternalIPv4String>)
+- [func GetSafeB2S\(b \[\]byte, defaultVal ...string\) string](<#GetSafeB2S>)
+- [func GetSafeBytes\(b \[\]byte, defaultVal ...\[\]byte\) \[\]byte](<#GetSafeBytes>)
+- [func GetSafeS2B\(s string, defaultVal ...\[\]byte\) \[\]byte](<#GetSafeS2B>)
+- [func GetSafeString\(s string, defaultVal ...string\) string](<#GetSafeString>)
+- [func GetString\(v interface\{\}, defaultVal ...string\) string](<#GetString>)
+- [func GoroutineID\(\) \(uint64, error\)](<#GoroutineID>)
+- [func Gzip\(data \[\]byte\) \(\[\]byte, error\)](<#Gzip>)
+- [func GzipLevel\(data \[\]byte, level int\) \(dst \[\]byte, err error\)](<#GzipLevel>)
+- [func HumanBaseBytes\(v uint64, base float64, sizes \[\]string\) string](<#HumanBaseBytes>)
+- [func HumanBigBytes\(s \*big.Int\) string](<#HumanBigBytes>)
+- [func HumanBigIBytes\(s \*big.Int\) string](<#HumanBigIBytes>)
+- [func HumanBigKbps\(s \*big.Int\) string](<#HumanBigKbps>)
+- [func HumanBytes\(v uint64\) string](<#HumanBytes>)
+- [func HumanGBMB\(v uint64\) string](<#HumanGBMB>)
+- [func HumanIBytes\(v uint64\) string](<#HumanIBytes>)
+- [func HumanIntBytes\(v int\) string](<#HumanIntBytes>)
+- [func HumanIntIBytes\(v int\) string](<#HumanIntIBytes>)
+- [func HumanIntKbps\(v int\) string](<#HumanIntKbps>)
+- [func HumanKbps\(v uint64\) string](<#HumanKbps>)
+- [func ID\(\) uint64](<#ID>)
+- [func IPv42Long\(ip net.IP\) int](<#IPv42Long>)
+- [func IPv42LongLittle\(ip net.IP\) int](<#IPv42LongLittle>)
+- [func IPv4String2Long\(ip string\) int](<#IPv4String2Long>)
+- [func IPv4String2LongLittle\(ip string\) int](<#IPv4String2LongLittle>)
+- [func IPv62Int\(ip net.IP\) \*big.Int](<#IPv62Int>)
+- [func IPv6String2Int\(ip string\) \*big.Int](<#IPv6String2Int>)
+- [func InIPNet\(ip net.IP, ipNets map\[\*net.IPNet\]struct\{\}\) bool](<#InIPNet>)
+- [func InIPNetString\(ip string, ipNets map\[\*net.IPNet\]struct\{\}\) bool](<#InIPNetString>)
+- [func InInts\(slice \[\]int, n int\) bool](<#InInts>)
+- [func InStrings\(ss \[\]string, s string\) bool](<#InStrings>)
+- [func InitCSTLocation\(\) \(name string, loc \*time.Location, cst \*time.Location, ok bool\)](<#InitCSTLocation>)
+- [func InitLocation\(name string\) \(\*time.Location, bool\)](<#InitLocation>)
+- [func Int2IPv6\(ipInt \*big.Int\) net.IP](<#Int2IPv6>)
+- [func Int2IPv6String\(n \*big.Int\) string](<#Int2IPv6String>)
+- [func IsIP\(ip string\) bool](<#IsIP>)
+- [func IsIPv4\(s string\) bool](<#IsIPv4>)
+- [func IsIPv6\(s string\) bool](<#IsIPv6>)
+- [func IsInternalIPv4\(ip net.IP\) bool](<#IsInternalIPv4>)
+- [func IsInternalIPv4String\(ip string\) bool](<#IsInternalIPv4String>)
+- [func IsLeapYear\(year int\) bool](<#IsLeapYear>)
+- [func IsNumeric\(s string\) bool](<#IsNumeric>)
+- [func IsPrivateIP\(ip net.IP\) bool](<#IsPrivateIP>)
+- [func IsPrivateIPString\(ip string\) bool](<#IsPrivateIPString>)
+- [func JoinBytes\(b ...\[\]byte\) \[\]byte](<#JoinBytes>)
+- [func JoinString\(s ...string\) string](<#JoinString>)
+- [func JoinStringBytes\(s ...string\) \[\]byte](<#JoinStringBytes>)
+- [func LeftPad\(s, pad string, n int\) string](<#LeftPad>)
+- [func LeftPadBytes\(b, pad \[\]byte, n int\) \[\]byte](<#LeftPadBytes>)
+- [func Logn\(n, b float64\) float64](<#Logn>)
+- [func Long2IPv4\(n int\) net.IP](<#Long2IPv4>)
+- [func Long2IPv4String\(n int\) string](<#Long2IPv4String>)
+- [func LongLittle2IPv4\(n int\) net.IP](<#LongLittle2IPv4>)
+- [func LongLittle2IPv4String\(n int\) string](<#LongLittle2IPv4String>)
+- [func MaxInt\(a, b int\) int](<#MaxInt>)
+- [func MinInt\(a, b int\) int](<#MinInt>)
+- [func MustBool\(v interface\{\}\) bool](<#MustBool>)
+- [func MustInt\(v interface\{\}\) int](<#MustInt>)
+- [func MustJSON\(v interface\{\}\) \[\]byte](<#MustJSON>)
+- [func MustJSONIndent\(v interface\{\}\) \[\]byte](<#MustJSONIndent>)
+- [func MustJSONIndentString\(v interface\{\}\) string](<#MustJSONIndentString>)
+- [func MustJSONString\(v interface\{\}\) string](<#MustJSONString>)
+- [func MustParseHumanBigBytes\(s string, defaultVal ...\*big.Int\) \*big.Int](<#MustParseHumanBigBytes>)
+- [func MustParseHumanBytes\(s string, defaultVal ...uint64\) uint64](<#MustParseHumanBytes>)
+- [func MustString\(v interface\{\}, timeLayout ...string\) string](<#MustString>)
+- [func NanoTime\(\) int64](<#NanoTime>)
+- [func NewRand\(seed ...int64\) \*rand.Rand](<#NewRand>)
+- [func Pad\(s, pad string, n int\) string](<#Pad>)
+- [func PadBytes\(s, pad \[\]byte, n int\) \[\]byte](<#PadBytes>)
+- [func ParseHostPort\(s string\) \(net.IP, uint16, bool, error\)](<#ParseHostPort>)
+- [func ParseHumanBigBytes\(s string\) \(\*big.Int, error\)](<#ParseHumanBigBytes>)
+- [func ParseHumanBytes\(s string\) \(uint64, error\)](<#ParseHumanBytes>)
+- [func ParseIP\(s string\) \(net.IP, bool\)](<#ParseIP>)
+- [func ParseIPv4\(ip string\) net.IP](<#ParseIPv4>)
+- [func ParseIPv6\(ip string\) net.IP](<#ParseIPv6>)
+- [func ParseIPx\(s string\) \(net.IP, bool\)](<#ParseIPx>)
+- [func ParseIPxWithNumeric\(s string\) \(net.IP, bool\)](<#ParseIPxWithNumeric>)
+- [func ParseInts\(s string\) \(\[\]int, error\)](<#ParseInts>)
+- [func RandBytes\(n int\) \[\]byte](<#RandBytes>)
+- [func RandHex\(nHalf int\) string](<#RandHex>)
+- [func RandInt\(min, max int\) int](<#RandInt>)
+- [func RandString\(n int\) string](<#RandString>)
+- [func RandUint32\(min, max uint32\) uint32](<#RandUint32>)
+- [func Recover\(cb ...RecoveryCallback\)](<#Recover>)
+- [func RemoveString\(ss \[\]string, s string\) \(\[\]string, bool\)](<#RemoveString>)
+- [func ReplaceHost\(a, b string\) string](<#ReplaceHost>)
+- [func Reverse\(s string\) string](<#Reverse>)
+- [func RightPad\(s, pad string, n int\) string](<#RightPad>)
+- [func RightPadBytes\(b, pad \[\]byte, n int\) \[\]byte](<#RightPadBytes>)
+- [func Round\(v float64, precision int\) float64](<#Round>)
+- [func RunPath\(\) string](<#RunPath>)
+- [func RuneReverse\(s string\) string](<#RuneReverse>)
+- [func RuneSubString\(s string, length int, suffix string\) string](<#RuneSubString>)
+- [func S2B\(s string\) \[\]byte](<#S2B>)
+- [func SafeGo\(fn func\(\), cb ...RecoveryCallback\)](<#SafeGo>)
+- [func SafeGoCommonFunc\(args interface\{\}, fn func\(args interface\{\}\), cb ...RecoveryCallback\)](<#SafeGoCommonFunc>)
+- [func SafeGoWithContext\(ctx context.Context, fn func\(ctx context.Context\), cb ...RecoveryCallback\)](<#SafeGoWithContext>)
+- [func SearchInt\(slice \[\]int, n int\) int](<#SearchInt>)
+- [func SearchString\(ss \[\]string, s string\) int](<#SearchString>)
+- [func Sleep\(ctx context.Context, interval time.Duration\) error](<#Sleep>)
+- [func SplitHostPort\(hostPort string\) \(host, port string\)](<#SplitHostPort>)
+- [func SumInt\(v ...int\) int](<#SumInt>)
+- [func ToLower\(b string\) string](<#ToLower>)
+- [func ToLowerBytes\(b \[\]byte\) \[\]byte](<#ToLowerBytes>)
+- [func ToUpper\(b string\) string](<#ToUpper>)
+- [func ToUpperBytes\(b \[\]byte\) \[\]byte](<#ToUpperBytes>)
+- [func Trim\(s string, cutset byte\) string](<#Trim>)
+- [func TrimBytes\(b \[\]byte, cutset byte\) \[\]byte](<#TrimBytes>)
+- [func TrimLeft\(s string, cutset byte\) string](<#TrimLeft>)
+- [func TrimLeftBytes\(b \[\]byte, cutset byte\) \[\]byte](<#TrimLeftBytes>)
+- [func TrimRight\(s string, cutset byte\) string](<#TrimRight>)
+- [func TrimRightBytes\(b \[\]byte, cutset byte\) \[\]byte](<#TrimRightBytes>)
+- [func TrimSlice\(ss \[\]string\) \[\]string](<#TrimSlice>)
+- [func UUID\(\) \[\]byte](<#UUID>)
+- [func UUIDShort\(\) string](<#UUIDShort>)
+- [func UUIDSimple\(\) string](<#UUIDSimple>)
+- [func UUIDString\(\) string](<#UUIDString>)
+- [func Ungzip\(data \[\]byte\) \(src \[\]byte, err error\)](<#Ungzip>)
+- [func Unzip\(data \[\]byte\) \(src \[\]byte, err error\)](<#Unzip>)
+- [func ValidOptionalPort\(port string\) bool](<#ValidOptionalPort>)
+- [func WaitNextMinute\(t ...time.Time\)](<#WaitNextMinute>)
+- [func WaitNextMinuteWithTime\(t ...time.Time\) \(now time.Time\)](<#WaitNextMinuteWithTime>)
+- [func WaitNextSecond\(t ...time.Time\)](<#WaitNextSecond>)
+- [func WaitNextSecondWithTime\(t ...time.Time\) \(now time.Time\)](<#WaitNextSecondWithTime>)
+- [func WaitSignal\(sig ...os.Signal\) os.Signal](<#WaitSignal>)
+- [func Zip\(data \[\]byte\) \(\[\]byte, error\)](<#Zip>)
+- [func ZipLevel\(data \[\]byte, level int\) \(dst \[\]byte, err error\)](<#ZipLevel>)
+- [type Bool](<#Bool>)
+  - [func NewBool\(val bool\) \*Bool](<#NewBool>)
+  - [func NewFalse\(\) \*Bool](<#NewFalse>)
+  - [func NewTrue\(\) \*Bool](<#NewTrue>)
+  - [func \(x \*Bool\) CAS\(old, new bool\) bool](<#Bool.CAS>)
+  - [func \(x \*Bool\) CompareAndSwap\(old, new bool\) \(swapped bool\)](<#Bool.CompareAndSwap>)
+  - [func \(x \*Bool\) Load\(\) bool](<#Bool.Load>)
+  - [func \(x \*Bool\) MarshalJSON\(\) \(\[\]byte, error\)](<#Bool.MarshalJSON>)
+  - [func \(x \*Bool\) Store\(val bool\)](<#Bool.Store>)
+  - [func \(x \*Bool\) StoreFalse\(\)](<#Bool.StoreFalse>)
+  - [func \(x \*Bool\) StoreTrue\(\)](<#Bool.StoreTrue>)
+  - [func \(x \*Bool\) String\(\) string](<#Bool.String>)
+  - [func \(x \*Bool\) Swap\(new bool\) \(old bool\)](<#Bool.Swap>)
+  - [func \(x \*Bool\) Toggle\(\) \(old bool\)](<#Bool.Toggle>)
+  - [func \(x \*Bool\) UnmarshalJSON\(b \[\]byte\) error](<#Bool.UnmarshalJSON>)
+- [type NoCmp](<#NoCmp>)
+- [type NoCopy](<#NoCopy>)
+  - [func \(\*NoCopy\) Lock\(\)](<#NoCopy.Lock>)
+  - [func \(\*NoCopy\) Unlock\(\)](<#NoCopy.Unlock>)
+- [type RecoveryCallback](<#RecoveryCallback>)
+- [type TryMutex](<#TryMutex>)
+  - [func NewTryMutex\(\) \*TryMutex](<#NewTryMutex>)
+  - [func \(m \*TryMutex\) Lock\(\)](<#TryMutex.Lock>)
+  - [func \(m \*TryMutex\) TryLock\(timeout ...time.Duration\) bool](<#TryMutex.TryLock>)
+  - [func \(m \*TryMutex\) Unlock\(\)](<#TryMutex.Unlock>)
 
 
 ## Constants
 
-Ref: dustin/go\-humanize IEC Sizes. kibis of bits
+<a name="Byte"></a>Ref: dustin/go\-humanize IEC Sizes. kibis of bits
 
 ```go
 const (
@@ -237,7 +246,7 @@ const (
 )
 ```
 
-SI Sizes.
+<a name="IByte"></a>SI Sizes.
 
 ```go
 const (
@@ -251,6 +260,17 @@ const (
 )
 ```
 
+<a name="IPv4Min"></a>
+
+```go
+const (
+    IPv4Min = 0
+    IPv4Max = 1<<32 - 1
+)
+```
+
+<a name="PtrSize"></a>
+
 ```go
 const (
     // PtrSize 4 on 32-bit systems, 8 on 64-bit.
@@ -260,7 +280,7 @@ const (
 
 ## Variables
 
-Ref: dustin/go\-humanize
+<a name="BigByte"></a>Ref: dustin/go\-humanize
 
 ```go
 var (
@@ -286,6 +306,8 @@ var (
 )
 ```
 
+<a name="BigSIByte"></a>
+
 ```go
 var (
 
@@ -310,6 +332,8 @@ var (
 )
 ```
 
+<a name="Rand"></a>
+
 ```go
 var (
     // Rand goroutine-safe, use Rand.xxx instead of rand.xxx
@@ -318,18 +342,19 @@ var (
 )
 ```
 
-```go
-var (
-    ErrInvalidHostPort = errors.New("invalid Host or Port")
-)
-```
+<a name="ErrInvalidHostPort"></a>
 
 ```go
-var (
-    StackTraceBufferSize = 4 << 10
-)
+var ErrInvalidHostPort = errors.New("invalid Host or Port")
 ```
 
+<a name="StackTraceBufferSize"></a>
+
+```go
+var StackTraceBufferSize = 4 << 10
+```
+
+<a name="AddString"></a>
 ## func AddString
 
 ```go
@@ -338,6 +363,7 @@ func AddString(s ...string) string
 
 AddString 拼接字符串 Deprecated: this function simply calls utils.JoinStringBytes.
 
+<a name="AddStringBytes"></a>
 ## func AddStringBytes
 
 ```go
@@ -346,14 +372,16 @@ func AddStringBytes(s ...string) []byte
 
 AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\) Deprecated: this function simply calls utils.JoinStringBytes.
 
+<a name="B2S"></a>
 ## func B2S
 
 ```go
 func B2S(b []byte) string
 ```
 
-B2S BytesToString
+B2S converts byte slice to string without a memory allocation. Slower: unsafe.String\(unsafe.SliceData\(b\), len\(b\)\) strings.Clone\(\): unsafe.String\(&b\[0\], len\(b\)\)
 
+<a name="B64Decode"></a>
 ## func B64Decode
 
 ```go
@@ -362,6 +390,7 @@ func B64Decode(s string) []byte
 
 B64Decode Base64 解码
 
+<a name="B64Encode"></a>
 ## func B64Encode
 
 ```go
@@ -370,6 +399,7 @@ func B64Encode(b []byte) string
 
 B64Encode Base64 编码
 
+<a name="B64UrlDecode"></a>
 ## func B64UrlDecode
 
 ```go
@@ -378,6 +408,7 @@ func B64UrlDecode(s string) []byte
 
 B64UrlDecode Base64 解码
 
+<a name="B64UrlEncode"></a>
 ## func B64UrlEncode
 
 ```go
@@ -386,6 +417,7 @@ func B64UrlEncode(b []byte) string
 
 B64UrlEncode Base64 解码, 安全 URL, 替换: "\+/" 为 "\-\_"
 
+<a name="BeginOfDay"></a>
 ## func BeginOfDay
 
 ```go
@@ -394,6 +426,7 @@ func BeginOfDay(t time.Time) time.Time
 
 BeginOfDay 当天 0 点
 
+<a name="BeginOfHour"></a>
 ## func BeginOfHour
 
 ```go
@@ -402,6 +435,7 @@ func BeginOfHour(t time.Time) time.Time
 
 BeginOfHour 0 分
 
+<a name="BeginOfLastMonth"></a>
 ## func BeginOfLastMonth
 
 ```go
@@ -410,6 +444,7 @@ func BeginOfLastMonth(t time.Time) time.Time
 
 BeginOfLastMonth 上月第一天 0 点
 
+<a name="BeginOfLastWeek"></a>
 ## func BeginOfLastWeek
 
 ```go
@@ -418,6 +453,7 @@ func BeginOfLastWeek(t time.Time) time.Time
 
 BeginOfLastWeek 上周一 0 点
 
+<a name="BeginOfMinute"></a>
 ## func BeginOfMinute
 
 ```go
@@ -426,6 +462,7 @@ func BeginOfMinute(t time.Time) time.Time
 
 BeginOfMinute 0 秒
 
+<a name="BeginOfMonth"></a>
 ## func BeginOfMonth
 
 ```go
@@ -434,6 +471,7 @@ func BeginOfMonth(t time.Time) time.Time
 
 BeginOfMonth 当月第一天 0 点
 
+<a name="BeginOfNextMonth"></a>
 ## func BeginOfNextMonth
 
 ```go
@@ -442,6 +480,7 @@ func BeginOfNextMonth(t time.Time) time.Time
 
 BeginOfNextMonth 下月第一天 0 点
 
+<a name="BeginOfNextWeek"></a>
 ## func BeginOfNextWeek
 
 ```go
@@ -450,6 +489,7 @@ func BeginOfNextWeek(t time.Time) time.Time
 
 BeginOfNextWeek 下周一 0 点
 
+<a name="BeginOfSecond"></a>
 ## func BeginOfSecond
 
 ```go
@@ -458,6 +498,7 @@ func BeginOfSecond(t time.Time) time.Time
 
 BeginOfSecond 0 毫秒
 
+<a name="BeginOfTomorrow"></a>
 ## func BeginOfTomorrow
 
 ```go
@@ -466,6 +507,7 @@ func BeginOfTomorrow(t time.Time) time.Time
 
 BeginOfTomorrow 明天 0 点
 
+<a name="BeginOfWeek"></a>
 ## func BeginOfWeek
 
 ```go
@@ -474,6 +516,7 @@ func BeginOfWeek(t time.Time) time.Time
 
 BeginOfWeek 本周一 0 点
 
+<a name="BeginOfYear"></a>
 ## func BeginOfYear
 
 ```go
@@ -482,6 +525,7 @@ func BeginOfYear(t time.Time) time.Time
 
 BeginOfYear 本年第一天 0 点
 
+<a name="BeginOfYesterday"></a>
 ## func BeginOfYesterday
 
 ```go
@@ -490,6 +534,7 @@ func BeginOfYesterday(t time.Time) time.Time
 
 BeginOfYesterday 昨天 0 点
 
+<a name="BigComma"></a>
 ## func BigComma
 
 ```go
@@ -498,6 +543,7 @@ func BigComma(b *big.Int) string
 
 BigComma big.Int 千分位分隔字符串 Ref: dustin/go\-humanize
 
+<a name="BigCommaf"></a>
 ## func BigCommaf
 
 ```go
@@ -506,6 +552,7 @@ func BigCommaf(v *big.Float) string
 
 BigCommaf big.Float 千分位分隔字符串 Ref: dustin/go\-humanize
 
+<a name="Bigoom"></a>
 ## func Bigoom
 
 ```go
@@ -514,6 +561,7 @@ func Bigoom(n, b *big.Int) (float64, int)
 
 Bigoom big.Int 总数量级 Ref: dustin/go\-humanize
 
+<a name="CPUTicks"></a>
 ## func CPUTicks
 
 ```go
@@ -522,6 +570,7 @@ func CPUTicks() int64
 
 CPUTicks CPU 时钟周期, 更高精度 \(云服务器做伪随机数种子时慎用\)
 
+<a name="CallPath"></a>
 ## func CallPath
 
 ```go
@@ -530,6 +579,7 @@ func CallPath() string
 
 CallPath 运行时路径, 编译目录 假如: mklink E:\\tmp\\linkapp.exe D:\\Fufu\\Test\\abc\\app.exe 执行: E:\\tmp\\linkapp.exe CallPath: E:\\Go\\src\\github.com\\fufuok\\utils\\tmp\\osext
 
+<a name="Comma"></a>
 ## func Comma
 
 ```go
@@ -538,6 +588,7 @@ func Comma(v int64) string
 
 Comma 整数转千分位分隔字符串 Ref: dustin/go\-humanize e.g. Comma\(834142\) \-\> 834,142
 
+<a name="Commaf"></a>
 ## func Commaf
 
 ```go
@@ -546,6 +597,7 @@ func Commaf(v float64) string
 
 Commaf 浮点数转千分位分隔字符串 Ref: dustin/go\-humanize e.g. Commaf\(834142.32\) \-\> 834,142.32
 
+<a name="Commai"></a>
 ## func Commai
 
 ```go
@@ -554,6 +606,7 @@ func Commai(v int) string
 
 Commai 整数转千分位分隔字符串
 
+<a name="Commau"></a>
 ## func Commau
 
 ```go
@@ -562,6 +615,7 @@ func Commau(v uint64) string
 
 Commau 整数转千分位分隔字符串 Ref: dustin/go\-humanize
 
+<a name="CopyB2S"></a>
 ## func CopyB2S
 
 ```go
@@ -570,6 +624,7 @@ func CopyB2S(b []byte) string
 
 CopyB2S Immutable, \[\]byte to string string\(b\)
 
+<a name="CopyBytes"></a>
 ## func CopyBytes
 
 ```go
@@ -578,6 +633,7 @@ func CopyBytes(b []byte) []byte
 
 CopyBytes Immutable, \[\]byte to \[\]byte
 
+<a name="CopyS2B"></a>
 ## func CopyS2B
 
 ```go
@@ -586,6 +642,7 @@ func CopyS2B(s string) []byte
 
 CopyS2B Immutable, string to \[\]byte \[\]byte\(s\)
 
+<a name="CopyString"></a>
 ## func CopyString
 
 ```go
@@ -594,6 +651,7 @@ func CopyString(s string) string
 
 CopyString Immutable, string to string e.g. fiberParam := utils.CopyString\(c.Params\("test"\)\) e.g. utils.CopyString\(s\[500:1000\]\) // 可以让 s 被 GC 回收 strings.Clone\(s\) // go1.18
 
+<a name="CutBytes"></a>
 ## func CutBytes
 
 ```go
@@ -604,6 +662,7 @@ CutBytes slices s around the first instance of sep, returning the text before an
 
 Cut returns slices of the original slice s, not copies. Ref: go1.18
 
+<a name="CutString"></a>
 ## func CutString
 
 ```go
@@ -612,6 +671,7 @@ func CutString(s, sep string) (before, after string, found bool)
 
 CutString xslices s around the first instance of sep, returning the text before and after sep. The found result reports whether sep appears in s. If sep does not appear in s, cut returns s, "", false. Ref: go1.18
 
+<a name="DaysInMonth"></a>
 ## func DaysInMonth
 
 ```go
@@ -620,6 +680,7 @@ func DaysInMonth(year int, m time.Month) int
 
 DaysInMonth 返回月份天数
 
+<a name="DaysInYear"></a>
 ## func DaysInYear
 
 ```go
@@ -628,6 +689,7 @@ func DaysInYear(year int) int
 
 DaysInYear 返回年份天数
 
+<a name="EncodeUUID"></a>
 ## func EncodeUUID
 
 ```go
@@ -636,6 +698,7 @@ func EncodeUUID(id []byte) []byte
 
 EncodeUUID 编码 UUID
 
+<a name="EndOfDay"></a>
 ## func EndOfDay
 
 ```go
@@ -644,6 +707,7 @@ func EndOfDay(t time.Time) time.Time
 
 EndOfDay 当天最后时刻
 
+<a name="EndOfHour"></a>
 ## func EndOfHour
 
 ```go
@@ -652,6 +716,7 @@ func EndOfHour(t time.Time) time.Time
 
 EndOfHour 最后一分
 
+<a name="EndOfLastMonth"></a>
 ## func EndOfLastMonth
 
 ```go
@@ -660,6 +725,7 @@ func EndOfLastMonth(t time.Time) time.Time
 
 EndOfLastMonth 上月最后一刻
 
+<a name="EndOfLastWeek"></a>
 ## func EndOfLastWeek
 
 ```go
@@ -668,6 +734,7 @@ func EndOfLastWeek(t time.Time) time.Time
 
 EndOfLastWeek 上周一最后一刻
 
+<a name="EndOfMinute"></a>
 ## func EndOfMinute
 
 ```go
@@ -676,6 +743,7 @@ func EndOfMinute(t time.Time) time.Time
 
 EndOfMinute 最后一秒
 
+<a name="EndOfMonth"></a>
 ## func EndOfMonth
 
 ```go
@@ -684,6 +752,7 @@ func EndOfMonth(t time.Time) time.Time
 
 EndOfMonth 当月最后一刻
 
+<a name="EndOfNextMonth"></a>
 ## func EndOfNextMonth
 
 ```go
@@ -692,6 +761,7 @@ func EndOfNextMonth(t time.Time) time.Time
 
 EndOfNextMonth 下月最后一刻
 
+<a name="EndOfNextWeek"></a>
 ## func EndOfNextWeek
 
 ```go
@@ -700,6 +770,7 @@ func EndOfNextWeek(t time.Time) time.Time
 
 EndOfNextWeek 下周一最后一刻
 
+<a name="EndOfSecond"></a>
 ## func EndOfSecond
 
 ```go
@@ -708,6 +779,7 @@ func EndOfSecond(t time.Time) time.Time
 
 EndOfSecond 最后一毫秒
 
+<a name="EndOfTomorrow"></a>
 ## func EndOfTomorrow
 
 ```go
@@ -716,6 +788,7 @@ func EndOfTomorrow(t time.Time) time.Time
 
 EndOfTomorrow 明天 0 点
 
+<a name="EndOfWeek"></a>
 ## func EndOfWeek
 
 ```go
@@ -724,6 +797,7 @@ func EndOfWeek(t time.Time) time.Time
 
 EndOfWeek 本周末最后一刻
 
+<a name="EndOfYear"></a>
 ## func EndOfYear
 
 ```go
@@ -732,6 +806,7 @@ func EndOfYear(t time.Time) time.Time
 
 EndOfYear 本年最后一刻
 
+<a name="EndOfYesterday"></a>
 ## func EndOfYesterday
 
 ```go
@@ -740,6 +815,7 @@ func EndOfYesterday(t time.Time) time.Time
 
 EndOfYesterday 昨天最后时刻
 
+<a name="EqualFold"></a>
 ## func EqualFold
 
 ```go
@@ -748,6 +824,7 @@ func EqualFold(b, s string) bool
 
 EqualFold tests ascii strings for equality case\-insensitively Ref: fiber
 
+<a name="EqualFoldBytes"></a>
 ## func EqualFoldBytes
 
 ```go
@@ -756,6 +833,7 @@ func EqualFoldBytes(b, s []byte) bool
 
 EqualFoldBytes tests ascii slices for equality case\-insensitively Ref: fiber
 
+<a name="Executable"></a>
 ## func Executable
 
 ```go
@@ -764,6 +842,7 @@ func Executable(evalSymlinks ...bool) string
 
 Executable 当前执行程序绝对路径 true 时返回解析符号链接后的绝对路径 Excutable: E:\\tmp\\linkapp.exe Excutable\(true\): D:\\Fufu\\Test\\abc\\app.exe
 
+<a name="ExecutableDir"></a>
 ## func ExecutableDir
 
 ```go
@@ -772,6 +851,7 @@ func ExecutableDir(evalSymlinks ...bool) string
 
 ExecutableDir 当前执行程序所在目录 true 时返回解析符号链接后的目录 ExcutableDir: E:\\tmp ExcutableDir\(true\): D:\\Fufu\\Test\\abc
 
+<a name="FastIntn"></a>
 ## func FastIntn
 
 ```go
@@ -780,6 +860,7 @@ func FastIntn(n int) int
 
 FastIntn this is similar to rand.Intn, but faster. A non\-negative pseudo\-random number in the half\-open interval \[0,n\). Return 0 if n \<= 0.
 
+<a name="FastRand"></a>
 ## func FastRand
 
 ```go
@@ -788,12 +869,16 @@ func FastRand() uint32
 
 FastRand 随机数
 
+<a name="FastRand64"></a>
 ## func FastRand64
 
 ```go
 func FastRand64() uint64
 ```
 
+
+
+<a name="FastRandBytes"></a>
 ## func FastRandBytes
 
 ```go
@@ -802,6 +887,7 @@ func FastRandBytes(n int) []byte
 
 FastRandBytes random bytes, but faster.
 
+<a name="FastRandn"></a>
 ## func FastRandn
 
 ```go
@@ -810,12 +896,16 @@ func FastRandn(n uint32) uint32
 
 FastRandn 等同于 FastRand\(\) % n, 但更快 See https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
 
+<a name="FastRandu"></a>
 ## func FastRandu
 
 ```go
 func FastRandu() uint
 ```
 
+
+
+<a name="GetBytes"></a>
 ## func GetBytes
 
 ```go
@@ -824,6 +914,7 @@ func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 
 GetBytes 先转为字符串再转为 \[\]byte, 可选指定默认值
 
+<a name="GetIPPort"></a>
 ## func GetIPPort
 
 ```go
@@ -832,6 +923,7 @@ func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 
 GetIPPort 返回 IP 和 端口
 
+<a name="GetInt"></a>
 ## func GetInt
 
 ```go
@@ -840,6 +932,7 @@ func GetInt(v interface{}, defaultInt ...int) int
 
 GetInt 获取 int 结果, 可选指定默认值\(若给定了默认值,则返回正整数或 0\)
 
+<a name="GetMonthDays"></a>
 ## func GetMonthDays
 
 ```go
@@ -848,6 +941,7 @@ func GetMonthDays(t time.Time) int
 
 GetMonthDays 当月天数
 
+<a name="GetNotInternalIPv4"></a>
 ## func GetNotInternalIPv4
 
 ```go
@@ -856,6 +950,7 @@ func GetNotInternalIPv4(ip, defaultIP net.IP, flag ...bool) net.IP
 
 GetNotInternalIPv4 如果是内网 IPv4 则使用默认值, flag 为真是必定返回一个 IP
 
+<a name="GetNotInternalIPv4String"></a>
 ## func GetNotInternalIPv4String
 
 ```go
@@ -864,6 +959,7 @@ func GetNotInternalIPv4String(ip, defaultIP string, flag ...bool) string
 
 GetNotInternalIPv4String 如果是内网 IPv4 则使用默认值
 
+<a name="GetSafeB2S"></a>
 ## func GetSafeB2S
 
 ```go
@@ -872,6 +968,7 @@ func GetSafeB2S(b []byte, defaultVal ...string) string
 
 GetSafeB2S Immutable, 可选指定默认值
 
+<a name="GetSafeBytes"></a>
 ## func GetSafeBytes
 
 ```go
@@ -880,6 +977,7 @@ func GetSafeBytes(b []byte, defaultVal ...[]byte) []byte
 
 GetSafeBytes Immutable, 可选指定默认值
 
+<a name="GetSafeS2B"></a>
 ## func GetSafeS2B
 
 ```go
@@ -888,6 +986,7 @@ func GetSafeS2B(s string, defaultVal ...[]byte) []byte
 
 GetSafeS2B Immutable, 可选指定默认值
 
+<a name="GetSafeString"></a>
 ## func GetSafeString
 
 ```go
@@ -896,6 +995,7 @@ func GetSafeString(s string, defaultVal ...string) string
 
 GetSafeString Immutable, 可选指定默认值
 
+<a name="GetString"></a>
 ## func GetString
 
 ```go
@@ -904,18 +1004,34 @@ func GetString(v interface{}, defaultVal ...string) string
 
 GetString 获取字符串结果, 可选指定默认值
 
+<a name="GoroutineID"></a>
+## func GoroutineID
+
+```go
+func GoroutineID() (uint64, error)
+```
+
+GoroutineID 获取 Goroutine ID
+
+<a name="Gzip"></a>
 ## func Gzip
 
 ```go
 func Gzip(data []byte) ([]byte, error)
 ```
 
+
+
+<a name="GzipLevel"></a>
 ## func GzipLevel
 
 ```go
 func GzipLevel(data []byte, level int) (dst []byte, err error)
 ```
 
+
+
+<a name="HumanBaseBytes"></a>
 ## func HumanBaseBytes
 
 ```go
@@ -924,6 +1040,7 @@ func HumanBaseBytes(v uint64, base float64, sizes []string) string
 
 HumanBaseBytes 数字的数量级表示
 
+<a name="HumanBigBytes"></a>
 ## func HumanBigBytes
 
 ```go
@@ -936,6 +1053,7 @@ See also: ParseHumanBigBytes.
 
 HumanBigBytes\(82854982\) \-\> 83 MB
 
+<a name="HumanBigIBytes"></a>
 ## func HumanBigIBytes
 
 ```go
@@ -948,6 +1066,7 @@ See also: ParseHumanBigBytes.
 
 HumanBigIBytes\(82854982\) \-\> 79 MiB
 
+<a name="HumanBigKbps"></a>
 ## func HumanBigKbps
 
 ```go
@@ -956,6 +1075,7 @@ func HumanBigKbps(s *big.Int) string
 
 HumanBigKbps 1 Kbps = 1000 bit, 传输速率\(bit per second, 位每秒\) e.g. HumanBigKbps\(82854982\) \-\> 83 Mbps
 
+<a name="HumanBytes"></a>
 ## func HumanBytes
 
 ```go
@@ -964,6 +1084,7 @@ func HumanBytes(v uint64) string
 
 HumanBytes 1 KB = 1000 B e.g. HumanBytes\(82854982\) \-\> 83 MB
 
+<a name="HumanGBMB"></a>
 ## func HumanGBMB
 
 ```go
@@ -972,6 +1093,7 @@ func HumanGBMB(v uint64) string
 
 HumanGBMB 转为 \*\* GB \*\* MB 1 GB = 1024 MB
 
+<a name="HumanIBytes"></a>
 ## func HumanIBytes
 
 ```go
@@ -980,6 +1102,7 @@ func HumanIBytes(v uint64) string
 
 HumanIBytes 1 KiB = 1024 B e.g. HumanIBytes\(82854982\) \-\> 79 MiB
 
+<a name="HumanIntBytes"></a>
 ## func HumanIntBytes
 
 ```go
@@ -988,6 +1111,7 @@ func HumanIntBytes(v int) string
 
 HumanIntBytes 1 KB = 1000 B
 
+<a name="HumanIntIBytes"></a>
 ## func HumanIntIBytes
 
 ```go
@@ -996,6 +1120,7 @@ func HumanIntIBytes(v int) string
 
 HumanIntIBytes 1 KiB = 1024 B
 
+<a name="HumanIntKbps"></a>
 ## func HumanIntKbps
 
 ```go
@@ -1004,6 +1129,7 @@ func HumanIntKbps(v int) string
 
 HumanIntKbps 1 Kbps = 1000 bit
 
+<a name="HumanKbps"></a>
 ## func HumanKbps
 
 ```go
@@ -1012,6 +1138,7 @@ func HumanKbps(v uint64) string
 
 HumanKbps 1 Kbps = 1000 bit, 传输速率\(bit per second, 位每秒\) e.g. HumanKbps\(82854982\) \-\> 83 Mbps
 
+<a name="ID"></a>
 ## func ID
 
 ```go
@@ -1020,6 +1147,7 @@ func ID() uint64
 
 ID 运行时自增 ID \(每次程序启动从 1 开始\)
 
+<a name="IPv42Long"></a>
 ## func IPv42Long
 
 ```go
@@ -1028,6 +1156,7 @@ func IPv42Long(ip net.IP) int
 
 IPv42Long IPv4 转数值
 
+<a name="IPv42LongLittle"></a>
 ## func IPv42LongLittle
 
 ```go
@@ -1036,6 +1165,7 @@ func IPv42LongLittle(ip net.IP) int
 
 IPv42LongLittle IPv4 转小端数值
 
+<a name="IPv4String2Long"></a>
 ## func IPv4String2Long
 
 ```go
@@ -1044,6 +1174,7 @@ func IPv4String2Long(ip string) int
 
 IPv4String2Long IPv4 字符串转数值
 
+<a name="IPv4String2LongLittle"></a>
 ## func IPv4String2LongLittle
 
 ```go
@@ -1052,6 +1183,25 @@ func IPv4String2LongLittle(ip string) int
 
 IPv4String2LongLittle IPv4 字符串转数值\(小端\)
 
+<a name="IPv62Int"></a>
+## func IPv62Int
+
+```go
+func IPv62Int(ip net.IP) *big.Int
+```
+
+IPv62Int IPv6 转数值
+
+<a name="IPv6String2Int"></a>
+## func IPv6String2Int
+
+```go
+func IPv6String2Int(ip string) *big.Int
+```
+
+IPv6String2Int IPv6 字符串转数值
+
+<a name="InIPNet"></a>
 ## func InIPNet
 
 ```go
@@ -1060,6 +1210,7 @@ func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 
 InIPNet 是否包含在指定 IPNet 列表中
 
+<a name="InIPNetString"></a>
 ## func InIPNetString
 
 ```go
@@ -1068,6 +1219,7 @@ func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 
 InIPNetString 是否包含在指定 IPNet 列表中
 
+<a name="InInts"></a>
 ## func InInts
 
 ```go
@@ -1076,14 +1228,16 @@ func InInts(slice []int, n int) bool
 
 InInts 检查整数是否存在于 slice
 
+<a name="InStrings"></a>
 ## func InStrings
 
 ```go
 func InStrings(ss []string, s string) bool
 ```
 
-InStrings 检查字符串是否存在于 slice
+InStrings 检查字符串是否存在于 slice 用 slices.Contains 替代
 
+<a name="InitCSTLocation"></a>
 ## func InitCSTLocation
 
 ```go
@@ -1092,6 +1246,7 @@ func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok 
 
 InitCSTLocation 初始化默认时区为中国东八区\(GMT\+8\) 返回值: name: "Asia/Shanghai" 或本地时区名称 loc: 优先尝试解析中国时区, 失败\(Windows\)后使用本地时区\(time.Local\) cst: 强制偏移的中国时区, \!\!\!注意: 无法使用 time.LoadLocation\(cst.String\(\)\) 二次加载 ok: true 表示初始化中国时区成功, false 表示 local 不一定是中国时区
 
+<a name="InitLocation"></a>
 ## func InitLocation
 
 ```go
@@ -1100,6 +1255,25 @@ func InitLocation(name string) (*time.Location, bool)
 
 InitLocation 解析并初始化本地时区
 
+<a name="Int2IPv6"></a>
+## func Int2IPv6
+
+```go
+func Int2IPv6(ipInt *big.Int) net.IP
+```
+
+Int2IPv6 数值转 IPv4
+
+<a name="Int2IPv6String"></a>
+## func Int2IPv6String
+
+```go
+func Int2IPv6String(n *big.Int) string
+```
+
+Int2IPv6String 数值转 IPv6 字符串
+
+<a name="IsIP"></a>
 ## func IsIP
 
 ```go
@@ -1108,22 +1282,25 @@ func IsIP(ip string) bool
 
 IsIP 判断是否为合法 IPv4 / IPv6
 
+<a name="IsIPv4"></a>
 ## func IsIPv4
 
 ```go
-func IsIPv4(ip string) bool
+func IsIPv4(s string) bool
 ```
 
-IsIPv4 判断是否为合法 IPv4
+IsIPv4 判断是否为合法 IPv4 IsIPv4 works the same way as net.ParseIP, but without check for IPv6 case and without returning net.IP slice, whereby IsIPv4 makes no allocations. Ref: gofiber/utils
 
+<a name="IsIPv6"></a>
 ## func IsIPv6
 
 ```go
-func IsIPv6(ip string) bool
+func IsIPv6(s string) bool
 ```
 
-IsIPv6 判断是否为合法 IPv6
+IsIPv6 判断是否为合法 IPv6 IsIPv6 works the same way as net.ParseIP, but without check for IPv4 case and without returning net.IP slice, whereby IsIPv6 makes no allocations. Ref: gofiber/utils
 
+<a name="IsInternalIPv4"></a>
 ## func IsInternalIPv4
 
 ```go
@@ -1132,6 +1309,7 @@ func IsInternalIPv4(ip net.IP) bool
 
 IsInternalIPv4 是否为内网 IPv4, 包含 NAT 专用网段 RFC6598, 比如华为云 ELB 的 100.125.0.0/16
 
+<a name="IsInternalIPv4String"></a>
 ## func IsInternalIPv4String
 
 ```go
@@ -1140,6 +1318,7 @@ func IsInternalIPv4String(ip string) bool
 
 IsInternalIPv4String 是否为内网 IPv4
 
+<a name="IsLeapYear"></a>
 ## func IsLeapYear
 
 ```go
@@ -1148,6 +1327,16 @@ func IsLeapYear(year int) bool
 
 IsLeapYear 判断是否为闰年
 
+<a name="IsNumeric"></a>
+## func IsNumeric
+
+```go
+func IsNumeric(s string) bool
+```
+
+IsNumeric 检查字符串是否全是数字: 0\-9
+
+<a name="IsPrivateIP"></a>
 ## func IsPrivateIP
 
 ```go
@@ -1156,6 +1345,7 @@ func IsPrivateIP(ip net.IP) bool
 
 IsPrivateIP reports whether ip is a private address, according to RFC 1918 \(IPv4 addresses\) and RFC 4193 \(IPv6 addresses\). Ref: go1.17\+ func \(ip IP\) IsPrivate\(\) bool
 
+<a name="IsPrivateIPString"></a>
 ## func IsPrivateIPString
 
 ```go
@@ -1164,6 +1354,7 @@ func IsPrivateIPString(ip string) bool
 
 IsPrivateIPString 是否为私有 IP
 
+<a name="JoinBytes"></a>
 ## func JoinBytes
 
 ```go
@@ -1172,6 +1363,7 @@ func JoinBytes(b ...[]byte) []byte
 
 JoinBytes 拼接 \[\]byte
 
+<a name="JoinString"></a>
 ## func JoinString
 
 ```go
@@ -1180,6 +1372,7 @@ func JoinString(s ...string) string
 
 JoinString 拼接字符串
 
+<a name="JoinStringBytes"></a>
 ## func JoinStringBytes
 
 ```go
@@ -1188,6 +1381,7 @@ func JoinStringBytes(s ...string) []byte
 
 JoinStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
 
+<a name="LeftPad"></a>
 ## func LeftPad
 
 ```go
@@ -1196,6 +1390,7 @@ func LeftPad(s, pad string, n int) string
 
 LeftPad 从左填充字符串到指定长度
 
+<a name="LeftPadBytes"></a>
 ## func LeftPadBytes
 
 ```go
@@ -1204,12 +1399,16 @@ func LeftPadBytes(b, pad []byte, n int) []byte
 
 LeftPadBytes 从左填充到指定长度
 
+<a name="Logn"></a>
 ## func Logn
 
 ```go
 func Logn(n, b float64) float64
 ```
 
+
+
+<a name="Long2IPv4"></a>
 ## func Long2IPv4
 
 ```go
@@ -1218,6 +1417,7 @@ func Long2IPv4(n int) net.IP
 
 Long2IPv4 数值转 IPv4
 
+<a name="Long2IPv4String"></a>
 ## func Long2IPv4String
 
 ```go
@@ -1226,6 +1426,7 @@ func Long2IPv4String(n int) string
 
 Long2IPv4String 数值转 IPv4 字符串
 
+<a name="LongLittle2IPv4"></a>
 ## func LongLittle2IPv4
 
 ```go
@@ -1234,6 +1435,7 @@ func LongLittle2IPv4(n int) net.IP
 
 LongLittle2IPv4 小端数值转 IPv4
 
+<a name="LongLittle2IPv4String"></a>
 ## func LongLittle2IPv4String
 
 ```go
@@ -1242,6 +1444,7 @@ func LongLittle2IPv4String(n int) string
 
 LongLittle2IPv4String 数值\(小端\)转 IPv4 字符串
 
+<a name="MaxInt"></a>
 ## func MaxInt
 
 ```go
@@ -1250,6 +1453,7 @@ func MaxInt(a, b int) int
 
 MaxInt 整数取大值
 
+<a name="MinInt"></a>
 ## func MinInt
 
 ```go
@@ -1258,6 +1462,7 @@ func MinInt(a, b int) int
 
 MinInt 整数取小值
 
+<a name="MustBool"></a>
 ## func MustBool
 
 ```go
@@ -1266,6 +1471,7 @@ func MustBool(v interface{}) bool
 
 MustBool 强制转为 bool
 
+<a name="MustInt"></a>
 ## func MustInt
 
 ```go
@@ -1274,6 +1480,7 @@ func MustInt(v interface{}) int
 
 MustInt 强制转为整数 \(int\)
 
+<a name="MustJSON"></a>
 ## func MustJSON
 
 ```go
@@ -1282,6 +1489,7 @@ func MustJSON(v interface{}) []byte
 
 MustJSON 转 json 返回 \[\]byte
 
+<a name="MustJSONIndent"></a>
 ## func MustJSONIndent
 
 ```go
@@ -1290,6 +1498,7 @@ func MustJSONIndent(v interface{}) []byte
 
 MustJSONIndent 转 json 返回 \[\]byte
 
+<a name="MustJSONIndentString"></a>
 ## func MustJSONIndentString
 
 ```go
@@ -1298,6 +1507,7 @@ func MustJSONIndentString(v interface{}) string
 
 MustJSONIndentString 转 json Indent 返回 string
 
+<a name="MustJSONString"></a>
 ## func MustJSONString
 
 ```go
@@ -1306,6 +1516,7 @@ func MustJSONString(v interface{}) string
 
 MustJSONString 转 json 返回 string
 
+<a name="MustParseHumanBigBytes"></a>
 ## func MustParseHumanBigBytes
 
 ```go
@@ -1314,6 +1525,7 @@ func MustParseHumanBigBytes(s string, defaultVal ...*big.Int) *big.Int
 
 MustParseHumanBigBytes 解析数字的数量级表示 e.g. MustParseHumanBigBytes\("42 MB"\) \-\> 42000000 e.g. MustParseHumanBigBytes\("\-42 mib", 123\) \-\> 123
 
+<a name="MustParseHumanBytes"></a>
 ## func MustParseHumanBytes
 
 ```go
@@ -1322,6 +1534,7 @@ func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 
 MustParseHumanBytes 解析数字的数量级表示 e.g. MustParseHumanBytes\("42 MB"\) \-\> 42000000 e.g. MustParseHumanBytes\("\-42 mib", 123\) \-\> 123
 
+<a name="MustString"></a>
 ## func MustString
 
 ```go
@@ -1330,6 +1543,7 @@ func MustString(v interface{}, timeLayout ...string) string
 
 MustString 强制转为字符串
 
+<a name="NanoTime"></a>
 ## func NanoTime
 
 ```go
@@ -1338,6 +1552,7 @@ func NanoTime() int64
 
 NanoTime 返回当前时间 \(以纳秒为单位\)
 
+<a name="NewRand"></a>
 ## func NewRand
 
 ```go
@@ -1346,6 +1561,7 @@ func NewRand(seed ...int64) *rand.Rand
 
 NewRand goroutine\-safe rand.Rand, optional seed value
 
+<a name="Pad"></a>
 ## func Pad
 
 ```go
@@ -1354,6 +1570,7 @@ func Pad(s, pad string, n int) string
 
 Pad 填充字符串到指定长度, 同 Python3: 'str'.center\(\)
 
+<a name="PadBytes"></a>
 ## func PadBytes
 
 ```go
@@ -1362,6 +1579,7 @@ func PadBytes(s, pad []byte, n int) []byte
 
 PadBytes 填充到指定长度
 
+<a name="ParseHostPort"></a>
 ## func ParseHostPort
 
 ```go
@@ -1370,6 +1588,7 @@ func ParseHostPort(s string) (net.IP, uint16, bool, error)
 
 ParseHostPort 解析 IP 和端口
 
+<a name="ParseHumanBigBytes"></a>
 ## func ParseHumanBigBytes
 
 ```go
@@ -1382,6 +1601,7 @@ See also: HumanBigBytes, HumanBigIBytes.
 
 ParseHumanBigBytes\("42 MB"\) \-\> 42000000, nil ParseHumanBigBytes\("42 mib"\) \-\> 44040192, nil
 
+<a name="ParseHumanBytes"></a>
 ## func ParseHumanBytes
 
 ```go
@@ -1390,6 +1610,7 @@ func ParseHumanBytes(s string) (uint64, error)
 
 ParseHumanBytes 解析数字的数量级表示 e.g. ParseHumanBytes\("42 MB"\) \-\> 42000000, nil e.g. ParseHumanBytes\("42 mib"\) \-\> 44040192, nil
 
+<a name="ParseIP"></a>
 ## func ParseIP
 
 ```go
@@ -1398,6 +1619,7 @@ func ParseIP(s string) (net.IP, bool)
 
 ParseIP 解析 IP 并返回是否为 IPv6
 
+<a name="ParseIPv4"></a>
 ## func ParseIPv4
 
 ```go
@@ -1406,6 +1628,7 @@ func ParseIPv4(ip string) net.IP
 
 ParseIPv4 判断是否为合法 IPv4 并解析
 
+<a name="ParseIPv6"></a>
 ## func ParseIPv6
 
 ```go
@@ -1414,6 +1637,25 @@ func ParseIPv6(ip string) net.IP
 
 ParseIPv6 判断是否为合法 IPv6 并解析
 
+<a name="ParseIPx"></a>
+## func ParseIPx
+
+```go
+func ParseIPx(s string) (net.IP, bool)
+```
+
+ParseIPx 解析 IP, 并返回是否为 IPv6
+
+<a name="ParseIPxWithNumeric"></a>
+## func ParseIPxWithNumeric
+
+```go
+func ParseIPxWithNumeric(s string) (net.IP, bool)
+```
+
+ParseIPxWithNumeric 解析 IP, 支持数字形态, 并返回是否为 IPv6
+
+<a name="ParseInts"></a>
 ## func ParseInts
 
 ```go
@@ -1422,6 +1664,7 @@ func ParseInts(s string) ([]int, error)
 
 ParseInts 解析字符串, 得到去重并排序后的数字列表 "5,0\-3, 3" =\> \[0,1,2,3,5\]
 
+<a name="RandBytes"></a>
 ## func RandBytes
 
 ```go
@@ -1430,6 +1673,7 @@ func RandBytes(n int) []byte
 
 RandBytes random bytes
 
+<a name="RandHex"></a>
 ## func RandHex
 
 ```go
@@ -1438,6 +1682,7 @@ func RandHex(nHalf int) string
 
 RandHex a random string containing only the following characters: 0123456789abcdef
 
+<a name="RandInt"></a>
 ## func RandInt
 
 ```go
@@ -1446,6 +1691,7 @@ func RandInt(min, max int) int
 
 RandInt \(\>=\)min \- \(\<\)max
 
+<a name="RandString"></a>
 ## func RandString
 
 ```go
@@ -1454,6 +1700,7 @@ func RandString(n int) string
 
 RandString a random string, which may contain uppercase letters, lowercase letters and numbers. Ref: stackoverflow.icza
 
+<a name="RandUint32"></a>
 ## func RandUint32
 
 ```go
@@ -1462,6 +1709,7 @@ func RandUint32(min, max uint32) uint32
 
 RandUint32 \(\>=\)min \- \(\<\)max
 
+<a name="Recover"></a>
 ## func Recover
 
 ```go
@@ -1470,6 +1718,7 @@ func Recover(cb ...RecoveryCallback)
 
 Recover 从 panic 中恢复并记录堆栈信息
 
+<a name="RemoveString"></a>
 ## func RemoveString
 
 ```go
@@ -1478,6 +1727,7 @@ func RemoveString(ss []string, s string) ([]string, bool)
 
 RemoveString 删除字符串元素
 
+<a name="ReplaceHost"></a>
 ## func ReplaceHost
 
 ```go
@@ -1486,6 +1736,16 @@ func ReplaceHost(a, b string) string
 
 ReplaceHost 返回 b 的主机名 \+ a 的端口 e.g. ReplaceHost\("a.cn:77", "b.cn:88"\) == "b.cn:77"
 
+<a name="Reverse"></a>
+## func Reverse
+
+```go
+func Reverse(s string) string
+```
+
+Reverse 反转字符串
+
+<a name="RightPad"></a>
 ## func RightPad
 
 ```go
@@ -1494,6 +1754,7 @@ func RightPad(s, pad string, n int) string
 
 RightPad 从右填充字符串到指定长度
 
+<a name="RightPadBytes"></a>
 ## func RightPadBytes
 
 ```go
@@ -1502,6 +1763,7 @@ func RightPadBytes(b, pad []byte, n int) []byte
 
 RightPadBytes 从右填充到指定长度
 
+<a name="Round"></a>
 ## func Round
 
 ```go
@@ -1510,6 +1772,7 @@ func Round(v float64, precision int) float64
 
 Round 四舍五入, ROUND\_HALF\_UP 模式实现 返回将 val 根据指定精度 precision \(十进制小数点后数字的数目\) 进行四舍五入的结果 precision 也可以是负数或零 Ref: thinkeridea/go\-extend
 
+<a name="RunPath"></a>
 ## func RunPath
 
 ```go
@@ -1518,14 +1781,34 @@ func RunPath() string
 
 RunPath 实际程序所在目录 RunPath: E:\\tmp
 
+<a name="RuneReverse"></a>
+## func RuneReverse
+
+```go
+func RuneReverse(s string) string
+```
+
+RuneReverse 反转多字节字符串
+
+<a name="RuneSubString"></a>
+## func RuneSubString
+
+```go
+func RuneSubString(s string, length int, suffix string) string
+```
+
+RuneSubString 多字节字符串截取 长度支持 0\(空字符串\) / \>0\(正常截取\) / \<0\(从结尾处往前截取\) 长度等于或超过字符串长度, 返回原字符串值, 此时忽略 suffix 参数
+
+<a name="S2B"></a>
 ## func S2B
 
 ```go
 func S2B(s string) []byte
 ```
 
-S2B StringToBytes converts string to byte slice without a memory allocation. Ref: gin
+S2B converts string to byte slice without a memory allocation. Ref: https://github.com/golang/go/issues/53003#issuecomment-1140276077
 
+<a name="SafeGo"></a>
 ## func SafeGo
 
 ```go
@@ -1534,6 +1817,25 @@ func SafeGo(fn func(), cb ...RecoveryCallback)
 
 SafeGo 带 Recover 的 goroutine 运行
 
+<a name="SafeGoCommonFunc"></a>
+## func SafeGoCommonFunc
+
+```go
+func SafeGoCommonFunc(args interface{}, fn func(args interface{}), cb ...RecoveryCallback)
+```
+
+SafeGoCommonFunc 带 Recover 的 goroutine 运行
+
+<a name="SafeGoWithContext"></a>
+## func SafeGoWithContext
+
+```go
+func SafeGoWithContext(ctx context.Context, fn func(ctx context.Context), cb ...RecoveryCallback)
+```
+
+SafeGoWithContext 带 Recover 的 goroutine 运行
+
+<a name="SearchInt"></a>
 ## func SearchInt
 
 ```go
@@ -1542,14 +1844,16 @@ func SearchInt(slice []int, n int) int
 
 SearchInt 搜索整数位置\(左, 第一个\)
 
+<a name="SearchString"></a>
 ## func SearchString
 
 ```go
 func SearchString(ss []string, s string) int
 ```
 
-SearchString 搜索字符串位置\(左, 第一个\)
+SearchString 搜索字符串位置\(左, 第一个\) 用 slices.Index 替代
 
+<a name="Sleep"></a>
 ## func Sleep
 
 ```go
@@ -1558,6 +1862,7 @@ func Sleep(ctx context.Context, interval time.Duration) error
 
 Sleep 支持上下文中断的 time.Sleep
 
+<a name="SplitHostPort"></a>
 ## func SplitHostPort
 
 ```go
@@ -1566,36 +1871,7 @@ func SplitHostPort(hostPort string) (host, port string)
 
 SplitHostPort separates host and port. If the port is not valid, it returns the entire input as host, and it doesn't check the validity of the host. Unlike net.SplitHostPort, but per RFC 3986, it requires ports to be numeric.
 
-## func Str2Bytes
-
-```go
-func Str2Bytes(s string) (b []byte)
-```
-
-Str2Bytes Ref: csdn.weixin\_43705457
-
-## func StrToBytes
-
-```go
-func StrToBytes(s string) []byte
-```
-
-StrToBytes Ref: Allenxuxu / toolkit
-
-## func String2Bytes
-
-```go
-func String2Bytes(s string) (bs []byte)
-```
-
-## func StringToBytes
-
-```go
-func StringToBytes(s string) (b []byte)
-```
-
-StringToBytes Ref: csdn.u010853261
-
+<a name="SumInt"></a>
 ## func SumInt
 
 ```go
@@ -1604,6 +1880,7 @@ func SumInt(v ...int) int
 
 SumInt 整数和
 
+<a name="ToLower"></a>
 ## func ToLower
 
 ```go
@@ -1612,6 +1889,7 @@ func ToLower(b string) string
 
 ToLower converts ascii string to lower\-case Ref: fiber
 
+<a name="ToLowerBytes"></a>
 ## func ToLowerBytes
 
 ```go
@@ -1620,6 +1898,7 @@ func ToLowerBytes(b []byte) []byte
 
 ToLowerBytes converts ascii slice to lower\-case Ref: fiber
 
+<a name="ToUpper"></a>
 ## func ToUpper
 
 ```go
@@ -1628,6 +1907,7 @@ func ToUpper(b string) string
 
 ToUpper converts ascii string to upper\-case Ref: fiber
 
+<a name="ToUpperBytes"></a>
 ## func ToUpperBytes
 
 ```go
@@ -1636,6 +1916,7 @@ func ToUpperBytes(b []byte) []byte
 
 ToUpperBytes converts ascii slice to upper\-case Ref: fiber
 
+<a name="Trim"></a>
 ## func Trim
 
 ```go
@@ -1644,6 +1925,7 @@ func Trim(s string, cutset byte) string
 
 Trim is the equivalent of strings.Trim Ref: fiber
 
+<a name="TrimBytes"></a>
 ## func TrimBytes
 
 ```go
@@ -1652,6 +1934,7 @@ func TrimBytes(b []byte, cutset byte) []byte
 
 TrimBytes is the equivalent of bytes.Trim Ref: fiber
 
+<a name="TrimLeft"></a>
 ## func TrimLeft
 
 ```go
@@ -1660,6 +1943,7 @@ func TrimLeft(s string, cutset byte) string
 
 TrimLeft is the equivalent of strings.TrimLeft Ref: fiber
 
+<a name="TrimLeftBytes"></a>
 ## func TrimLeftBytes
 
 ```go
@@ -1668,6 +1952,7 @@ func TrimLeftBytes(b []byte, cutset byte) []byte
 
 TrimLeftBytes is the equivalent of bytes.TrimLeft Ref: fiber
 
+<a name="TrimRight"></a>
 ## func TrimRight
 
 ```go
@@ -1676,6 +1961,7 @@ func TrimRight(s string, cutset byte) string
 
 TrimRight is the equivalent of strings.TrimRight Ref: fiber
 
+<a name="TrimRightBytes"></a>
 ## func TrimRightBytes
 
 ```go
@@ -1684,6 +1970,7 @@ func TrimRightBytes(b []byte, cutset byte) []byte
 
 TrimRightBytes is the equivalent of bytes.TrimRight Ref: fiber
 
+<a name="TrimSlice"></a>
 ## func TrimSlice
 
 ```go
@@ -1692,6 +1979,7 @@ func TrimSlice(ss []string) []string
 
 TrimSlice 清除 slice 中各元素的空白, 并删除空白项 注意: 原切片将被修改
 
+<a name="UUID"></a>
 ## func UUID
 
 ```go
@@ -1700,6 +1988,7 @@ func UUID() []byte
 
 UUID 随机 UUID, RFC4122, Version 4
 
+<a name="UUIDShort"></a>
 ## func UUIDShort
 
 ```go
@@ -1708,6 +1997,7 @@ func UUIDShort() string
 
 UUIDShort 随机 UUID, 短版, base58
 
+<a name="UUIDSimple"></a>
 ## func UUIDSimple
 
 ```go
@@ -1716,6 +2006,7 @@ func UUIDSimple() string
 
 UUIDSimple 随机 UUID, 无短横线
 
+<a name="UUIDString"></a>
 ## func UUIDString
 
 ```go
@@ -1724,18 +2015,25 @@ func UUIDString() string
 
 UUIDString 随机 UUID
 
+<a name="Ungzip"></a>
 ## func Ungzip
 
 ```go
 func Ungzip(data []byte) (src []byte, err error)
 ```
 
+
+
+<a name="Unzip"></a>
 ## func Unzip
 
 ```go
 func Unzip(data []byte) (src []byte, err error)
 ```
 
+
+
+<a name="ValidOptionalPort"></a>
 ## func ValidOptionalPort
 
 ```go
@@ -1744,6 +2042,7 @@ func ValidOptionalPort(port string) bool
 
 ValidOptionalPort reports whether port is either an empty string or matches /^:\\d\*$/
 
+<a name="WaitNextMinute"></a>
 ## func WaitNextMinute
 
 ```go
@@ -1752,6 +2051,7 @@ func WaitNextMinute(t ...time.Time)
 
 WaitNextMinute 下一分钟, 对齐时间, 0 秒
 
+<a name="WaitNextMinuteWithTime"></a>
 ## func WaitNextMinuteWithTime
 
 ```go
@@ -1760,6 +2060,7 @@ func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)
 
 WaitNextMinuteWithTime 下一分钟, 对齐时间, 0 秒
 
+<a name="WaitNextSecond"></a>
 ## func WaitNextSecond
 
 ```go
@@ -1768,6 +2069,7 @@ func WaitNextSecond(t ...time.Time)
 
 WaitNextSecond 下一秒, 对齐时间, 0 毫秒 \(近似\)
 
+<a name="WaitNextSecondWithTime"></a>
 ## func WaitNextSecondWithTime
 
 ```go
@@ -1776,6 +2078,7 @@ func WaitNextSecondWithTime(t ...time.Time) (now time.Time)
 
 WaitNextSecondWithTime 下一秒, 对齐时间, 0 毫秒 \(近似\)
 
+<a name="WaitSignal"></a>
 ## func WaitSignal
 
 ```go
@@ -1784,18 +2087,25 @@ func WaitSignal(sig ...os.Signal) os.Signal
 
 WaitSignal 等待系统信号 默认捕获退出类信息
 
+<a name="Zip"></a>
 ## func Zip
 
 ```go
 func Zip(data []byte) ([]byte, error)
 ```
 
+
+
+<a name="ZipLevel"></a>
 ## func ZipLevel
 
 ```go
 func ZipLevel(data []byte, level int) (dst []byte, err error)
 ```
 
+
+
+<a name="Bool"></a>
 ## type Bool
 
 A Bool is an atomic boolean value. The zero value is false.
@@ -1806,30 +2116,43 @@ type Bool struct {
 }
 ```
 
+<a name="NewBool"></a>
 ### func NewBool
 
 ```go
 func NewBool(val bool) *Bool
 ```
 
+
+
+<a name="NewFalse"></a>
 ### func NewFalse
 
 ```go
 func NewFalse() *Bool
 ```
 
+
+
+<a name="NewTrue"></a>
 ### func NewTrue
 
 ```go
 func NewTrue() *Bool
 ```
 
+
+
+<a name="Bool.CAS"></a>
 ### func \(\*Bool\) CAS
 
 ```go
 func (x *Bool) CAS(old, new bool) bool
 ```
 
+
+
+<a name="Bool.CompareAndSwap"></a>
 ### func \(\*Bool\) CompareAndSwap
 
 ```go
@@ -1838,6 +2161,7 @@ func (x *Bool) CompareAndSwap(old, new bool) (swapped bool)
 
 CompareAndSwap executes the compare\-and\-swap operation for the boolean value x.
 
+<a name="Bool.Load"></a>
 ### func \(\*Bool\) Load
 
 ```go
@@ -1846,12 +2170,16 @@ func (x *Bool) Load() bool
 
 Load atomically loads and returns the value stored in x.
 
+<a name="Bool.MarshalJSON"></a>
 ### func \(\*Bool\) MarshalJSON
 
 ```go
 func (x *Bool) MarshalJSON() ([]byte, error)
 ```
 
+
+
+<a name="Bool.Store"></a>
 ### func \(\*Bool\) Store
 
 ```go
@@ -1860,24 +2188,34 @@ func (x *Bool) Store(val bool)
 
 Store atomically stores val into x.
 
+<a name="Bool.StoreFalse"></a>
 ### func \(\*Bool\) StoreFalse
 
 ```go
 func (x *Bool) StoreFalse()
 ```
 
+
+
+<a name="Bool.StoreTrue"></a>
 ### func \(\*Bool\) StoreTrue
 
 ```go
 func (x *Bool) StoreTrue()
 ```
 
+
+
+<a name="Bool.String"></a>
 ### func \(\*Bool\) String
 
 ```go
 func (x *Bool) String() string
 ```
 
+
+
+<a name="Bool.Swap"></a>
 ### func \(\*Bool\) Swap
 
 ```go
@@ -1886,6 +2224,7 @@ func (x *Bool) Swap(new bool) (old bool)
 
 Swap atomically stores new into x and returns the previous value.
 
+<a name="Bool.Toggle"></a>
 ### func \(\*Bool\) Toggle
 
 ```go
@@ -1894,26 +2233,37 @@ func (x *Bool) Toggle() (old bool)
 
 Toggle atomically negates the Boolean and returns the previous value
 
+<a name="Bool.UnmarshalJSON"></a>
 ### func \(\*Bool\) UnmarshalJSON
 
 ```go
 func (x *Bool) UnmarshalJSON(b []byte) error
 ```
 
+
+
+<a name="NoCmp"></a>
 ## type NoCmp
 
 NoCmp is an uncomparable struct. Embed this inside another struct to make it uncomparable.
 
-type Foo struct \{ NoCmp // ... \}
+```
+type Foo struct {
+  NoCmp
+  // ...
+}
+```
 
 This DOES NOT:
 
-\- Disallow shallow copies of structs \- Disallow comparison of pointers to uncomparable structs
+- Disallow shallow copies of structs
+- Disallow comparison of pointers to uncomparable structs
 
 ```go
 type NoCmp [0]func()
 ```
 
+<a name="NoCopy"></a>
 ## type NoCopy
 
 NoCopy may be added to structs which must not be copied after the first use.
@@ -1926,6 +2276,7 @@ Note that it must not be embedded, due to the Lock and Unlock methods.
 type NoCopy struct{} //nolint:unused
 ```
 
+<a name="NoCopy.Lock"></a>
 ### func \(\*NoCopy\) Lock
 
 ```go
@@ -1934,12 +2285,16 @@ func (*NoCopy) Lock()
 
 Lock is a no\-op used by \-copylocks checker from \`go vet\`.
 
+<a name="NoCopy.Unlock"></a>
 ### func \(\*NoCopy\) Unlock
 
 ```go
 func (*NoCopy) Unlock()
 ```
 
+
+
+<a name="RecoveryCallback"></a>
 ## type RecoveryCallback
 
 RecoveryCallback 自定义恢复信息回调
@@ -1948,7 +2303,10 @@ RecoveryCallback 自定义恢复信息回调
 type RecoveryCallback func(err interface{}, trace []byte)
 ```
 
+<a name="TryMutex"></a>
 ## type TryMutex
+
+
 
 ```go
 type TryMutex struct {
@@ -1956,18 +2314,25 @@ type TryMutex struct {
 }
 ```
 
+<a name="NewTryMutex"></a>
 ### func NewTryMutex
 
 ```go
 func NewTryMutex() *TryMutex
 ```
 
+
+
+<a name="TryMutex.Lock"></a>
 ### func \(\*TryMutex\) Lock
 
 ```go
 func (m *TryMutex) Lock()
 ```
 
+
+
+<a name="TryMutex.TryLock"></a>
 ### func \(\*TryMutex\) TryLock
 
 ```go
@@ -1976,6 +2341,7 @@ func (m *TryMutex) TryLock(timeout ...time.Duration) bool
 
 TryLock 实现可选等待时间尝试获取锁
 
+<a name="TryMutex.Unlock"></a>
 ### func \(\*TryMutex\) Unlock
 
 ```go

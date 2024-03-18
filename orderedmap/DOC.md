@@ -8,45 +8,50 @@ import "github.com/fufuok/utils/orderedmap"
 
 ## Index
 
-- [type ByPair](<#type-bypair>)
-  - [func (a ByPair) Len() int](<#func-bypair-len>)
-  - [func (a ByPair) Less(i, j int) bool](<#func-bypair-less>)
-  - [func (a ByPair) Swap(i, j int)](<#func-bypair-swap>)
-- [type ByPairOf](<#type-bypairof>)
-  - [func (a ByPairOf[V]) Len() int](<#func-bypairofv-len>)
-  - [func (a ByPairOf[V]) Less(i, j int) bool](<#func-bypairofv-less>)
-  - [func (a ByPairOf[V]) Swap(i, j int)](<#func-bypairofv-swap>)
-- [type OrderedMap](<#type-orderedmap>)
-  - [func New() *OrderedMap](<#func-new>)
-  - [func (o *OrderedMap) Delete(key string)](<#func-orderedmap-delete>)
-  - [func (o *OrderedMap) Get(key string) (interface{}, bool)](<#func-orderedmap-get>)
-  - [func (o *OrderedMap) Keys() []string](<#func-orderedmap-keys>)
-  - [func (o OrderedMap) MarshalJSON() ([]byte, error)](<#func-orderedmap-marshaljson>)
-  - [func (o *OrderedMap) Set(key string, value interface{})](<#func-orderedmap-set>)
-  - [func (o *OrderedMap) SetEscapeHTML(on bool)](<#func-orderedmap-setescapehtml>)
-  - [func (o *OrderedMap) Sort(lessFunc func(a *Pair, b *Pair) bool)](<#func-orderedmap-sort>)
-  - [func (o *OrderedMap) SortKeys(sortFunc ...func(keys []string))](<#func-orderedmap-sortkeys>)
-  - [func (o *OrderedMap) UnmarshalJSON(b []byte) error](<#func-orderedmap-unmarshaljson>)
-  - [func (o *OrderedMap) Values() map[string]interface{}](<#func-orderedmap-values>)
-- [type OrderedMapOf](<#type-orderedmapof>)
-  - [func NewOf[V any]() *OrderedMapOf[V]](<#func-newof>)
-  - [func (o *OrderedMapOf[V]) Delete(key string)](<#func-orderedmapofv-delete>)
-  - [func (o *OrderedMapOf[V]) Get(key string) (V, bool)](<#func-orderedmapofv-get>)
-  - [func (o *OrderedMapOf[V]) Keys() []string](<#func-orderedmapofv-keys>)
-  - [func (o *OrderedMapOf[V]) MustGet(key string) V](<#func-orderedmapofv-mustget>)
-  - [func (o *OrderedMapOf[V]) Set(key string, value V)](<#func-orderedmapofv-set>)
-  - [func (o *OrderedMapOf[V]) Sort(lessFunc func(a *PairOf[V], b *PairOf[V]) bool)](<#func-orderedmapofv-sort>)
-  - [func (o *OrderedMapOf[V]) SortKeys(sortFunc ...func(keys []string))](<#func-orderedmapofv-sortkeys>)
-  - [func (o *OrderedMapOf[V]) Values() map[string]V](<#func-orderedmapofv-values>)
-- [type Pair](<#type-pair>)
-  - [func (kv *Pair) Key() string](<#func-pair-key>)
-  - [func (kv *Pair) Value() interface{}](<#func-pair-value>)
-- [type PairOf](<#type-pairof>)
-  - [func (kv *PairOf[V]) Key() string](<#func-pairofv-key>)
-  - [func (kv *PairOf[V]) Value() V](<#func-pairofv-value>)
+- [type ByPair](<#ByPair>)
+  - [func \(a ByPair\) Len\(\) int](<#ByPair.Len>)
+  - [func \(a ByPair\) Less\(i, j int\) bool](<#ByPair.Less>)
+  - [func \(a ByPair\) Swap\(i, j int\)](<#ByPair.Swap>)
+- [type ByPairOf](<#ByPairOf>)
+  - [func \(a ByPairOf\[K, V\]\) Len\(\) int](<#ByPairOf[K, V].Len>)
+  - [func \(a ByPairOf\[K, V\]\) Less\(i, j int\) bool](<#ByPairOf[K, V].Less>)
+  - [func \(a ByPairOf\[K, V\]\) Swap\(i, j int\)](<#ByPairOf[K, V].Swap>)
+- [type OrderedMap](<#OrderedMap>)
+  - [func New\(\) \*OrderedMap](<#New>)
+  - [func \(o \*OrderedMap\) Delete\(key string\)](<#OrderedMap.Delete>)
+  - [func \(o \*OrderedMap\) Get\(key string\) \(interface\{\}, bool\)](<#OrderedMap.Get>)
+  - [func \(o \*OrderedMap\) Keys\(\) \[\]string](<#OrderedMap.Keys>)
+  - [func \(o OrderedMap\) MarshalJSON\(\) \(\[\]byte, error\)](<#OrderedMap.MarshalJSON>)
+  - [func \(o \*OrderedMap\) Set\(key string, value interface\{\}\)](<#OrderedMap.Set>)
+  - [func \(o \*OrderedMap\) SetEscapeHTML\(on bool\)](<#OrderedMap.SetEscapeHTML>)
+  - [func \(o \*OrderedMap\) Sort\(lessFunc func\(a \*Pair, b \*Pair\) bool\)](<#OrderedMap.Sort>)
+  - [func \(o \*OrderedMap\) SortKeys\(sortFunc ...func\(keys \[\]string\)\)](<#OrderedMap.SortKeys>)
+  - [func \(o \*OrderedMap\) UnmarshalJSON\(b \[\]byte\) error](<#OrderedMap.UnmarshalJSON>)
+  - [func \(o \*OrderedMap\) Values\(\) map\[string\]interface\{\}](<#OrderedMap.Values>)
+- [type OrderedMapOf](<#OrderedMapOf>)
+  - [func NewOf\[K comparable, V any\]\(\) \*OrderedMapOf\[K, V\]](<#NewOf>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Clone\(\) \*OrderedMapOf\[K, V\]](<#OrderedMapOf[K, V].Clone>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Delete\(key K\)](<#OrderedMapOf[K, V].Delete>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Get\(key K\) \(V, bool\)](<#OrderedMapOf[K, V].Get>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Keys\(\) \[\]K](<#OrderedMapOf[K, V].Keys>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) MustGet\(key K\) V](<#OrderedMapOf[K, V].MustGet>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Set\(key K, value V\)](<#OrderedMapOf[K, V].Set>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Sort\(lessFunc func\(a \*PairOf\[K, V\], b \*PairOf\[K, V\]\) bool\)](<#OrderedMapOf[K, V].Sort>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) SortKeys\(sortFunc func\(keys \[\]K\)\)](<#OrderedMapOf[K, V].SortKeys>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) ToMap\(\) map\[K\]V](<#OrderedMapOf[K, V].ToMap>)
+  - [func \(o \*OrderedMapOf\[K, V\]\) Values\(\) map\[K\]V](<#OrderedMapOf[K, V].Values>)
+- [type Pair](<#Pair>)
+  - [func \(kv \*Pair\) Key\(\) string](<#Pair.Key>)
+  - [func \(kv \*Pair\) Value\(\) interface\{\}](<#Pair.Value>)
+- [type PairOf](<#PairOf>)
+  - [func \(kv \*PairOf\[K, V\]\) Key\(\) K](<#PairOf[K, V].Key>)
+  - [func \(kv \*PairOf\[K, V\]\) Value\(\) V](<#PairOf[K, V].Value>)
 
 
+<a name="ByPair"></a>
 ## type ByPair
+
+
 
 ```go
 type ByPair struct {
@@ -55,52 +60,76 @@ type ByPair struct {
 }
 ```
 
+<a name="ByPair.Len"></a>
 ### func \(ByPair\) Len
 
 ```go
 func (a ByPair) Len() int
 ```
 
+
+
+<a name="ByPair.Less"></a>
 ### func \(ByPair\) Less
 
 ```go
 func (a ByPair) Less(i, j int) bool
 ```
 
+
+
+<a name="ByPair.Swap"></a>
 ### func \(ByPair\) Swap
 
 ```go
 func (a ByPair) Swap(i, j int)
 ```
 
+
+
+<a name="ByPairOf"></a>
 ## type ByPairOf
 
+
+
 ```go
-type ByPairOf[V any] struct {
-    Pairs    []*PairOf[V]
-    LessFunc func(a *PairOf[V], j *PairOf[V]) bool
+type ByPairOf[K comparable, V any] struct {
+    Pairs    []*PairOf[K, V]
+    LessFunc func(a *PairOf[K, V], j *PairOf[K, V]) bool
 }
 ```
 
-### func \(ByPairOf\[V\]\) Len
+<a name="ByPairOf[K, V].Len"></a>
+### func \(ByPairOf\[K, V\]\) Len
 
 ```go
-func (a ByPairOf[V]) Len() int
+func (a ByPairOf[K, V]) Len() int
 ```
 
-### func \(ByPairOf\[V\]\) Less
+
+
+<a name="ByPairOf[K, V].Less"></a>
+### func \(ByPairOf\[K, V\]\) Less
 
 ```go
-func (a ByPairOf[V]) Less(i, j int) bool
+func (a ByPairOf[K, V]) Less(i, j int) bool
 ```
 
-### func \(ByPairOf\[V\]\) Swap
+
+
+<a name="ByPairOf[K, V].Swap"></a>
+### func \(ByPairOf\[K, V\]\) Swap
 
 ```go
-func (a ByPairOf[V]) Swap(i, j int)
+func (a ByPairOf[K, V]) Swap(i, j int)
 ```
 
+
+
+<a name="OrderedMap"></a>
 ## type OrderedMap
+
+
 
 ```go
 type OrderedMap struct {
@@ -108,48 +137,70 @@ type OrderedMap struct {
 }
 ```
 
+<a name="New"></a>
 ### func New
 
 ```go
 func New() *OrderedMap
 ```
 
+
+
+<a name="OrderedMap.Delete"></a>
 ### func \(\*OrderedMap\) Delete
 
 ```go
 func (o *OrderedMap) Delete(key string)
 ```
 
+
+
+<a name="OrderedMap.Get"></a>
 ### func \(\*OrderedMap\) Get
 
 ```go
 func (o *OrderedMap) Get(key string) (interface{}, bool)
 ```
 
+
+
+<a name="OrderedMap.Keys"></a>
 ### func \(\*OrderedMap\) Keys
 
 ```go
 func (o *OrderedMap) Keys() []string
 ```
 
+
+
+<a name="OrderedMap.MarshalJSON"></a>
 ### func \(OrderedMap\) MarshalJSON
 
 ```go
 func (o OrderedMap) MarshalJSON() ([]byte, error)
 ```
 
+
+
+<a name="OrderedMap.Set"></a>
 ### func \(\*OrderedMap\) Set
 
 ```go
 func (o *OrderedMap) Set(key string, value interface{})
 ```
 
+
+
+<a name="OrderedMap.SetEscapeHTML"></a>
 ### func \(\*OrderedMap\) SetEscapeHTML
 
 ```go
 func (o *OrderedMap) SetEscapeHTML(on bool)
 ```
 
+
+
+<a name="OrderedMap.Sort"></a>
 ### func \(\*OrderedMap\) Sort
 
 ```go
@@ -158,6 +209,7 @@ func (o *OrderedMap) Sort(lessFunc func(a *Pair, b *Pair) bool)
 
 Sort the map using your sort func
 
+<a name="OrderedMap.SortKeys"></a>
 ### func \(\*OrderedMap\) SortKeys
 
 ```go
@@ -166,85 +218,138 @@ func (o *OrderedMap) SortKeys(sortFunc ...func(keys []string))
 
 SortKeys Sort the map keys using your sort func
 
+<a name="OrderedMap.UnmarshalJSON"></a>
 ### func \(\*OrderedMap\) UnmarshalJSON
 
 ```go
 func (o *OrderedMap) UnmarshalJSON(b []byte) error
 ```
 
+
+
+<a name="OrderedMap.Values"></a>
 ### func \(\*OrderedMap\) Values
 
 ```go
 func (o *OrderedMap) Values() map[string]interface{}
 ```
 
+
+
+<a name="OrderedMapOf"></a>
 ## type OrderedMapOf
 
+
+
 ```go
-type OrderedMapOf[V any] struct {
+type OrderedMapOf[K comparable, V any] struct {
     // contains filtered or unexported fields
 }
 ```
 
+<a name="NewOf"></a>
 ### func NewOf
 
 ```go
-func NewOf[V any]() *OrderedMapOf[V]
+func NewOf[K comparable, V any]() *OrderedMapOf[K, V]
 ```
 
-### func \(\*OrderedMapOf\[V\]\) Delete
+
+
+<a name="OrderedMapOf[K, V].Clone"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Clone
 
 ```go
-func (o *OrderedMapOf[V]) Delete(key string)
+func (o *OrderedMapOf[K, V]) Clone() *OrderedMapOf[K, V]
 ```
 
-### func \(\*OrderedMapOf\[V\]\) Get
+
+
+<a name="OrderedMapOf[K, V].Delete"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Delete
 
 ```go
-func (o *OrderedMapOf[V]) Get(key string) (V, bool)
+func (o *OrderedMapOf[K, V]) Delete(key K)
 ```
 
-### func \(\*OrderedMapOf\[V\]\) Keys
+
+
+<a name="OrderedMapOf[K, V].Get"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Get
 
 ```go
-func (o *OrderedMapOf[V]) Keys() []string
+func (o *OrderedMapOf[K, V]) Get(key K) (V, bool)
 ```
 
-### func \(\*OrderedMapOf\[V\]\) MustGet
+
+
+<a name="OrderedMapOf[K, V].Keys"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Keys
 
 ```go
-func (o *OrderedMapOf[V]) MustGet(key string) V
+func (o *OrderedMapOf[K, V]) Keys() []K
 ```
 
-### func \(\*OrderedMapOf\[V\]\) Set
+
+
+<a name="OrderedMapOf[K, V].MustGet"></a>
+### func \(\*OrderedMapOf\[K, V\]\) MustGet
 
 ```go
-func (o *OrderedMapOf[V]) Set(key string, value V)
+func (o *OrderedMapOf[K, V]) MustGet(key K) V
 ```
 
-### func \(\*OrderedMapOf\[V\]\) Sort
+
+
+<a name="OrderedMapOf[K, V].Set"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Set
 
 ```go
-func (o *OrderedMapOf[V]) Sort(lessFunc func(a *PairOf[V], b *PairOf[V]) bool)
+func (o *OrderedMapOf[K, V]) Set(key K, value V)
+```
+
+
+
+<a name="OrderedMapOf[K, V].Sort"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Sort
+
+```go
+func (o *OrderedMapOf[K, V]) Sort(lessFunc func(a *PairOf[K, V], b *PairOf[K, V]) bool)
 ```
 
 Sort the map using your sort func
 
-### func \(\*OrderedMapOf\[V\]\) SortKeys
+<a name="OrderedMapOf[K, V].SortKeys"></a>
+### func \(\*OrderedMapOf\[K, V\]\) SortKeys
 
 ```go
-func (o *OrderedMapOf[V]) SortKeys(sortFunc ...func(keys []string))
+func (o *OrderedMapOf[K, V]) SortKeys(sortFunc func(keys []K))
 ```
 
 SortKeys Sort the map keys using your sort func
 
-### func \(\*OrderedMapOf\[V\]\) Values
+<a name="OrderedMapOf[K, V].ToMap"></a>
+### func \(\*OrderedMapOf\[K, V\]\) ToMap
 
 ```go
-func (o *OrderedMapOf[V]) Values() map[string]V
+func (o *OrderedMapOf[K, V]) ToMap() map[K]V
 ```
 
+
+
+<a name="OrderedMapOf[K, V].Values"></a>
+### func \(\*OrderedMapOf\[K, V\]\) Values
+
+```go
+func (o *OrderedMapOf[K, V]) Values() map[K]V
+```
+
+
+
+<a name="Pair"></a>
 ## type Pair
+
+
 
 ```go
 type Pair struct {
@@ -252,36 +357,49 @@ type Pair struct {
 }
 ```
 
+<a name="Pair.Key"></a>
 ### func \(\*Pair\) Key
 
 ```go
 func (kv *Pair) Key() string
 ```
 
+
+
+<a name="Pair.Value"></a>
 ### func \(\*Pair\) Value
 
 ```go
 func (kv *Pair) Value() interface{}
 ```
 
+
+
+<a name="PairOf"></a>
 ## type PairOf
 
+
+
 ```go
-type PairOf[V any] struct {
+type PairOf[K comparable, V any] struct {
     // contains filtered or unexported fields
 }
 ```
 
-### func \(\*PairOf\[V\]\) Key
+<a name="PairOf[K, V].Key"></a>
+### func \(\*PairOf\[K, V\]\) Key
 
 ```go
-func (kv *PairOf[V]) Key() string
+func (kv *PairOf[K, V]) Key() K
 ```
 
-### func \(\*PairOf\[V\]\) Value
+
+
+<a name="PairOf[K, V].Value"></a>
+### func \(\*PairOf\[K, V\]\) Value
 
 ```go
-func (kv *PairOf[V]) Value() V
+func (kv *PairOf[K, V]) Value() V
 ```
 
 

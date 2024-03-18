@@ -55,9 +55,7 @@ const (
 <a name="ErrFilename"></a>
 
 ```go
-var (
-    ErrFilename = errors.New("wrong file name")
-)
+var ErrFilename = errors.New("wrong file name")
 ```
 
 <a name="CopyDir"></a>
