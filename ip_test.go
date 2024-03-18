@@ -318,3 +318,104 @@ func TestParseIPx(t *testing.T) {
 		assert.Equal(t, v.isIPv6, isIPv6)
 	}
 }
+
+// Ref: gofiber/utils
+func Test_IsIPv4(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, true, IsIPv4("255.255.255.255"))
+	assert.Equal(t, true, IsIPv4("174.23.33.100"))
+	assert.Equal(t, true, IsIPv4("127.0.0.1"))
+	assert.Equal(t, true, IsIPv4("0.0.0.0"))
+
+	assert.Equal(t, false, IsIPv4("255.255.255.256"))
+	assert.Equal(t, false, IsIPv4(".0.0.0"))
+	assert.Equal(t, false, IsIPv4("0.0.0."))
+	assert.Equal(t, false, IsIPv4("0.0.0"))
+	assert.Equal(t, false, IsIPv4(".0.0.0."))
+	assert.Equal(t, false, IsIPv4("0.0.0.0.0"))
+	assert.Equal(t, false, IsIPv4("0"))
+	assert.Equal(t, false, IsIPv4(""))
+	assert.Equal(t, false, IsIPv4("2345:0425:2CA1::0567:5673:23b5"))
+	assert.Equal(t, false, IsIPv4("invalid"))
+	assert.Equal(t, false, IsIPv4("189.12.34.260"))
+	assert.Equal(t, false, IsIPv4("189.12.260.260"))
+	assert.Equal(t, false, IsIPv4("189.260.260.260"))
+	assert.Equal(t, false, IsIPv4("999.999.999.999"))
+	assert.Equal(t, false, IsIPv4("9999.9999.9999.9999"))
+}
+
+// Ref: gofiber/utils
+func Benchmark_IsIPv4(b *testing.B) {
+	ip := "174.23.33.100"
+	var res bool
+
+	b.Run("fiber", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = IsIPv4(ip)
+		}
+		assert.Equal(b, true, res)
+	})
+
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = net.ParseIP(ip) != nil
+		}
+		assert.Equal(b, true, res)
+	})
+}
+
+// Ref: gofiber/utils
+func Test_IsIPv6(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, true, IsIPv6("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"))
+	assert.Equal(t, true, IsIPv6("9396:9549:b4f7:8ed0:4791:1330:8c06:e62d"))
+	assert.Equal(t, true, IsIPv6("2345:0425:2CA1::0567:5673:23b5"))
+	assert.Equal(t, true, IsIPv6("2001:1:2:3:4:5:6:7"))
+	assert.Equal(t, true, IsIPv6("2001::"))
+	assert.Equal(t, true, IsIPv6("::"))
+
+	assert.Equal(t, false, IsIPv6("2001::1::1"))
+	assert.Equal(t, false, IsIPv6("2001::fffg"))
+	assert.Equal(t, false, IsIPv6("1.1.1.1"))
+	assert.Equal(t, false, IsIPv6("2001:1:2:3:4:5:6:"))
+	assert.Equal(t, false, IsIPv6(":1:2:3:4:5:6:"))
+	assert.Equal(t, false, IsIPv6("1:2:3:4:5:6:"))
+	assert.Equal(t, false, IsIPv6(""))
+	assert.Equal(t, false, IsIPv6("invalid"))
+}
+
+// Ref: gofiber/utils
+func Benchmark_IsIPv6(b *testing.B) {
+	ip := "9396:9549:b4f7:8ed0:4791:1330:8c06:e62d"
+	var res bool
+
+	b.Run("fiber", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = IsIPv6(ip)
+		}
+		assert.Equal(b, true, res)
+	})
+
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = net.ParseIP(ip) != nil
+		}
+		assert.Equal(b, true, res)
+	})
+}
+
+// go test -run=^$ -benchmem -benchtime=1s -count=2 -bench=Benchmark_IsIP
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// Benchmark_IsIPv4/fiber-16               88282953                13.25 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv4/fiber-16               90268933                13.23 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv4/default-16             45390993                25.53 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv4/default-16             46329868                25.49 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv6/fiber-16               27761413                44.99 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv6/fiber-16               27327100                43.97 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv6/default-16             21168326                57.92 ns/op            0 B/op          0 allocs/op
+// Benchmark_IsIPv6/default-16             20407336                57.98 ns/op            0 B/op          0 allocs/op
