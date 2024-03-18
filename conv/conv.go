@@ -58,13 +58,17 @@ func Ttov(t bool) interface{} {
 // Float64
 // /////////////////////////////////////////
 
-const maxUint64 = uint64(18446744073709551615)
-const minInt64 = int64(-9223372036854775808)
-const maxInt64 = int64(9223372036854775807)
+const (
+	maxUint64 = uint64(18446744073709551615)
+	minInt64  = int64(-9223372036854775808)
+	maxInt64  = int64(9223372036854775807)
+)
 
-var maxUint64Float = math.Nextafter(math.MaxUint64, 0)
-var maxInt64Float = math.Nextafter(math.MaxInt64, 0)
-var minInt64Float = math.Nextafter(math.MinInt64, 1)
+var (
+	maxUint64Float = math.Nextafter(math.MaxUint64, 0)
+	maxInt64Float  = math.Nextafter(math.MaxInt64, 0)
+	minInt64Float  = math.Nextafter(math.MinInt64, 1)
+)
 
 // Ftot converts float64 to bool
 func Ftot(f float64) bool {
@@ -206,6 +210,7 @@ func Utov(u uint64) interface{} {
 func isnumch(c byte) bool {
 	return (c >= '0' && c <= '9') || c == '.'
 }
+
 func parseFloat(a string) (float64, error) {
 	if a == "" {
 		return 0, strconv.ErrSyntax

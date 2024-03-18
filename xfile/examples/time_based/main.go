@@ -28,7 +28,7 @@ func initRecorder() {
 		FilenameTpl: "time_%s.log",
 		TimeTpl:     "150405",
 	}
-	_ = os.MkdirAll(filenameMaker.FilePath, 0755)
+	_ = os.MkdirAll(filenameMaker.FilePath, 0o755)
 	fmt.Printf("%+v\n", filenameMaker)
 	filename := filenameMaker.MakeFilename("")
 	opt := &xfile.Options{

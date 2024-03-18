@@ -45,7 +45,7 @@ func ResetDir(dirPath string) error {
 			return err
 		}
 	}
-	return os.MkdirAll(dirPath, 0755)
+	return os.MkdirAll(dirPath, 0o755)
 }
 
 // ReadFile reads contents from a file

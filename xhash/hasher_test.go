@@ -33,7 +33,7 @@ func TestGenHasher64(t *testing.T) {
 		y int
 	}
 	hasher3 := GenHasher64[*foo]()
-	var h3 = new(foo)
+	h3 := new(foo)
 	h31 := h3
 	assert.Equal(t, hasher3(h3), hasher3(h31))
 

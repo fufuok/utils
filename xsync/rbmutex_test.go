@@ -20,7 +20,6 @@ func TestRBMutexSerialReader(t *testing.T) {
 	var rtokens [numIters]*RToken
 	for i := 0; i < numIters; i++ {
 		rtokens[i] = mu.RLock()
-
 	}
 	for i := 0; i < numIters; i++ {
 		mu.RUnlock(rtokens[i])

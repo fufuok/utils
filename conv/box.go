@@ -65,14 +65,17 @@ func CustomBits(x uint64) Value {
 	return Value{x, custBitsType}
 }
 
-var plocker uint64
-var ptable map[unsafe.Pointer]struct{}
+var (
+	plocker uint64
+	ptable  map[unsafe.Pointer]struct{}
+)
 
 func plock() {
 	for !atomic.CompareAndSwapUint64(&plocker, 0, 1) {
 		runtime.Gosched()
 	}
 }
+
 func punlock() {
 	atomic.StoreUint64(&plocker, 0)
 }
@@ -111,8 +114,10 @@ const maxLen uint64 = 0x7FFFFFFF // int32 -> 2147483647 bytes
 // maxCap is the maximum capacity above the length for byte-slices.
 const maxCap uint64 = 0x7FFFFF // int24 -> 8388607 bytes
 
-var forceIfaceStrs = false
-var forceIfacePtrs = false
+var (
+	forceIfaceStrs = false
+	forceIfacePtrs = false
+)
 
 // non-primitive types
 const (

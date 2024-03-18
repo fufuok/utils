@@ -25,12 +25,15 @@ type Pudding struct {
 func (p Pudding) Float64() float64 {
 	return float64(p.Neat) * float64(p.Feet)
 }
+
 func (p Pudding) Uint64() uint64 {
 	return uint64(p.Neat) * uint64(p.Feet)
 }
+
 func (p Pudding) Int64() int64 {
 	return int64(p.Neat) * int64(p.Feet)
 }
+
 func (p Pudding) Bool() bool {
 	return true
 }
@@ -270,7 +273,6 @@ func TestValue(t *testing.T) {
 	assert(t, StringWithTag("hello", 999).Tag() == 999)
 	assert(t, StringWithTag("hello", 999).String() == "hello")
 	forceIfaceStrs = false
-
 }
 
 func TestBytes(t *testing.T) {

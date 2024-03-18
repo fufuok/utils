@@ -198,7 +198,6 @@ func humanateBigBytes(s, base *big.Int, sizes []string) string {
 	}
 
 	return fmt.Sprintf(f, val, suffix)
-
 }
 
 // order of magnitude (to a max order)

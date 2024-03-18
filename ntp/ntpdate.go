@@ -20,17 +20,15 @@ const (
 	defaultMinInterval = 20 * time.Second
 )
 
-var (
-	// 缺省的 NTP Host
-	defaultNTPHosts = []string{
-		"ntp.aliyun.com",
-		"ntp.tencent.com",
-		"time.cloudflare.com",
-		"time.windows.com",
-		"time.apple.com",
-		"pool.ntp.org",
-	}
-)
+// 缺省的 NTP Host
+var defaultNTPHosts = []string{
+	"ntp.aliyun.com",
+	"ntp.tencent.com",
+	"time.cloudflare.com",
+	"time.windows.com",
+	"time.apple.com",
+	"pool.ntp.org",
+}
 
 type HostResponse struct {
 	Host string

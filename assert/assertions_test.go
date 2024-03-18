@@ -90,7 +90,7 @@ func TestIsNil(t *testing.T) {
 
 	var eface1 error
 	Nil(t, eface1)
-	var eface2 = new(error)
+	eface2 := new(error)
 	NotNil(t, eface2)
 	var iface3 interface{} = eface1
 	Nil(t, iface3)
@@ -105,13 +105,13 @@ func TestIsNil(t *testing.T) {
 	var fun func(int) error
 	Nil(t, fun)
 
-	var struct0 = new(bytes.Buffer)
+	struct0 := new(bytes.Buffer)
 	NotNil(t, struct0)
 	var struct1 *bytes.Buffer
 	Nil(t, struct1)
 	var struct2 bytes.Buffer
 	NotNil(t, struct2)
-	var struct3 = &bytes.Buffer{}
+	struct3 := &bytes.Buffer{}
 	NotNil(t, struct3)
 	var struct4 *struct{}
 	Nil(t, struct4)

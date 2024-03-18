@@ -173,7 +173,7 @@ func TrimSlice(ss []string) []string {
 // ToLower converts ascii string to lower-case
 // Ref: fiber
 func ToLower(b string) string {
-	var res = make([]byte, len(b))
+	res := make([]byte, len(b))
 	copy(res, b)
 	for i := 0; i < len(res); i++ {
 		res[i] = toLowerTable[res[i]]
@@ -185,7 +185,7 @@ func ToLower(b string) string {
 // ToUpper converts ascii string to upper-case
 // Ref: fiber
 func ToUpper(b string) string {
-	var res = make([]byte, len(b))
+	res := make([]byte, len(b))
 	copy(res, b)
 	for i := 0; i < len(res); i++ {
 		res[i] = toUpperTable[res[i]]

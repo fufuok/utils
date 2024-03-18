@@ -14,9 +14,7 @@ const (
 	IPv4Max = 1<<32 - 1
 )
 
-var (
-	ErrInvalidHostPort = errors.New("invalid Host or Port")
-)
+var ErrInvalidHostPort = errors.New("invalid Host or Port")
 
 // IsPrivateIP reports whether ip is a private address, according to
 // RFC 1918 (IPv4 addresses) and RFC 4193 (IPv6 addresses).

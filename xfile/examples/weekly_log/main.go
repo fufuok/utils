@@ -36,7 +36,7 @@ func main() {
 }
 
 func initRecorder() {
-	_ = os.MkdirAll(filePath, 0755)
+	_ = os.MkdirAll(filePath, 0o755)
 	filenameMaker := new(weeklyMaker)
 	filename := filenameMaker.MakeFilename("")
 	opt := &xfile.Options{

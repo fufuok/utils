@@ -8,11 +8,13 @@ import (
 	"testing"
 )
 
-var testRandBytes = make([]byte, 16)
-var testEncodedBytes []byte
-var testEncodedBase64 []byte
-var testInteger = uint64(math.MaxInt64)
-var testEncodedInteger = []byte("V8qRkBGKRiP")
+var (
+	testRandBytes      = make([]byte, 16)
+	testEncodedBytes   []byte
+	testEncodedBase64  []byte
+	testInteger        = uint64(math.MaxInt64)
+	testEncodedInteger = []byte("V8qRkBGKRiP")
+)
 
 func init() {
 	if _, err := rand.Read(testRandBytes); err != nil {

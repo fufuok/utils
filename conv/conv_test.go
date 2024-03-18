@@ -16,11 +16,13 @@ func assert(t *testing.T, cond bool) {
 	}
 }
 
-type tbooler bool
-type tfloater float64
-type tstringer string
-type tinter int64
-type tuinter uint64
+type (
+	tbooler   bool
+	tfloater  float64
+	tstringer string
+	tinter    int64
+	tuinter   uint64
+)
 
 func (t tbooler) Bool() bool        { return bool(t) }
 func (t tfloater) Float64() float64 { return float64(t) }
@@ -419,7 +421,6 @@ func TestConv(t *testing.T) {
 	assert(t, Vtoa(tstringer("wqer9812039")) == "wqer9812039")
 	// any(fallback) -> string
 	assert(t, Vtoa(nil) == "")
-
 }
 
 func TestFloatConversions(t *testing.T) {

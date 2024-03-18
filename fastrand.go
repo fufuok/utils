@@ -39,6 +39,7 @@ func NewRand(seed ...int64) *rand.Rand {
 			New: func() interface{} {
 				return rand.NewSource(n)
 			},
-		}}
+		},
+	}
 	return rand.New(src)
 }

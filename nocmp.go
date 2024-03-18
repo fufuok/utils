@@ -23,13 +23,13 @@ package utils
 // NoCmp is an uncomparable struct. Embed this inside another struct to make
 // it uncomparable.
 //
-//  type Foo struct {
-//    NoCmp
-//    // ...
-//  }
+//	type Foo struct {
+//	  NoCmp
+//	  // ...
+//	}
 //
 // This DOES NOT:
 //
-//  - Disallow shallow copies of structs
-//  - Disallow comparison of pointers to uncomparable structs
+//   - Disallow shallow copies of structs
+//   - Disallow comparison of pointers to uncomparable structs
 type NoCmp [0]func()

@@ -87,6 +87,7 @@ func TestRandom(t *testing.T) {
 		Ugly(b)
 	}
 }
+
 func TestBig(t *testing.T) {
 	json := `[
   {
@@ -404,6 +405,7 @@ func BenchmarkPrettySortKeys(t *testing.B) {
 		PrettyOptions(example1, &opts)
 	}
 }
+
 func BenchmarkUgly(t *testing.B) {
 	t.ReportAllocs()
 	t.ResetTimer()

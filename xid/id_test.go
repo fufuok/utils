@@ -182,7 +182,6 @@ func TestIDJSONUnmarshaling(t *testing.T) {
 	if got := *v.ID; got.Compare(want) != 0 {
 		t.Errorf("json.Unmarshal() = %v, want %v", got, want)
 	}
-
 }
 
 func TestIDJSONUnmarshalingError(t *testing.T) {

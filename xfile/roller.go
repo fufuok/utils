@@ -18,9 +18,7 @@ const (
 	MinFlushInterval      = 100 * time.Millisecond
 )
 
-var (
-	ErrFilename = errors.New("wrong file name")
-)
+var ErrFilename = errors.New("wrong file name")
 
 type FilenameMaker interface {
 	MakeFilename(name string) string
@@ -173,7 +171,7 @@ func (r *Roller) openNewFile() error {
 			r.logger.Errorf("rebuild file: %s, err: %v", r.name, err)
 		}
 	}
-	file, err := os.OpenFile(r.name, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	file, err := os.OpenFile(r.name, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 	if err != nil {
 		return err
 	}

@@ -870,7 +870,7 @@ func TestTimeCopy(t *testing.T) {
 	}{
 		{2016, time.July, 4, 23, 11, 33, 3000, "America/New_York"},
 		{2015, time.October, 31, 9, 44, 23, 45935, "UTC"},
-		{2014, time.May, 5, 22, 01, 50, 219300, "Europe/Prague"},
+		{2014, time.May, 5, 22, 1, 50, 219300, "Europe/Prague"},
 	}
 
 	for i, test := range tests {
@@ -1117,7 +1117,7 @@ type Chan struct {
 }
 
 func TestChannel(t *testing.T) {
-	var c = Chan{
+	c := Chan{
 		Ch: make(chan int, 10),
 	}
 
@@ -1145,11 +1145,10 @@ func TestChannel(t *testing.T) {
 	if total != 45 {
 		t.Errorf("expected value %v, but it's %v", 45, total)
 	}
-
 }
 
 func TestArray(t *testing.T) {
-	var a = [6]int{0, 1, 2, 3, 4, 5}
+	a := [6]int{0, 1, 2, 3, 4, 5}
 	copied := Copy[[6]int](a)
 	a[0] = 10
 
@@ -1197,5 +1196,4 @@ func TestPointerInterface(t *testing.T) {
 	if s.A != "AA" {
 		t.Errorf("expected value %v, but it's %v", "A", s.A)
 	}
-
 }

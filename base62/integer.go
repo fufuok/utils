@@ -27,7 +27,7 @@ func (enc *Encoding) AppendUint(dst []byte, num uint64) []byte {
 	}
 
 	var buf [11]byte
-	var i = 11
+	i := 11
 	for num > 0 {
 		r := num % base
 		num /= base

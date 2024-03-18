@@ -16,9 +16,7 @@ const (
 	PtrSize = 4 << (^uintptr(0) >> 63)
 )
 
-var (
-	StackTraceBufferSize = 4 << 10
-)
+var StackTraceBufferSize = 4 << 10
 
 // RecoveryCallback 自定义恢复信息回调
 type RecoveryCallback func(err interface{}, trace []byte)

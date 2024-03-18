@@ -80,14 +80,12 @@ func TestSched(t *testing.T) {
 	}
 }
 
-var (
-	f = func() {
-		p := 0
-		for i := 0; i < 0; i++ {
-			p += i
-		}
+var f = func() {
+	p := 0
+	for i := 0; i < 0; i++ {
+		p += i
 	}
-)
+}
 
 func BenchmarkSched(b *testing.B) {
 	l := sched.New()

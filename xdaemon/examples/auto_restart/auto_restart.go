@@ -30,5 +30,4 @@ func main() {
 	log.Println(os.Getpid(), "start...")
 	time.Sleep(time.Second * 10)
 	log.Println(os.Getpid(), "end")
-
 }
