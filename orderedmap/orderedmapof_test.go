@@ -10,7 +10,7 @@ import (
 )
 
 func TestOrderedMapOf(t *testing.T) {
-	o := NewOf[any]()
+	o := NewOf[string, any]()
 	// number
 	o.Set("number", 3)
 	v, _ := o.Get("number")
@@ -90,7 +90,7 @@ func TestOrderedMapOf(t *testing.T) {
 }
 
 func TestOrderedMapOf_SortKeys(t *testing.T) {
-	o := NewOf[int]()
+	o := NewOf[string, int]()
 	o.Set("b", 2)
 	o.Set("a", 1)
 	o.Set("c", 3)
@@ -112,12 +112,12 @@ func TestOrderedMapOf_SortKeys(t *testing.T) {
 }
 
 func TestOrderedMapOf_Sort(t *testing.T) {
-	o := NewOf[float64]()
+	o := NewOf[string, float64]()
 	o.Set("b", 2.1)
 	o.Set("a", 1.1)
 	o.Set("c", 3)
 
-	o.Sort(func(a *PairOf[float64], b *PairOf[float64]) bool {
+	o.Sort(func(a *PairOf[string, float64], b *PairOf[string, float64]) bool {
 		return a.value > b.value
 	})
 

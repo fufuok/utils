@@ -5,15 +5,16 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/fufuok/utils/orderedmap"
 )
 
 func main() {
-	om := orderedmap.NewOf[int]()
-	om.Set("a", 1)
-	om.Set("b", 2)
-	om.Sort(func(a *orderedmap.PairOf[int], b *orderedmap.PairOf[int]) bool {
+	om := orderedmap.NewOf[int, int32]()
+	om.Set(7, 1)
+	om.Set(2, 2)
+	om.Sort(func(a *orderedmap.PairOf[int, int32], b *orderedmap.PairOf[int, int32]) bool {
 		return a.Value() > b.Value()
 	})
 	for _, k := range om.Keys() {
@@ -26,8 +27,8 @@ func main() {
 	_ = c
 	_ = m
 
-	// use NewOf[any]() instead of o := map[string]any{}
-	o := orderedmap.NewOf[any]()
+	// use NewOf[string, any]() instead of o := map[string]any{}
+	o := orderedmap.NewOf[string, any]()
 
 	// use Set instead of o["a"] = 1
 	o.Set("a", 1)
@@ -51,14 +52,14 @@ func main() {
 	o.Delete("b")
 
 	fmt.Println("sort the keys:")
-	o.SortKeys()
+	o.SortKeys(sort.Strings)
 	for _, k := range o.Keys() {
 		v, _ := o.Get(k)
 		fmt.Println(k, v)
 	}
 
 	fmt.Println("sort by Pair:")
-	o.Sort(func(a *orderedmap.PairOf[any], b *orderedmap.PairOf[any]) bool {
+	o.Sort(func(a *orderedmap.PairOf[string, any], b *orderedmap.PairOf[string, any]) bool {
 		return a.Value().(int) < b.Value().(int)
 	})
 	for _, k := range o.Keys() {
@@ -67,7 +68,7 @@ func main() {
 	}
 
 	fmt.Println("sort by Pair(reverse):")
-	o.Sort(func(a *orderedmap.PairOf[any], b *orderedmap.PairOf[any]) bool {
+	o.Sort(func(a *orderedmap.PairOf[string, any], b *orderedmap.PairOf[string, any]) bool {
 		return a.Value().(int) > b.Value().(int)
 	})
 	for _, k := range o.Keys() {
@@ -77,8 +78,8 @@ func main() {
 }
 
 // Output:
-// b 2
-// a 1
+// 2 2
+// 7 1
 // Get: 1 true
 // a 1
 // c 2

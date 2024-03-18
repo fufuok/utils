@@ -5,9 +5,7 @@ import (
 	"testing"
 )
 
-var (
-	count = 1_000_000
-)
+var count = 1_000_000
 
 func BenchmarkOrderedMap_Set(b *testing.B) {
 	o := New()

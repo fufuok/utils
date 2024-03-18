@@ -8,13 +8,13 @@ import (
 	"slices"
 )
 
-func (o *OrderedMapOf[V]) Clone() *OrderedMapOf[V] {
-	return &OrderedMapOf[V]{
+func (o *OrderedMapOf[K, V]) Clone() *OrderedMapOf[K, V] {
+	return &OrderedMapOf[K, V]{
 		keys:   slices.Clone(o.keys),
 		values: maps.Clone(o.values),
 	}
 }
 
-func (o *OrderedMapOf[V]) ToMap() map[string]V {
+func (o *OrderedMapOf[K, V]) ToMap() map[K]V {
 	return maps.Clone(o.values)
 }

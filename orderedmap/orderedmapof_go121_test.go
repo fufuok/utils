@@ -10,7 +10,7 @@ import (
 )
 
 func TestOrderedMapOf_Clone(t *testing.T) {
-	o := NewOf[int]()
+	o := NewOf[string, int]()
 	o.Set("b", 2)
 	o.Set("a", 1)
 	o.Set("c", 3)
@@ -25,7 +25,7 @@ func TestOrderedMapOf_Clone(t *testing.T) {
 }
 
 func TestOrderedMapOf_ToMap(t *testing.T) {
-	o := NewOf[int]()
+	o := NewOf[string, int]()
 	o.Set("b", 2)
 	o.Set("a", 1)
 	o.Set("c", 3)
