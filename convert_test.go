@@ -8,66 +8,6 @@ import (
 	"github.com/fufuok/utils/assert"
 )
 
-func TestStringToBytes(t *testing.T) {
-	t.Parallel()
-	for i := 0; i < 100; i++ {
-		s := RandString(64)
-		expected := []byte(s)
-		actual := StringToBytes(s)
-		assert.Equal(t, expected, actual)
-		assert.Equal(t, len(expected), len(actual))
-	}
-
-	expected := testString
-	actual := StringToBytes(expected)
-	assert.Equal(t, []byte(expected), actual)
-}
-
-func TestString2Bytes(t *testing.T) {
-	t.Parallel()
-	for i := 0; i < 100; i++ {
-		s := RandString(64)
-		expected := []byte(s)
-		actual := String2Bytes(s)
-		assert.Equal(t, expected, actual)
-		assert.Equal(t, len(expected), len(actual))
-	}
-
-	expected := testString
-	actual := String2Bytes(expected)
-	assert.Equal(t, []byte(expected), actual)
-}
-
-func TestStr2Bytes(t *testing.T) {
-	t.Parallel()
-	for i := 0; i < 100; i++ {
-		s := RandString(64)
-		expected := []byte(s)
-		actual := Str2Bytes(s)
-		assert.Equal(t, expected, actual)
-		assert.Equal(t, len(expected), len(actual))
-	}
-
-	expected := testString
-	actual := Str2Bytes(expected)
-	assert.Equal(t, []byte(expected), actual)
-}
-
-func TestStrToBytes(t *testing.T) {
-	t.Parallel()
-	for i := 0; i < 100; i++ {
-		s := RandString(64)
-		expected := []byte(s)
-		actual := StrToBytes(s)
-		assert.Equal(t, expected, actual)
-		assert.Equal(t, len(expected), len(actual))
-	}
-
-	expected := testString
-	actual := StrToBytes(expected)
-	assert.Equal(t, []byte(expected), actual)
-}
-
 func TestS2B(t *testing.T) {
 	t.Parallel()
 	for i := 0; i < 100; i++ {
@@ -221,63 +161,60 @@ func TestB64UrlDecode(t *testing.T) {
 	}
 }
 
-func BenchmarkS2BStringToBytes(b *testing.B) {
+func Benchmark_S2B(b *testing.B) {
 	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
+	bs := []byte(s)
+	var res []byte
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = StringToBytes(s)
-	}
+	b.Run("unsafe", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = S2B(s)
+		}
+		assert.Equal(b, bs, res)
+	})
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = []byte(s)
+		}
+		assert.Equal(b, bs, res)
+	})
 }
 
-func BenchmarkS2BString2Bytes(b *testing.B) {
+// go test -run=^$ -benchmem -count=2 -bench=Benchmark_S2B
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// Benchmark_S2B/unsafe-16                 1000000000               0.5843 ns/op          0 B/op          0 allocs/op
+// Benchmark_S2B/unsafe-16                 1000000000               0.5740 ns/op          0 B/op          0 allocs/op
+// Benchmark_S2B/default-16                   49786             31890 ns/op          311299 B/op          1 allocs/op
+// Benchmark_S2B/default-16                   32858             38366 ns/op          311298 B/op          1 allocs/op
+
+func Benchmark_B2S(b *testing.B) {
 	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
+	bs := []byte(s)
+	var res string
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = String2Bytes(s)
-	}
+	b.Run("unsafe", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = B2S(bs)
+		}
+		assert.Equal(b, s, res)
+	})
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = string(bs)
+		}
+		assert.Equal(b, s, res)
+	})
 }
 
-func BenchmarkS2BStr2Bytes(b *testing.B) {
-	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Str2Bytes(s)
-	}
-}
-
-func BenchmarkS2BStrToBytes(b *testing.B) {
-	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = StrToBytes(s)
-	}
-}
-
-func BenchmarkS2B(b *testing.B) {
-	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = S2B(s)
-	}
-}
-
-func BenchmarkS2BStdStringToBytes(b *testing.B) {
-	s := strings.Repeat(testString, 10000)
-	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = []byte(s)
-	}
-}
-
-// BenchmarkS2BStringToBytes-8      	1000000000	         0.378 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2BString2Bytes-8       	1000000000	         0.325 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2BStr2Bytes-8          	1000000000	         0.334 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2BStrToBytes-8         	1000000000	         0.421 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2B-8                   	1000000000	         0.325 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkS2BStdStringToBytes-8   	   27127	     43473 ns/op	  262144 B/op	       1 allocs/op
+// go test -run=^$ -benchmem -count=2 -bench=Benchmark_B2S
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// Benchmark_B2S/unsafe-16                 1000000000               0.4800 ns/op          0 B/op          0 allocs/op
+// Benchmark_B2S/unsafe-16                 1000000000               0.4874 ns/op          0 B/op          0 allocs/op
+// Benchmark_B2S/default-16                   41380             31547 ns/op          311298 B/op          1 allocs/op
+// Benchmark_B2S/default-16                   38935             37336 ns/op          311298 B/op          1 allocs/op

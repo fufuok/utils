@@ -8,69 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unsafe"
 )
-
-// 更安全的 reflect.StringHeader
-type stringHeader struct {
-	data unsafe.Pointer
-	len  int
-}
-
-// 更安全的 reflect.SliceHeader
-type sliceHeader struct {
-	data unsafe.Pointer
-	len  int
-	cap  int
-}
-
-func String2Bytes(s string) (bs []byte) {
-	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
-	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))
-	bh.Data = sh.Data
-	bh.Len = sh.Len
-	bh.Cap = sh.Len
-	return
-}
-
-// StringToBytes Ref: csdn.u010853261
-func StringToBytes(s string) (b []byte) {
-	return *(*[]byte)(unsafe.Pointer(&sliceHeader{
-		data: (*stringHeader)(unsafe.Pointer(&s)).data,
-		len:  len(s),
-		cap:  len(s),
-	}))
-}
-
-// Str2Bytes Ref: csdn.weixin_43705457
-func Str2Bytes(s string) (b []byte) {
-	*(*string)(unsafe.Pointer(&b)) = s
-	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s)
-	return
-}
-
-// StrToBytes Ref: Allenxuxu / toolkit
-func StrToBytes(s string) []byte {
-	x := (*[2]uintptr)(unsafe.Pointer(&s))
-	h := [3]uintptr{x[0], x[1], x[1]}
-	return *(*[]byte)(unsafe.Pointer(&h))
-}
-
-// S2B StringToBytes converts string to byte slice without a memory allocation.
-// Ref: gin
-func S2B(s string) []byte {
-	return *(*[]byte)(unsafe.Pointer(
-		&struct {
-			string
-			Cap int
-		}{s, len(s)},
-	))
-}
-
-// B2S BytesToString
-func B2S(b []byte) string {
-	return *(*string)(unsafe.Pointer(&b))
-}
 
 // MustJSONIndent 转 json 返回 []byte
 func MustJSONIndent(v interface{}) []byte {
