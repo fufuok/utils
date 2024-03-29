@@ -31,6 +31,21 @@ func InitLocation(name string) (*time.Location, bool) {
 	return loc, true
 }
 
+// WaitUntilMinute 等待, 直到 m 分钟
+func WaitUntilMinute(m int, t ...time.Time) {
+	var now time.Time
+	if len(t) > 0 {
+		now = t[0]
+	} else {
+		now = time.Now()
+	}
+	n := m - now.Minute()
+	if n < 0 {
+		n += 60
+	}
+	time.Sleep(time.Duration(n) * time.Minute)
+}
+
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
 func WaitNextMinute(t ...time.Time) {
 	_ = WaitNextMinuteWithTime(t...)
@@ -49,6 +64,21 @@ func WaitNextMinuteWithTime(t ...time.Time) (now time.Time) {
 	<-timer.C
 	timerpool.Release(timer)
 	return
+}
+
+// WaitUntilSecond 等待, 直到 s 秒
+func WaitUntilSecond(s int, t ...time.Time) {
+	var now time.Time
+	if len(t) > 0 {
+		now = t[0]
+	} else {
+		now = time.Now()
+	}
+	n := s - now.Second()
+	if n < 0 {
+		n += 60
+	}
+	time.Sleep(time.Duration(n) * time.Second)
 }
 
 // WaitNextSecond 下一秒, 对齐时间, 0 毫秒 (近似)
