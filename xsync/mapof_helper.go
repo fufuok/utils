@@ -3,10 +3,6 @@
 
 package xsync
 
-import (
-	"hash/maphash"
-)
-
 type HashMapOf[K comparable, V any] interface {
 	// Load returns the value stored in the map for a key, or nil if no
 	// value is present.
@@ -73,27 +69,4 @@ type HashMapOf[K comparable, V any] interface {
 
 	// Size returns current size of the map.
 	Size() int
-}
-
-var minMapTableCap = defaultMinMapTableLen * entriesPerMapBucket
-
-// Deprecated: NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys.
-// If no hasher is specified, an automatic generation will be attempted.
-// Hashable allowed map key types constraint.
-// Automatically generated hashes for these types are safe:
-//
-//	type Hashable interface {
-//		~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-//		~float32 | ~float64 | ~string | ~complex64 | ~complex128
-//	}
-func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V] {
-	return NewHashMapOfPresized[K, V](minMapTableCap, hasher...)
-}
-
-// Deprecated: NewHashMapOfPresized 官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器
-func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V] {
-	if sizeHint < minMapTableCap {
-		sizeHint = minMapTableCap
-	}
-	return NewMapOfPresized[K, V](sizeHint)
 }

@@ -6,29 +6,29 @@
 import "github.com/fufuok/utils/ntp"
 ```
 
-Package ntp provides an implementation of a Simple NTP \(SNTP\) client capable of querying the current time from a remote NTP server.  See RFC5905 \(https://tools.ietf.org/html/rfc5905\) for more details.
+Package ntp provides an implementation of a Simple NTP \(SNTP\) client capable of querying the current time from a remote NTP server. See RFC5905 \(https://tools.ietf.org/html/rfc5905\) for more details.
 
 This approach grew out of a go\-nuts post by Michael Hofmann: https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/FlcdMU5fkLQ
 
 ## Index
 
 - [Constants](<#constants>)
-- [func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Duration](<#func-clockoffsetchan>)
-- [func Time(host string) (time.Time, error)](<#func-time>)
-- [func TimeChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Time](<#func-timechan>)
-- [func TimeV(host string, version int) (time.Time, error)](<#func-timev>)
-- [type HostResponse](<#type-hostresponse>)
-  - [func HostPreferred(hosts []string) *HostResponse](<#func-hostpreferred>)
-- [type LeapIndicator](<#type-leapindicator>)
-- [type QueryOptions](<#type-queryoptions>)
-- [type Response](<#type-response>)
-  - [func GetResponse(host string) *Response](<#func-getresponse>)
-  - [func Query(host string) (*Response, error)](<#func-query>)
-  - [func QueryWithOptions(host string, opt QueryOptions) (*Response, error)](<#func-querywithoptions>)
-  - [func (r *Response) Validate() error](<#func-response-validate>)
+- [func ClockOffsetChan\(ctx context.Context, interval time.Duration, hosts ...string\) chan time.Duration](<#ClockOffsetChan>)
+- [func TimeChan\(ctx context.Context, interval time.Duration, hosts ...string\) chan time.Time](<#TimeChan>)
+- [type HostResponse](<#HostResponse>)
+  - [func HostPreferred\(hosts \[\]string\) \*HostResponse](<#HostPreferred>)
+- [type LeapIndicator](<#LeapIndicator>)
+- [type QueryOptions](<#QueryOptions>)
+- [type Response](<#Response>)
+  - [func GetResponse\(host string\) \*Response](<#GetResponse>)
+  - [func Query\(host string\) \(\*Response, error\)](<#Query>)
+  - [func QueryWithOptions\(host string, opt QueryOptions\) \(\*Response, error\)](<#QueryWithOptions>)
+  - [func \(r \*Response\) Validate\(\) error](<#Response.Validate>)
 
 
 ## Constants
+
+<a name="LeapNoWarning"></a>
 
 ```go
 const (
@@ -46,6 +46,7 @@ const (
 )
 ```
 
+<a name="ClockOffsetChan"></a>
 ## func ClockOffsetChan
 
 ```go
@@ -54,14 +55,7 @@ func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...strin
 
 ClockOffsetChan 启动 Simple NTP \(SNTP\), 周期性获取时钟偏移值
 
-## func Time
-
-```go
-func Time(host string) (time.Time, error)
-```
-
-Time returns the current time using information from a remote NTP server. It uses version 4 of the NTP protocol. On error, it returns the local system time.
-
+<a name="TimeChan"></a>
 ## func TimeChan
 
 ```go
@@ -70,17 +64,10 @@ func TimeChan(ctx context.Context, interval time.Duration, hosts ...string) chan
 
 TimeChan 启动 Simple NTP \(SNTP\), 周期性获取最新时间
 
-## func TimeV
-
-```go
-func TimeV(host string, version int) (time.Time, error)
-```
-
-TimeV returns the current time using information from a remote NTP server. On error, it returns the local system time. The version may be 2, 3, or 4.
-
-Deprecated: TimeV is deprecated. Use QueryWithOptions instead.
-
+<a name="HostResponse"></a>
 ## type HostResponse
+
+
 
 ```go
 type HostResponse struct {
@@ -89,6 +76,7 @@ type HostResponse struct {
 }
 ```
 
+<a name="HostPreferred"></a>
 ### func HostPreferred
 
 ```go
@@ -97,6 +85,7 @@ func HostPreferred(hosts []string) *HostResponse
 
 HostPreferred 选择最快的 NTP Host
 
+<a name="LeapIndicator"></a>
 ## type LeapIndicator
 
 The LeapIndicator is used to warn if a leap second should be inserted or deleted in the last minute of the current month.
@@ -105,6 +94,7 @@ The LeapIndicator is used to warn if a leap second should be inserted or deleted
 type LeapIndicator uint8
 ```
 
+<a name="QueryOptions"></a>
 ## type QueryOptions
 
 QueryOptions contains the list of configurable options that may be used with the QueryWithOptions function.
@@ -119,6 +109,7 @@ type QueryOptions struct {
 }
 ```
 
+<a name="Response"></a>
 ## type Response
 
 A Response contains time data, some of which is returned by the NTP server and some of which is calculated by the client.
@@ -191,6 +182,7 @@ type Response struct {
 }
 ```
 
+<a name="GetResponse"></a>
 ### func GetResponse
 
 ```go
@@ -199,6 +191,7 @@ func GetResponse(host string) *Response
 
 GetResponse 获取 NTP 响应, 无效值返回 nil
 
+<a name="Query"></a>
 ### func Query
 
 ```go
@@ -207,6 +200,7 @@ func Query(host string) (*Response, error)
 
 Query returns a response from the remote NTP server Host. It contains the time at which the server transmitted the response as well as other useful information about the time and the remote server.
 
+<a name="QueryWithOptions"></a>
 ### func QueryWithOptions
 
 ```go
@@ -215,6 +209,7 @@ func QueryWithOptions(host string, opt QueryOptions) (*Response, error)
 
 QueryWithOptions performs the same function as Query but allows for the customization of several query options.
 
+<a name="Response.Validate"></a>
 ### func \(\*Response\) Validate
 
 ```go
@@ -222,7 +217,5 @@ func (r *Response) Validate() error
 ```
 
 Validate checks if the response is valid for the purposes of time synchronization.
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

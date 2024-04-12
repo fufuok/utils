@@ -98,12 +98,6 @@ func JoinStringBytes(s ...string) []byte {
 	return b
 }
 
-// AddStringBytes 拼接字符串, 返回 bytes from bytes.Join()
-// Deprecated: this function simply calls utils.JoinStringBytes.
-func AddStringBytes(s ...string) []byte {
-	return JoinStringBytes(s...)
-}
-
 // JoinString 拼接字符串
 func JoinString(s ...string) string {
 	switch len(s) {
@@ -118,12 +112,6 @@ func JoinString(s ...string) string {
 	default:
 		return B2S(JoinStringBytes(s...))
 	}
-}
-
-// AddString 拼接字符串
-// Deprecated: this function simply calls utils.JoinStringBytes.
-func AddString(s ...string) string {
-	return JoinString(s...)
 }
 
 // SearchString 搜索字符串位置(左, 第一个)

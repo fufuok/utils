@@ -10,8 +10,6 @@ import "github.com/fufuok/utils"
 
 - [Constants](<#constants>)
 - [Variables](<#variables>)
-- [func AddString\(s ...string\) string](<#AddString>)
-- [func AddStringBytes\(s ...string\) \[\]byte](<#AddStringBytes>)
 - [func B2S\(b \[\]byte\) string](<#B2S>)
 - [func B64Decode\(s string\) \[\]byte](<#B64Decode>)
 - [func B64Encode\(b \[\]byte\) string](<#B64Encode>)
@@ -201,6 +199,8 @@ import "github.com/fufuok/utils"
 - [func WaitNextSecond\(t ...time.Time\)](<#WaitNextSecond>)
 - [func WaitNextSecondWithTime\(t ...time.Time\) \(now time.Time\)](<#WaitNextSecondWithTime>)
 - [func WaitSignal\(sig ...os.Signal\) os.Signal](<#WaitSignal>)
+- [func WaitUntilMinute\(m int, t ...time.Time\)](<#WaitUntilMinute>)
+- [func WaitUntilSecond\(s int, t ...time.Time\)](<#WaitUntilSecond>)
 - [func Zip\(data \[\]byte\) \(\[\]byte, error\)](<#Zip>)
 - [func ZipLevel\(data \[\]byte, level int\) \(dst \[\]byte, err error\)](<#ZipLevel>)
 - [type Bool](<#Bool>)
@@ -353,24 +353,6 @@ var ErrInvalidHostPort = errors.New("invalid Host or Port")
 ```go
 var StackTraceBufferSize = 4 << 10
 ```
-
-<a name="AddString"></a>
-## func AddString
-
-```go
-func AddString(s ...string) string
-```
-
-AddString 拼接字符串 Deprecated: this function simply calls utils.JoinStringBytes.
-
-<a name="AddStringBytes"></a>
-## func AddStringBytes
-
-```go
-func AddStringBytes(s ...string) []byte
-```
-
-AddStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\) Deprecated: this function simply calls utils.JoinStringBytes.
 
 <a name="B2S"></a>
 ## func B2S
@@ -2086,6 +2068,24 @@ func WaitSignal(sig ...os.Signal) os.Signal
 ```
 
 WaitSignal 等待系统信号 默认捕获退出类信息
+
+<a name="WaitUntilMinute"></a>
+## func WaitUntilMinute
+
+```go
+func WaitUntilMinute(m int, t ...time.Time)
+```
+
+WaitUntilMinute 等待, 直到 m 分钟
+
+<a name="WaitUntilSecond"></a>
+## func WaitUntilSecond
+
+```go
+func WaitUntilSecond(s int, t ...time.Time)
+```
+
+WaitUntilSecond 等待, 直到 s 秒
 
 <a name="Zip"></a>
 ## func Zip

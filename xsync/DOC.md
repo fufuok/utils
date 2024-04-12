@@ -8,65 +8,64 @@ import "github.com/fufuok/utils/xsync"
 
 ## Index
 
-- [type Counter](<#type-counter>)
-  - [func NewCounter() *Counter](<#func-newcounter>)
-  - [func (c *Counter) Add(delta int64)](<#func-counter-add>)
-  - [func (c *Counter) Dec()](<#func-counter-dec>)
-  - [func (c *Counter) Inc()](<#func-counter-inc>)
-  - [func (c *Counter) Reset()](<#func-counter-reset>)
-  - [func (c *Counter) Value() int64](<#func-counter-value>)
-- [type HashMapOf](<#type-hashmapof>)
-  - [func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapof>)
-  - [func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V]](<#func-newhashmapofpresized>)
-- [type MPMCQueue](<#type-mpmcqueue>)
-  - [func NewMPMCQueue(capacity int) *MPMCQueue](<#func-newmpmcqueue>)
-  - [func (q *MPMCQueue) Dequeue() interface{}](<#func-mpmcqueue-dequeue>)
-  - [func (q *MPMCQueue) Enqueue(item interface{})](<#func-mpmcqueue-enqueue>)
-  - [func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)](<#func-mpmcqueue-trydequeue>)
-  - [func (q *MPMCQueue) TryEnqueue(item interface{}) bool](<#func-mpmcqueue-tryenqueue>)
-- [type MPMCQueueOf](<#type-mpmcqueueof>)
-  - [func NewMPMCQueueOf[I any](capacity int) *MPMCQueueOf[I]](<#func-newmpmcqueueof>)
-  - [func (q *MPMCQueueOf[I]) Dequeue() I](<#func-mpmcqueueofi-dequeue>)
-  - [func (q *MPMCQueueOf[I]) Enqueue(item I)](<#func-mpmcqueueofi-enqueue>)
-  - [func (q *MPMCQueueOf[I]) TryDequeue() (item I, ok bool)](<#func-mpmcqueueofi-trydequeue>)
-  - [func (q *MPMCQueueOf[I]) TryEnqueue(item I) bool](<#func-mpmcqueueofi-tryenqueue>)
-- [type Map](<#type-map>)
-  - [func NewMap() *Map](<#func-newmap>)
-  - [func NewMapPresized(sizeHint int) *Map](<#func-newmappresized>)
-  - [func (m *Map) Clear()](<#func-map-clear>)
-  - [func (m *Map) Compute(key string, valueFn func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool)) (actual interface{}, ok bool)](<#func-map-compute>)
-  - [func (m *Map) Delete(key string)](<#func-map-delete>)
-  - [func (m *Map) Load(key string) (value interface{}, ok bool)](<#func-map-load>)
-  - [func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)](<#func-map-loadanddelete>)
-  - [func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadandstore>)
-  - [func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual interface{}, loaded bool)](<#func-map-loadorcompute>)
-  - [func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)](<#func-map-loadorstore>)
-  - [func (m *Map) Range(f func(key string, value interface{}) bool)](<#func-map-range>)
-  - [func (m *Map) Size() int](<#func-map-size>)
-  - [func (m *Map) Store(key string, value interface{})](<#func-map-store>)
-- [type MapOf](<#type-mapof>)
-  - [func NewMapOf[K comparable, V any]() *MapOf[K, V]](<#func-newmapof>)
-  - [func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]](<#func-newmapofpresized>)
-  - [func (m *MapOf[K, V]) Clear()](<#func-mapofk-v-clear>)
-  - [func (m *MapOf[K, V]) Compute(key K, valueFn func(oldValue V, loaded bool) (newValue V, delete bool)) (actual V, ok bool)](<#func-mapofk-v-compute>)
-  - [func (m *MapOf[K, V]) Delete(key K)](<#func-mapofk-v-delete>)
-  - [func (m *MapOf[K, V]) Load(key K) (value V, ok bool)](<#func-mapofk-v-load>)
-  - [func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)](<#func-mapofk-v-loadanddelete>)
-  - [func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool)](<#func-mapofk-v-loadandstore>)
-  - [func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)](<#func-mapofk-v-loadorcompute>)
-  - [func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)](<#func-mapofk-v-loadorstore>)
-  - [func (m *MapOf[K, V]) Range(f func(key K, value V) bool)](<#func-mapofk-v-range>)
-  - [func (m *MapOf[K, V]) Size() int](<#func-mapofk-v-size>)
-  - [func (m *MapOf[K, V]) Store(key K, value V)](<#func-mapofk-v-store>)
-- [type RBMutex](<#type-rbmutex>)
-  - [func NewRBMutex() *RBMutex](<#func-newrbmutex>)
-  - [func (mu *RBMutex) Lock()](<#func-rbmutex-lock>)
-  - [func (mu *RBMutex) RLock() *RToken](<#func-rbmutex-rlock>)
-  - [func (mu *RBMutex) RUnlock(t *RToken)](<#func-rbmutex-runlock>)
-  - [func (mu *RBMutex) Unlock()](<#func-rbmutex-unlock>)
-- [type RToken](<#type-rtoken>)
+- [type Counter](<#Counter>)
+  - [func NewCounter\(\) \*Counter](<#NewCounter>)
+  - [func \(c \*Counter\) Add\(delta int64\)](<#Counter.Add>)
+  - [func \(c \*Counter\) Dec\(\)](<#Counter.Dec>)
+  - [func \(c \*Counter\) Inc\(\)](<#Counter.Inc>)
+  - [func \(c \*Counter\) Reset\(\)](<#Counter.Reset>)
+  - [func \(c \*Counter\) Value\(\) int64](<#Counter.Value>)
+- [type HashMapOf](<#HashMapOf>)
+- [type MPMCQueue](<#MPMCQueue>)
+  - [func NewMPMCQueue\(capacity int\) \*MPMCQueue](<#NewMPMCQueue>)
+  - [func \(q \*MPMCQueue\) Dequeue\(\) interface\{\}](<#MPMCQueue.Dequeue>)
+  - [func \(q \*MPMCQueue\) Enqueue\(item interface\{\}\)](<#MPMCQueue.Enqueue>)
+  - [func \(q \*MPMCQueue\) TryDequeue\(\) \(item interface\{\}, ok bool\)](<#MPMCQueue.TryDequeue>)
+  - [func \(q \*MPMCQueue\) TryEnqueue\(item interface\{\}\) bool](<#MPMCQueue.TryEnqueue>)
+- [type MPMCQueueOf](<#MPMCQueueOf>)
+  - [func NewMPMCQueueOf\[I any\]\(capacity int\) \*MPMCQueueOf\[I\]](<#NewMPMCQueueOf>)
+  - [func \(q \*MPMCQueueOf\[I\]\) Dequeue\(\) I](<#MPMCQueueOf[I].Dequeue>)
+  - [func \(q \*MPMCQueueOf\[I\]\) Enqueue\(item I\)](<#MPMCQueueOf[I].Enqueue>)
+  - [func \(q \*MPMCQueueOf\[I\]\) TryDequeue\(\) \(item I, ok bool\)](<#MPMCQueueOf[I].TryDequeue>)
+  - [func \(q \*MPMCQueueOf\[I\]\) TryEnqueue\(item I\) bool](<#MPMCQueueOf[I].TryEnqueue>)
+- [type Map](<#Map>)
+  - [func NewMap\(\) \*Map](<#NewMap>)
+  - [func NewMapPresized\(sizeHint int\) \*Map](<#NewMapPresized>)
+  - [func \(m \*Map\) Clear\(\)](<#Map.Clear>)
+  - [func \(m \*Map\) Compute\(key string, valueFn func\(oldValue interface\{\}, loaded bool\) \(newValue interface\{\}, delete bool\)\) \(actual interface\{\}, ok bool\)](<#Map.Compute>)
+  - [func \(m \*Map\) Delete\(key string\)](<#Map.Delete>)
+  - [func \(m \*Map\) Load\(key string\) \(value interface\{\}, ok bool\)](<#Map.Load>)
+  - [func \(m \*Map\) LoadAndDelete\(key string\) \(value interface\{\}, loaded bool\)](<#Map.LoadAndDelete>)
+  - [func \(m \*Map\) LoadAndStore\(key string, value interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadAndStore>)
+  - [func \(m \*Map\) LoadOrCompute\(key string, valueFn func\(\) interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadOrCompute>)
+  - [func \(m \*Map\) LoadOrStore\(key string, value interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadOrStore>)
+  - [func \(m \*Map\) Range\(f func\(key string, value interface\{\}\) bool\)](<#Map.Range>)
+  - [func \(m \*Map\) Size\(\) int](<#Map.Size>)
+  - [func \(m \*Map\) Store\(key string, value interface\{\}\)](<#Map.Store>)
+- [type MapOf](<#MapOf>)
+  - [func NewMapOf\[K comparable, V any\]\(\) \*MapOf\[K, V\]](<#NewMapOf>)
+  - [func NewMapOfPresized\[K comparable, V any\]\(sizeHint int\) \*MapOf\[K, V\]](<#NewMapOfPresized>)
+  - [func \(m \*MapOf\[K, V\]\) Clear\(\)](<#MapOf[K, V].Clear>)
+  - [func \(m \*MapOf\[K, V\]\) Compute\(key K, valueFn func\(oldValue V, loaded bool\) \(newValue V, delete bool\)\) \(actual V, ok bool\)](<#MapOf[K, V].Compute>)
+  - [func \(m \*MapOf\[K, V\]\) Delete\(key K\)](<#MapOf[K, V].Delete>)
+  - [func \(m \*MapOf\[K, V\]\) Load\(key K\) \(value V, ok bool\)](<#MapOf[K, V].Load>)
+  - [func \(m \*MapOf\[K, V\]\) LoadAndDelete\(key K\) \(value V, loaded bool\)](<#MapOf[K, V].LoadAndDelete>)
+  - [func \(m \*MapOf\[K, V\]\) LoadAndStore\(key K, value V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadAndStore>)
+  - [func \(m \*MapOf\[K, V\]\) LoadOrCompute\(key K, valueFn func\(\) V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadOrCompute>)
+  - [func \(m \*MapOf\[K, V\]\) LoadOrStore\(key K, value V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadOrStore>)
+  - [func \(m \*MapOf\[K, V\]\) Range\(f func\(key K, value V\) bool\)](<#MapOf[K, V].Range>)
+  - [func \(m \*MapOf\[K, V\]\) Size\(\) int](<#MapOf[K, V].Size>)
+  - [func \(m \*MapOf\[K, V\]\) Store\(key K, value V\)](<#MapOf[K, V].Store>)
+- [type RBMutex](<#RBMutex>)
+  - [func NewRBMutex\(\) \*RBMutex](<#NewRBMutex>)
+  - [func \(mu \*RBMutex\) Lock\(\)](<#RBMutex.Lock>)
+  - [func \(mu \*RBMutex\) RLock\(\) \*RToken](<#RBMutex.RLock>)
+  - [func \(mu \*RBMutex\) RUnlock\(t \*RToken\)](<#RBMutex.RUnlock>)
+  - [func \(mu \*RBMutex\) Unlock\(\)](<#RBMutex.Unlock>)
+- [type RToken](<#RToken>)
 
 
+<a name="Counter"></a>
 ## type Counter
 
 A Counter is a striped int64 counter.
@@ -81,6 +80,7 @@ type Counter struct {
 }
 ```
 
+<a name="NewCounter"></a>
 ### func NewCounter
 
 ```go
@@ -89,6 +89,7 @@ func NewCounter() *Counter
 
 NewCounter creates a new Counter instance.
 
+<a name="Counter.Add"></a>
 ### func \(\*Counter\) Add
 
 ```go
@@ -97,6 +98,7 @@ func (c *Counter) Add(delta int64)
 
 Add adds the delta to the counter.
 
+<a name="Counter.Dec"></a>
 ### func \(\*Counter\) Dec
 
 ```go
@@ -105,6 +107,7 @@ func (c *Counter) Dec()
 
 Dec decrements the counter by 1.
 
+<a name="Counter.Inc"></a>
 ### func \(\*Counter\) Inc
 
 ```go
@@ -113,6 +116,7 @@ func (c *Counter) Inc()
 
 Inc increments the counter by 1.
 
+<a name="Counter.Reset"></a>
 ### func \(\*Counter\) Reset
 
 ```go
@@ -121,6 +125,7 @@ func (c *Counter) Reset()
 
 Reset resets the counter to zero. This method should only be used when it is known that there are no concurrent modifications of the counter.
 
+<a name="Counter.Value"></a>
 ### func \(\*Counter\) Value
 
 ```go
@@ -129,7 +134,10 @@ func (c *Counter) Value() int64
 
 Value returns the current counter value. The returned value may not include all of the latest operations in presence of concurrent modifications of the counter.
 
+<a name="HashMapOf"></a>
 ## type HashMapOf
+
+
 
 ```go
 type HashMapOf[K comparable, V any] interface {
@@ -201,29 +209,7 @@ type HashMapOf[K comparable, V any] interface {
 }
 ```
 
-### func NewHashMapOf
-
-```go
-func NewHashMapOf[K comparable, V any](hasher ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
-```
-
-Deprecated: NewHashMapOf creates a new HashMapOf instance with arbitrarily typed keys. If no hasher is specified, an automatic generation will be attempted. Hashable allowed map key types constraint. Automatically generated hashes for these types are safe:
-
-```
-type Hashable interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-	~float32 | ~float64 | ~string | ~complex64 | ~complex128
-}
-```
-
-### func NewHashMapOfPresized
-
-```go
-func NewHashMapOfPresized[K comparable, V any](sizeHint int, _ ...func(maphash.Seed, K) uint64) HashMapOf[K, V]
-```
-
-Deprecated: NewHashMapOfPresized 官方版本: \`v3.0.0\` 已统一了调用方法并内置了 hasher 生成器
-
+<a name="MPMCQueue"></a>
 ## type MPMCQueue
 
 A MPMCQueue is a bounded multi\-producer multi\-consumer concurrent queue.
@@ -238,6 +224,7 @@ type MPMCQueue struct {
 }
 ```
 
+<a name="NewMPMCQueue"></a>
 ### func NewMPMCQueue
 
 ```go
@@ -246,6 +233,7 @@ func NewMPMCQueue(capacity int) *MPMCQueue
 
 NewMPMCQueue creates a new MPMCQueue instance with the given capacity.
 
+<a name="MPMCQueue.Dequeue"></a>
 ### func \(\*MPMCQueue\) Dequeue
 
 ```go
@@ -254,6 +242,7 @@ func (q *MPMCQueue) Dequeue() interface{}
 
 Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
 
+<a name="MPMCQueue.Enqueue"></a>
 ### func \(\*MPMCQueue\) Enqueue
 
 ```go
@@ -262,6 +251,7 @@ func (q *MPMCQueue) Enqueue(item interface{})
 
 Enqueue inserts the given item into the queue. Blocks, if the queue is full.
 
+<a name="MPMCQueue.TryDequeue"></a>
 ### func \(\*MPMCQueue\) TryDequeue
 
 ```go
@@ -270,6 +260,7 @@ func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
 
 TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
 
+<a name="MPMCQueue.TryEnqueue"></a>
 ### func \(\*MPMCQueue\) TryEnqueue
 
 ```go
@@ -278,6 +269,7 @@ func (q *MPMCQueue) TryEnqueue(item interface{}) bool
 
 TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
 
+<a name="MPMCQueueOf"></a>
 ## type MPMCQueueOf
 
 A MPMCQueueOf is a bounded multi\-producer multi\-consumer concurrent queue. It's a generic version of MPMCQueue.
@@ -292,6 +284,7 @@ type MPMCQueueOf[I any] struct {
 }
 ```
 
+<a name="NewMPMCQueueOf"></a>
 ### func NewMPMCQueueOf
 
 ```go
@@ -300,6 +293,7 @@ func NewMPMCQueueOf[I any](capacity int) *MPMCQueueOf[I]
 
 NewMPMCQueueOf creates a new MPMCQueueOf instance with the given capacity.
 
+<a name="MPMCQueueOf[I].Dequeue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) Dequeue
 
 ```go
@@ -308,6 +302,7 @@ func (q *MPMCQueueOf[I]) Dequeue() I
 
 Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
 
+<a name="MPMCQueueOf[I].Enqueue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) Enqueue
 
 ```go
@@ -316,6 +311,7 @@ func (q *MPMCQueueOf[I]) Enqueue(item I)
 
 Enqueue inserts the given item into the queue. Blocks, if the queue is full.
 
+<a name="MPMCQueueOf[I].TryDequeue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) TryDequeue
 
 ```go
@@ -324,6 +320,7 @@ func (q *MPMCQueueOf[I]) TryDequeue() (item I, ok bool)
 
 TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
 
+<a name="MPMCQueueOf[I].TryEnqueue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) TryEnqueue
 
 ```go
@@ -332,6 +329,7 @@ func (q *MPMCQueueOf[I]) TryEnqueue(item I) bool
 
 TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
 
+<a name="Map"></a>
 ## type Map
 
 Map is like a Go map\[string\]interface\{\} but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map with a number of valuable extensions like Compute or Size.
@@ -350,6 +348,7 @@ type Map struct {
 }
 ```
 
+<a name="NewMap"></a>
 ### func NewMap
 
 ```go
@@ -358,6 +357,7 @@ func NewMap() *Map
 
 NewMap creates a new Map instance.
 
+<a name="NewMapPresized"></a>
 ### func NewMapPresized
 
 ```go
@@ -366,6 +366,7 @@ func NewMapPresized(sizeHint int) *Map
 
 NewMapPresized creates a new Map instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
 
+<a name="Map.Clear"></a>
 ### func \(\*Map\) Clear
 
 ```go
@@ -374,6 +375,7 @@ func (m *Map) Clear()
 
 Clear deletes all keys and values currently stored in the map.
 
+<a name="Map.Compute"></a>
 ### func \(\*Map\) Compute
 
 ```go
@@ -384,6 +386,7 @@ Compute either sets the computed new value for the key or deletes the value for 
 
 This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
+<a name="Map.Delete"></a>
 ### func \(\*Map\) Delete
 
 ```go
@@ -392,6 +395,7 @@ func (m *Map) Delete(key string)
 
 Delete deletes the value for a key.
 
+<a name="Map.Load"></a>
 ### func \(\*Map\) Load
 
 ```go
@@ -400,6 +404,7 @@ func (m *Map) Load(key string) (value interface{}, ok bool)
 
 Load returns the value stored in the map for a key, or nil if no value is present. The ok result indicates whether value was found in the map.
 
+<a name="Map.LoadAndDelete"></a>
 ### func \(\*Map\) LoadAndDelete
 
 ```go
@@ -408,6 +413,7 @@ func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
 
 LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
 
+<a name="Map.LoadAndStore"></a>
 ### func \(\*Map\) LoadAndStore
 
 ```go
@@ -416,6 +422,7 @@ func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, l
 
 LoadAndStore returns the existing value for the key if present, while setting the new value for the key. It stores the new value and returns the existing one, if present. The loaded result is true if the existing value was loaded, false otherwise.
 
+<a name="Map.LoadOrCompute"></a>
 ### func \(\*Map\) LoadOrCompute
 
 ```go
@@ -426,6 +433,7 @@ LoadOrCompute returns the existing value for the key if present. Otherwise, it c
 
 This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
+<a name="Map.LoadOrStore"></a>
 ### func \(\*Map\) LoadOrStore
 
 ```go
@@ -434,6 +442,7 @@ func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, lo
 
 LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
 
+<a name="Map.Range"></a>
 ### func \(\*Map\) Range
 
 ```go
@@ -446,6 +455,7 @@ Range does not necessarily correspond to any consistent snapshot of the Map's co
 
 It is safe to modify the map while iterating it, including entry creation, modification and deletion. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
+<a name="Map.Size"></a>
 ### func \(\*Map\) Size
 
 ```go
@@ -454,6 +464,7 @@ func (m *Map) Size() int
 
 Size returns current size of the map.
 
+<a name="Map.Store"></a>
 ### func \(\*Map\) Store
 
 ```go
@@ -462,6 +473,7 @@ func (m *Map) Store(key string, value interface{})
 
 Store sets the value for a key.
 
+<a name="MapOf"></a>
 ## type MapOf
 
 MapOf is like a Go map\[K\]V but is safe for concurrent use by multiple goroutines without additional locking or coordination. It follows the interface of sync.Map with a number of valuable extensions like Compute or Size.
@@ -478,6 +490,7 @@ type MapOf[K comparable, V any] struct {
 }
 ```
 
+<a name="NewMapOf"></a>
 ### func NewMapOf
 
 ```go
@@ -486,6 +499,7 @@ func NewMapOf[K comparable, V any]() *MapOf[K, V]
 
 NewMapOf creates a new MapOf instance.
 
+<a name="NewMapOfPresized"></a>
 ### func NewMapOfPresized
 
 ```go
@@ -494,6 +508,7 @@ func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]
 
 NewMapOfPresized creates a new MapOf instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
 
+<a name="MapOf[K, V].Clear"></a>
 ### func \(\*MapOf\[K, V\]\) Clear
 
 ```go
@@ -502,6 +517,7 @@ func (m *MapOf[K, V]) Clear()
 
 Clear deletes all keys and values currently stored in the map.
 
+<a name="MapOf[K, V].Compute"></a>
 ### func \(\*MapOf\[K, V\]\) Compute
 
 ```go
@@ -514,6 +530,8 @@ This call locks a hash table bucket while the compute function is executed. It m
 
 <details><summary>Example</summary>
 <p>
+
+
 
 ```go
 package main
@@ -592,6 +610,7 @@ func main() {
 </p>
 </details>
 
+<a name="MapOf[K, V].Delete"></a>
 ### func \(\*MapOf\[K, V\]\) Delete
 
 ```go
@@ -600,6 +619,7 @@ func (m *MapOf[K, V]) Delete(key K)
 
 Delete deletes the value for a key.
 
+<a name="MapOf[K, V].Load"></a>
 ### func \(\*MapOf\[K, V\]\) Load
 
 ```go
@@ -608,6 +628,7 @@ func (m *MapOf[K, V]) Load(key K) (value V, ok bool)
 
 Load returns the value stored in the map for a key, or zero value of type V if no value is present. The ok result indicates whether value was found in the map.
 
+<a name="MapOf[K, V].LoadAndDelete"></a>
 ### func \(\*MapOf\[K, V\]\) LoadAndDelete
 
 ```go
@@ -616,6 +637,7 @@ func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)
 
 LoadAndDelete deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
 
+<a name="MapOf[K, V].LoadAndStore"></a>
 ### func \(\*MapOf\[K, V\]\) LoadAndStore
 
 ```go
@@ -624,6 +646,7 @@ func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool)
 
 LoadAndStore returns the existing value for the key if present, while setting the new value for the key. It stores the new value and returns the existing one, if present. The loaded result is true if the existing value was loaded, false otherwise.
 
+<a name="MapOf[K, V].LoadOrCompute"></a>
 ### func \(\*MapOf\[K, V\]\) LoadOrCompute
 
 ```go
@@ -634,6 +657,7 @@ LoadOrCompute returns the existing value for the key if present. Otherwise, it c
 
 This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
+<a name="MapOf[K, V].LoadOrStore"></a>
 ### func \(\*MapOf\[K, V\]\) LoadOrStore
 
 ```go
@@ -642,6 +666,7 @@ func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)
 
 LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
 
+<a name="MapOf[K, V].Range"></a>
 ### func \(\*MapOf\[K, V\]\) Range
 
 ```go
@@ -654,6 +679,7 @@ Range does not necessarily correspond to any consistent snapshot of the Map's co
 
 It is safe to modify the map while iterating it, including entry creation, modification and deletion. However, the concurrent modification rule apply, i.e. the changes may be not reflected in the subsequently iterated entries.
 
+<a name="MapOf[K, V].Size"></a>
 ### func \(\*MapOf\[K, V\]\) Size
 
 ```go
@@ -662,6 +688,7 @@ func (m *MapOf[K, V]) Size() int
 
 Size returns current size of the map.
 
+<a name="MapOf[K, V].Store"></a>
 ### func \(\*MapOf\[K, V\]\) Store
 
 ```go
@@ -670,6 +697,7 @@ func (m *MapOf[K, V]) Store(key K, value V)
 
 Store sets the value for a key.
 
+<a name="RBMutex"></a>
 ## type RBMutex
 
 A RBMutex is a reader biased reader/writer mutual exclusion lock. The lock can be held by an many readers or a single writer. The zero value for a RBMutex is an unlocked mutex.
@@ -688,6 +716,7 @@ type RBMutex struct {
 }
 ```
 
+<a name="NewRBMutex"></a>
 ### func NewRBMutex
 
 ```go
@@ -696,6 +725,7 @@ func NewRBMutex() *RBMutex
 
 NewRBMutex creates a new RBMutex instance.
 
+<a name="RBMutex.Lock"></a>
 ### func \(\*RBMutex\) Lock
 
 ```go
@@ -704,6 +734,7 @@ func (mu *RBMutex) Lock()
 
 Lock locks m for writing. If the lock is already locked for reading or writing, Lock blocks until the lock is available.
 
+<a name="RBMutex.RLock"></a>
 ### func \(\*RBMutex\) RLock
 
 ```go
@@ -714,6 +745,7 @@ RLock locks m for reading and returns a reader token. The token must be used in 
 
 Should not be used for recursive read locking; a blocked Lock call excludes new readers from acquiring the lock.
 
+<a name="RBMutex.RUnlock"></a>
 ### func \(\*RBMutex\) RUnlock
 
 ```go
@@ -722,6 +754,7 @@ func (mu *RBMutex) RUnlock(t *RToken)
 
 RUnlock undoes a single RLock call. A reader token obtained from the RLock call must be provided. RUnlock does not affect other simultaneous readers. A panic is raised if m is not locked for reading on entry to RUnlock.
 
+<a name="RBMutex.Unlock"></a>
 ### func \(\*RBMutex\) Unlock
 
 ```go
@@ -732,6 +765,7 @@ Unlock unlocks m for writing. A panic is raised if m is not locked for writing o
 
 As with RWMutex, a locked RBMutex is not associated with a particular goroutine. One goroutine may RLock \(Lock\) a RBMutex and then arrange for another goroutine to RUnlock \(Unlock\) it.
 
+<a name="RToken"></a>
 ## type RToken
 
 RToken is a reader lock token.
@@ -741,7 +775,5 @@ type RToken struct {
     // contains filtered or unexported fields
 }
 ```
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

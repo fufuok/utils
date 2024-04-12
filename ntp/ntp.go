@@ -300,33 +300,6 @@ func QueryWithOptions(host string, opt QueryOptions) (*Response, error) {
 	return parseTime(m, now), nil
 }
 
-// TimeV returns the current time using information from a remote NTP server.
-// On error, it returns the local system time. The version may be 2, 3, or 4.
-//
-// Deprecated: TimeV is deprecated. Use QueryWithOptions instead.
-func TimeV(host string, version int) (time.Time, error) {
-	m, recvTime, err := getTime(host, QueryOptions{Version: version})
-	if err != nil {
-		return time.Now(), err
-	}
-
-	r := parseTime(m, recvTime)
-	err = r.Validate()
-	if err != nil {
-		return time.Now(), err
-	}
-
-	// Use the clock offset to calculate the time.
-	return time.Now().Add(r.ClockOffset), nil
-}
-
-// Time returns the current time using information from a remote NTP server.
-// It uses version 4 of the NTP protocol. On error, it returns the local
-// system time.
-func Time(host string) (time.Time, error) {
-	return TimeV(host, defaultNtpVersion)
-}
-
 // getTime performs the NTP server query and returns the response message
 // along with the local system time it was received.
 func getTime(host string, opt QueryOptions) (*msg, ntpTime, error) {
