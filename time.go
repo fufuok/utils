@@ -43,7 +43,9 @@ func WaitUntilMinute(m int, t ...time.Time) {
 	if n < 0 {
 		n += 60
 	}
-	time.Sleep(time.Duration(n) * time.Minute)
+	timer := timerpool.New(time.Duration(n) * time.Minute)
+	<-timer.C
+	timerpool.Release(timer)
 }
 
 // WaitNextMinute 下一分钟, 对齐时间, 0 秒
@@ -59,7 +61,7 @@ func WaitNextMinuteWithTime(t ...time.Time) (now time.Time) {
 	} else {
 		start = time.Now()
 	}
-	now = BeginOfSecond(start.Add(time.Minute))
+	now = BeginOfMinute(start.Add(time.Minute))
 	timer := timerpool.New(now.Sub(start))
 	<-timer.C
 	timerpool.Release(timer)
@@ -78,7 +80,9 @@ func WaitUntilSecond(s int, t ...time.Time) {
 	if n < 0 {
 		n += 60
 	}
-	time.Sleep(time.Duration(n) * time.Second)
+	timer := timerpool.New(time.Duration(n) * time.Second)
+	<-timer.C
+	timerpool.Release(timer)
 }
 
 // WaitNextSecond 下一秒, 对齐时间, 0 毫秒 (近似)
