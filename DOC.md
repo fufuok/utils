@@ -66,7 +66,6 @@ import "github.com/fufuok/utils"
 - [func FastIntn\(n int\) int](<#FastIntn>)
 - [func FastRand\(\) uint32](<#FastRand>)
 - [func FastRand64\(\) uint64](<#FastRand64>)
-- [func FastRandBytes\(n int\) \[\]byte](<#FastRandBytes>)
 - [func FastRandn\(n uint32\) uint32](<#FastRandn>)
 - [func FastRandu\(\) uint](<#FastRandu>)
 - [func GetBytes\(v interface\{\}, defaultVal ...\[\]byte\) \[\]byte](<#GetBytes>)
@@ -152,8 +151,14 @@ import "github.com/fufuok/utils"
 - [func ParseIPx\(s string\) \(net.IP, bool\)](<#ParseIPx>)
 - [func ParseIPxWithNumeric\(s string\) \(net.IP, bool\)](<#ParseIPxWithNumeric>)
 - [func ParseInts\(s string\) \(\[\]int, error\)](<#ParseInts>)
+- [func RandAlphaBytes\(n int\) \[\]byte](<#RandAlphaBytes>)
+- [func RandAlphaString\(n int\) string](<#RandAlphaString>)
 - [func RandBytes\(n int\) \[\]byte](<#RandBytes>)
-- [func RandHex\(nHalf int\) string](<#RandHex>)
+- [func RandBytesLetters\(n int, letters string\) \[\]byte](<#RandBytesLetters>)
+- [func RandDecBytes\(n int\) \[\]byte](<#RandDecBytes>)
+- [func RandDecString\(n int\) string](<#RandDecString>)
+- [func RandHexBytes\(n int\) \[\]byte](<#RandHexBytes>)
+- [func RandHexString\(n int\) string](<#RandHexString>)
 - [func RandInt\(min, max int\) int](<#RandInt>)
 - [func RandString\(n int\) string](<#RandString>)
 - [func RandUint32\(min, max uint32\) uint32](<#RandUint32>)
@@ -859,15 +864,6 @@ func FastRand64() uint64
 ```
 
 
-
-<a name="FastRandBytes"></a>
-## func FastRandBytes
-
-```go
-func FastRandBytes(n int) []byte
-```
-
-FastRandBytes random bytes, but faster.
 
 <a name="FastRandn"></a>
 ## func FastRandn
@@ -1646,6 +1642,24 @@ func ParseInts(s string) ([]int, error)
 
 ParseInts 解析字符串, 得到去重并排序后的数字列表 "5,0\-3, 3" =\> \[0,1,2,3,5\]
 
+<a name="RandAlphaBytes"></a>
+## func RandAlphaBytes
+
+```go
+func RandAlphaBytes(n int) []byte
+```
+
+RandAlphaBytes generates random alpha bytes.
+
+<a name="RandAlphaString"></a>
+## func RandAlphaString
+
+```go
+func RandAlphaString(n int) string
+```
+
+RandAlphaString 指定长度的随机字母字符串
+
 <a name="RandBytes"></a>
 ## func RandBytes
 
@@ -1653,16 +1667,52 @@ ParseInts 解析字符串, 得到去重并排序后的数字列表 "5,0\-3, 3" =
 func RandBytes(n int) []byte
 ```
 
-RandBytes random bytes
+RandBytes random bytes, but faster.
 
-<a name="RandHex"></a>
-## func RandHex
+<a name="RandBytesLetters"></a>
+## func RandBytesLetters
 
 ```go
-func RandHex(nHalf int) string
+func RandBytesLetters(n int, letters string) []byte
 ```
 
-RandHex a random string containing only the following characters: 0123456789abcdef
+RandBytesLetters 生成指定长度的字符切片
+
+<a name="RandDecBytes"></a>
+## func RandDecBytes
+
+```go
+func RandDecBytes(n int) []byte
+```
+
+RandDecBytes 指定长度的随机数字切片
+
+<a name="RandDecString"></a>
+## func RandDecString
+
+```go
+func RandDecString(n int) string
+```
+
+RandDecString 指定长度的随机数字字符串
+
+<a name="RandHexBytes"></a>
+## func RandHexBytes
+
+```go
+func RandHexBytes(n int) []byte
+```
+
+RandHexBytes generates random hexadecimal bytes.
+
+<a name="RandHexString"></a>
+## func RandHexString
+
+```go
+func RandHexString(n int) string
+```
+
+RandHexString 指定长度的随机 hex 字符串
 
 <a name="RandInt"></a>
 ## func RandInt

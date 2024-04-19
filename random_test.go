@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"bytes"
 	"math"
 	"math/rand"
+	"strings"
 	"sync"
 	"testing"
 
@@ -111,60 +111,37 @@ func BenchmarkRandIntParallel(b *testing.B) {
 
 func TestRandString(t *testing.T) {
 	t.Parallel()
-	a, b := RandString(777), RandString(777)
-	assert.Equal(t, 777, len(a))
-	assert.Equal(t, false, a == b)
-	assert.Equal(t, "", RandString(-1))
-}
-
-func TestRandBytes(t *testing.T) {
-	t.Parallel()
-	a, b := RandBytes(777), RandBytes(777)
-	assert.Equal(t, 777, len(a))
-	assert.Equal(t, 777, len(b))
-	assert.Equal(t, false, bytes.Equal(a, b))
-}
-
-func TestFastRandBytes(t *testing.T) {
-	t.Parallel()
-	a, b := FastRandBytes(777), FastRandBytes(777)
-	assert.Equal(t, 777, len(a))
-	assert.Equal(t, 777, len(b))
-	assert.Equal(t, false, bytes.Equal(a, b))
-}
-
-func TestRandHex(t *testing.T) {
-	t.Parallel()
-	assert.Equal(t, 32, len(RandHex(16)))
-	assert.Equal(t, 14, len(RandHex(7)))
-}
-
-func BenchmarkRandBytes(b *testing.B) {
-	b.Run("RandString", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			_ = RandString(20)
+	fns := []func(n int) string{RandString, RandAlphaString, RandHexString, RandDecString}
+	ss := []string{letterBytes, alphaBytes, hexBytes, decBytes}
+	for i, fn := range fns {
+		a, b := fn(777), fn(777)
+		assert.Equal(t, 777, len(a))
+		assert.NotEqual(t, a, b)
+		assert.Equal(t, "", fn(-1))
+		for _, s := range ss[i] {
+			assert.True(t, strings.ContainsRune(a, s))
 		}
-	})
-	b.Run("RandBytes", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			_ = RandBytes(20)
-		}
-	})
-	b.Run("FastRandBytes", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			_ = FastRandBytes(20)
-		}
-	})
+	}
+}
+
+func TestRandBytesLetters(t *testing.T) {
+	t.Parallel()
+	letters := ""
+	assert.Nil(t, RandBytesLetters(10, letters))
+	letters = "a"
+	assert.Nil(t, RandBytesLetters(10, letters))
+	letters = "ab"
+	s := B2S(RandBytesLetters(10, letters))
+	assert.Equal(t, 10, len(s))
+	assert.True(t, strings.Contains(s, "a"))
+	assert.True(t, strings.Contains(s, "b"))
+	letters = "xxxxxxxxxxxx"
+	s = B2S(RandBytesLetters(100, letters))
+	assert.Equal(t, 100, len(s))
+	assert.Equal(t, strings.Repeat("x", 100), s)
 }
 
 func BenchmarkRandBytesParallel(b *testing.B) {
-	b.Run("RandString", func(b *testing.B) {
-		b.RunParallel(func(pb *testing.PB) {
-			for pb.Next() {
-				_ = RandString(20)
-			}
-		})
-	})
 	b.Run("RandBytes", func(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
@@ -172,10 +149,24 @@ func BenchmarkRandBytesParallel(b *testing.B) {
 			}
 		})
 	})
-	b.Run("FastRandBytes", func(b *testing.B) {
+	b.Run("RandAlphaBytes", func(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
-				_ = FastRandBytes(20)
+				_ = RandAlphaBytes(20)
+			}
+		})
+	})
+	b.Run("RandHexBytes", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				_ = RandHexBytes(20)
+			}
+		})
+	})
+	b.Run("RandDecBytes", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				_ = RandDecBytes(20)
 			}
 		})
 	})
@@ -207,15 +198,16 @@ func BenchmarkRandBytesParallel(b *testing.B) {
 // BenchmarkRandIntParallel/std.rand.Intn-4        13878208                88.73 ns/op            0 B/op          0 allocs/op
 // BenchmarkRandIntParallel/std.rand.Intn-4        13828624                89.97 ns/op            0 B/op          0 allocs/op
 
-// BenchmarkRandBytes/RandString-4                 18142927                64.27 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytes/RandString-4                 18944168                64.43 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytes/RandBytes-4                   1730853                694.3 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytes/RandBytes-4                   1719566                687.4 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytes/FastRandBytes-4              18185881                64.99 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytes/FastRandBytes-4              18052567                65.73 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/RandString-4         63093751                19.00 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/RandString-4         67928510                19.29 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/RandBytes-4           1309642                916.2 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/RandBytes-4           1315711                916.6 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/FastRandBytes-4      64837544                20.05 ns/op           24 B/op          1 allocs/op
-// BenchmarkRandBytesParallel/FastRandBytes-4      65973478                19.52 ns/op           24 B/op          1 allocs/op
+// go test -run=^$ -benchmem -benchtime=1s -count=2 -bench=BenchmarkRandBytes
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// BenchmarkRandBytesParallel/RandBytes-16                 95409290                12.65 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandBytes-16                 90086031                12.75 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandAlphaBytes-16            79601335                14.97 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandAlphaBytes-16            76708616                14.81 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandHexBytes-16              39585378                28.88 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandHexBytes-16              43593310                29.04 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandDecBytes-16              32723065                36.39 ns/op           24 B/op          1 allocs/op
+// BenchmarkRandBytesParallel/RandDecBytes-16              33422029                36.33 ns/op           24 B/op          1 allocs/op

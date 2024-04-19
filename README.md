@@ -22,14 +22,13 @@ package utils // import "github.com/fufuok/utils"
 
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
+const IPv4Min = 0 ...
 const PtrSize = 4 << (^uintptr(0) >> 63)
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
 var ErrInvalidHostPort = errors.New("invalid Host or Port")
 var StackTraceBufferSize = 4 << 10
-func AddString(s ...string) string
-func AddStringBytes(s ...string) []byte
 func B2S(b []byte) string
 func B64Decode(s string) []byte
 func B64Encode(b []byte) string
@@ -86,7 +85,6 @@ func ExecutableDir(evalSymlinks ...bool) string
 func FastIntn(n int) int
 func FastRand() uint32
 func FastRand64() uint64
-func FastRandBytes(n int) []byte
 func FastRandn(n uint32) uint32
 func FastRandu() uint
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
@@ -119,18 +117,23 @@ func IPv42Long(ip net.IP) int
 func IPv42LongLittle(ip net.IP) int
 func IPv4String2Long(ip string) int
 func IPv4String2LongLittle(ip string) int
+func IPv62Int(ip net.IP) *big.Int
+func IPv6String2Int(ip string) *big.Int
 func InIPNet(ip net.IP, ipNets map[*net.IPNet]struct{}) bool
 func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
 func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)
 func InitLocation(name string) (*time.Location, bool)
+func Int2IPv6(ipInt *big.Int) net.IP
+func Int2IPv6String(n *big.Int) string
 func IsIP(ip string) bool
-func IsIPv4(ip string) bool
-func IsIPv6(ip string) bool
+func IsIPv4(s string) bool
+func IsIPv6(s string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
 func IsLeapYear(year int) bool
+func IsNumeric(s string) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
@@ -164,9 +167,17 @@ func ParseHumanBytes(s string) (uint64, error)
 func ParseIP(s string) (net.IP, bool)
 func ParseIPv4(ip string) net.IP
 func ParseIPv6(ip string) net.IP
+func ParseIPx(s string) (net.IP, bool)
+func ParseIPxWithNumeric(s string) (net.IP, bool)
 func ParseInts(s string) ([]int, error)
+func RandAlphaBytes(n int) []byte
+func RandAlphaString(n int) string
 func RandBytes(n int) []byte
-func RandHex(nHalf int) string
+func RandBytesLetters(n int, letters string) []byte
+func RandDecBytes(n int) []byte
+func RandDecString(n int) string
+func RandHexBytes(n int) []byte
+func RandHexString(n int) string
 func RandInt(min, max int) int
 func RandString(n int) string
 func RandUint32(min, max uint32) uint32
@@ -188,10 +199,6 @@ func SearchInt(slice []int, n int) int
 func SearchString(ss []string, s string) int
 func Sleep(ctx context.Context, interval time.Duration) error
 func SplitHostPort(hostPort string) (host, port string)
-func Str2Bytes(s string) (b []byte)
-func StrToBytes(s string) []byte
-func String2Bytes(s string) (bs []byte)
-func StringToBytes(s string) (b []byte)
 func SumInt(v ...int) int
 func ToLower(b string) string
 func ToLowerBytes(b []byte) []byte
@@ -216,6 +223,8 @@ func WaitNextMinuteWithTime(t ...time.Time) (now time.Time)
 func WaitNextSecond(t ...time.Time)
 func WaitNextSecondWithTime(t ...time.Time) (now time.Time)
 func WaitSignal(sig ...os.Signal) os.Signal
+func WaitUntilMinute(m int, t ...time.Time)
+func WaitUntilSecond(s int, t ...time.Time)
 func Zip(data []byte) ([]byte, error)
 func ZipLevel(data []byte, level int) (dst []byte, err error)
 type Bool struct{ ... }
@@ -1125,7 +1134,7 @@ func main() {
 
 	fmt.Println(utils.Rand.Intn(10), utils.FastIntn(10))
 
-	dec, _ := utils.Zip(utils.FastRandBytes(3000))
+	dec, _ := utils.Zip(utils.RandBytes(3000))
 	src, _ := utils.Unzip(dec)
 	fmt.Println(len(dec), len(src)) // 2288 3000
 

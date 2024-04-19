@@ -1,13 +1,13 @@
 package utils
 
 import (
-	rrand "crypto/rand"
-	"encoding/hex"
-	"io"
 	"math"
 )
 
 const (
+	decBytes      = "0123456789"
+	hexBytes      = "0123456789abcdef"
+	alphaBytes    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	letterBytes   = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	letterIdxBits = 6                    // 6 bits to represent a letter index
 	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
@@ -58,31 +58,47 @@ func FastIntn(n int) int {
 // RandString a random string, which may contain uppercase letters, lowercase letters and numbers.
 // Ref: stackoverflow.icza
 func RandString(n int) string {
-	return B2S(FastRandBytes(n))
+	return B2S(RandBytes(n))
 }
 
-// RandHex a random string containing only the following characters: 0123456789abcdef
-func RandHex(nHalf int) string {
-	return hex.EncodeToString(FastRandBytes(nHalf))
+// RandHexString 指定长度的随机 hex 字符串
+func RandHexString(n int) string {
+	return B2S(RandHexBytes(n))
 }
 
-// RandBytes random bytes
+// RandAlphaString 指定长度的随机字母字符串
+func RandAlphaString(n int) string {
+	return B2S(RandAlphaBytes(n))
+}
+
+// RandDecString 指定长度的随机数字字符串
+func RandDecString(n int) string {
+	return B2S(RandDecBytes(n))
+}
+
+// RandBytes random bytes, but faster.
 func RandBytes(n int) []byte {
-	if n < 1 {
-		return nil
-	}
-
-	b := make([]byte, n)
-	if _, err := io.ReadFull(rrand.Reader, b); err != nil {
-		return nil
-	}
-
-	return b
+	return RandBytesLetters(n, letterBytes)
 }
 
-// FastRandBytes random bytes, but faster.
-func FastRandBytes(n int) []byte {
-	if n < 1 {
+// RandAlphaBytes generates random alpha bytes.
+func RandAlphaBytes(n int) []byte {
+	return RandBytesLetters(n, alphaBytes)
+}
+
+// RandHexBytes generates random hexadecimal bytes.
+func RandHexBytes(n int) []byte {
+	return RandBytesLetters(n, hexBytes)
+}
+
+// RandDecBytes 指定长度的随机数字切片
+func RandDecBytes(n int) []byte {
+	return RandBytesLetters(n, decBytes)
+}
+
+// RandBytesLetters 生成指定长度的字符切片
+func RandBytesLetters(n int, letters string) []byte {
+	if n < 1 || len(letters) < 2 {
 		return nil
 	}
 	b := make([]byte, n)
@@ -90,8 +106,8 @@ func FastRandBytes(n int) []byte {
 		if remain == 0 {
 			cache, remain = FastRand(), letterIdxMax
 		}
-		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
+		if idx := int(cache & letterIdxMask); idx < len(letters) {
+			b[i] = letters[idx]
 			i--
 		}
 		cache >>= letterIdxBits
