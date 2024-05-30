@@ -954,7 +954,7 @@ type Pool struct{ ... }
 
 ### NTP 简单时间同步
 
-见: [ntp](ntp)
+独立项目, 见: https://github.com/fufuok/ntp
 
 默认优选 NTP Host, 周期性返回时钟偏移值或当前时间, 也可指定 Host 单次请求
 
