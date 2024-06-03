@@ -27,8 +27,8 @@ func ToString[T any](xs []T, sep string) string {
 	return strings.Join(ss, sep)
 }
 
-// Average 求数字切片的平均值
-func Average[T generic.Numeric](xs []T) float64 {
+// Average 求数字切片的平均值, 可选指定保留小数位数
+func Average[T generic.Numeric](xs []T, precision ...int) float64 {
 	switch len(xs) {
 	case 0:
 		return 0
@@ -41,5 +41,9 @@ func Average[T generic.Numeric](xs []T) float64 {
 	for _, x := range xs {
 		m += x
 	}
-	return float64(m) / float64(len(xs))
+	v := float64(m) / float64(len(xs))
+	if len(precision) > 0 && precision[0] > 0 {
+		return utils.Round(v, precision[0])
+	}
+	return v
 }

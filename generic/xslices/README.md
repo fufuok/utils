@@ -8,7 +8,7 @@ import "github.com/fufuok/utils/generic/xslices"
 
 ## Index
 
-- [func Average\[T generic.Numeric\]\(xs \[\]T\) float64](<#Average>)
+- [func Average\[T generic.Numeric\]\(xs \[\]T, precision ...int\) float64](<#Average>)
 - [func Deduplication\[E comparable\]\(s \[\]E\) \[\]E](<#Deduplication>)
 - [func Filter\[E any, S \~\[\]E\]\(s S, pred func\(E\) bool\) S](<#Filter>)
 - [func Max\[T cmp.Ordered\]\(xs ...T\) \(y T\)](<#Max>)
@@ -21,10 +21,10 @@ import "github.com/fufuok/utils/generic/xslices"
 ## func Average
 
 ```go
-func Average[T generic.Numeric](xs []T) float64
+func Average[T generic.Numeric](xs []T, precision ...int) float64
 ```
 
-Average 求数字切片的平均值
+Average 求数字切片的平均值, 可选指定保留小数位数
 
 <a name="Deduplication"></a>
 ## func Deduplication

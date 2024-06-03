@@ -24,4 +24,9 @@ func TestAverage(t *testing.T) {
 	assert.Equal(t, 2.5, Average(xs))
 	assert.Equal(t, float64(0), Average([]float32{0.0}))
 	assert.Equal(t, 0.6, Average([]float64{0.0, 1.2}))
+
+	fs := []float64{0.0, 0.5, 0.5}
+	assert.Equal(t, 0.33, Average(fs, 2))
+	fs = []float64{0.0, 1, 1}
+	assert.Equal(t, 0.667, Average(fs, 3))
 }
