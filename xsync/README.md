@@ -1,6 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20240226 v3.1.0*
+*forked from puzpuzpuz/xsync v20240622 v3.2.0*
 
 ## 改动:
 
