@@ -673,6 +673,8 @@ type Daemon struct{ ... }
 
 **官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器, 不再需要之前的改动, 直接使用官方原版就好**
 
+**如果要在 go1.18 以下使用, 可以使用: github.com/fufuok/xsync@v1.3.1**
+
 <details>
   <summary>DOC</summary>
 
@@ -1001,6 +1003,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"github.com/fufuok/utils"
@@ -1014,7 +1017,6 @@ import (
 	"github.com/fufuok/utils/xhash"
 	"github.com/fufuok/utils/xid"
 	"github.com/fufuok/utils/xjson/jsongen"
-	"github.com/fufuok/utils/xsync"
 )
 
 func main() {
@@ -1186,16 +1188,16 @@ func main() {
 	now = utils.WaitNextSecondWithTime()
 	fmt.Println("hour:minute:second.00*ms", now)
 
-	count := xsync.NewCounter()
+	count := int64(0)
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
 	for i := 0; i < 30; i++ {
 		bus.Add(1)
 		bus.RunWithArgs(func(n ...interface{}) {
-			count.Add(int64(n[0].(int)))
+			atomic.AddInt64(&count, int64(n[0].(int)))
 		}, i)
 	}
 	bus.Wait()
-	fmt.Println("count:", count.Value()) // count: 435
+	fmt.Println("count:", atomic.LoadInt64(&count)) // count: 435
 
 	// 继续下一批任务
 	bus.Add(1)
