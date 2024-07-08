@@ -1,6 +1,6 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20240622 v3.2.0*
+*forked from puzpuzpuz/xsync v20240708 v3.3.1*
 
 ## 改动:
 
@@ -35,7 +35,7 @@ import (
 )
 ```
 
-*Note for v1 and v2 users*: v1 and v2 support is discontinued, so please upgrade to v3. While the API has some breaking changes, the migration should be trivial.
+*Note for pre-v3 users*: v1 and v2 support is discontinued, so please upgrade to v3. While the API has some breaking changes, the migration should be trivial.
 
 ### Counter
 
@@ -77,7 +77,9 @@ m.Store("foo", "bar")
 v, ok := m.Load("foo")
 ```
 
-One important difference with `Map` is that `MapOf` supports arbitrary `comparable` key types:
+Apart from CLHT, `MapOf` borrows ideas from Java's `j.u.c.ConcurrentHashMap` (immutable K/V pair structs instead of atomic snapshots) and C++'s `absl::flat_hash_map` (meta memory and SWAR-based lookups). It also has more dense memory layout when compared with `Map`. Long story short, `MapOf` should be preferred over `Map` when possible.
+
+An important difference with `Map` is that `MapOf` supports arbitrary `comparable` key types:
 
 ```go
 type Point struct {

@@ -12,14 +12,6 @@ type (
 	BucketPadded = bucketPadded
 )
 
-type MapStats struct {
-	mapStats
-}
-
-func CollectMapStats(m *Map) MapStats {
-	return MapStats{m.stats()}
-}
-
 func LockBucket(mu *uint64) {
 	lockBucket(mu)
 }
@@ -50,6 +42,22 @@ func DisableAssertions() {
 
 func Fastrand() uint32 {
 	return runtime_fastrand()
+}
+
+func Broadcast(b uint8) uint64 {
+	return broadcast(b)
+}
+
+func FirstMarkedByteIndex(w uint64) int {
+	return firstMarkedByteIndex(w)
+}
+
+func MarkZeroBytes(w uint64) uint64 {
+	return markZeroBytes(w)
+}
+
+func SetByte(w uint64, b uint8, idx int) uint64 {
+	return setByte(w, b, idx)
 }
 
 func NextPowOf2(v uint32) uint32 {

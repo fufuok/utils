@@ -2,23 +2,23 @@ package main
 
 import (
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"github.com/fufuok/utils/sched"
-	"github.com/fufuok/utils/xsync"
 )
 
 func main() {
-	count := xsync.NewCounter()
+	count := int64(0)
 	bus := sched.New() // 默认并发数: runtime.NumCPU()
 	for i := 0; i < 30; i++ {
 		bus.Add(1)
 		bus.RunWithArgs(func(n ...interface{}) {
-			count.Add(int64(n[0].(int)))
+			atomic.AddInt64(&count, int64(n[0].(int)))
 		}, i)
 	}
 	bus.Wait()
-	fmt.Println("count:", count.Value()) // count: 435
+	fmt.Println("count:", atomic.LoadInt64(&count)) // count: 435
 
 	// 继续下一批任务
 	bus.Add(1)

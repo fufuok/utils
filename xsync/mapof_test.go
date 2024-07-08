@@ -270,7 +270,31 @@ func TestMapOfStore_StructKeys_StructValues(t *testing.T) {
 	}
 }
 
-func TestMapOfStore_HashCodeCollisions(t *testing.T) {
+func TestMapOfWithHasher(t *testing.T) {
+	const numEntries = 10000
+	m := NewMapOfWithHasher[int, int](murmur3Finalizer)
+	for i := 0; i < numEntries; i++ {
+		m.Store(i, i)
+	}
+	for i := 0; i < numEntries; i++ {
+		v, ok := m.Load(i)
+		if !ok {
+			t.Fatalf("value not found for %d", i)
+		}
+		if v != i {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+}
+
+func murmur3Finalizer(i int, _ uint64) uint64 {
+	h := uint64(i)
+	h = (h ^ (h >> 33)) * 0xff51afd7ed558ccd
+	h = (h ^ (h >> 33)) * 0xc4ceb9fe1a85ec53
+	return h ^ (h >> 33)
+}
+
+func TestMapOfWithHasher_HashCodeCollisions(t *testing.T) {
 	const numEntries = 1000
 	m := NewMapOfWithHasher[int, int](func(i int, _ uint64) uint64 {
 		// We intentionally use an awful hash function here to make sure
@@ -538,7 +562,7 @@ func TestMapOfStoreThenParallelDelete_DoesNotShrinkBelowMinTableLen(t *testing.T
 	<-cdone
 	<-cdone
 
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	if stats.RootBuckets != DefaultMinMapTableLen {
 		t.Fatalf("table length was different from the minimum: %d", stats.RootBuckets)
 	}
@@ -609,35 +633,35 @@ func TestMapOfClear(t *testing.T) {
 }
 
 func assertMapOfCapacity[K comparable, V any](t *testing.T, m *MapOf[K, V], expectedCap int) {
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	if stats.Capacity != expectedCap {
 		t.Fatalf("capacity was different from %d: %d", expectedCap, stats.Capacity)
 	}
 }
 
 func TestNewMapOfPresized(t *testing.T) {
-	assertMapOfCapacity(t, NewMapOf[string, string](), DefaultMinMapTableCap)
-	assertMapOfCapacity(t, NewMapOfPresized[string, string](0), DefaultMinMapTableCap)
-	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(0)), DefaultMinMapTableCap)
-	assertMapOfCapacity(t, NewMapOfPresized[string, string](-100), DefaultMinMapTableCap)
-	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(-100)), DefaultMinMapTableCap)
-	assertMapOfCapacity(t, NewMapOfPresized[string, string](500), 768)
-	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(500)), 768)
-	assertMapOfCapacity(t, NewMapOfPresized[int, int](1_000_000), 1_572_864)
-	assertMapOfCapacity(t, NewMapOf[int, int](WithPresize(1_000_000)), 1_572_864)
-	assertMapOfCapacity(t, NewMapOfPresized[point, point](100), 192)
-	assertMapOfCapacity(t, NewMapOf[point, point](WithPresize(100)), 192)
+	assertMapOfCapacity(t, NewMapOf[string, string](), DefaultMinMapOfTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string, string](0), DefaultMinMapOfTableCap)
+	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(0)), DefaultMinMapOfTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string, string](-100), DefaultMinMapOfTableCap)
+	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(-100)), DefaultMinMapOfTableCap)
+	assertMapOfCapacity(t, NewMapOfPresized[string, string](500), 640)
+	assertMapOfCapacity(t, NewMapOf[string, string](WithPresize(500)), 640)
+	assertMapOfCapacity(t, NewMapOfPresized[int, int](1_000_000), 1_310_720)
+	assertMapOfCapacity(t, NewMapOf[int, int](WithPresize(1_000_000)), 1_310_720)
+	assertMapOfCapacity(t, NewMapOfPresized[point, point](100), 160)
+	assertMapOfCapacity(t, NewMapOf[point, point](WithPresize(100)), 160)
 }
 
 func TestNewMapOfPresized_DoesNotShrinkBelowMinTableLen(t *testing.T) {
 	const minTableLen = 1024
-	const numEntries = minTableLen * EntriesPerMapBucket
+	const numEntries = minTableLen * EntriesPerMapOfBucket
 	m := NewMapOf[int, int](WithPresize(numEntries))
 	for i := 0; i < numEntries; i++ {
 		m.Store(i, i)
 	}
 
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	if stats.RootBuckets <= minTableLen {
 		t.Fatalf("table did not grow: %d", stats.RootBuckets)
 	}
@@ -646,7 +670,7 @@ func TestNewMapOfPresized_DoesNotShrinkBelowMinTableLen(t *testing.T) {
 		m.Delete(i)
 	}
 
-	stats = CollectMapOfStats(m)
+	stats = m.Stats()
 	if stats.RootBuckets != minTableLen {
 		t.Fatalf("table length was different from the minimum: %d", stats.RootBuckets)
 	}
@@ -654,16 +678,16 @@ func TestNewMapOfPresized_DoesNotShrinkBelowMinTableLen(t *testing.T) {
 
 func TestNewMapOfGrowOnly_OnlyShrinksOnClear(t *testing.T) {
 	const minTableLen = 128
-	const numEntries = minTableLen * EntriesPerMapBucket
+	const numEntries = minTableLen * EntriesPerMapOfBucket
 	m := NewMapOf[int, int](WithPresize(numEntries), WithGrowOnly())
 
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	initialTableLen := stats.RootBuckets
 
 	for i := 0; i < 2*numEntries; i++ {
 		m.Store(i, i)
 	}
-	stats = CollectMapOfStats(m)
+	stats = m.Stats()
 	maxTableLen := stats.RootBuckets
 	if maxTableLen <= minTableLen {
 		t.Fatalf("table did not grow: %d", maxTableLen)
@@ -672,13 +696,13 @@ func TestNewMapOfGrowOnly_OnlyShrinksOnClear(t *testing.T) {
 	for i := 0; i < numEntries; i++ {
 		m.Delete(i)
 	}
-	stats = CollectMapOfStats(m)
+	stats = m.Stats()
 	if stats.RootBuckets != maxTableLen {
 		t.Fatalf("table length was different from the expected: %d", stats.RootBuckets)
 	}
 
 	m.Clear()
-	stats = CollectMapOfStats(m)
+	stats = m.Stats()
 	if stats.RootBuckets != initialTableLen {
 		t.Fatalf("table length was different from the initial: %d", stats.RootBuckets)
 	}
@@ -691,11 +715,11 @@ func TestMapOfResize(t *testing.T) {
 	for i := 0; i < numEntries; i++ {
 		m.Store(strconv.Itoa(i), i)
 	}
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	if stats.Size != numEntries {
 		t.Fatalf("size was too small: %d", stats.Size)
 	}
-	expectedCapacity := int(math.RoundToEven(MapLoadFactor+1)) * stats.RootBuckets * EntriesPerMapBucket
+	expectedCapacity := int(math.RoundToEven(MapLoadFactor+1)) * stats.RootBuckets * EntriesPerMapOfBucket
 	if stats.Capacity > expectedCapacity {
 		t.Fatalf("capacity was too large: %d, expected: %d", stats.Capacity, expectedCapacity)
 	}
@@ -715,11 +739,11 @@ func TestMapOfResize(t *testing.T) {
 	for i := 0; i < numEntries; i++ {
 		m.Delete(strconv.Itoa(i))
 	}
-	stats = CollectMapOfStats(m)
+	stats = m.Stats()
 	if stats.Size > 0 {
 		t.Fatalf("zero size was expected: %d", stats.Size)
 	}
-	expectedCapacity = stats.RootBuckets * EntriesPerMapBucket
+	expectedCapacity = stats.RootBuckets * EntriesPerMapOfBucket
 	if stats.Capacity != expectedCapacity {
 		t.Fatalf("capacity was too large: %d, expected: %d", stats.Capacity, expectedCapacity)
 	}
@@ -739,7 +763,7 @@ func TestMapOfResize_CounterLenLimit(t *testing.T) {
 	for i := 0; i < numEntries; i++ {
 		m.Store("foo"+strconv.Itoa(i), "bar"+strconv.Itoa(i))
 	}
-	stats := CollectMapOfStats(m)
+	stats := m.Stats()
 	if stats.Size != numEntries {
 		t.Fatalf("size was too small: %d", stats.Size)
 	}
@@ -749,7 +773,7 @@ func TestMapOfResize_CounterLenLimit(t *testing.T) {
 	}
 }
 
-func parallelSeqTypedResizer(t *testing.T, m *MapOf[int, int], numEntries int, positive bool, cdone chan bool) {
+func parallelSeqTypedResizer(m *MapOf[int, int], numEntries int, positive bool, cdone chan bool) {
 	for i := 0; i < numEntries; i++ {
 		if positive {
 			m.Store(i, i)
@@ -764,8 +788,8 @@ func TestMapOfParallelResize_GrowOnly(t *testing.T) {
 	const numEntries = 100_000
 	m := NewMapOf[int, int]()
 	cdone := make(chan bool)
-	go parallelSeqTypedResizer(t, m, numEntries, true, cdone)
-	go parallelSeqTypedResizer(t, m, numEntries, false, cdone)
+	go parallelSeqTypedResizer(m, numEntries, true, cdone)
+	go parallelSeqTypedResizer(m, numEntries, false, cdone)
 	// Wait for the goroutines to finish.
 	<-cdone
 	<-cdone
@@ -801,7 +825,7 @@ func parallelRandTypedResizer(t *testing.T, m *MapOf[string, int], numIters, num
 
 func TestMapOfParallelResize(t *testing.T) {
 	const numIters = 1_000
-	const numEntries = 2 * EntriesPerMapBucket * DefaultMinMapTableLen
+	const numEntries = 2 * EntriesPerMapOfBucket * DefaultMinMapTableLen
 	m := NewMapOf[string, int]()
 	cdone := make(chan bool)
 	go parallelRandTypedResizer(t, m, numIters, numEntries, cdone)
@@ -984,7 +1008,7 @@ func TestMapOfParallelStoresAndDeletes(t *testing.T) {
 	}
 }
 
-func parallelTypedComputer(t *testing.T, m *MapOf[uint64, uint64], numIters, numEntries int, cdone chan bool) {
+func parallelTypedComputer(m *MapOf[uint64, uint64], numIters, numEntries int, cdone chan bool) {
 	for i := 0; i < numIters; i++ {
 		for j := 0; j < numEntries; j++ {
 			m.Compute(uint64(j), func(oldValue uint64, loaded bool) (newValue uint64, delete bool) {
@@ -1001,7 +1025,7 @@ func TestMapOfParallelComputes(t *testing.T) {
 	m := NewMapOf[uint64, uint64]()
 	cdone := make(chan bool)
 	for i := 0; i < numWorkers; i++ {
-		go parallelTypedComputer(t, m, numIters, numWorkers, cdone)
+		go parallelTypedComputer(m, numIters, numWorkers, cdone)
 	}
 	// Wait for the goroutines to finish.
 	for i := 0; i < numWorkers; i++ {
@@ -1019,7 +1043,7 @@ func TestMapOfParallelComputes(t *testing.T) {
 	}
 }
 
-func parallelTypedRangeStorer(t *testing.T, m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
+func parallelTypedRangeStorer(m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
 	for {
 		for i := 0; i < numEntries; i++ {
 			m.Store(i, i)
@@ -1031,7 +1055,7 @@ func parallelTypedRangeStorer(t *testing.T, m *MapOf[int, int], numEntries int, 
 	cdone <- true
 }
 
-func parallelTypedRangeDeleter(t *testing.T, m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
+func parallelTypedRangeDeleter(m *MapOf[int, int], numEntries int, stopFlag *int64, cdone chan bool) {
 	for {
 		for i := 0; i < numEntries; i++ {
 			m.Delete(i)
@@ -1052,8 +1076,8 @@ func TestMapOfParallelRange(t *testing.T) {
 	// Start goroutines that would be storing and deleting items in parallel.
 	cdone := make(chan bool)
 	stopFlag := int64(0)
-	go parallelTypedRangeStorer(t, m, numEntries, &stopFlag, cdone)
-	go parallelTypedRangeDeleter(t, m, numEntries, &stopFlag, cdone)
+	go parallelTypedRangeStorer(m, numEntries, &stopFlag, cdone)
+	go parallelTypedRangeDeleter(m, numEntries, &stopFlag, cdone)
 	// Iterate the map and verify that no duplicate keys were met.
 	met := make(map[int]int)
 	m.Range(func(key int, value int) bool {
@@ -1122,6 +1146,60 @@ func TestMapOfDoesNotLoseEntriesOnResize(t *testing.T) {
 	// Verify map contents.
 	if s := m.Size(); s != 0 {
 		t.Fatalf("map is not empty: %d", s)
+	}
+}
+
+func TestMapOfStats(t *testing.T) {
+	m := NewMapOf[int, int]()
+
+	stats := m.Stats()
+	if stats.RootBuckets != DefaultMinMapTableLen {
+		t.Fatalf("unexpected number of root buckets: %d", stats.RootBuckets)
+	}
+	if stats.TotalBuckets != stats.RootBuckets {
+		t.Fatalf("unexpected number of total buckets: %d", stats.TotalBuckets)
+	}
+	if stats.EmptyBuckets != stats.RootBuckets {
+		t.Fatalf("unexpected number of empty buckets: %d", stats.EmptyBuckets)
+	}
+	if stats.Capacity != EntriesPerMapOfBucket*DefaultMinMapTableLen {
+		t.Fatalf("unexpected capacity: %d", stats.Capacity)
+	}
+	if stats.Size != 0 {
+		t.Fatalf("unexpected size: %d", stats.Size)
+	}
+	if stats.Counter != 0 {
+		t.Fatalf("unexpected counter: %d", stats.Counter)
+	}
+	if stats.CounterLen != 8 {
+		t.Fatalf("unexpected counter length: %d", stats.CounterLen)
+	}
+
+	for i := 0; i < 200; i++ {
+		m.Store(i, i)
+	}
+
+	stats = m.Stats()
+	if stats.RootBuckets != 2*DefaultMinMapTableLen {
+		t.Fatalf("unexpected number of root buckets: %d", stats.RootBuckets)
+	}
+	if stats.TotalBuckets < stats.RootBuckets {
+		t.Fatalf("unexpected number of total buckets: %d", stats.TotalBuckets)
+	}
+	if stats.EmptyBuckets >= stats.RootBuckets {
+		t.Fatalf("unexpected number of empty buckets: %d", stats.EmptyBuckets)
+	}
+	if stats.Capacity < 2*EntriesPerMapOfBucket*DefaultMinMapTableLen {
+		t.Fatalf("unexpected capacity: %d", stats.Capacity)
+	}
+	if stats.Size != 200 {
+		t.Fatalf("unexpected size: %d", stats.Size)
+	}
+	if stats.Counter != 200 {
+		t.Fatalf("unexpected counter: %d", stats.Counter)
+	}
+	if stats.CounterLen != 8 {
+		t.Fatalf("unexpected counter length: %d", stats.CounterLen)
 	}
 }
 
@@ -1211,6 +1289,25 @@ func BenchmarkMapOfInt_WarmUp(b *testing.B) {
 	for _, bc := range benchmarkCases {
 		b.Run(bc.name, func(b *testing.B) {
 			m := NewMapOfPresized[int, int](benchmarkNumEntries)
+			for i := 0; i < benchmarkNumEntries; i++ {
+				m.Store(i, i)
+			}
+			b.ResetTimer()
+			benchmarkMapOfIntKeys(b, func(k int) (int, bool) {
+				return m.Load(k)
+			}, func(k int, v int) {
+				m.Store(k, v)
+			}, func(k int) {
+				m.Delete(k)
+			}, bc.readPercentage)
+		})
+	}
+}
+
+func BenchmarkMapOfInt_Murmur3Finalizer_WarmUp(b *testing.B) {
+	for _, bc := range benchmarkCases {
+		b.Run(bc.name, func(b *testing.B) {
+			m := NewMapOfWithHasher[int, int](murmur3Finalizer, WithPresize(benchmarkNumEntries))
 			for i := 0; i < benchmarkNumEntries; i++ {
 				m.Store(i, i)
 			}
