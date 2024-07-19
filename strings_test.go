@@ -567,3 +567,31 @@ func TestIsNumeric(t *testing.T) {
 		assert.Equal(t, tt.isNumeric, IsNumeric(tt.s))
 	}
 }
+
+func TestTruncStr(t *testing.T) {
+	t.Parallel()
+	ss := "Hello，世界!😄,f f"
+	for _, tt := range []struct {
+		s      string
+		maxLen int
+		suffix string
+		want   string
+	}{
+		{"", 1, "..", ""},
+		{ss, 0, "..", ""},
+		{ss, 1, "", "H"},
+		{ss, 1, "..", "H.."},
+		{ss, 2, "..", "He.."},
+		{ss, 9, "..", "Hello，世界!.."},
+		{ss, 10, "", "Hello，世界!😄"},
+		{ss, 10, "..", "Hello，世界!😄.."},
+		{ss, 13, "..", "Hello，世界!😄,f .."},
+		{ss, 14, "..", ss},
+		{ss, 15, "..", ss},
+		{ss, 25, "..", ss},
+	} {
+		assert.Equal(t, tt.want, TruncStr(tt.s, tt.maxLen, tt.suffix))
+	}
+
+	assert.NotEqual(t, TruncStr(ss, 10, ""), ss[:10])
+}

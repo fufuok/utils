@@ -319,3 +319,21 @@ func IsNumeric(s string) bool {
 	}
 	return true
 }
+
+// TruncStr 截断字符串
+func TruncStr(s string, maxLen int, suffix string) string {
+	if maxLen <= 0 || s == "" {
+		return ""
+	}
+	if utf8.RuneCountInString(s) <= maxLen {
+		return s
+	}
+	var i, n int
+	for i = range s {
+		if n == maxLen {
+			break
+		}
+		n++
+	}
+	return s[:i] + suffix
+}
