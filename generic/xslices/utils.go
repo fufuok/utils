@@ -47,3 +47,29 @@ func Average[T generic.Numeric](xs []T, precision ...int) float64 {
 	}
 	return v
 }
+
+// Chunk 按指定 size 对元素切片分组
+func Chunk[T any, S ~[]T](ss S, size int) []S {
+	if size <= 0 {
+		if ss == nil {
+			return []S{}
+		}
+		return []S{ss}
+	}
+
+	length := len(ss)
+	num := length / size
+	if length%size != 0 {
+		num += 1
+	}
+
+	res := make([]S, 0, num)
+	for i := 0; i < num; i++ {
+		last := (i + 1) * size
+		if last > length {
+			last = length
+		}
+		res = append(res, ss[i*size:last:last])
+	}
+	return res
+}
