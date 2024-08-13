@@ -552,8 +552,8 @@ func TestSubString(t *testing.T) {
 func TestIsNumeric(t *testing.T) {
 	t.Parallel()
 	for _, tt := range []struct {
-		s         string
-		isNumeric bool
+		s   string
+		res bool
 	}{
 		{"", false},
 		{" 123", false},
@@ -564,7 +564,44 @@ func TestIsNumeric(t *testing.T) {
 		{"1234567890777", true},
 		{"0", true},
 	} {
-		assert.Equal(t, tt.isNumeric, IsNumeric(tt.s))
+		assert.Equal(t, tt.res, IsNumeric(tt.s))
+	}
+}
+
+func TestIsLetter(t *testing.T) {
+	t.Parallel()
+	for _, tt := range []struct {
+		s   string
+		res bool
+	}{
+		{"", false},
+		{" Abc", false},
+		{"A bc", false},
+		{"Hello123", false},
+
+		{"aBc", true},
+		{"z", true},
+	} {
+		assert.Equal(t, tt.res, IsLetter(tt.s))
+	}
+}
+
+func TestIsLetterOrNumeric(t *testing.T) {
+	t.Parallel()
+	for _, tt := range []struct {
+		s   string
+		res bool
+	}{
+		{"", false},
+		{" Abc", false},
+		{"A 12", false},
+
+		{"Hello123", true},
+		{"aBc", true},
+		{"1230", true},
+		{"z", true},
+	} {
+		assert.Equal(t, tt.res, IsLetterOrNumeric(tt.s), tt.s)
 	}
 }
 

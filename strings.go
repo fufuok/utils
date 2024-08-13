@@ -307,13 +307,39 @@ func Reverse(s string) string {
 	return B2S(b)
 }
 
-// IsNumeric 检查字符串是否全是数字: 0-9
+// IsNumeric 检查字符串是否全是 ASCII 数字: 0-9
 func IsNumeric(s string) bool {
 	if s == "" {
 		return false
 	}
-	for _, char := range s {
-		if char < '0' || char > '9' {
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
+}
+
+// IsLetter 检查字符串是否全是 ASCII 字母
+func IsLetter(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if !(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
+			return false
+		}
+	}
+	return true
+}
+
+// IsLetterOrNumeric 检查字符串是否全是 ASCII 字母或数字
+func IsLetterOrNumeric(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if !(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
 			return false
 		}
 	}
