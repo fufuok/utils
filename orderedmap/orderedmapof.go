@@ -4,6 +4,8 @@
 package orderedmap
 
 import (
+	"bytes"
+	"encoding/json"
 	"sort"
 )
 
@@ -30,15 +32,21 @@ func (a ByPairOf[K, V]) Swap(i, j int)      { a.Pairs[i], a.Pairs[j] = a.Pairs[j
 func (a ByPairOf[K, V]) Less(i, j int) bool { return a.LessFunc(a.Pairs[i], a.Pairs[j]) }
 
 type OrderedMapOf[K comparable, V any] struct {
-	keys   []K
-	values map[K]V
+	keys       []K
+	values     map[K]V
+	escapeHTML bool
 }
 
 func NewOf[K comparable, V any]() *OrderedMapOf[K, V] {
 	o := OrderedMapOf[K, V]{}
 	o.keys = []K{}
 	o.values = map[K]V{}
+	o.escapeHTML = true
 	return &o
+}
+
+func (o *OrderedMapOf[K, V]) SetEscapeHTML(on bool) {
+	o.escapeHTML = on
 }
 
 func (o *OrderedMapOf[K, V]) Get(key K) (V, bool) {
@@ -76,6 +84,10 @@ func (o *OrderedMapOf[K, V]) Delete(key K) {
 	delete(o.values, key)
 }
 
+func (o *OrderedMapOf[K, V]) Size() int {
+	return len(o.keys)
+}
+
 func (o *OrderedMapOf[K, V]) Keys() []K {
 	return o.keys
 }
@@ -101,4 +113,27 @@ func (o *OrderedMapOf[K, V]) Sort(lessFunc func(a *PairOf[K, V], b *PairOf[K, V]
 	for i, pair := range pairs {
 		o.keys[i] = pair.key
 	}
+}
+
+func (o *OrderedMapOf[K, V]) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	buf.WriteByte('{')
+	encoder := json.NewEncoder(&buf)
+	encoder.SetEscapeHTML(o.escapeHTML)
+	for i, k := range o.keys {
+		if i > 0 {
+			buf.WriteByte(',')
+		}
+		// add key
+		if err := encoder.Encode(k); err != nil {
+			return nil, err
+		}
+		buf.WriteByte(':')
+		// add value
+		if err := encoder.Encode(o.values[k]); err != nil {
+			return nil, err
+		}
+	}
+	buf.WriteByte('}')
+	return buf.Bytes(), nil
 }

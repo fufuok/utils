@@ -76,6 +76,10 @@ func (o *OrderedMap) Delete(key string) {
 	delete(o.values, key)
 }
 
+func (o *OrderedMap) Size() int {
+	return len(o.keys)
+}
+
 func (o *OrderedMap) Keys() []string {
 	return o.keys
 }

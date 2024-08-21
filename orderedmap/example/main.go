@@ -73,6 +73,8 @@ func main() {
 		v, _ := o.Get(k)
 		fmt.Println(k, v)
 	}
+
+	fmt.Println("size:", o.Size())
 }
 
 // Output:
@@ -103,3 +105,4 @@ func main() {
 // d 1.23
 // a 1
 // b -1
+// size: 5

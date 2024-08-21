@@ -4,6 +4,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"sort"
 
@@ -75,6 +76,11 @@ func main() {
 		v, _ := o.Get(k)
 		fmt.Println(k, v)
 	}
+
+	fmt.Println("size:", o.Size())
+
+	js, _ := json.Marshal(o)
+	fmt.Println(string(js))
 }
 
 // Output:
@@ -93,3 +99,5 @@ func main() {
 // sort by Pair(reverse):
 // c 2
 // a 1
+// size: 2
+// {"c":2,"a":1}

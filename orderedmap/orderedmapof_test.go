@@ -4,8 +4,11 @@
 package orderedmap
 
 import (
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 	"testing"
 )
 
@@ -132,5 +135,114 @@ func TestOrderedMapOf_Sort(t *testing.T) {
 		if k[i] != expectedKeys[i] {
 			t.Error("Sort root key order", i, k[i], "!=", expectedKeys[i])
 		}
+	}
+}
+
+func TestOrderedMapOf_BlankMarshalJSON(t *testing.T) {
+	o := NewOf[int, int]()
+	// blank map
+	b, err := json.Marshal(o)
+	if err != nil {
+		t.Error("Marshalling blank map to json", err)
+	}
+	s := string(b)
+	// check json is correctly ordered
+	if s != `{}` {
+		t.Error("JSON Marshaling blank map value is incorrect", s)
+	}
+	// convert to indented json
+	bi, err := json.MarshalIndent(o, "", "  ")
+	if err != nil {
+		t.Error("Marshalling indented json for blank map", err)
+	}
+	si := string(bi)
+	ei := `{}`
+	if si != ei {
+		fmt.Println(ei)
+		fmt.Println(si)
+		t.Error("JSON MarshalIndent blank map value is incorrect", si)
+	}
+}
+
+func TestOrderedMapOf_MarshalJSON(t *testing.T) {
+	o := NewOf[string, any]()
+	// number
+	o.Set("number", 3)
+	// string
+	o.Set("string", "x")
+	// string
+	o.Set("specialstring", "\\.<>[]{}_-")
+	// new value keeps key in old position
+	o.Set("number", 4)
+	// keys not sorted alphabetically
+	o.Set("z", 1)
+	o.Set("a", 2)
+	o.Set("b", 3)
+	// slice
+	o.Set("slice", []interface{}{
+		"1",
+		1,
+	})
+	// orderedmap
+	v := New()
+	v.Set("e", 1)
+	v.Set("a", 2)
+	o.Set("orderedmap", v)
+	// escape key
+	o.Set("test\n\r\t\\\"ing", 9)
+	// convert to json
+	b, err := json.Marshal(o)
+	if err != nil {
+		t.Error("Marshalling json", err)
+	}
+	s := string(b)
+	// check json is correctly ordered
+	if s != `{"number":4,"string":"x","specialstring":"\\.\u003c\u003e[]{}_-","z":1,"a":2,"b":3,"slice":["1",1],"orderedmap":{"e":1,"a":2},"test\n\r\t\\\"ing":9}` {
+		t.Error("JSON Marshal value is incorrect", s)
+	}
+	// convert to indented json
+	bi, err := json.MarshalIndent(o, "", "  ")
+	if err != nil {
+		t.Error("Marshalling indented json", err)
+	}
+	si := string(bi)
+	ei := `{
+  "number": 4,
+  "string": "x",
+  "specialstring": "\\.\u003c\u003e[]{}_-",
+  "z": 1,
+  "a": 2,
+  "b": 3,
+  "slice": [
+    "1",
+    1
+  ],
+  "orderedmap": {
+    "e": 1,
+    "a": 2
+  },
+  "test\n\r\t\\\"ing": 9
+}`
+	if si != ei {
+		fmt.Println(ei)
+		fmt.Println(si)
+		t.Error("JSON MarshalIndent value is incorrect", si)
+	}
+}
+
+func TestOrderedMapOf_MarshalJSONNoEscapeHTML(t *testing.T) {
+	o := NewOf[string, string]()
+	o.SetEscapeHTML(false)
+	// string special characters
+	o.Set("specialstring", "\\.<>[]{}_-")
+	// convert to json
+	b, err := o.MarshalJSON()
+	if err != nil {
+		t.Error("Marshalling json", err)
+	}
+	s := strings.Replace(string(b), "\n", "", -1)
+	// check json is correctly ordered
+	if s != `{"specialstring":"\\.<>[]{}_-"}` {
+		t.Error("JSON Marshal value is incorrect", s)
 	}
 }
