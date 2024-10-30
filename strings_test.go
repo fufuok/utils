@@ -632,3 +632,62 @@ func TestTruncStr(t *testing.T) {
 
 	assert.NotEqual(t, TruncStr(ss, 10, ""), ss[:10])
 }
+
+func TestLastString(t *testing.T) {
+	t.Parallel()
+	ss := "Hello，世界!😄,f f"
+	for _, tt := range []struct {
+		sep  string
+		want string
+	}{
+		{",", "f f"},
+		{"H", "ello，世界!😄,f f"},
+		{"o", "，世界!😄,f f"},
+		{" ", "f"},
+
+		// 注意:
+		{"el", "llo，世界!😄,f f"},
+
+		{",,", ""},
+		{"E", ""},
+		{"f", ""},
+	} {
+		assert.Equal(t, tt.want, LastString(ss, tt.sep))
+	}
+
+	assert.NotEqual(t, ",f f", LastString(ss, "😄"))
+	assert.Equal(t, "\nc", LastString("a\n\nb\n\nc", "\n\n"))
+
+	assert.Equal(t, "c", LastString("a\nb\nc", "\n"))
+	assert.Equal(t, "", LastString("a\nb\nc\n", "\n"))
+	assert.Equal(t, "c", LastString(strings.TrimSpace("a\nb\nc\n"), "\n"))
+}
+
+func TestFirstString(t *testing.T) {
+	t.Parallel()
+	ss := "Hello，世界!😄,f f"
+	for _, tt := range []struct {
+		sep  string
+		want string
+	}{
+		{",", "Hello，世界!😄"},
+		{"o", "Hell"},
+		{" ", "Hello，世界!😄,f"},
+
+		// 注意:
+		{"el", "H"},
+
+		{",,", ""},
+		{"E", ""},
+		{"H", ""},
+	} {
+		assert.Equal(t, tt.want, FirstString(ss, tt.sep))
+	}
+
+	assert.Equal(t, "Hello，世界!", FirstString(ss, "😄"))
+	assert.Equal(t, "a", FirstString("a\n\nb\n\nc", "\n\n"))
+
+	assert.Equal(t, "a", FirstString("a\nb\nc", "\n"))
+	assert.Equal(t, "", FirstString("\na\nb\nc", "\n"))
+	assert.Equal(t, "a", FirstString(strings.TrimSpace("\na\nb\nc\n"), "\n"))
+}

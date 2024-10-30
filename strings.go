@@ -363,3 +363,21 @@ func TruncStr(s string, maxLen int, suffix string) string {
 	}
 	return s[:i] + suffix
 }
+
+// LastString 获取文本内容最后一个分隔符(单字节: sep[0])后的内容
+func LastString(s, sep string) string {
+	idx := strings.LastIndex(s, sep)
+	if idx != -1 && idx+1 < len(s) {
+		return s[idx+1:]
+	}
+	return ""
+}
+
+// FirstString 获取文本内容第一个分隔符(单字节: sep[0])前的内容
+func FirstString(s, sep string) string {
+	idx := strings.Index(s, sep)
+	if idx != -1 {
+		return s[:idx]
+	}
+	return ""
+}
