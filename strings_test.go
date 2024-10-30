@@ -647,8 +647,8 @@ func TestLastString(t *testing.T) {
 
 		// 注意:
 		{"el", "llo，世界!😄,f f"},
-
 		{",,", ""},
+
 		{"E", ""},
 		{"f", ""},
 	} {
@@ -657,10 +657,13 @@ func TestLastString(t *testing.T) {
 
 	assert.NotEqual(t, ",f f", LastString(ss, "😄"))
 	assert.Equal(t, "\nc", LastString("a\n\nb\n\nc", "\n\n"))
+	assert.Equal(t, "c", LastString("a\n\nb\n\nc", "\n"))
 
 	assert.Equal(t, "c", LastString("a\nb\nc", "\n"))
 	assert.Equal(t, "", LastString("a\nb\nc\n", "\n"))
 	assert.Equal(t, "c", LastString(strings.TrimSpace("a\nb\nc\n"), "\n"))
+
+	assert.Equal(t, "ff", LastString("abc", "\n", "ff"))
 }
 
 func TestFirstString(t *testing.T) {
@@ -676,8 +679,8 @@ func TestFirstString(t *testing.T) {
 
 		// 注意:
 		{"el", "H"},
-
 		{",,", ""},
+
 		{"E", ""},
 		{"H", ""},
 	} {
@@ -686,8 +689,11 @@ func TestFirstString(t *testing.T) {
 
 	assert.Equal(t, "Hello，世界!", FirstString(ss, "😄"))
 	assert.Equal(t, "a", FirstString("a\n\nb\n\nc", "\n\n"))
+	assert.Equal(t, "a", FirstString("a\n\nb\n\nc", "\n"))
 
 	assert.Equal(t, "a", FirstString("a\nb\nc", "\n"))
 	assert.Equal(t, "", FirstString("\na\nb\nc", "\n"))
 	assert.Equal(t, "a", FirstString(strings.TrimSpace("\na\nb\nc\n"), "\n"))
+
+	assert.Equal(t, "ff", FirstString("abc", "\n", "ff"))
 }
