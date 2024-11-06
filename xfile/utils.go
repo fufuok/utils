@@ -72,7 +72,7 @@ func ReadLines(filename string) ([]string, error) {
 func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error) {
 	f, err := os.Open(filename)
 	if err != nil {
-		return []string{""}, err
+		return nil, err
 	}
 	defer func() {
 		_ = f.Close()
