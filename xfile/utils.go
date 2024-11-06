@@ -3,6 +3,7 @@ package xfile
 import (
 	"archive/zip"
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -63,6 +64,11 @@ func ReadLines(filename string) ([]string, error) {
 	return ReadLinesOffsetN(filename, 0, -1)
 }
 
+// HeadLines 读取文件头部 N 行
+func HeadLines(filename string, num int) ([]string, error) {
+	return ReadLinesOffsetN(filename, 0, num)
+}
+
 // ReadLinesOffsetN reads contents from file and splits them by new line.
 // The offset tells at which line number to start.
 // The count determines the number of lines to read (starting from offset):
@@ -94,6 +100,117 @@ func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error) {
 		ret = append(ret, strings.Trim(line, "\n"))
 	}
 	return ret, nil
+}
+
+// TailLines 返回文件最后 N 行
+func TailLines(filename string, num int, cleanLine ...bool) ([]string, error) {
+	if num == 0 {
+		return nil, nil
+	}
+
+	if num < 0 {
+		return ReadLines(filename)
+	}
+
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = f.Close()
+	}()
+
+	info, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	size := info.Size()
+	if size == 0 {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+	ret := make([]string, 0, num)
+	char := []byte{0}
+	offset := int64(0)
+	hasLine := false
+	clean := false
+	if len(cleanLine) > 0 {
+		clean = cleanLine[0]
+	}
+	for {
+		offset--
+		_, err := f.Seek(offset, io.SeekEnd)
+		if err != nil {
+			break
+		}
+
+		if _, err := f.Read(char); err != nil {
+			if err == io.EOF {
+				break
+			}
+			return nil, err
+		}
+
+		if char[0] == '\n' {
+			bs := buf.Bytes()
+			reverseBytes(bs)
+
+			// 清除空白, 跳过空行
+			if clean {
+				bs = bytes.TrimSpace(bs)
+				if len(bs) == 0 {
+					buf.Reset()
+					continue
+				}
+			}
+			ret = append(ret, string(bs))
+
+			num--
+			if num == 0 {
+				reverseStringSlices(ret)
+				return ret, nil
+			}
+
+			buf.Reset()
+			hasLine = true
+			continue
+		}
+		buf.WriteByte(char[0])
+		hasLine = false
+	}
+
+	if hasLine || buf.Len() > 0 {
+		bs := buf.Bytes()
+		reverseBytes(bs)
+		// 清除空白, 跳过空行
+		if clean {
+			bs = bytes.TrimSpace(bs)
+			if len(bs) > 0 {
+				ret = append(ret, string(bs))
+			}
+		} else {
+			ret = append(ret, string(bs))
+		}
+	}
+
+	reverseStringSlices(ret)
+	return ret, nil
+}
+
+// Ref: slices.Reverse()
+func reverseBytes(s []byte) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+}
+
+// Ref: slices.Reverse()
+func reverseStringSlices(s []string) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
 }
 
 // ModTime 文件最后修改时间
