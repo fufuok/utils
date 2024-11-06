@@ -12,6 +12,7 @@ import "github.com/fufuok/utils/xfile"
 - [Variables](<#variables>)
 - [func CopyDir\(srcDir, dstDir string\) error](<#CopyDir>)
 - [func CopyFile\(srcFile, dstFile string\) error](<#CopyFile>)
+- [func HeadLines\(filename string, num int\) \(\[\]string, error\)](<#HeadLines>)
 - [func IsDir\(s string\) bool](<#IsDir>)
 - [func IsExist\(s string\) bool](<#IsExist>)
 - [func IsFile\(s string\) bool](<#IsFile>)
@@ -20,6 +21,7 @@ import "github.com/fufuok/utils/xfile"
 - [func ReadLines\(filename string\) \(\[\]string, error\)](<#ReadLines>)
 - [func ReadLinesOffsetN\(filename string, offset uint, n int\) \(\[\]string, error\)](<#ReadLinesOffsetN>)
 - [func ResetDir\(dirPath string\) error](<#ResetDir>)
+- [func TailLines\(filename string, num int, cleanLine ...bool\) \(\[\]string, error\)](<#TailLines>)
 - [func UnzipDir\(zipFile, dstDir string\) error](<#UnzipDir>)
 - [func UnzipFile\(zipFile \*zip.File, dstFile string\) error](<#UnzipFile>)
 - [func ZipDir\(srcDir, zipFilePath string\) error](<#ZipDir>)
@@ -75,6 +77,15 @@ func CopyFile(srcFile, dstFile string) error
 ```
 
 CopyFile 文件拷贝
+
+<a name="HeadLines"></a>
+## func HeadLines
+
+```go
+func HeadLines(filename string, num int) ([]string, error)
+```
+
+HeadLines 读取文件头部 N 行
 
 <a name="IsDir"></a>
 ## func IsDir
@@ -147,6 +158,15 @@ func ResetDir(dirPath string) error
 ```
 
 ResetDir 清除并重建空目录
+
+<a name="TailLines"></a>
+## func TailLines
+
+```go
+func TailLines(filename string, num int, cleanLine ...bool) ([]string, error)
+```
+
+TailLines 返回文件最后 N 行
 
 <a name="UnzipDir"></a>
 ## func UnzipDir

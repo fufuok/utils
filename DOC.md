@@ -33,6 +33,7 @@ import "github.com/fufuok/utils"
 - [func Bigoom\(n, b \*big.Int\) \(float64, int\)](<#Bigoom>)
 - [func CPUTicks\(\) int64](<#CPUTicks>)
 - [func CallPath\(\) string](<#CallPath>)
+- [func CheckDomain\(name string\) error](<#CheckDomain>)
 - [func Comma\(v int64\) string](<#Comma>)
 - [func Commaf\(v float64\) string](<#Commaf>)
 - [func Commai\(v int\) string](<#Commai>)
@@ -68,7 +69,9 @@ import "github.com/fufuok/utils"
 - [func FastRand64\(\) uint64](<#FastRand64>)
 - [func FastRandn\(n uint32\) uint32](<#FastRandn>)
 - [func FastRandu\(\) uint](<#FastRandu>)
+- [func FirstString\(s, sep string, defaultStr ...string\) string](<#FirstString>)
 - [func GetBytes\(v interface\{\}, defaultVal ...\[\]byte\) \[\]byte](<#GetBytes>)
+- [func GetDomain\(name string\) string](<#GetDomain>)
 - [func GetIPPort\(addr net.Addr\) \(ip net.IP, port int, err error\)](<#GetIPPort>)
 - [func GetInt\(v interface\{\}, defaultInt ...int\) int](<#GetInt>)
 - [func GetMonthDays\(t time.Time\) int](<#GetMonthDays>)
@@ -114,12 +117,15 @@ import "github.com/fufuok/utils"
 - [func IsInternalIPv4\(ip net.IP\) bool](<#IsInternalIPv4>)
 - [func IsInternalIPv4String\(ip string\) bool](<#IsInternalIPv4String>)
 - [func IsLeapYear\(year int\) bool](<#IsLeapYear>)
+- [func IsLetter\(s string\) bool](<#IsLetter>)
+- [func IsLetterOrNumeric\(s string\) bool](<#IsLetterOrNumeric>)
 - [func IsNumeric\(s string\) bool](<#IsNumeric>)
 - [func IsPrivateIP\(ip net.IP\) bool](<#IsPrivateIP>)
 - [func IsPrivateIPString\(ip string\) bool](<#IsPrivateIPString>)
 - [func JoinBytes\(b ...\[\]byte\) \[\]byte](<#JoinBytes>)
 - [func JoinString\(s ...string\) string](<#JoinString>)
 - [func JoinStringBytes\(s ...string\) \[\]byte](<#JoinStringBytes>)
+- [func LastString\(s, sep string, defaultStr ...string\) string](<#LastString>)
 - [func LeftPad\(s, pad string, n int\) string](<#LeftPad>)
 - [func LeftPadBytes\(b, pad \[\]byte, n int\) \[\]byte](<#LeftPadBytes>)
 - [func Logn\(n, b float64\) float64](<#Logn>)
@@ -192,6 +198,7 @@ import "github.com/fufuok/utils"
 - [func TrimRight\(s string, cutset byte\) string](<#TrimRight>)
 - [func TrimRightBytes\(b \[\]byte, cutset byte\) \[\]byte](<#TrimRightBytes>)
 - [func TrimSlice\(ss \[\]string\) \[\]string](<#TrimSlice>)
+- [func TruncStr\(s string, maxLen int, suffix string\) string](<#TruncStr>)
 - [func UUID\(\) \[\]byte](<#UUID>)
 - [func UUIDShort\(\) string](<#UUIDShort>)
 - [func UUIDSimple\(\) string](<#UUIDSimple>)
@@ -566,6 +573,15 @@ func CallPath() string
 
 CallPath 运行时路径, 编译目录 假如: mklink E:\\tmp\\linkapp.exe D:\\Fufu\\Test\\abc\\app.exe 执行: E:\\tmp\\linkapp.exe CallPath: E:\\Go\\src\\github.com\\fufuok\\utils\\tmp\\osext
 
+<a name="CheckDomain"></a>
+## func CheckDomain
+
+```go
+func CheckDomain(name string) error
+```
+
+CheckDomain returns an error if the host name is not valid. See https://tools.ietf.org/html/rfc1034#section-3.5 and https://tools.ietf.org/html/rfc1123#section-2. Ref: chmike/domain
+
 <a name="Comma"></a>
 ## func Comma
 
@@ -883,6 +899,15 @@ func FastRandu() uint
 
 
 
+<a name="FirstString"></a>
+## func FirstString
+
+```go
+func FirstString(s, sep string, defaultStr ...string) string
+```
+
+FirstString 获取文本内容第一个分隔符\(单字节: sep\[0\]\)前的内容
+
 <a name="GetBytes"></a>
 ## func GetBytes
 
@@ -891,6 +916,15 @@ func GetBytes(v interface{}, defaultVal ...[]byte) []byte
 ```
 
 GetBytes 先转为字符串再转为 \[\]byte, 可选指定默认值
+
+<a name="GetDomain"></a>
+## func GetDomain
+
+```go
+func GetDomain(name string) string
+```
+
+GetDomain 检查并返回清除前后空白的域名
 
 <a name="GetIPPort"></a>
 ## func GetIPPort
@@ -1305,6 +1339,24 @@ func IsLeapYear(year int) bool
 
 IsLeapYear 判断是否为闰年
 
+<a name="IsLetter"></a>
+## func IsLetter
+
+```go
+func IsLetter(s string) bool
+```
+
+IsLetter 检查字符串是否全是 ASCII 字母
+
+<a name="IsLetterOrNumeric"></a>
+## func IsLetterOrNumeric
+
+```go
+func IsLetterOrNumeric(s string) bool
+```
+
+IsLetterOrNumeric 检查字符串是否全是 ASCII 字母或数字
+
 <a name="IsNumeric"></a>
 ## func IsNumeric
 
@@ -1312,7 +1364,7 @@ IsLeapYear 判断是否为闰年
 func IsNumeric(s string) bool
 ```
 
-IsNumeric 检查字符串是否全是数字: 0\-9
+IsNumeric 检查字符串是否全是 ASCII 数字: 0\-9
 
 <a name="IsPrivateIP"></a>
 ## func IsPrivateIP
@@ -1358,6 +1410,15 @@ func JoinStringBytes(s ...string) []byte
 ```
 
 JoinStringBytes 拼接字符串, 返回 bytes from bytes.Join\(\)
+
+<a name="LastString"></a>
+## func LastString
+
+```go
+func LastString(s, sep string, defaultStr ...string) string
+```
+
+LastString 获取文本内容最后一个分隔符\(单字节: sep\[0\]\)后的内容
 
 <a name="LeftPad"></a>
 ## func LeftPad
@@ -2010,6 +2071,15 @@ func TrimSlice(ss []string) []string
 ```
 
 TrimSlice 清除 slice 中各元素的空白, 并删除空白项 注意: 原切片将被修改
+
+<a name="TruncStr"></a>
+## func TruncStr
+
+```go
+func TruncStr(s string, maxLen int, suffix string) string
+```
+
+TruncStr 截断字符串
 
 <a name="UUID"></a>
 ## func UUID
