@@ -1237,8 +1237,11 @@ func main() {
 }
 ```
 
+## 🔑 JetBrains OS licenses
 
+The `utils` package was developed using `GoLand` IDE under the ***Free JetBrains Open Source License*** granted by JetBrains s.r.o. I would like to take this opportunity to express my gratitude.
 
+<a href="https://www.jetbrains.com/?from=FF.PyAdmin" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo."></a>
 
 
 
