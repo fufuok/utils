@@ -3,7 +3,6 @@ package xfile
 import (
 	"archive/zip"
 	"bufio"
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -130,87 +129,67 @@ func TailLines(filename string, num int, cleanLine ...bool) ([]string, error) {
 		return nil, nil
 	}
 
-	var buf bytes.Buffer
-	ret := make([]string, 0, num)
-	char := []byte{0}
-	offset := int64(0)
-	hasLine := false
 	clean := false
 	if len(cleanLine) > 0 {
 		clean = cleanLine[0]
 	}
-	for {
-		offset--
-		_, err := f.Seek(offset, io.SeekEnd)
-		if err != nil {
+
+	chunkSize := int64(2048)
+	if num > 5 {
+		chunkSize = 4096
+	}
+	if size < chunkSize {
+		chunkSize = size
+	}
+
+	ret := make([]string, 0, num)
+	buf := make([]byte, chunkSize)
+	chip := ""
+	for offset := -chunkSize; ; offset -= chunkSize {
+		if offset < -size {
+			buf = buf[:chunkSize-(-size-offset)]
+			offset = -size
+		}
+		if _, err := f.Seek(offset, io.SeekEnd); err != nil {
 			break
 		}
-
-		if _, err := f.Read(char); err != nil {
+		n, err := f.Read(buf)
+		if err != nil {
 			if err == io.EOF {
 				break
 			}
 			return nil, err
 		}
-
-		if char[0] == '\n' {
-			bs := buf.Bytes()
-			reverseBytes(bs)
-
-			// 清除空白, 跳过空行
-			if clean {
-				bs = bytes.TrimSpace(bs)
-				if len(bs) == 0 {
-					buf.Reset()
-					continue
+		lines := strings.Split(utils.B2S(buf[:n])+chip, "\n")
+		chip = lines[0]
+		if len(lines) > 1 {
+			for i := len(lines) - 1; i >= 1; i-- {
+				line := lines[i]
+				if clean {
+					line = strings.TrimRight(line, " \t\r\n")
+					if line == "" {
+						continue
+					}
+				}
+				ret = append([]string{line}, ret...)
+				if len(ret) == num {
+					return ret, nil
 				}
 			}
-			ret = append(ret, string(bs))
-
-			num--
-			if num == 0 {
-				reverseStringSlices(ret)
-				return ret, nil
-			}
-
-			buf.Reset()
-			hasLine = true
-			continue
 		}
-		buf.WriteByte(char[0])
-		hasLine = false
-	}
-
-	if hasLine || buf.Len() > 0 {
-		bs := buf.Bytes()
-		reverseBytes(bs)
-		// 清除空白, 跳过空行
-		if clean {
-			bs = bytes.TrimSpace(bs)
-			if len(bs) > 0 {
-				ret = append(ret, string(bs))
-			}
-		} else {
-			ret = append(ret, string(bs))
+		if offset <= -size {
+			break
 		}
 	}
 
-	reverseStringSlices(ret)
+	if clean {
+		chip = strings.TrimRight(chip, " \t\r\n")
+		if chip == "" {
+			return ret, nil
+		}
+	}
+	ret = append([]string{chip}, ret...)
 	return ret, nil
-}
-
-// Ref: slices.Reverse()
-func reverseBytes(s []byte) {
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
-	}
-}
-
-// Ref: slices.Reverse()
-func reverseStringSlices(s []string) {
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
-	}
 }
 
 // ModTime 文件最后修改时间
