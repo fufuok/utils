@@ -13,20 +13,19 @@ import (
 var externalIPAPI = map[string][]string{
 	"ipv4": {
 		"https://4.ipw.cn",
-		"https://api-ipv4.ip.sb/ip",
-		"https://api.ipify.org",
+		"http://ipinfo.io/ip",
 		"http://ifconfig.me/ip",
 		"http://ident.me",
 		"http://myexternalip.com/raw",
-		"http://ip.42.pl/short",
-		"http://ipinfo.io/ip",
+
+		"https://api64.ipify.org",
+		"https://api.ipify.org",
 	},
 	"ipv6": {
 		"https://6.ipw.cn",
-		"https://api-ipv6.ip.sb/ip",
-		"https://api64.ipify.org",
 		"http://ifconfig.me/ip",
 		"http://ident.me",
+		"http://myexternalip.com/raw",
 	},
 }
 
