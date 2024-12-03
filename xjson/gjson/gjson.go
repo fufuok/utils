@@ -1,3 +1,9 @@
+// Copyright 2024 Joshua J Baker. All rights reserved.
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file.
+//
+// https://github.com/tidwall/gjson
+
 // Package gjson provides searching for json strings.
 package gjson
 
@@ -334,7 +340,7 @@ type arrayOrMapResult struct {
 }
 
 func (t Result) arrayOrMap(vc byte, valueize bool) (r arrayOrMapResult) {
-	json := t.Raw
+	var json = t.Raw
 	var i int
 	var value Result
 	var count int
@@ -686,7 +692,7 @@ func (t Result) Value() interface{} {
 }
 
 func parseString(json string, i int) (int, string, bool, bool) {
-	s := i
+	var s = i
 	for ; i < len(json); i++ {
 		if json[i] > '\\' {
 			continue
@@ -724,7 +730,7 @@ func parseString(json string, i int) (int, string, bool, bool) {
 }
 
 func parseNumber(json string, i int) (int, string) {
-	s := i
+	var s = i
 	i++
 	for ; i < len(json); i++ {
 		if json[i] <= ' ' || json[i] == ',' || json[i] == ']' ||
@@ -736,7 +742,7 @@ func parseNumber(json string, i int) (int, string) {
 }
 
 func parseLiteral(json string, i int) (int, string) {
-	s := i
+	var s = i
 	i++
 	for ; i < len(json); i++ {
 		if json[i] < 'a' || json[i] > 'z' {
@@ -793,7 +799,8 @@ func parseArrayPath(path string) (r arrayPathResult) {
 				} else if path[1] == '[' || path[1] == '(' {
 					// query
 					r.query.on = true
-					qpath, op, value, _, fi, vesc, ok := parseQuery(path[i:])
+					qpath, op, value, _, fi, vesc, ok :=
+						parseQuery(path[i:])
 					if !ok {
 						// bad query, end now
 						break
@@ -1039,6 +1046,10 @@ func parseObjectPath(path string) (r objectPathResult) {
 	return
 }
 
+var vchars = [256]byte{
+	'"': 2, '{': 3, '(': 3, '[': 3, '}': 1, ')': 1, ']': 1,
+}
+
 func parseSquash(json string, i int) (int, string) {
 	// expects that the lead character is a '[' or '{' or '('
 	// squash the value, ignoring all nested arrays and objects.
@@ -1046,43 +1057,137 @@ func parseSquash(json string, i int) (int, string) {
 	s := i
 	i++
 	depth := 1
-	for ; i < len(json); i++ {
-		if json[i] >= '"' && json[i] <= '}' {
-			switch json[i] {
-			case '"':
+	var c byte
+	for i < len(json) {
+		for i < len(json)-8 {
+			jslice := json[i : i+8]
+			c = vchars[jslice[0]]
+			if c != 0 {
+				i += 0
+				goto token
+			}
+			c = vchars[jslice[1]]
+			if c != 0 {
+				i += 1
+				goto token
+			}
+			c = vchars[jslice[2]]
+			if c != 0 {
+				i += 2
+				goto token
+			}
+			c = vchars[jslice[3]]
+			if c != 0 {
+				i += 3
+				goto token
+			}
+			c = vchars[jslice[4]]
+			if c != 0 {
+				i += 4
+				goto token
+			}
+			c = vchars[jslice[5]]
+			if c != 0 {
+				i += 5
+				goto token
+			}
+			c = vchars[jslice[6]]
+			if c != 0 {
+				i += 6
+				goto token
+			}
+			c = vchars[jslice[7]]
+			if c != 0 {
+				i += 7
+				goto token
+			}
+			i += 8
+		}
+		c = vchars[json[i]]
+		if c == 0 {
+			i++
+			continue
+		}
+	token:
+		if c == 2 {
+			// '"' string
+			i++
+			s2 := i
+		nextquote:
+			for i < len(json)-8 {
+				jslice := json[i : i+8]
+				if jslice[0] == '"' {
+					i += 0
+					goto strchkesc
+				}
+				if jslice[1] == '"' {
+					i += 1
+					goto strchkesc
+				}
+				if jslice[2] == '"' {
+					i += 2
+					goto strchkesc
+				}
+				if jslice[3] == '"' {
+					i += 3
+					goto strchkesc
+				}
+				if jslice[4] == '"' {
+					i += 4
+					goto strchkesc
+				}
+				if jslice[5] == '"' {
+					i += 5
+					goto strchkesc
+				}
+				if jslice[6] == '"' {
+					i += 6
+					goto strchkesc
+				}
+				if jslice[7] == '"' {
+					i += 7
+					goto strchkesc
+				}
+				i += 8
+			}
+			goto strchkstd
+		strchkesc:
+			if json[i-1] != '\\' {
 				i++
-				s2 := i
-				for ; i < len(json); i++ {
-					if json[i] > '\\' {
-						continue
-					}
-					if json[i] == '"' {
-						// look for an escaped slash
-						if json[i-1] == '\\' {
-							n := 0
-							for j := i - 2; j > s2-1; j-- {
-								if json[j] != '\\' {
-									break
-								}
-								n++
-							}
-							if n%2 == 0 {
-								continue
-							}
-						}
-						break
-					}
-				}
-			case '{', '[', '(':
-				depth++
-			case '}', ']', ')':
-				depth--
-				if depth == 0 {
+				continue
+			}
+		strchkstd:
+			for i < len(json) {
+				if json[i] > '\\' || json[i] != '"' {
 					i++
-					return i, json[s:i]
+					continue
 				}
+				// look for an escaped slash
+				if json[i-1] == '\\' {
+					n := 0
+					for j := i - 2; j > s2-1; j-- {
+						if json[j] != '\\' {
+							break
+						}
+						n++
+					}
+					if n%2 == 0 {
+						i++
+						goto nextquote
+					}
+				}
+				break
+			}
+		} else {
+			// '{', '[', '(', '}', ']', ')'
+			// open close tokens
+			depth += int(c) - 2
+			if depth == 0 {
+				i++
+				return i, json[s:i]
 			}
 		}
+		i++
 	}
 	return i, json[s:]
 }
@@ -1102,7 +1207,7 @@ func parseObject(c *parseContext, i int, path string) (int, bool) {
 				// this is slightly different from getting s string value
 				// because we don't need the outer quotes.
 				i++
-				s := i
+				var s = i
 				for ; i < len(c.json); i++ {
 					if c.json[i] > '\\' {
 						continue
@@ -1251,7 +1356,7 @@ func parseObject(c *parseContext, i int, path string) (int, bool) {
 }
 
 // matchLimit will limit the complexity of the match operation to avoid ReDos
-// attacks from arbritary inputs.
+// attacks from arbitrary inputs.
 // See the github.com/tidwall/match.MatchLimit function for more information.
 func matchLimit(str, pattern string) bool {
 	matched, _ := match.MatchLimit(str, pattern, 10000)
@@ -1399,7 +1504,6 @@ func queryMatches(rp *arrayPathResult, value Result) bool {
 	}
 	return false
 }
-
 func parseArray(c *parseContext, i int, path string) (int, bool) {
 	var pmatch, vesc, ok, hit bool
 	var val string
@@ -1619,8 +1723,8 @@ func parseArray(c *parseContext, i int, path string) (int, bool) {
 							c.pipe = right
 							c.piped = true
 						}
-						indexes := make([]int, 0, 64)
-						jsons := make([]byte, 0, 64)
+						var indexes = make([]int, 0, 64)
+						var jsons = make([]byte, 0, 64)
 						jsons = append(jsons, '[')
 						for j, k := 0, 0; j < len(alog); j++ {
 							idx := alog[j]
@@ -1917,6 +2021,16 @@ func appendHex16(dst []byte, x uint16) []byte {
 	)
 }
 
+// DisableEscapeHTML will disable the automatic escaping of certain
+// "problamatic" HTML characters when encoding to JSON.
+// These character include '>', '<' and '&', which get escaped to \u003e,
+// \u0026, and \u003c respectively.
+//
+// This is a global flag and will affect all further gjson operations.
+// Ideally, if used, it should be set one time before other gjson functions
+// are called.
+var DisableEscapeHTML = false
+
 // AppendJSONString is a convenience function that converts the provided string
 // to a valid JSON string and appends it to dst.
 func AppendJSONString(dst []byte, s string) []byte {
@@ -1940,7 +2054,8 @@ func AppendJSONString(dst []byte, s string) []byte {
 				dst = append(dst, 'u')
 				dst = appendHex16(dst, uint16(s[i]))
 			}
-		} else if s[i] == '>' || s[i] == '<' || s[i] == '&' {
+		} else if !DisableEscapeHTML &&
+			(s[i] == '>' || s[i] == '<' || s[i] == '&') {
 			dst = append(dst, '\\', 'u')
 			dst = appendHex16(dst, uint16(s[i]))
 		} else if s[i] == '\\' {
@@ -2095,7 +2210,7 @@ func Get(json, path string) Result {
 		}
 	}
 	var i int
-	c := &parseContext{json: json}
+	var c = &parseContext{json: json}
 	if len(path) >= 2 && path[0] == '.' && path[1] == '.' {
 		c.lines = true
 		parseArray(c, 0, path[2:])
@@ -2136,7 +2251,7 @@ func runeit(json string) rune {
 
 // unescape unescapes a string
 func unescape(json string) string {
-	str := make([]byte, 0, len(json))
+	var str = make([]byte, 0, len(json))
 	for i := 0; i < len(json); i++ {
 		switch {
 		default:
@@ -2194,7 +2309,7 @@ func unescape(json string) string {
 }
 
 // Less return true if a token is less than another token.
-// The caseSensitive paramater is used when the tokens are Strings.
+// The caseSensitive parameter is used when the tokens are Strings.
 // The order when comparing two different type is:
 //
 //	Null < False < Number < String < True < JSON
@@ -2377,7 +2492,6 @@ func validpayload(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validany(data []byte, i int) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		switch data[i] {
@@ -2403,7 +2517,6 @@ func validany(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validobject(data []byte, i int) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		switch data[i] {
@@ -2446,7 +2559,6 @@ func validobject(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validcolon(data []byte, i int) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		switch data[i] {
@@ -2460,7 +2572,6 @@ func validcolon(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validcomma(data []byte, i int, end byte) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		switch data[i] {
@@ -2476,7 +2587,6 @@ func validcomma(data []byte, i int, end byte) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validarray(data []byte, i int) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		switch data[i] {
@@ -2500,7 +2610,6 @@ func validarray(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validstring(data []byte, i int) (outi int, ok bool) {
 	for ; i < len(data); i++ {
 		if data[i] < ' ' {
@@ -2533,7 +2642,6 @@ func validstring(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validnumber(data []byte, i int) (outi int, ok bool) {
 	i--
 	// sign
@@ -2616,7 +2724,6 @@ func validtrue(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validfalse(data []byte, i int) (outi int, ok bool) {
 	if i+4 <= len(data) && data[i] == 'a' && data[i+1] == 'l' &&
 		data[i+2] == 's' && data[i+3] == 'e' {
@@ -2624,7 +2731,6 @@ func validfalse(data []byte, i int) (outi int, ok bool) {
 	}
 	return i, false
 }
-
 func validnull(data []byte, i int) (outi int, ok bool) {
 	if i+3 <= len(data) && data[i] == 'u' && data[i+1] == 'l' &&
 		data[i+2] == 'l' {
@@ -3362,7 +3468,7 @@ func (t Result) Path(json string) string {
 		goto fail
 	}
 	if !strings.HasPrefix(json[t.Index:], t.Raw) {
-		// Result is not at the JSON index as exepcted.
+		// Result is not at the JSON index as expected.
 		goto fail
 	}
 	for ; i >= 0; i-- {
