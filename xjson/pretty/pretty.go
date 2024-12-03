@@ -88,7 +88,7 @@ func ugly(dst, src []byte) []byte {
 }
 
 func isNaNOrInf(src []byte) bool {
-	return src[0] == 'i' || // Inf
+	return src[0] == 'i' || //Inf
 		src[0] == 'I' || // inf
 		src[0] == '+' || // +Inf
 		src[0] == 'N' || // Nan
@@ -140,7 +140,6 @@ type byKeyVal struct {
 func (arr *byKeyVal) Len() int {
 	return len(arr.pairs)
 }
-
 func (arr *byKeyVal) Less(i, j int) bool {
 	if arr.isLess(i, j, byKey) {
 		return true
@@ -150,7 +149,6 @@ func (arr *byKeyVal) Less(i, j int) bool {
 	}
 	return arr.isLess(i, j, byVal)
 }
-
 func (arr *byKeyVal) Swap(i, j int) {
 	arr.pairs[i], arr.pairs[j] = arr.pairs[j], arr.pairs[i]
 	arr.sorted = true
@@ -230,6 +228,7 @@ func (arr *byKeyVal) isLess(i, j int, kind byKind) bool {
 		return n1 < n2
 	}
 	return string(v1) < string(v2)
+
 }
 
 func parsestr(s []byte) []byte {
@@ -346,7 +345,6 @@ func appendPrettyObject(buf, json []byte, i int, open, close byte, pretty bool, 
 	}
 	return buf, i, nl, open != '{'
 }
-
 func sortPairs(json, buf []byte, pairs []pair) []byte {
 	if len(pairs) == 0 {
 		return buf
@@ -424,6 +422,7 @@ type Style struct {
 	Key, String, Number [2]string
 	True, False, Null   [2]string
 	Escape              [2]string
+	Brackets            [2]string
 	Append              func(dst []byte, c byte) []byte
 }
 
@@ -441,13 +440,14 @@ var TerminalStyle *Style
 
 func init() {
 	TerminalStyle = &Style{
-		Key:    [2]string{"\x1B[94m", "\x1B[0m"},
-		String: [2]string{"\x1B[92m", "\x1B[0m"},
-		Number: [2]string{"\x1B[93m", "\x1B[0m"},
-		True:   [2]string{"\x1B[96m", "\x1B[0m"},
-		False:  [2]string{"\x1B[96m", "\x1B[0m"},
-		Null:   [2]string{"\x1B[91m", "\x1B[0m"},
-		Escape: [2]string{"\x1B[35m", "\x1B[0m"},
+		Key:      [2]string{"\x1B[1m\x1B[94m", "\x1B[0m"},
+		String:   [2]string{"\x1B[32m", "\x1B[0m"},
+		Number:   [2]string{"\x1B[33m", "\x1B[0m"},
+		True:     [2]string{"\x1B[36m", "\x1B[0m"},
+		False:    [2]string{"\x1B[36m", "\x1B[0m"},
+		Null:     [2]string{"\x1B[2m", "\x1B[0m"},
+		Escape:   [2]string{"\x1B[35m", "\x1B[0m"},
+		Brackets: [2]string{"\x1B[1m", "\x1B[0m"},
 		Append: func(dst []byte, c byte) []byte {
 			if c < ' ' && (c != '\r' && c != '\n' && c != '\t' && c != '\v') {
 				dst = append(dst, "\\u00"...)
@@ -541,13 +541,19 @@ func Color(src []byte, style *Style) []byte {
 			}
 		} else if src[i] == '{' || src[i] == '[' {
 			stack = append(stack, stackt{src[i], src[i] == '{'})
+			dst = append(dst, style.Brackets[0]...)
 			dst = apnd(dst, src[i])
+			dst = append(dst, style.Brackets[1]...)
 		} else if (src[i] == '}' || src[i] == ']') && len(stack) > 0 {
 			stack = stack[:len(stack)-1]
+			dst = append(dst, style.Brackets[0]...)
 			dst = apnd(dst, src[i])
+			dst = append(dst, style.Brackets[1]...)
 		} else if (src[i] == ':' || src[i] == ',') && len(stack) > 0 && stack[len(stack)-1].kind == '{' {
 			stack[len(stack)-1].key = !stack[len(stack)-1].key
+			dst = append(dst, style.Brackets[0]...)
 			dst = apnd(dst, src[i])
+			dst = append(dst, style.Brackets[1]...)
 		} else {
 			var kind byte
 			if (src[i] >= '0' && src[i] <= '9') || src[i] == '-' || isNaNOrInf(src[i:]) {
