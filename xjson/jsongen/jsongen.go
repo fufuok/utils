@@ -4,6 +4,7 @@ package jsongen
 import (
 	"strconv"
 
+	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/pools/bytespool"
 )
 
@@ -386,5 +387,6 @@ func NewMap() *Map {
 }
 
 func EscapeString(s string) Value {
-	return V(AppendJSONString(nil, s))
+	dst := bytespool.Make(len(s) + 2)
+	return V(utils.B2S(AppendJSONString(dst, s)))
 }
