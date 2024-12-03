@@ -2,9 +2,7 @@
 package jsongen
 
 import (
-	"encoding/json"
 	"strconv"
-	"unsafe"
 
 	"github.com/fufuok/utils/pools/bytespool"
 )
@@ -17,32 +15,18 @@ type Value interface {
 	Size() int
 }
 
-// QuotedValue 表示需要用"包裹起来的值，例如字符串
-type QuotedValue string
-
-// Serialize 将`q`序列化为字符串，追加到`buf`后，返回新的`buf`
-func (q QuotedValue) Serialize(buf []byte) []byte {
-	buf = append(buf, '"')
-	buf = append(buf, q...)
-	return append(buf, '"')
-}
-
-// Size 返回`q`在最终的`json`串中占有多少字节
-func (q QuotedValue) Size() int {
-	return len(q) + 2
-}
-
-// UnquotedValue 表示不需要用"包裹起来的值，例如整数，浮点数等
-type UnquotedValue string
+// V 表示标准的`json`值，例如: 123，1.23，true 等
+// 字符串值是以双引号包裹的字符串, 如: "abc"
+type V string
 
 // Serialize 将`u`序列化为字符串，追加到`buf`后，返回新的`buf`
-func (u UnquotedValue) Serialize(buf []byte) []byte {
-	return append(buf, u...)
+func (v V) Serialize(buf []byte) []byte {
+	return append(buf, v...)
 }
 
 // Size 返回`u`在最终的`json`串中占有多少字节
-func (u UnquotedValue) Size() int {
-	return len(u)
+func (v V) Size() int {
+	return len(v)
 }
 
 type RawBytes []byte
@@ -135,25 +119,25 @@ func (a *Array) AppendRawBytesArray(bs [][]byte) {
 // AppendUint 将`uint64`类型的值`u`追加到数组`a`后
 func (a *Array) AppendUint(u uint64) {
 	value := strconv.FormatUint(u, 10)
-	*a = append(*a, UnquotedValue(value))
+	*a = append(*a, V(value))
 }
 
 // AppendInt 将`int64`类型的值`i`追加到数组`a`后
 func (a *Array) AppendInt(i int64) {
 	value := strconv.FormatInt(i, 10)
-	*a = append(*a, UnquotedValue(value))
+	*a = append(*a, V(value))
 }
 
 // AppendFloat 将`float64`类型的值`f`追加到数组`a`后
 func (a *Array) AppendFloat(f float64) {
 	value := strconv.FormatFloat(f, 'g', 10, 64)
-	*a = append(*a, UnquotedValue(value))
+	*a = append(*a, V(value))
 }
 
 // AppendBool 将`bool`类型的值`b`追加到数组`a`后
 func (a *Array) AppendBool(b bool) {
 	value := strconv.FormatBool(b)
-	*a = append(*a, UnquotedValue(value))
+	*a = append(*a, V(value))
 }
 
 // AppendString 将`string`类型的值`s`追加到数组`a`后
@@ -166,11 +150,16 @@ func (a *Array) AppendMap(m *Map) {
 	*a = append(*a, m)
 }
 
+// AppendArray 将`json`数组`oa`追加到数组`a`后
+func (a *Array) AppendArray(oa *Array) {
+	*a = append(*a, oa)
+}
+
 // AppendUintArray 将`uint64`数组`u`追加到数组`a`后
 func (a *Array) AppendUintArray(u []uint64) {
 	value := make([]Value, 0, len(u))
 	for _, v := range u {
-		value = append(value, UnquotedValue(strconv.FormatUint(v, 10)))
+		value = append(value, V(strconv.FormatUint(v, 10)))
 	}
 	*a = append(*a, Array(value))
 }
@@ -179,7 +168,7 @@ func (a *Array) AppendUintArray(u []uint64) {
 func (a *Array) AppendIntArray(i []int64) {
 	value := make([]Value, 0, len(i))
 	for _, v := range i {
-		value = append(value, UnquotedValue(strconv.FormatInt(v, 10)))
+		value = append(value, V(strconv.FormatInt(v, 10)))
 	}
 	*a = append(*a, Array(value))
 }
@@ -188,7 +177,7 @@ func (a *Array) AppendIntArray(i []int64) {
 func (a *Array) AppendFloatArray(f []float64) {
 	value := make([]Value, 0, len(f))
 	for _, v := range f {
-		value = append(value, UnquotedValue(strconv.FormatFloat(v, 'g', 10, 64)))
+		value = append(value, V(strconv.FormatFloat(v, 'g', 10, 64)))
 	}
 	*a = append(*a, Array(value))
 }
@@ -197,7 +186,7 @@ func (a *Array) AppendFloatArray(f []float64) {
 func (a *Array) AppendBoolArray(b []bool) {
 	value := make([]Value, 0, len(b))
 	for _, v := range b {
-		value = append(value, UnquotedValue(strconv.FormatBool(v)))
+		value = append(value, V(strconv.FormatBool(v)))
 	}
 	*a = append(*a, Array(value))
 }
@@ -212,7 +201,7 @@ func (a *Array) AppendStringArray(s []string) {
 }
 
 // AppendMapArray 将`Map`数组`m`追加到数组`a`后
-func (a *Array) AppendMapArray(m []Map) {
+func (a *Array) AppendMapArray(m []*Map) {
 	value := make([]Value, 0, len(m))
 	for _, v := range m {
 		value = append(value, v)
@@ -220,9 +209,13 @@ func (a *Array) AppendMapArray(m []Map) {
 	*a = append(*a, Array(value))
 }
 
-// AppendArray 将`json`数组`oa`追加到数组`a`后
-func (a *Array) AppendArray(oa Array) {
-	*a = append(*a, oa)
+// AppendArrayArray 将`json`数组`oa`追加到数组`a`后
+func (a *Array) AppendArrayArray(oa []*Array) {
+	value := make([]Value, 0, len(oa))
+	for _, v := range oa {
+		value = append(value, v)
+	}
+	*a = append(*a, Array(value))
 }
 
 // Map 表示一个`json`映射
@@ -303,25 +296,25 @@ func (m *Map) PutRawBytesArray(key string, bs [][]byte) {
 // PutUint 将`uint64`类型的值`u`与键`key`关联
 func (m *Map) PutUint(key string, u uint64) {
 	value := strconv.FormatUint(u, 10)
-	m.put(key, UnquotedValue(value))
+	m.put(key, V(value))
 }
 
 // PutInt 将`int64`类型的值`i`与键`key`关联
 func (m *Map) PutInt(key string, i int64) {
 	value := strconv.FormatInt(i, 10)
-	m.put(key, UnquotedValue(value))
+	m.put(key, V(value))
 }
 
 // PutFloat 将`float64`类型的值`f`与键`key`关联
 func (m *Map) PutFloat(key string, f float64) {
 	value := strconv.FormatFloat(f, 'g', 10, 64)
-	m.put(key, UnquotedValue(value))
+	m.put(key, V(value))
 }
 
 // PutBool 将`bool`类型的值`b`与键`key`关联
 func (m *Map) PutBool(key string, b bool) {
 	value := strconv.FormatBool(b)
-	m.put(key, UnquotedValue(value))
+	m.put(key, V(value))
 }
 
 // PutString 将`string`类型的值`value`与键`key`关联
@@ -333,7 +326,7 @@ func (m *Map) PutString(key, value string) {
 func (m *Map) PutUintArray(key string, u []uint64) {
 	value := make([]Value, 0, len(u))
 	for _, v := range u {
-		value = append(value, UnquotedValue(strconv.FormatUint(v, 10)))
+		value = append(value, V(strconv.FormatUint(v, 10)))
 	}
 	m.put(key, Array(value))
 }
@@ -342,7 +335,7 @@ func (m *Map) PutUintArray(key string, u []uint64) {
 func (m *Map) PutIntArray(key string, i []int64) {
 	value := make([]Value, 0, len(i))
 	for _, v := range i {
-		value = append(value, UnquotedValue(strconv.FormatInt(v, 10)))
+		value = append(value, V(strconv.FormatInt(v, 10)))
 	}
 	m.put(key, Array(value))
 }
@@ -351,7 +344,7 @@ func (m *Map) PutIntArray(key string, i []int64) {
 func (m *Map) PutFloatArray(key string, f []float64) {
 	value := make([]Value, 0, len(f))
 	for _, v := range f {
-		value = append(value, UnquotedValue(strconv.FormatFloat(v, 'g', 10, 64)))
+		value = append(value, V(strconv.FormatFloat(v, 'g', 10, 64)))
 	}
 	m.put(key, Array(value))
 }
@@ -360,7 +353,7 @@ func (m *Map) PutFloatArray(key string, f []float64) {
 func (m *Map) PutBoolArray(key string, b []bool) {
 	value := make([]Value, 0, len(b))
 	for _, v := range b {
-		value = append(value, UnquotedValue(strconv.FormatBool(v)))
+		value = append(value, V(strconv.FormatBool(v)))
 	}
 	m.put(key, Array(value))
 }
@@ -393,11 +386,5 @@ func NewMap() *Map {
 }
 
 func EscapeString(s string) Value {
-	for i := 0; i < len(s); i++ {
-		if s[i] == '"' || s[i] == '\\' || s[i] < ' ' || s[i] > 0x7f {
-			b, _ := json.Marshal(s)
-			return UnquotedValue(*(*string)(unsafe.Pointer(&b)))
-		}
-	}
-	return QuotedValue(s)
+	return V(AppendJSONString(nil, s))
 }

@@ -2,12 +2,31 @@
 package jsongen
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"testing"
 )
 
 var jsStr = `{"a":3,"b":[4,true]}`
+
+func TestV(t *testing.T) {
+	testCases := []struct {
+		value    V
+		expected string
+	}{
+		{"1234", "1234"},
+		{"12.34", "12.34"},
+		{"true", "true"},
+		{`"s字符串"`, `"s字符串"`},
+	}
+
+	for _, c := range testCases {
+		if string(c.value.Serialize(nil)) != c.expected {
+			t.Errorf("actual(%s) != expected(%s)", string(c.value.Serialize(nil)), c.expected)
+		}
+	}
+}
 
 func TestRawString(t *testing.T) {
 	testCases := []struct {
@@ -41,47 +60,20 @@ func TestRawBytes(t *testing.T) {
 	}
 }
 
-func TestUnquotedValue(t *testing.T) {
-	testCases := []struct {
-		value    UnquotedValue
-		expected string
-	}{
-		{"1234", "1234"},
-		{"12.34", "12.34"},
-	}
-
-	for _, c := range testCases {
-		if string(c.value.Serialize(nil)) != c.expected {
-			t.Errorf("actual(%s) != expected(%s)", string(c.value.Serialize(nil)), c.expected)
-		}
-	}
-}
-
-func TestQuotedValue(t *testing.T) {
-	testCases := []struct {
-		value    QuotedValue
-		expected string
-	}{
-		{QuotedValue("string"), `"string"`},
-		{QuotedValue(`string with \`), `"string with \"`},
-		{QuotedValue(`string with "`), `"string with ""`},
-	}
-
-	for _, c := range testCases {
-		if string(c.value.Serialize(nil)) != c.expected {
-			t.Errorf("actual(%s) != expected(%s)", string(c.value.Serialize(nil)), c.expected)
-		}
-	}
-}
-
 func TestGenJSON(t *testing.T) {
 	js := NewMap()
-	js.PutRawString("raw", jsStr)
 	js.PutString("multiline", "x  \n  y  \n   \t\n  ")
+	js.PutRawString("raw", jsStr)
+	js.PutString("zh", "中　\n > < & %  Fufu \r \t 文\\u2728->?\\n*\\U0001F63A   \"")
 	bs := js.Serialize(nil)
+	t.Log("==", string(bs), "==")
 	var v map[string]interface{}
 	if err := json.Unmarshal(bs, &v); err != nil {
 		t.Fatal("Invalid JSON")
+	}
+	ms, _ := json.Marshal(v)
+	if !bytes.Equal(bs, ms) {
+		t.Fatalf("actual(%s) != expected(%s)", ms, bs)
 	}
 }
 
@@ -143,9 +135,9 @@ func array4() (*Array, string) {
 	a1, expected1 := array1()
 	a2, expected2 := array2()
 	a3, expected3 := array3()
-	a4.AppendArray(*a1)
-	a4.AppendArray(*a2)
-	a4.AppendArray(*a3)
+	a4.AppendArray(a1)
+	a4.AppendArray(a2)
+	a4.AppendArray(a3)
 	expected4 := fmt.Sprintf("[%s,%s,%s]", expected1, expected2, expected3)
 
 	return a4, expected4
@@ -283,5 +275,43 @@ func TestMapValue(t *testing.T) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			t.Errorf("map name:%s unmarshal error:%v", c.name, err)
 		}
+	}
+}
+
+func TestNestedMapArray(t *testing.T) {
+	a := NewArray()
+	a.AppendString(`"中`)
+	a.AppendRawString(`[true,"b"]`)
+
+	m1, _ := map1()
+	m2, _ := map2()
+	m3, _ := map3()
+	m4, _ := map4()
+	m5 := NewMap()
+	m5.PutString("n", "1")
+	m5.PutArray("a", a)
+
+	arr := NewArray()
+	arr.AppendFloatArray([]float64{3.14, -1.0})
+	arr.AppendArray(a)
+	arr.AppendMap(m5)
+
+	// [[3.14,-1],["\"中",[true,"b"]],{"n":"1","a":["\"中",[true,"b"]]}]
+	bs := arr.Serialize(nil)
+	t.Log(string(bs))
+	var s []interface{}
+	if err := json.Unmarshal(bs, &s); err != nil {
+		t.Fatal("Invalid JSON")
+	}
+
+	arr.AppendMap(m1)
+	arr.AppendMapArray([]*Map{m2, m3, m4})
+	m := NewMap()
+	m.PutMap("m", m5)
+	m.PutArray("a", arr)
+	bs = m.Serialize(nil)
+	var v map[string]interface{}
+	if err := json.Unmarshal(bs, &v); err != nil {
+		t.Fatal("Invalid JSON")
 	}
 }
