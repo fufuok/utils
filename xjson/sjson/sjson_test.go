@@ -62,7 +62,6 @@ func testRaw(t *testing.T, kind int, expect, json, path string, value interface{
 		t.Fatalf("expected '%v', got '%v'", expect, string(json3))
 	}
 }
-
 func TestBasic(t *testing.T) {
 	testRaw(t, setRaw, `[{"hiw":"planet","hi":"world"}]`, `[{"hi":"world"}]`, "0.hiw", `"planet"`)
 	testRaw(t, setRaw, `[true]`, ``, "0", `true`)
@@ -191,7 +190,7 @@ func TestDeleteIssue21(t *testing.T) {
 	expectedForLenBefore309AsBytes := `{"1":"","0":"01234567890123456789012345678901234567890123456789012345678901234567890123456","2":""}`
 	// ---------------------------
 
-	data := []struct {
+	var data = []struct {
 		desc     string
 		input    string
 		expected string
@@ -215,6 +214,7 @@ func TestDeleteIssue21(t *testing.T) {
 
 	for i, d := range data {
 		result, err := Delete(d.input, "to_delete")
+
 		if err != nil {
 			t.Error(fmtErrorf(testError{
 				unexpected: "error",
@@ -270,7 +270,6 @@ func TestSetDotKeyIssue10(t *testing.T) {
 		t.Fatalf("expected '%v', got '%v'", `{"app.token":"cde"}`, json)
 	}
 }
-
 func TestDeleteDotKeyIssue19(t *testing.T) {
 	json := []byte(`{"data":{"key1":"value1","key2.something":"value2"}}`)
 	json, _ = DeleteBytes(json, `data.key2\.something`)
@@ -280,12 +279,12 @@ func TestDeleteDotKeyIssue19(t *testing.T) {
 }
 
 func TestIssue36(t *testing.T) {
-	json := `
+	var json = `
 	{
 	    "size": 1000
     }
 `
-	raw := `
+	var raw = `
 	{
 	    "sample": "hello"
 	}
@@ -336,5 +335,19 @@ func TestIndexes(t *testing.T) {
 	}
 	if gjson.Get(json, "friends.#.last").String() != `["Johnson","Craig","Johnson"]` {
 		t.Fatal("mismatch")
+	}
+}
+
+func TestIssue61(t *testing.T) {
+	json := `{
+		"@context": {
+		  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		  "@vocab": "http://schema.org/",
+		  "sh": "http://www.w3.org/ns/shacl#"
+		}
+	}`
+	json1, _ := Set(json, "@context.@vocab", "newval")
+	if gjson.Get(json1, "@context.@vocab").String() != "newval" {
+		t.Fail()
 	}
 }

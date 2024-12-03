@@ -134,8 +134,7 @@ func appendStringify(buf []byte, s string) []byte {
 
 // appendBuild builds a json block from a json path.
 func appendBuild(buf []byte, array bool, paths []pathResult, raw string,
-	stringify bool,
-) []byte {
+	stringify bool) []byte {
 	if !array {
 		buf = appendStringify(buf, paths[0].part)
 		buf = append(buf, ':')
@@ -249,8 +248,7 @@ loop:
 var errNoChange = &errorType{"no change"}
 
 func appendRawPaths(buf []byte, jstr string, paths []pathResult, raw string,
-	stringify, del bool,
-) ([]byte, error) {
+	stringify, del bool) ([]byte, error) {
 	var err error
 	var res gjson.Result
 	var found bool
@@ -367,8 +365,7 @@ func appendRawPaths(buf []byte, jstr string, paths []pathResult, raw string,
 			} else {
 				return nil, &errorType{
 					"cannot set array element for non-numeric key '" +
-						paths[0].part + "'",
-				}
+						paths[0].part + "'"}
 			}
 		}
 		if appendit {
@@ -506,8 +503,7 @@ type sliceHeader struct {
 }
 
 func set(jstr, path, raw string,
-	stringify, del, optimistic, inplace bool,
-) ([]byte, error) {
+	stringify, del, optimistic, inplace bool) ([]byte, error) {
 	if path == "" {
 		return []byte(jstr), &errorType{"path cannot be empty"}
 	}
@@ -522,8 +518,7 @@ func set(jstr, path, raw string,
 				if !stringify || !mustMarshalString(raw) {
 					jsonh := *(*stringHeader)(unsafe.Pointer(&jstr))
 					jsonbh := sliceHeader{
-						data: jsonh.data, len: jsonh.len, cap: jsonh.len,
-					}
+						data: jsonh.data, len: jsonh.len, cap: jsonh.len}
 					jbytes := *(*[]byte)(unsafe.Pointer(&jsonbh))
 					if stringify {
 						jbytes[res.Index] = '"'
@@ -633,8 +628,7 @@ func setComplexPath(jstr, path, raw string, stringify bool) ([]byte, error) {
 // Invalid json will not panic, but it may return back unexpected results.
 // An error is returned if the path is not valid.
 func SetOptions(json, path string, value interface{},
-	opts *Options,
-) (string, error) {
+	opts *Options) (string, error) {
 	if opts != nil {
 		if opts.ReplaceInPlace {
 			// it's not safe to replace bytes in-place for strings
@@ -655,8 +649,7 @@ func SetOptions(json, path string, value interface{},
 // If working with bytes, this method preferred over
 // SetOptions(string(data), path, value)
 func SetBytesOptions(json []byte, path string, value interface{},
-	opts *Options,
-) ([]byte, error) {
+	opts *Options) ([]byte, error) {
 	var optimistic, inplace bool
 	if opts != nil {
 		optimistic = opts.Optimistic
@@ -727,8 +720,7 @@ func SetBytesOptions(json []byte, path string, value interface{},
 // If working with bytes, this method preferred over
 // SetRawOptions(string(data), path, value, opts)
 func SetRawBytesOptions(json []byte, path string, value []byte,
-	opts *Options,
-) ([]byte, error) {
+	opts *Options) ([]byte, error) {
 	jstr := *(*string)(unsafe.Pointer(&json))
 	vstr := *(*string)(unsafe.Pointer(&value))
 	var optimistic, inplace bool
