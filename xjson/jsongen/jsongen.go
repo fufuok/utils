@@ -4,42 +4,29 @@ package jsongen
 import (
 	"strconv"
 
-	"github.com/fufuok/utils"
 	"github.com/fufuok/utils/pools/bytespool"
 )
 
-// Value 表示将要序列化到`json`字符串中的值
 type Value interface {
-	// Serialize 将值序列化为字符串，追加到`buf`后，返回新的`buf`
+	// Serialize 将值序列化为字符串, 追加到 buf 并返回
 	Serialize(buf []byte) []byte
-	// Size 返回值在最终的`json`串中占有多少字节
+	// Size 返回值最终字节数
 	Size() int
 }
 
-// V 表示标准的`json`值，例如: 123，1.23，true 等
+// V 表示标准的 JSON 值，例如: 123，1.23，true 等
 // 字符串值是以双引号包裹的字符串, 如: "abc"
 type V string
 
-// Serialize 将`u`序列化为字符串，追加到`buf`后，返回新的`buf`
 func (v V) Serialize(buf []byte) []byte {
 	return append(buf, v...)
 }
 
-// Size 返回`u`在最终的`json`串中占有多少字节
 func (v V) Size() int {
 	return len(v)
 }
 
-type RawBytes []byte
-
-func (b RawBytes) Serialize(buf []byte) []byte {
-	return append(buf, b...)
-}
-
-func (b RawBytes) Size() int {
-	return len(b)
-}
-
+// RawString 附加原生 JSON 数据字符串形式, 如直接附加: `[1,{"A":1}]`
 type RawString string
 
 func (s RawString) Serialize(buf []byte) []byte {
@@ -50,24 +37,35 @@ func (s RawString) Size() int {
 	return len(s)
 }
 
-// Array 表示一个`json`数组
-type Array []Value
+// RawBytes 附加原生 JSON 数据
+type RawBytes []byte
 
-// NewArray 创建一个`json`数组，返回其指针
-func NewArray() *Array {
-	a := Array(make([]Value, 0, 1))
-	return &a
+func (b RawBytes) Serialize(buf []byte) []byte {
+	return append(buf, b...)
 }
 
-// Serialize 将`a`序列化为字符串，追加到`buf`后，返回新的`buf`
-func (a Array) Serialize(buf []byte) []byte {
+func (b RawBytes) Size() int {
+	return len(b)
+}
+
+// Array 数组类的 JSON 数据
+type Array struct {
+	values []Value
+}
+
+// NewArray 创建 JSON 数组, 无添加值时, 结果中至少附加一个空数组: []
+func NewArray() *Array {
+	return &Array{}
+}
+
+func (a *Array) Serialize(buf []byte) []byte {
 	if cap(buf) == 0 {
 		buf = bytespool.Make(a.Size())
 	}
 
 	buf = append(buf, '[')
-	count := len(a)
-	for i, e := range a {
+	count := len(a.values)
+	for i, e := range a.values {
 		buf = e.Serialize(buf)
 		if i != count-1 {
 			buf = append(buf, ',')
@@ -76,157 +74,185 @@ func (a Array) Serialize(buf []byte) []byte {
 	return append(buf, ']')
 }
 
-// Size 返回`a`在最终的`json`串中占有多少字节
-func (a Array) Size() int {
+func (a *Array) Size() int {
 	size := 0
-	for _, e := range a {
+	for _, e := range a.values {
 		size += e.Size()
 	}
 
 	// for []
 	size += 2
 
-	if len(a) > 1 {
+	if len(a.values) > 1 {
 		// for ,
-		size += len(a) - 1
+		size += len(a.values) - 1
 	}
 	return size
 }
 
-func (a *Array) AppendRawString(s string) {
-	*a = append(*a, RawString(s))
+// AppendUint 追加单个或多个 uint64 到数组: [1,2] => [1,2,3,4]
+func (a *Array) AppendUint(vv ...uint64) {
+	for _, v := range vv {
+		a.values = append(a.values, V(strconv.FormatUint(v, 10)))
+	}
 }
 
-func (a *Array) AppendRawBytes(b []byte) {
-	*a = append(*a, RawBytes(b))
+// AppendInt 追加单个或多个 int64 到数组: [1,2] => [1,2,3,4]
+func (a *Array) AppendInt(vv ...int64) {
+	for _, v := range vv {
+		a.values = append(a.values, V(strconv.FormatInt(v, 10)))
+	}
 }
 
-func (a *Array) AppendRawStringArray(ss []string) {
-	value := make([]Value, 0, len(ss))
+// AppendFloat 追加单个或多个 float64 到数组: [1,2] => [1,2,3.1,4]
+func (a *Array) AppendFloat(vv ...float64) {
+	for _, v := range vv {
+		a.values = append(a.values, V(strconv.FormatFloat(v, 'f', -1, 64)))
+	}
+}
+
+// AppendBool 追加单个或多个 bool 到数组: [1,2] => [1,2,true,false]
+func (a *Array) AppendBool(vv ...bool) {
+	for _, v := range vv {
+		a.values = append(a.values, V(strconv.FormatBool(v)))
+	}
+}
+
+// AppendString 追加单个或多个 string 到数组: [1,2] => [1,2,"A","b"]
+// a.AppendString("A", "b")
+func (a *Array) AppendString(vv ...string) {
+	for _, v := range vv {
+		a.values = append(a.values, V(EscapeString(v)))
+	}
+}
+
+// AppendMap 追加单个或多个 map 到数组: [1,2] => [1,2,{"A":1},{"b":true}]
+func (a *Array) AppendMap(vv ...*Map) {
+	for _, v := range vv {
+		if v != nil {
+			a.values = append(a.values, v)
+		}
+	}
+}
+
+// AppendArray 追加单个或多个 array 到数组: [1,2] => [1,2,[{"A":1}],[true]]
+func (a *Array) AppendArray(vv ...*Array) {
+	for _, v := range vv {
+		if v != nil {
+			a.values = append(a.values, v)
+		}
+	}
+}
+
+// AppendRawString 追加单个或多个原生 JSON 字符串, 如: [1,2] => [1,2,[2,{"A":1}]]
+// a.AppendRawString(`[2,{"A":1}]`)
+func (a *Array) AppendRawString(ss ...string) {
+	if len(ss) == 0 {
+		return
+	}
+	vv := make([]Value, 0, len(ss))
 	for _, v := range ss {
-		value = append(value, RawString(v))
+		if v != "" {
+			vv = append(vv, RawString(v))
+		}
 	}
-	*a = append(*a, Array(value))
+	a.values = append(a.values, vv...)
 }
 
-func (a *Array) AppendRawBytesArray(bs [][]byte) {
-	value := make([]Value, 0, len(bs))
-	for _, v := range bs {
-		value = append(value, RawBytes(v))
+// AppendRawBytes 追加单个或多个原生 JSON 数据
+func (a *Array) AppendRawBytes(bb ...[]byte) {
+	if len(bb) == 0 {
+		return
 	}
-	*a = append(*a, Array(value))
-}
-
-// AppendUint 将`uint64`类型的值`u`追加到数组`a`后
-func (a *Array) AppendUint(u uint64) {
-	value := strconv.FormatUint(u, 10)
-	*a = append(*a, V(value))
-}
-
-// AppendInt 将`int64`类型的值`i`追加到数组`a`后
-func (a *Array) AppendInt(i int64) {
-	value := strconv.FormatInt(i, 10)
-	*a = append(*a, V(value))
-}
-
-// AppendFloat 将`float64`类型的值`f`追加到数组`a`后
-func (a *Array) AppendFloat(f float64) {
-	value := strconv.FormatFloat(f, 'g', 10, 64)
-	*a = append(*a, V(value))
-}
-
-// AppendBool 将`bool`类型的值`b`追加到数组`a`后
-func (a *Array) AppendBool(b bool) {
-	value := strconv.FormatBool(b)
-	*a = append(*a, V(value))
-}
-
-// AppendString 将`string`类型的值`s`追加到数组`a`后
-func (a *Array) AppendString(value string) {
-	*a = append(*a, EscapeString(value))
-}
-
-// AppendMap 将`Map`类型的值`m`追加到数组`a`后
-func (a *Array) AppendMap(m *Map) {
-	*a = append(*a, m)
-}
-
-// AppendArray 将`json`数组`oa`追加到数组`a`后
-func (a *Array) AppendArray(oa *Array) {
-	*a = append(*a, oa)
-}
-
-// AppendUintArray 将`uint64`数组`u`追加到数组`a`后
-func (a *Array) AppendUintArray(u []uint64) {
-	value := make([]Value, 0, len(u))
-	for _, v := range u {
-		value = append(value, V(strconv.FormatUint(v, 10)))
+	vv := make([]Value, 0, len(bb))
+	for _, v := range bb {
+		if v != nil {
+			vv = append(vv, RawBytes(v))
+		}
 	}
-	*a = append(*a, Array(value))
+	a.values = append(a.values, vv...)
 }
 
-// AppendIntArray 将`int64`数组`i`追加到数组`a`后
-func (a *Array) AppendIntArray(i []int64) {
-	value := make([]Value, 0, len(i))
-	for _, v := range i {
-		value = append(value, V(strconv.FormatInt(v, 10)))
-	}
-	*a = append(*a, Array(value))
+// AppendUintArray 追加 uint64 数组: [1,2] => [1,2,[3,4,5]]
+func (a *Array) AppendUintArray(vv []uint64) {
+	sub := NewArray()
+	sub.AppendUint(vv...)
+	a.values = append(a.values, sub)
 }
 
-// AppendFloatArray 将`float64`数组`f`追加到数组`a`后
-func (a *Array) AppendFloatArray(f []float64) {
-	value := make([]Value, 0, len(f))
-	for _, v := range f {
-		value = append(value, V(strconv.FormatFloat(v, 'g', 10, 64)))
-	}
-	*a = append(*a, Array(value))
+// AppendIntArray 追加 int64 数组: [1,2] => [1,2,[3,4,5]]
+func (a *Array) AppendIntArray(vv []int64) {
+	sub := NewArray()
+	sub.AppendInt(vv...)
+	a.values = append(a.values, sub)
 }
 
-// AppendBoolArray 将`bool`数组`b`追加到数组`a`后
-func (a *Array) AppendBoolArray(b []bool) {
-	value := make([]Value, 0, len(b))
-	for _, v := range b {
-		value = append(value, V(strconv.FormatBool(v)))
-	}
-	*a = append(*a, Array(value))
+// AppendFloatArray 追加 float64 数组: [1,2] => [1,2,[3,4.1,5]]
+func (a *Array) AppendFloatArray(vv []float64) {
+	sub := NewArray()
+	sub.AppendFloat(vv...)
+	a.values = append(a.values, sub)
 }
 
-// AppendStringArray 将`string`数组`s`追加到数组`a`后
-func (a *Array) AppendStringArray(s []string) {
-	value := make([]Value, 0, len(s))
-	for _, v := range s {
-		value = append(value, EscapeString(v))
-	}
-	*a = append(*a, Array(value))
+// AppendBoolArray 追加 bool 数组: [1,2] => [1,2,[true,false]]
+func (a *Array) AppendBoolArray(vv []bool) {
+	sub := NewArray()
+	sub.AppendBool(vv...)
+	a.values = append(a.values, sub)
 }
 
-// AppendMapArray 将`Map`数组`m`追加到数组`a`后
-func (a *Array) AppendMapArray(m []*Map) {
-	value := make([]Value, 0, len(m))
-	for _, v := range m {
-		value = append(value, v)
-	}
-	*a = append(*a, Array(value))
+// AppendStringArray 追加 string 数组: [1,2] => [1,2,["A","b"]]
+// a.AppendStringArray([]string{"A","b"})
+func (a *Array) AppendStringArray(vv []string) {
+	sub := NewArray()
+	sub.AppendString(vv...)
+	a.values = append(a.values, sub)
 }
 
-// AppendArrayArray 将`json`数组`oa`追加到数组`a`后
-func (a *Array) AppendArrayArray(oa []*Array) {
-	value := make([]Value, 0, len(oa))
-	for _, v := range oa {
-		value = append(value, v)
-	}
-	*a = append(*a, Array(value))
+// AppendMapArray 追加 map 数组: [1,2] => [1,2,[{"A":1},{"b":true}]]
+func (a *Array) AppendMapArray(vv []*Map) {
+	sub := NewArray()
+	sub.AppendMap(vv...)
+	a.values = append(a.values, sub)
 }
 
-// Map 表示一个`json`映射
+// AppendArrayArray 追加 array 数组: [1,2] => [1,2,[[3],[4],[{"b":true}]]]
+func (a *Array) AppendArrayArray(vv []*Array) {
+	sub := NewArray()
+	sub.AppendArray(vv...)
+	a.values = append(a.values, sub)
+}
+
+// AppendRawStringArray 追加原生 JSON 字符串数组: [1,2] => [1,2,["x",[4],[{"b":true}]]]
+// a.AppendRawStringArray([]string{`"x"`, `[4]`, `[{"b":true}]`})
+func (a *Array) AppendRawStringArray(ss []string) {
+	sub := NewArray()
+	sub.AppendRawString(ss...)
+	a.values = append(a.values, sub)
+}
+
+// AppendRawBytesArray 追加原生 JSON 数据数组
+func (a *Array) AppendRawBytesArray(vv [][]byte) {
+	sub := NewArray()
+	sub.AppendRawBytes(vv...)
+	a.values = append(a.values, sub)
+}
+
+// Map 对象类(字典) JSON 数据
 type Map struct {
 	keys   []string
 	values []Value
 }
 
-// Serialize 将`m`序列化为字符串，追加到`buf`后，返回新的`buf`
-func (m Map) Serialize(buf []byte) []byte {
+// NewMap 创建对象类(字典) JSON 数据集, 无添加值时, 结果中至少附加一个空对象: {}
+func NewMap() *Map {
+	return &Map{
+		keys:   make([]string, 0, 8),
+		values: make([]Value, 0, 8),
+	}
+}
+
+func (m *Map) Serialize(buf []byte) []byte {
 	if cap(buf) == 0 {
 		buf = bytespool.Make(m.Size())
 	}
@@ -234,9 +260,7 @@ func (m Map) Serialize(buf []byte) []byte {
 	buf = append(buf, '{')
 	count := len(m.keys)
 	for i, key := range m.keys {
-		buf = append(buf, '"')
 		buf = append(buf, key...)
-		buf = append(buf, '"')
 		buf = append(buf, ':')
 		buf = m.values[i].Serialize(buf)
 		if i != count-1 {
@@ -246,12 +270,11 @@ func (m Map) Serialize(buf []byte) []byte {
 	return append(buf, '}')
 }
 
-// Size 返回`m`在最终的`json`串中占有多少字节
-func (m Map) Size() int {
+func (m *Map) Size() int {
 	size := 0
 	for i, key := range m.keys {
-		// +2 for ", +1 for :
-		size += len(key) + 2 + 1
+		// +1 for :
+		size += len(key) + 1
 		size += m.values[i].Size()
 	}
 
@@ -266,7 +289,7 @@ func (m Map) Size() int {
 }
 
 func (m *Map) put(key string, value Value) {
-	m.keys = append(m.keys, key)
+	m.keys = append(m.keys, EscapeString(key))
 	m.values = append(m.values, value)
 }
 
@@ -278,115 +301,75 @@ func (m *Map) PutRawBytes(key string, b []byte) {
 	m.put(key, RawBytes(b))
 }
 
-func (m *Map) PutRawStringArray(key string, ss []string) {
-	value := make([]Value, 0, len(ss))
-	for _, v := range ss {
-		value = append(value, RawString(v))
-	}
-	m.put(key, Array(value))
-}
-
-func (m *Map) PutRawBytesArray(key string, bs [][]byte) {
-	value := make([]Value, 0, len(bs))
-	for _, v := range bs {
-		value = append(value, RawBytes(v))
-	}
-	m.put(key, Array(value))
-}
-
-// PutUint 将`uint64`类型的值`u`与键`key`关联
 func (m *Map) PutUint(key string, u uint64) {
-	value := strconv.FormatUint(u, 10)
-	m.put(key, V(value))
+	m.put(key, V(strconv.FormatUint(u, 10)))
 }
 
-// PutInt 将`int64`类型的值`i`与键`key`关联
 func (m *Map) PutInt(key string, i int64) {
-	value := strconv.FormatInt(i, 10)
-	m.put(key, V(value))
+	m.put(key, V(strconv.FormatInt(i, 10)))
 }
 
-// PutFloat 将`float64`类型的值`f`与键`key`关联
 func (m *Map) PutFloat(key string, f float64) {
-	value := strconv.FormatFloat(f, 'g', 10, 64)
-	m.put(key, V(value))
+	m.put(key, V(strconv.FormatFloat(f, 'f', -1, 64)))
 }
 
-// PutBool 将`bool`类型的值`b`与键`key`关联
 func (m *Map) PutBool(key string, b bool) {
-	value := strconv.FormatBool(b)
-	m.put(key, V(value))
+	m.put(key, V(strconv.FormatBool(b)))
 }
 
-// PutString 将`string`类型的值`value`与键`key`关联
-func (m *Map) PutString(key, value string) {
-	m.put(key, EscapeString(value))
+func (m *Map) PutString(key, s string) {
+	m.put(key, V(EscapeString(s)))
 }
 
-// PutUintArray 将`uint64`数组类型的值`u`与键`key`关联
-func (m *Map) PutUintArray(key string, u []uint64) {
-	value := make([]Value, 0, len(u))
-	for _, v := range u {
-		value = append(value, V(strconv.FormatUint(v, 10)))
-	}
-	m.put(key, Array(value))
-}
-
-// PutIntArray 将`int64`数组类型的值`i`与键`key`关联
-func (m *Map) PutIntArray(key string, i []int64) {
-	value := make([]Value, 0, len(i))
-	for _, v := range i {
-		value = append(value, V(strconv.FormatInt(v, 10)))
-	}
-	m.put(key, Array(value))
-}
-
-// PutFloatArray 将`float64`数组类型的值`f`与键`key`关联
-func (m *Map) PutFloatArray(key string, f []float64) {
-	value := make([]Value, 0, len(f))
-	for _, v := range f {
-		value = append(value, V(strconv.FormatFloat(v, 'g', 10, 64)))
-	}
-	m.put(key, Array(value))
-}
-
-// PutBoolArray 将`bool`数组类型的值`b`与键`key`关联
-func (m *Map) PutBoolArray(key string, b []bool) {
-	value := make([]Value, 0, len(b))
-	for _, v := range b {
-		value = append(value, V(strconv.FormatBool(v)))
-	}
-	m.put(key, Array(value))
-}
-
-// PutStringArray 将`string`数组类型的值`s`与键`key`关联
-func (m *Map) PutStringArray(key string, s []string) {
-	value := make([]Value, 0, len(s))
-	for _, v := range s {
-		value = append(value, EscapeString(v))
-	}
-	m.put(key, Array(value))
-}
-
-// PutArray 将`json`数组`a`与键`key`关联
-func (m *Map) PutArray(key string, a *Array) {
+func (m *Map) PutRawStringArray(key string, ss []string) {
+	a := NewArray()
+	a.AppendRawString(ss...)
 	m.put(key, a)
 }
 
-// PutMap 将`json`映射`om`与键`key`关联
+func (m *Map) PutRawBytesArray(key string, bs [][]byte) {
+	a := NewArray()
+	a.AppendRawBytes(bs...)
+	m.put(key, a)
+}
+
+// PutUintArray 添加 uint64 数组数据项: {"A":[1,2]}
+func (m *Map) PutUintArray(key string, u []uint64) {
+	a := NewArray()
+	a.AppendUint(u...)
+	m.put(key, a)
+}
+
+func (m *Map) PutIntArray(key string, i []int64) {
+	a := NewArray()
+	a.AppendInt(i...)
+	m.put(key, a)
+}
+
+func (m *Map) PutFloatArray(key string, f []float64) {
+	a := NewArray()
+	a.AppendFloat(f...)
+	m.put(key, a)
+}
+
+func (m *Map) PutBoolArray(key string, b []bool) {
+	a := NewArray()
+	a.AppendBool(b...)
+	m.put(key, a)
+}
+
+func (m *Map) PutStringArray(key string, s []string) {
+	a := NewArray()
+	a.AppendString(s...)
+	m.put(key, a)
+}
+
+// PutArray 添加值为数组的数据项: {"A":[1,true,"x"]}
+func (m *Map) PutArray(key string, oa *Array) {
+	m.put(key, oa)
+}
+
+// PutMap 添加值为对象(字典)的数据项, map 嵌套: {"A":{"sub":1}}
 func (m *Map) PutMap(key string, om *Map) {
 	m.put(key, om)
-}
-
-// NewMap 创建一个`json`映射返回其指针
-func NewMap() *Map {
-	return &Map{
-		keys:   make([]string, 0, 8),
-		values: make([]Value, 0, 8),
-	}
-}
-
-func EscapeString(s string) Value {
-	dst := bytespool.Make(len(s) + 2)
-	return V(utils.B2S(AppendJSONString(dst, s)))
 }

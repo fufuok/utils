@@ -8,6 +8,9 @@ package jsongen
 
 import (
 	"unicode/utf8"
+
+	"github.com/fufuok/utils"
+	"github.com/fufuok/utils/pools/bytespool"
 )
 
 // DisableEscapeHTML will disable the automatic escaping of certain
@@ -25,8 +28,16 @@ var hexchars = [...]byte{
 	'a', 'b', 'c', 'd', 'e', 'f',
 }
 
+// EscapeString 转义 JSON 字符串, 并在前后加上双引号
+func EscapeString(s string) string {
+	dst := bytespool.Make(len(s) + 2)
+	return utils.B2S(AppendJSONString(dst, s))
+}
+
 // AppendJSONString is a convenience function that converts the provided string
 // to a valid JSON string and appends it to dst.
+//
+//nolint:cyclop,nestif
 func AppendJSONString(dst []byte, s string) []byte {
 	dst = append(dst, make([]byte, len(s)+2)...)
 	dst = append(dst[:len(dst)-len(s)-2], '"')

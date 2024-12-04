@@ -6,7 +6,7 @@
 import "github.com/fufuok/utils/xjson/jsongen"
 ```
 
-### Package jsongen forked from darjun/json\-gen
+Package jsongen forked from darjun/json\-gen
 
 Package jsongen Copyright 2024 Joshua J Baker. All rights reserved. Use of this source code is governed by an MIT\-style license that can be found in the LICENSE file.
 
@@ -15,65 +15,65 @@ https://github.com/tidwall/gjson
 ## Index
 
 - [Variables](<#variables>)
-- [func AppendJSONString(dst []byte, s string) []byte](<#func-appendjsonstring>)
-- [type Array](<#type-array>)
-  - [func NewArray() *Array](<#func-newarray>)
-  - [func (a *Array) AppendArray(oa *Array)](<#func-array-appendarray>)
-  - [func (a *Array) AppendArrayArray(oa []*Array)](<#func-array-appendarrayarray>)
-  - [func (a *Array) AppendBool(b bool)](<#func-array-appendbool>)
-  - [func (a *Array) AppendBoolArray(b []bool)](<#func-array-appendboolarray>)
-  - [func (a *Array) AppendFloat(f float64)](<#func-array-appendfloat>)
-  - [func (a *Array) AppendFloatArray(f []float64)](<#func-array-appendfloatarray>)
-  - [func (a *Array) AppendInt(i int64)](<#func-array-appendint>)
-  - [func (a *Array) AppendIntArray(i []int64)](<#func-array-appendintarray>)
-  - [func (a *Array) AppendMap(m *Map)](<#func-array-appendmap>)
-  - [func (a *Array) AppendMapArray(m []*Map)](<#func-array-appendmaparray>)
-  - [func (a *Array) AppendRawBytes(b []byte)](<#func-array-appendrawbytes>)
-  - [func (a *Array) AppendRawBytesArray(bs [][]byte)](<#func-array-appendrawbytesarray>)
-  - [func (a *Array) AppendRawString(s string)](<#func-array-appendrawstring>)
-  - [func (a *Array) AppendRawStringArray(ss []string)](<#func-array-appendrawstringarray>)
-  - [func (a *Array) AppendString(value string)](<#func-array-appendstring>)
-  - [func (a *Array) AppendStringArray(s []string)](<#func-array-appendstringarray>)
-  - [func (a *Array) AppendUint(u uint64)](<#func-array-appenduint>)
-  - [func (a *Array) AppendUintArray(u []uint64)](<#func-array-appenduintarray>)
-  - [func (a Array) Serialize(buf []byte) []byte](<#func-array-serialize>)
-  - [func (a Array) Size() int](<#func-array-size>)
-- [type Map](<#type-map>)
-  - [func NewMap() *Map](<#func-newmap>)
-  - [func (m *Map) PutArray(key string, a *Array)](<#func-map-putarray>)
-  - [func (m *Map) PutBool(key string, b bool)](<#func-map-putbool>)
-  - [func (m *Map) PutBoolArray(key string, b []bool)](<#func-map-putboolarray>)
-  - [func (m *Map) PutFloat(key string, f float64)](<#func-map-putfloat>)
-  - [func (m *Map) PutFloatArray(key string, f []float64)](<#func-map-putfloatarray>)
-  - [func (m *Map) PutInt(key string, i int64)](<#func-map-putint>)
-  - [func (m *Map) PutIntArray(key string, i []int64)](<#func-map-putintarray>)
-  - [func (m *Map) PutMap(key string, om *Map)](<#func-map-putmap>)
-  - [func (m *Map) PutRawBytes(key string, b []byte)](<#func-map-putrawbytes>)
-  - [func (m *Map) PutRawBytesArray(key string, bs [][]byte)](<#func-map-putrawbytesarray>)
-  - [func (m *Map) PutRawString(key, s string)](<#func-map-putrawstring>)
-  - [func (m *Map) PutRawStringArray(key string, ss []string)](<#func-map-putrawstringarray>)
-  - [func (m *Map) PutString(key, value string)](<#func-map-putstring>)
-  - [func (m *Map) PutStringArray(key string, s []string)](<#func-map-putstringarray>)
-  - [func (m *Map) PutUint(key string, u uint64)](<#func-map-putuint>)
-  - [func (m *Map) PutUintArray(key string, u []uint64)](<#func-map-putuintarray>)
-  - [func (m Map) Serialize(buf []byte) []byte](<#func-map-serialize>)
-  - [func (m Map) Size() int](<#func-map-size>)
-- [type RawBytes](<#type-rawbytes>)
-  - [func (b RawBytes) Serialize(buf []byte) []byte](<#func-rawbytes-serialize>)
-  - [func (b RawBytes) Size() int](<#func-rawbytes-size>)
-- [type RawString](<#type-rawstring>)
-  - [func (s RawString) Serialize(buf []byte) []byte](<#func-rawstring-serialize>)
-  - [func (s RawString) Size() int](<#func-rawstring-size>)
-- [type V](<#type-v>)
-  - [func (v V) Serialize(buf []byte) []byte](<#func-v-serialize>)
-  - [func (v V) Size() int](<#func-v-size>)
-- [type Value](<#type-value>)
-  - [func EscapeString(s string) Value](<#func-escapestring>)
+- [func AppendJSONString\(dst \[\]byte, s string\) \[\]byte](<#AppendJSONString>)
+- [func EscapeString\(s string\) string](<#EscapeString>)
+- [type Array](<#Array>)
+  - [func NewArray\(\) \*Array](<#NewArray>)
+  - [func \(a \*Array\) AppendArray\(vv ...\*Array\)](<#Array.AppendArray>)
+  - [func \(a \*Array\) AppendArrayArray\(vv \[\]\*Array\)](<#Array.AppendArrayArray>)
+  - [func \(a \*Array\) AppendBool\(vv ...bool\)](<#Array.AppendBool>)
+  - [func \(a \*Array\) AppendBoolArray\(vv \[\]bool\)](<#Array.AppendBoolArray>)
+  - [func \(a \*Array\) AppendFloat\(vv ...float64\)](<#Array.AppendFloat>)
+  - [func \(a \*Array\) AppendFloatArray\(vv \[\]float64\)](<#Array.AppendFloatArray>)
+  - [func \(a \*Array\) AppendInt\(vv ...int64\)](<#Array.AppendInt>)
+  - [func \(a \*Array\) AppendIntArray\(vv \[\]int64\)](<#Array.AppendIntArray>)
+  - [func \(a \*Array\) AppendMap\(vv ...\*Map\)](<#Array.AppendMap>)
+  - [func \(a \*Array\) AppendMapArray\(vv \[\]\*Map\)](<#Array.AppendMapArray>)
+  - [func \(a \*Array\) AppendRawBytes\(bb ...\[\]byte\)](<#Array.AppendRawBytes>)
+  - [func \(a \*Array\) AppendRawBytesArray\(vv \[\]\[\]byte\)](<#Array.AppendRawBytesArray>)
+  - [func \(a \*Array\) AppendRawString\(ss ...string\)](<#Array.AppendRawString>)
+  - [func \(a \*Array\) AppendRawStringArray\(ss \[\]string\)](<#Array.AppendRawStringArray>)
+  - [func \(a \*Array\) AppendString\(vv ...string\)](<#Array.AppendString>)
+  - [func \(a \*Array\) AppendStringArray\(vv \[\]string\)](<#Array.AppendStringArray>)
+  - [func \(a \*Array\) AppendUint\(vv ...uint64\)](<#Array.AppendUint>)
+  - [func \(a \*Array\) AppendUintArray\(vv \[\]uint64\)](<#Array.AppendUintArray>)
+  - [func \(a \*Array\) Serialize\(buf \[\]byte\) \[\]byte](<#Array.Serialize>)
+  - [func \(a \*Array\) Size\(\) int](<#Array.Size>)
+- [type Map](<#Map>)
+  - [func NewMap\(\) \*Map](<#NewMap>)
+  - [func \(m \*Map\) PutArray\(key string, oa \*Array\)](<#Map.PutArray>)
+  - [func \(m \*Map\) PutBool\(key string, b bool\)](<#Map.PutBool>)
+  - [func \(m \*Map\) PutBoolArray\(key string, b \[\]bool\)](<#Map.PutBoolArray>)
+  - [func \(m \*Map\) PutFloat\(key string, f float64\)](<#Map.PutFloat>)
+  - [func \(m \*Map\) PutFloatArray\(key string, f \[\]float64\)](<#Map.PutFloatArray>)
+  - [func \(m \*Map\) PutInt\(key string, i int64\)](<#Map.PutInt>)
+  - [func \(m \*Map\) PutIntArray\(key string, i \[\]int64\)](<#Map.PutIntArray>)
+  - [func \(m \*Map\) PutMap\(key string, om \*Map\)](<#Map.PutMap>)
+  - [func \(m \*Map\) PutRawBytes\(key string, b \[\]byte\)](<#Map.PutRawBytes>)
+  - [func \(m \*Map\) PutRawBytesArray\(key string, bs \[\]\[\]byte\)](<#Map.PutRawBytesArray>)
+  - [func \(m \*Map\) PutRawString\(key, s string\)](<#Map.PutRawString>)
+  - [func \(m \*Map\) PutRawStringArray\(key string, ss \[\]string\)](<#Map.PutRawStringArray>)
+  - [func \(m \*Map\) PutString\(key, s string\)](<#Map.PutString>)
+  - [func \(m \*Map\) PutStringArray\(key string, s \[\]string\)](<#Map.PutStringArray>)
+  - [func \(m \*Map\) PutUint\(key string, u uint64\)](<#Map.PutUint>)
+  - [func \(m \*Map\) PutUintArray\(key string, u \[\]uint64\)](<#Map.PutUintArray>)
+  - [func \(m \*Map\) Serialize\(buf \[\]byte\) \[\]byte](<#Map.Serialize>)
+  - [func \(m \*Map\) Size\(\) int](<#Map.Size>)
+- [type RawBytes](<#RawBytes>)
+  - [func \(b RawBytes\) Serialize\(buf \[\]byte\) \[\]byte](<#RawBytes.Serialize>)
+  - [func \(b RawBytes\) Size\(\) int](<#RawBytes.Size>)
+- [type RawString](<#RawString>)
+  - [func \(s RawString\) Serialize\(buf \[\]byte\) \[\]byte](<#RawString.Serialize>)
+  - [func \(s RawString\) Size\(\) int](<#RawString.Size>)
+- [type V](<#V>)
+  - [func \(v V\) Serialize\(buf \[\]byte\) \[\]byte](<#V.Serialize>)
+  - [func \(v V\) Size\(\) int](<#V.Size>)
+- [type Value](<#Value>)
 
 
 ## Variables
 
-DisableEscapeHTML will disable the automatic escaping of certain "problamatic" HTML characters when encoding to JSON. These character include '\>', '\<' and '&', which get escaped to \\u003e, \\u0026, and \\u003c respectively.
+<a name="DisableEscapeHTML"></a>DisableEscapeHTML will disable the automatic escaping of certain "problamatic" HTML characters when encoding to JSON. These character include '\>', '\<' and '&', which get escaped to \\u003e, \\u0026, and \\u003c respectively.
 
 This is a global flag and will affect all further gjson operations. Ideally, if used, it should be set one time before other gjson functions are called.
 
@@ -81,7 +81,8 @@ This is a global flag and will affect all further gjson operations. Ideally, if 
 var DisableEscapeHTML = false
 ```
 
-## func [AppendJSONString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/utils.go#L30>)
+<a name="AppendJSONString"></a>
+## func AppendJSONString
 
 ```go
 func AppendJSONString(dst []byte, s string) []byte
@@ -89,177 +90,219 @@ func AppendJSONString(dst []byte, s string) []byte
 
 AppendJSONString is a convenience function that converts the provided string to a valid JSON string and appends it to dst.
 
-## type [Array](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L53>)
-
-Array 表示一个\`json\`数组
+<a name="EscapeString"></a>
+## func EscapeString
 
 ```go
-type Array []Value
+func EscapeString(s string) string
 ```
 
-### func [NewArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L56>)
+EscapeString 转义 JSON 字符串, 并在前后加上双引号
+
+<a name="Array"></a>
+## type Array
+
+Array 数组类的 JSON 数据
+
+```go
+type Array struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewArray"></a>
+### func NewArray
 
 ```go
 func NewArray() *Array
 ```
 
-NewArray 创建一个\`json\`数组，返回其指针
+NewArray 创建 JSON 数组, 无添加值时, 结果中至少附加一个空数组: \[\]
 
-### func \(\*Array\) [AppendArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L154>)
-
-```go
-func (a *Array) AppendArray(oa *Array)
-```
-
-AppendArray 将\`json\`数组\`oa\`追加到数组\`a\`后
-
-### func \(\*Array\) [AppendArrayArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L213>)
+<a name="Array.AppendArray"></a>
+### func \(\*Array\) AppendArray
 
 ```go
-func (a *Array) AppendArrayArray(oa []*Array)
+func (a *Array) AppendArray(vv ...*Array)
 ```
 
-AppendArrayArray 将\`json\`数组\`oa\`追加到数组\`a\`后
+AppendArray 追加单个或多个 array 到数组: \[1,2\] =\> \[1,2,\[\{"A":1\}\],\[true\]\]
 
-### func \(\*Array\) [AppendBool](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L138>)
+<a name="Array.AppendArrayArray"></a>
+### func \(\*Array\) AppendArrayArray
 
 ```go
-func (a *Array) AppendBool(b bool)
+func (a *Array) AppendArrayArray(vv []*Array)
 ```
 
-AppendBool 将\`bool\`类型的值\`b\`追加到数组\`a\`后
+AppendArrayArray 追加 array 数组: \[1,2\] =\> \[1,2,\[\[3\],\[4\],\[\{"b":true\}\]\]\]
 
-### func \(\*Array\) [AppendBoolArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L186>)
+<a name="Array.AppendBool"></a>
+### func \(\*Array\) AppendBool
 
 ```go
-func (a *Array) AppendBoolArray(b []bool)
+func (a *Array) AppendBool(vv ...bool)
 ```
 
-AppendBoolArray 将\`bool\`数组\`b\`追加到数组\`a\`后
+AppendBool 追加单个或多个 bool 到数组: \[1,2\] =\> \[1,2,true,false\]
 
-### func \(\*Array\) [AppendFloat](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L132>)
+<a name="Array.AppendBoolArray"></a>
+### func \(\*Array\) AppendBoolArray
 
 ```go
-func (a *Array) AppendFloat(f float64)
+func (a *Array) AppendBoolArray(vv []bool)
 ```
 
-AppendFloat 将\`float64\`类型的值\`f\`追加到数组\`a\`后
+AppendBoolArray 追加 bool 数组: \[1,2\] =\> \[1,2,\[true,false\]\]
 
-### func \(\*Array\) [AppendFloatArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L177>)
+<a name="Array.AppendFloat"></a>
+### func \(\*Array\) AppendFloat
 
 ```go
-func (a *Array) AppendFloatArray(f []float64)
+func (a *Array) AppendFloat(vv ...float64)
 ```
 
-AppendFloatArray 将\`float64\`数组\`f\`追加到数组\`a\`后
+AppendFloat 追加单个或多个 float64 到数组: \[1,2\] =\> \[1,2,3.1,4\]
 
-### func \(\*Array\) [AppendInt](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L126>)
+<a name="Array.AppendFloatArray"></a>
+### func \(\*Array\) AppendFloatArray
 
 ```go
-func (a *Array) AppendInt(i int64)
+func (a *Array) AppendFloatArray(vv []float64)
 ```
 
-AppendInt 将\`int64\`类型的值\`i\`追加到数组\`a\`后
+AppendFloatArray 追加 float64 数组: \[1,2\] =\> \[1,2,\[3,4.1,5\]\]
 
-### func \(\*Array\) [AppendIntArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L168>)
+<a name="Array.AppendInt"></a>
+### func \(\*Array\) AppendInt
 
 ```go
-func (a *Array) AppendIntArray(i []int64)
+func (a *Array) AppendInt(vv ...int64)
 ```
 
-AppendIntArray 将\`int64\`数组\`i\`追加到数组\`a\`后
+AppendInt 追加单个或多个 int64 到数组: \[1,2\] =\> \[1,2,3,4\]
 
-### func \(\*Array\) [AppendMap](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L149>)
+<a name="Array.AppendIntArray"></a>
+### func \(\*Array\) AppendIntArray
 
 ```go
-func (a *Array) AppendMap(m *Map)
+func (a *Array) AppendIntArray(vv []int64)
 ```
 
-AppendMap 将\`Map\`类型的值\`m\`追加到数组\`a\`后
+AppendIntArray 追加 int64 数组: \[1,2\] =\> \[1,2,\[3,4,5\]\]
 
-### func \(\*Array\) [AppendMapArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L204>)
+<a name="Array.AppendMap"></a>
+### func \(\*Array\) AppendMap
 
 ```go
-func (a *Array) AppendMapArray(m []*Map)
+func (a *Array) AppendMap(vv ...*Map)
 ```
 
-AppendMapArray 将\`Map\`数组\`m\`追加到数组\`a\`后
+AppendMap 追加单个或多个 map 到数组: \[1,2\] =\> \[1,2,\{"A":1\},\{"b":true\}\]
 
-### func \(\*Array\) [AppendRawBytes](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L99>)
+<a name="Array.AppendMapArray"></a>
+### func \(\*Array\) AppendMapArray
 
 ```go
-func (a *Array) AppendRawBytes(b []byte)
+func (a *Array) AppendMapArray(vv []*Map)
 ```
 
-### func \(\*Array\) [AppendRawBytesArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L111>)
+AppendMapArray 追加 map 数组: \[1,2\] =\> \[1,2,\[\{"A":1\},\{"b":true\}\]\]
+
+<a name="Array.AppendRawBytes"></a>
+### func \(\*Array\) AppendRawBytes
 
 ```go
-func (a *Array) AppendRawBytesArray(bs [][]byte)
+func (a *Array) AppendRawBytes(bb ...[]byte)
 ```
 
-### func \(\*Array\) [AppendRawString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L95>)
+AppendRawBytes 追加单个或多个原生 JSON 数据
+
+<a name="Array.AppendRawBytesArray"></a>
+### func \(\*Array\) AppendRawBytesArray
 
 ```go
-func (a *Array) AppendRawString(s string)
+func (a *Array) AppendRawBytesArray(vv [][]byte)
 ```
 
-### func \(\*Array\) [AppendRawStringArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L103>)
+AppendRawBytesArray 追加原生 JSON 数据数组
+
+<a name="Array.AppendRawString"></a>
+### func \(\*Array\) AppendRawString
+
+```go
+func (a *Array) AppendRawString(ss ...string)
+```
+
+AppendRawString 追加单个或多个原生 JSON 字符串, 如: \[1,2\] =\> \[1,2,\[2,\{"A":1\}\]\] a.AppendRawString\(\`\[2,\{"A":1\}\]\`\)
+
+<a name="Array.AppendRawStringArray"></a>
+### func \(\*Array\) AppendRawStringArray
 
 ```go
 func (a *Array) AppendRawStringArray(ss []string)
 ```
 
-### func \(\*Array\) [AppendString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L144>)
+AppendRawStringArray 追加原生 JSON 字符串数组: \[1,2\] =\> \[1,2,\["x",\[4\],\[\{"b":true\}\]\]\] a.AppendRawStringArray\(\[\]string\{\`"x"\`, \`\[4\]\`, \`\[\{"b":true\}\]\`\}\)
+
+<a name="Array.AppendString"></a>
+### func \(\*Array\) AppendString
 
 ```go
-func (a *Array) AppendString(value string)
+func (a *Array) AppendString(vv ...string)
 ```
 
-AppendString 将\`string\`类型的值\`s\`追加到数组\`a\`后
+AppendString 追加单个或多个 string 到数组: \[1,2\] =\> \[1,2,"A","b"\] a.AppendString\("A", "b"\)
 
-### func \(\*Array\) [AppendStringArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L195>)
+<a name="Array.AppendStringArray"></a>
+### func \(\*Array\) AppendStringArray
 
 ```go
-func (a *Array) AppendStringArray(s []string)
+func (a *Array) AppendStringArray(vv []string)
 ```
 
-AppendStringArray 将\`string\`数组\`s\`追加到数组\`a\`后
+AppendStringArray 追加 string 数组: \[1,2\] =\> \[1,2,\["A","b"\]\] a.AppendStringArray\(\[\]string\{"A","b"\}\)
 
-### func \(\*Array\) [AppendUint](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L120>)
+<a name="Array.AppendUint"></a>
+### func \(\*Array\) AppendUint
 
 ```go
-func (a *Array) AppendUint(u uint64)
+func (a *Array) AppendUint(vv ...uint64)
 ```
 
-AppendUint 将\`uint64\`类型的值\`u\`追加到数组\`a\`后
+AppendUint 追加单个或多个 uint64 到数组: \[1,2\] =\> \[1,2,3,4\]
 
-### func \(\*Array\) [AppendUintArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L159>)
+<a name="Array.AppendUintArray"></a>
+### func \(\*Array\) AppendUintArray
 
 ```go
-func (a *Array) AppendUintArray(u []uint64)
+func (a *Array) AppendUintArray(vv []uint64)
 ```
 
-AppendUintArray 将\`uint64\`数组\`u\`追加到数组\`a\`后
+AppendUintArray 追加 uint64 数组: \[1,2\] =\> \[1,2,\[3,4,5\]\]
 
-### func \(Array\) [Serialize](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L62>)
+<a name="Array.Serialize"></a>
+### func \(\*Array\) Serialize
 
 ```go
-func (a Array) Serialize(buf []byte) []byte
+func (a *Array) Serialize(buf []byte) []byte
 ```
 
-Serialize 将\`a\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(Array\) [Size](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L79>)
+
+<a name="Array.Size"></a>
+### func \(\*Array\) Size
 
 ```go
-func (a Array) Size() int
+func (a *Array) Size() int
 ```
 
-Size 返回\`a\`在最终的\`json\`串中占有多少字节
 
-## type [Map](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L222-L225>)
 
-Map 表示一个\`json\`映射
+<a name="Map"></a>
+## type Map
+
+Map 对象类\(字典\) JSON 数据
 
 ```go
 type Map struct {
@@ -267,229 +310,270 @@ type Map struct {
 }
 ```
 
-### func [NewMap](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L381>)
+<a name="NewMap"></a>
+### func NewMap
 
 ```go
 func NewMap() *Map
 ```
 
-NewMap 创建一个\`json\`映射返回其指针
+NewMap 创建对象类\(字典\) JSON 数据集, 无添加值时, 结果中至少附加一个空对象: \{\}
 
-### func \(\*Map\) [PutArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L371>)
+<a name="Map.PutArray"></a>
+### func \(\*Map\) PutArray
 
 ```go
-func (m *Map) PutArray(key string, a *Array)
+func (m *Map) PutArray(key string, oa *Array)
 ```
 
-PutArray 将\`json\`数组\`a\`与键\`key\`关联
+PutArray 添加值为数组的数据项: \{"A":\[1,true,"x"\]\}
 
-### func \(\*Map\) [PutBool](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L315>)
+<a name="Map.PutBool"></a>
+### func \(\*Map\) PutBool
 
 ```go
 func (m *Map) PutBool(key string, b bool)
 ```
 
-PutBool 将\`bool\`类型的值\`b\`与键\`key\`关联
 
-### func \(\*Map\) [PutBoolArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L353>)
+
+<a name="Map.PutBoolArray"></a>
+### func \(\*Map\) PutBoolArray
 
 ```go
 func (m *Map) PutBoolArray(key string, b []bool)
 ```
 
-PutBoolArray 将\`bool\`数组类型的值\`b\`与键\`key\`关联
 
-### func \(\*Map\) [PutFloat](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L309>)
+
+<a name="Map.PutFloat"></a>
+### func \(\*Map\) PutFloat
 
 ```go
 func (m *Map) PutFloat(key string, f float64)
 ```
 
-PutFloat 将\`float64\`类型的值\`f\`与键\`key\`关联
 
-### func \(\*Map\) [PutFloatArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L344>)
+
+<a name="Map.PutFloatArray"></a>
+### func \(\*Map\) PutFloatArray
 
 ```go
 func (m *Map) PutFloatArray(key string, f []float64)
 ```
 
-PutFloatArray 将\`float64\`数组类型的值\`f\`与键\`key\`关联
 
-### func \(\*Map\) [PutInt](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L303>)
+
+<a name="Map.PutInt"></a>
+### func \(\*Map\) PutInt
 
 ```go
 func (m *Map) PutInt(key string, i int64)
 ```
 
-PutInt 将\`int64\`类型的值\`i\`与键\`key\`关联
 
-### func \(\*Map\) [PutIntArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L335>)
+
+<a name="Map.PutIntArray"></a>
+### func \(\*Map\) PutIntArray
 
 ```go
 func (m *Map) PutIntArray(key string, i []int64)
 ```
 
-PutIntArray 将\`int64\`数组类型的值\`i\`与键\`key\`关联
 
-### func \(\*Map\) [PutMap](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L376>)
+
+<a name="Map.PutMap"></a>
+### func \(\*Map\) PutMap
 
 ```go
 func (m *Map) PutMap(key string, om *Map)
 ```
 
-PutMap 将\`json\`映射\`om\`与键\`key\`关联
+PutMap 添加值为对象\(字典\)的数据项, map 嵌套: \{"A":\{"sub":1\}\}
 
-### func \(\*Map\) [PutRawBytes](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L276>)
+<a name="Map.PutRawBytes"></a>
+### func \(\*Map\) PutRawBytes
 
 ```go
 func (m *Map) PutRawBytes(key string, b []byte)
 ```
 
-### func \(\*Map\) [PutRawBytesArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L288>)
+
+
+<a name="Map.PutRawBytesArray"></a>
+### func \(\*Map\) PutRawBytesArray
 
 ```go
 func (m *Map) PutRawBytesArray(key string, bs [][]byte)
 ```
 
-### func \(\*Map\) [PutRawString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L272>)
+
+
+<a name="Map.PutRawString"></a>
+### func \(\*Map\) PutRawString
 
 ```go
 func (m *Map) PutRawString(key, s string)
 ```
 
-### func \(\*Map\) [PutRawStringArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L280>)
+
+
+<a name="Map.PutRawStringArray"></a>
+### func \(\*Map\) PutRawStringArray
 
 ```go
 func (m *Map) PutRawStringArray(key string, ss []string)
 ```
 
-### func \(\*Map\) [PutString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L321>)
+
+
+<a name="Map.PutString"></a>
+### func \(\*Map\) PutString
 
 ```go
-func (m *Map) PutString(key, value string)
+func (m *Map) PutString(key, s string)
 ```
 
-PutString 将\`string\`类型的值\`value\`与键\`key\`关联
 
-### func \(\*Map\) [PutStringArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L362>)
+
+<a name="Map.PutStringArray"></a>
+### func \(\*Map\) PutStringArray
 
 ```go
 func (m *Map) PutStringArray(key string, s []string)
 ```
 
-PutStringArray 将\`string\`数组类型的值\`s\`与键\`key\`关联
 
-### func \(\*Map\) [PutUint](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L297>)
+
+<a name="Map.PutUint"></a>
+### func \(\*Map\) PutUint
 
 ```go
 func (m *Map) PutUint(key string, u uint64)
 ```
 
-PutUint 将\`uint64\`类型的值\`u\`与键\`key\`关联
 
-### func \(\*Map\) [PutUintArray](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L326>)
+
+<a name="Map.PutUintArray"></a>
+### func \(\*Map\) PutUintArray
 
 ```go
 func (m *Map) PutUintArray(key string, u []uint64)
 ```
 
-PutUintArray 将\`uint64\`数组类型的值\`u\`与键\`key\`关联
+PutUintArray 添加 uint64 数组数据项: \{"A":\[1,2\]\}
 
-### func \(Map\) [Serialize](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L228>)
-
-```go
-func (m Map) Serialize(buf []byte) []byte
-```
-
-Serialize 将\`m\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
-
-### func \(Map\) [Size](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L249>)
+<a name="Map.Serialize"></a>
+### func \(\*Map\) Serialize
 
 ```go
-func (m Map) Size() int
+func (m *Map) Serialize(buf []byte) []byte
 ```
 
-Size 返回\`m\`在最终的\`json\`串中占有多少字节
 
-## type [RawBytes](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L32>)
+
+<a name="Map.Size"></a>
+### func \(\*Map\) Size
+
+```go
+func (m *Map) Size() int
+```
+
+
+
+<a name="RawBytes"></a>
+## type RawBytes
+
+RawBytes 附加原生 JSON 数据
 
 ```go
 type RawBytes []byte
 ```
 
-### func \(RawBytes\) [Serialize](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L34>)
+<a name="RawBytes.Serialize"></a>
+### func \(RawBytes\) Serialize
 
 ```go
 func (b RawBytes) Serialize(buf []byte) []byte
 ```
 
-### func \(RawBytes\) [Size](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L38>)
+
+
+<a name="RawBytes.Size"></a>
+### func \(RawBytes\) Size
 
 ```go
 func (b RawBytes) Size() int
 ```
 
-## type [RawString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L42>)
+
+
+<a name="RawString"></a>
+## type RawString
+
+RawString 附加原生 JSON 数据字符串形式, 如直接附加: \`\[1,\{"A":1\}\]\`
 
 ```go
 type RawString string
 ```
 
-### func \(RawString\) [Serialize](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L44>)
+<a name="RawString.Serialize"></a>
+### func \(RawString\) Serialize
 
 ```go
 func (s RawString) Serialize(buf []byte) []byte
 ```
 
-### func \(RawString\) [Size](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L48>)
+
+
+<a name="RawString.Size"></a>
+### func \(RawString\) Size
 
 ```go
 func (s RawString) Size() int
 ```
 
-## type [V](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L20>)
 
-V 表示标准的\`json\`值，例如: 123，1.23，true 等 字符串值是以双引号包裹的字符串, 如: "abc"
+
+<a name="V"></a>
+## type V
+
+V 表示标准的 JSON 值，例如: 123，1.23，true 等 字符串值是以双引号包裹的字符串, 如: "abc"
 
 ```go
 type V string
 ```
 
-### func \(V\) [Serialize](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L23>)
+<a name="V.Serialize"></a>
+### func \(V\) Serialize
 
 ```go
 func (v V) Serialize(buf []byte) []byte
 ```
 
-Serialize 将\`u\`序列化为字符串，追加到\`buf\`后，返回新的\`buf\`
 
-### func \(V\) [Size](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L28>)
+
+<a name="V.Size"></a>
+### func \(V\) Size
 
 ```go
 func (v V) Size() int
 ```
 
-Size 返回\`u\`在最终的\`json\`串中占有多少字节
 
-## type [Value](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L11-L16>)
 
-Value 表示将要序列化到\`json\`字符串中的值
+<a name="Value"></a>
+## type Value
+
+
 
 ```go
 type Value interface {
-    // Serialize 将值序列化为字符串，追加到`buf`后，返回新的`buf`
+    // Serialize 将值序列化为字符串, 追加到 buf 并返回
     Serialize(buf []byte) []byte
-    // Size 返回值在最终的`json`串中占有多少字节
+    // Size 返回值最终字节数
     Size() int
 }
 ```
-
-### func [EscapeString](<https://github.com/fufuok/utils/blob/master/xjson/jsongen/jsongen.go#L388>)
-
-```go
-func EscapeString(s string) Value
-```
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

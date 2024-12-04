@@ -278,6 +278,33 @@ func TestMapValue(t *testing.T) {
 	}
 }
 
+func TestBoundaryMapArray(t *testing.T) {
+	a := NewArray()
+	a.AppendInt(1, 2)
+	a.AppendInt()
+	a.AppendArray()
+	a.AppendMap(NewMap())
+	a.AppendMap(nil, nil)
+	a.AppendArray(NewArray())
+	a.AppendArray(nil)
+	a.AppendArrayArray([]*Array{NewArray(), NewArray()})
+	a.AppendIntArray([]int64{3})
+	a.AppendRawString(`[2, {"A":1}]`)
+	a.AppendRawStringArray([]string{`"x"`, `[4]`, `[{"b":true}]`})
+	m := NewMap()
+	m.PutStringArray("s\ns ", nil)
+	a.AppendMap(m)
+	bs := a.Serialize(nil)
+	want := `[1,2,{},[],[[],[]],[3],[2, {"A":1}],["x",[4],[{"b":true}]],{"s\ns ":[]}]`
+	if string(bs) != want {
+		t.Fatalf("actual(%s) != expected(%s)", string(bs), want)
+	}
+	var s []interface{}
+	if err := json.Unmarshal(bs, &s); err != nil {
+		t.Fatal("Invalid JSON")
+	}
+}
+
 func TestNestedMapArray(t *testing.T) {
 	a := NewArray()
 	a.AppendString(`"中`)
