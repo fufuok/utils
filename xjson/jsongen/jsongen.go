@@ -147,30 +147,20 @@ func (a *Array) AppendArray(vv ...*Array) {
 // AppendRawString 追加单个或多个原生 JSON 字符串, 如: [1,2] => [1,2,[2,{"A":1}]]
 // a.AppendRawString(`[2,{"A":1}]`)
 func (a *Array) AppendRawString(ss ...string) {
-	if len(ss) == 0 {
-		return
-	}
-	vv := make([]Value, 0, len(ss))
 	for _, v := range ss {
 		if v != "" {
-			vv = append(vv, RawString(v))
+			a.values = append(a.values, RawString(v))
 		}
 	}
-	a.values = append(a.values, vv...)
 }
 
 // AppendRawBytes 追加单个或多个原生 JSON 数据
 func (a *Array) AppendRawBytes(bb ...[]byte) {
-	if len(bb) == 0 {
-		return
-	}
-	vv := make([]Value, 0, len(bb))
 	for _, v := range bb {
 		if v != nil {
-			vv = append(vv, RawBytes(v))
+			a.values = append(a.values, RawBytes(v))
 		}
 	}
-	a.values = append(a.values, vv...)
 }
 
 // AppendUintArray 追加 uint64 数组: [1,2] => [1,2,[3,4,5]]
