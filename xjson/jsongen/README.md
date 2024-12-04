@@ -8,16 +8,13 @@
 
 ## 改动
 
-- 增加使用 `buffer_pool`
+- 增加使用 `bytespool`
 - 增加添加原始 JSON 数据方法: `RawString` `RawBytes`
   - map: `m.PutRawString` `m.PutRawBytes` `m.PutRawStringArray` `m.PutRawBytesArray`
   - array: `a.AppendRawString` `a.AppendRawBytes` `a.AppendRawStringArray` `a.AppendRawBytesArray`
 - 减少一些不必要的转换
-- 增加 `go mod`
 
 ## 使用
-
-简单使用请向下翻原文, 高性能场景建议配合 [bytespool](https://github.com/fufuok/bytespool) 使用:
 
 ```go
 package main
@@ -25,8 +22,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/fufuok/bytespool"
-	"github.com/fufuok/jsongen"
+	"github.com/fufuok/utils/xjson/jsongen"
 )
 
 func main() {
@@ -40,17 +36,12 @@ func main() {
 	js.PutArray("sub", jsArr)
 	js.PutRawString("raw", `{"n":null,"m":[1,"ff"]}`)
 
-	size := js.Size()
-	bs := bytespool.Get(size)
-	defer bytespool.Put(bs)
-	data := js.Serialize(bs)
-
-	// 也可以直接使用 nil
-	// data := js.Serialize(nil)
-
+	data := js.Serialize(nil)
+	fmt.Printf("len: %d == %d\n", js.Size(), len(data))
 	fmt.Printf("%s\n", data)
 
 	// Output:
+	// len: 86 == 86
 	// {"s":"a\"b\"\\c","f":3.14,"b":false,"sub":[7,["A","B"]],"raw":{"n":null,"m":[1,"ff"]}}
 }
 ```
