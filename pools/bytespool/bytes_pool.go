@@ -3,8 +3,6 @@ package bytespool
 import (
 	"math"
 	"math/bits"
-	"reflect"
-	"runtime"
 	"sync"
 	"unsafe"
 )
@@ -55,18 +53,21 @@ func (p *CapacityPools) New(size int) (buf []byte) {
 		return p.Make(minCapacity)
 	}
 	if size > defaultMaxSize {
-		return make([]byte, size, size)
+		return Bytes(size, size)
 	}
 	idx := getIndex(size)
-	ptr, _ := p.pools[idx].Get().(unsafe.Pointer)
+	ptr, _ := p.pools[idx].Get().(*byte)
 	if ptr == nil {
-		return make([]byte, size, 1<<idx)
+		return Bytes(size, 1<<idx)
 	}
-	sh := (*reflect.SliceHeader)(unsafe.Pointer(&buf))
-	sh.Data = uintptr(ptr)
+	
+	// go1.20
+	// return unsafe.Slice(ptr, bp.capacity)[:size]
+
+	sh := (*bytesHeader)(unsafe.Pointer(&buf))
+	sh.Data = ptr
 	sh.Len = size
 	sh.Cap = 1 << idx
-	runtime.KeepAlive(ptr)
 	return
 }
 
@@ -115,8 +116,12 @@ func (p *CapacityPools) Release(buf []byte) bool {
 	if n != 1<<idx {
 		idx--
 	}
-	// array pointer
-	p.pools[idx].Put(unsafe.Pointer(&buf[:1][0]))
+
+	// go1.20, store array pointer,
+	// bp.pool.Put(unsafe.SliceData(buf))
+
+	sh := (*bytesHeader)(unsafe.Pointer(&buf))
+	p.pools[idx].Put(sh.Data)
 	return true
 }
 
