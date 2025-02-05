@@ -358,7 +358,63 @@ func TestMapLoadOrCompute_FunctionCalledOnce(t *testing.T) {
 			return v
 		})
 	}
+	m.Range(func(k string, v interface{}) bool {
+		if vi, ok := v.(int); !ok || strconv.Itoa(vi) != k {
+			t.Fatalf("%sth key is not equal to value %d", k, v)
+		}
+		return true
+	})
+}
 
+func TestMapLoadOrTryCompute(t *testing.T) {
+	const numEntries = 1000
+	m := NewMap()
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue interface{}, cancel bool) {
+			return i, true
+		})
+		if loaded {
+			t.Fatalf("value not computed for %d", i)
+		}
+		if v != nil {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+	if m.Size() != 0 {
+		t.Fatalf("zero map size expected: %d", m.Size())
+	}
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue interface{}, cancel bool) {
+			return i, false
+		})
+		if loaded {
+			t.Fatalf("value not computed for %d", i)
+		}
+		if v != i {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue interface{}, cancel bool) {
+			return i, false
+		})
+		if !loaded {
+			t.Fatalf("value not loaded for %d", i)
+		}
+		if v != i {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+}
+
+func TestMapLoadOrTryCompute_FunctionCalledOnce(t *testing.T) {
+	m := NewMap()
+	for i := 0; i < 100; {
+		m.LoadOrTryCompute(strconv.Itoa(i), func() (v interface{}, cancel bool) {
+			v, i = i, i+1
+			return v, false
+		})
+	}
 	m.Range(func(k string, v interface{}) bool {
 		if vi, ok := v.(int); !ok || strconv.Itoa(vi) != k {
 			t.Fatalf("%sth key is not equal to value %d", k, v)
@@ -368,11 +424,11 @@ func TestMapLoadOrCompute_FunctionCalledOnce(t *testing.T) {
 }
 
 func TestMapCompute(t *testing.T) {
-	var zeroedV interface{}
+	var zeroV interface{}
 	m := NewMap()
 	// Store a new value.
 	v, ok := m.Compute("foobar", func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool) {
-		if oldValue != zeroedV {
+		if oldValue != zeroV {
 			t.Fatalf("oldValue should be empty interface{} when computing a new value: %d", oldValue)
 		}
 		if loaded {
@@ -425,8 +481,8 @@ func TestMapCompute(t *testing.T) {
 	}
 	// Try to delete a non-existing value. Notice different key.
 	v, ok = m.Compute("barbaz", func(oldValue interface{}, loaded bool) (newValue interface{}, delete bool) {
-		var zeroedV interface{}
-		if oldValue != zeroedV {
+		var zeroV interface{}
+		if oldValue != zeroV {
 			t.Fatalf("oldValue should be empty interface{} when trying to delete a non-existing value: %d", oldValue)
 		}
 		if loaded {
@@ -437,7 +493,7 @@ func TestMapCompute(t *testing.T) {
 		delete = true
 		return
 	})
-	if v != zeroedV {
+	if v != zeroV {
 		t.Fatalf("v should be empty interface{} when trying to delete a non-existing value: %d", v)
 	}
 	if ok {
@@ -1267,6 +1323,30 @@ func TestMapStats(t *testing.T) {
 	}
 	if stats.CounterLen != 8 {
 		t.Fatalf("unexpected counter length: %d", stats.CounterLen)
+	}
+}
+
+func TestToPlainMap_NilPointer(t *testing.T) {
+	pm := ToPlainMap(nil)
+	if len(pm) != 0 {
+		t.Fatalf("got unexpected size of nil map copy: %d", len(pm))
+	}
+}
+
+func TestToPlainMap(t *testing.T) {
+	const numEntries = 1000
+	m := NewMap()
+	for i := 0; i < numEntries; i++ {
+		m.Store(strconv.Itoa(i), i)
+	}
+	pm := ToPlainMap(m)
+	if len(pm) != numEntries {
+		t.Fatalf("got unexpected size of nil map copy: %d", len(pm))
+	}
+	for i := 0; i < numEntries; i++ {
+		if v := pm[strconv.Itoa(i)]; v != i {
+			t.Fatalf("unexpected value for key %d: %d", i, v)
+		}
 	}
 }
 

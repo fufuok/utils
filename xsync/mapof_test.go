@@ -371,6 +371,63 @@ func TestMapOfLoadOrCompute_FunctionCalledOnce(t *testing.T) {
 	})
 }
 
+func TestMapOfLoadOrTryCompute(t *testing.T) {
+	const numEntries = 1000
+	m := NewMapOf[string, int]()
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue int, cancel bool) {
+			return i, true
+		})
+		if loaded {
+			t.Fatalf("value not computed for %d", i)
+		}
+		if v != 0 {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+	if m.Size() != 0 {
+		t.Fatalf("zero map size expected: %d", m.Size())
+	}
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue int, cancel bool) {
+			return i, false
+		})
+		if loaded {
+			t.Fatalf("value not computed for %d", i)
+		}
+		if v != i {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+	for i := 0; i < numEntries; i++ {
+		v, loaded := m.LoadOrTryCompute(strconv.Itoa(i), func() (newValue int, cancel bool) {
+			return i, false
+		})
+		if !loaded {
+			t.Fatalf("value not loaded for %d", i)
+		}
+		if v != i {
+			t.Fatalf("values do not match for %d: %v", i, v)
+		}
+	}
+}
+
+func TestMapOfLoadOrTryCompute_FunctionCalledOnce(t *testing.T) {
+	m := NewMapOf[int, int]()
+	for i := 0; i < 100; {
+		m.LoadOrTryCompute(i, func() (newValue int, cancel bool) {
+			newValue, i = i, i+1
+			return newValue, false
+		})
+	}
+	m.Range(func(k, v int) bool {
+		if k != v {
+			t.Fatalf("%dth key is not equal to value %d", k, v)
+		}
+		return true
+	})
+}
+
 func TestMapOfCompute(t *testing.T) {
 	m := NewMapOf[string, int]()
 	// Store a new value.
@@ -1200,6 +1257,30 @@ func TestMapOfStats(t *testing.T) {
 	}
 	if stats.CounterLen != 8 {
 		t.Fatalf("unexpected counter length: %d", stats.CounterLen)
+	}
+}
+
+func TestToPlainMapOf_NilPointer(t *testing.T) {
+	pm := ToPlainMapOf[int, int](nil)
+	if len(pm) != 0 {
+		t.Fatalf("got unexpected size of nil map copy: %d", len(pm))
+	}
+}
+
+func TestToPlainMapOf(t *testing.T) {
+	const numEntries = 1000
+	m := NewMapOf[int, int]()
+	for i := 0; i < numEntries; i++ {
+		m.Store(i, i)
+	}
+	pm := ToPlainMapOf[int, int](m)
+	if len(pm) != numEntries {
+		t.Fatalf("got unexpected size of nil map copy: %d", len(pm))
+	}
+	for i := 0; i < numEntries; i++ {
+		if v := pm[i]; v != i {
+			t.Fatalf("unexpected value for key %d: %d", i, v)
+		}
 	}
 }
 
