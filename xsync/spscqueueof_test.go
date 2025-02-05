@@ -13,6 +13,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
+
+	. "github.com/fufuok/utils/xsync"
 )
 
 func TestSPSCQueueOf_InvalidSize(t *testing.T) {

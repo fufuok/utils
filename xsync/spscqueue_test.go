@@ -7,6 +7,8 @@ package xsync_test
 import (
 	"sync"
 	"testing"
+
+	. "github.com/fufuok/utils/xsync"
 )
 
 func TestSPSCQueue_InvalidSize(t *testing.T) {
