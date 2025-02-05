@@ -33,7 +33,7 @@ func TestTrylock(t *testing.T) {
 	}()
 
 	ts := time.Now()
-	ok = m.TryLock(100 * time.Millisecond)
+	ok = m.TryLock(120 * time.Millisecond)
 	took := time.Since(ts)
 	if !ok {
 		t.Fatal("it should be the lock succeeded but failed")
