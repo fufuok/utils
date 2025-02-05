@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"runtime"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -76,3 +78,72 @@ func BenchmarkTrylock(b *testing.B) {
 		})
 	})
 }
+
+/*
+Ref: https://github.com/panjf2000/ants/blob/dev/pkg/sync/spinlock_test.go
+Benchmark result for three types of locks:
+	goos: darwin
+	goarch: arm64
+	pkg: github.com/panjf2000/ants/v2/pkg/sync
+	BenchmarkMutex-10              	10452573	       111.1 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkSpinLock-10           	58953211	        18.01 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBackOffSpinLock-10    	100000000	        10.81 ns/op	       0 B/op	       0 allocs/op
+*/
+
+type originSpinLock uint32
+
+func (sl *originSpinLock) Lock() {
+	for !atomic.CompareAndSwapUint32((*uint32)(sl), 0, 1) {
+		runtime.Gosched()
+	}
+}
+
+func (sl *originSpinLock) Unlock() {
+	atomic.StoreUint32((*uint32)(sl), 0)
+}
+
+func NewOriginSpinLock() sync.Locker {
+	return new(originSpinLock)
+}
+
+func BenchmarkSpinMutex(b *testing.B) {
+	m := sync.Mutex{}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			m.Lock()
+			//nolint:staticcheck
+			m.Unlock()
+		}
+	})
+}
+
+func BenchmarkSpinLock(b *testing.B) {
+	spin := NewOriginSpinLock()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			spin.Lock()
+			//nolint:staticcheck
+			spin.Unlock()
+		}
+	})
+}
+
+func BenchmarkBackOffSpinLock(b *testing.B) {
+	spin := NewSpinLock()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			spin.Lock()
+			//nolint:staticcheck
+			spin.Unlock()
+		}
+	})
+}
+
+// # go test -run=^$ -benchmem -benchtime=1s -bench=Spin
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// BenchmarkSpinMutex-16           23156875                54.36 ns/op            0 B/op          0 allocs/op
+// BenchmarkSpinLock-16            215412934                5.564 ns/op           0 B/op          0 allocs/op
+// BenchmarkBackOffSpinLock-16     246957524                4.877 ns/op           0 B/op          0 allocs/op
