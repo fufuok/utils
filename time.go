@@ -7,18 +7,32 @@ import (
 	"github.com/fufuok/utils/pools/timerpool"
 )
 
+const (
+	ChinaTimezone   = "UTC+8"
+	ChinaTimeOffset = 8 * 60 * 60
+)
+
+// InitChinaLocation 设置全局时区为中国东八区(GMT+8)
+func InitChinaLocation() *time.Location {
+	loc := time.FixedZone(ChinaTimezone, ChinaTimeOffset)
+	time.Local = loc
+	return loc
+}
+
 // InitCSTLocation 初始化默认时区为中国东八区(GMT+8)
 // 返回值:
 // name: "Asia/Shanghai" 或本地时区名称
 // loc: 优先尝试解析中国时区, 失败(Windows)后使用本地时区(time.Local)
 // cst: 强制偏移的中国时区, !!!注意: 无法使用 time.LoadLocation(cst.String()) 二次加载
 // ok: true 表示初始化中国时区成功, false 表示 local 不一定是中国时区
+// Deprecated: 对于 公元1年 这种极早日期, 某些系统的时区数据库可能使用当时的 本地平均时间(LMT),
+// 结果: +08:05:43 而非标准 +08:00
 func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool) {
 	name = "Asia/Shanghai"
 	loc, ok = InitLocation(name)
 	time.Local = loc
 	name = loc.String()
-	cst = time.FixedZone("CST", 8*60*60)
+	cst = time.FixedZone(ChinaTimezone, ChinaTimeOffset)
 	return
 }
 
