@@ -12,11 +12,12 @@ const (
 	ChinaTimeOffset = 8 * 60 * 60
 )
 
+var ChinaTimeLocation = time.FixedZone(ChinaTimeZone, ChinaTimeOffset)
+
 // InitChinaLocation 设置全局时区为中国东八区(GMT+8)
 func InitChinaLocation() *time.Location {
-	loc := time.FixedZone(ChinaTimeZone, ChinaTimeOffset)
-	time.Local = loc
-	return loc
+	time.Local = ChinaTimeLocation
+	return ChinaTimeLocation
 }
 
 // InitCSTLocation 初始化默认时区为中国东八区(GMT+8)
