@@ -89,7 +89,7 @@ func TestInitCSTLocation(t *testing.T) {
 	assert.NotNil(t, loc)
 	assert.NotNil(t, cst)
 	assert.Equal(t, time.Local, loc)
-	assert.Equal(t, ChinaTimezone, cst.String())
+	assert.Equal(t, ChinaTimeZone, cst.String())
 
 	ts := time.Now().In(cst).Format(time.RFC3339)
 	assert.True(t, strings.Contains(ts, "+08:00"))
@@ -98,7 +98,7 @@ func TestInitCSTLocation(t *testing.T) {
 func TestInitChinaLocation(t *testing.T) {
 	loc := InitChinaLocation()
 	assert.NotNil(t, loc)
-	assert.Equal(t, ChinaTimezone, loc.String())
+	assert.Equal(t, ChinaTimeZone, loc.String())
 
 	ts := time.Now().In(loc).Format(time.RFC3339)
 	assert.True(t, strings.Contains(ts, "+08:00"))
