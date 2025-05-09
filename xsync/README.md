@@ -1,13 +1,12 @@
 # 标准库 `sync` 扩展包
 
-*forked from puzpuzpuz/xsync v20240715 v3.4.0*
+*forked from puzpuzpuz/xsync v20250127 v3.5.1*
 
 ## 改动:
 
-- ~~增加 `func NewHashMapOf[K comparable, V any](hasher ...func(K) uint64) HashMapOf[K, V]` 实现统一调用方法, 根据键类型使用 xxHash~~
-- 保留了对 go1.18 以下的支持
+- 保留了对 go1.18 以下的支持 (最后的版本)
+- go1.24+ 推荐使用: "github.com/fufuok/cache/xsync" 或直接使用官方版本
 
-**官方版本: `v3.0.0` 已统一了调用方法并内置了 hasher 生成器, 不再需要上面的改动, 可以直接使用官方原版就好**
 
 [![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/puzpuzpuz/xsync/v3)
 [![GoReport](https://goreportcard.com/badge/github.com/puzpuzpuz/xsync/v3)](https://goreportcard.com/report/github.com/puzpuzpuz/xsync/v3)
