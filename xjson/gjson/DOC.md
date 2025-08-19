@@ -11,50 +11,59 @@ Package gjson provides searching for json strings.
 ## Index
 
 - [Variables](<#variables>)
-- [func AddModifier(name string, fn func(json, arg string) string)](<#func-addmodifier>)
-- [func AppendJSONString(dst []byte, s string) []byte](<#func-appendjsonstring>)
-- [func Escape(comp string) string](<#func-escape>)
-- [func ForEachLine(json string, iterator func(line Result) bool)](<#func-foreachline>)
-- [func ModifierExists(name string, fn func(json, arg string) string) bool](<#func-modifierexists>)
-- [func Valid(json string) bool](<#func-valid>)
-- [func ValidBytes(json []byte) bool](<#func-validbytes>)
-- [type Result](<#type-result>)
-  - [func Get(json, path string) Result](<#func-get>)
-  - [func GetBytes(json []byte, path string) Result](<#func-getbytes>)
-  - [func GetMany(json string, path ...string) []Result](<#func-getmany>)
-  - [func GetManyBytes(json []byte, path ...string) []Result](<#func-getmanybytes>)
-  - [func Parse(json string) Result](<#func-parse>)
-  - [func ParseBytes(json []byte) Result](<#func-parsebytes>)
-  - [func (t Result) Array() []Result](<#func-result-array>)
-  - [func (t Result) Bool() bool](<#func-result-bool>)
-  - [func (t Result) Exists() bool](<#func-result-exists>)
-  - [func (t Result) Float() float64](<#func-result-float>)
-  - [func (t Result) ForEach(iterator func(key, value Result) bool)](<#func-result-foreach>)
-  - [func (t Result) Get(path string) Result](<#func-result-get>)
-  - [func (t Result) Int() int64](<#func-result-int>)
-  - [func (t Result) IsArray() bool](<#func-result-isarray>)
-  - [func (t Result) IsBool() bool](<#func-result-isbool>)
-  - [func (t Result) IsObject() bool](<#func-result-isobject>)
-  - [func (t Result) Less(token Result, caseSensitive bool) bool](<#func-result-less>)
-  - [func (t Result) Map() map[string]Result](<#func-result-map>)
-  - [func (t Result) Path(json string) string](<#func-result-path>)
-  - [func (t Result) Paths(json string) []string](<#func-result-paths>)
-  - [func (t Result) String() string](<#func-result-string>)
-  - [func (t Result) Time() time.Time](<#func-result-time>)
-  - [func (t Result) Uint() uint64](<#func-result-uint>)
-  - [func (t Result) Value() interface{}](<#func-result-value>)
-- [type Type](<#type-type>)
-  - [func (t Type) String() string](<#func-type-string>)
+- [func AddModifier\(name string, fn func\(json, arg string\) string\)](<#AddModifier>)
+- [func AppendJSONString\(dst \[\]byte, s string\) \[\]byte](<#AppendJSONString>)
+- [func Escape\(comp string\) string](<#Escape>)
+- [func ForEachLine\(json string, iterator func\(line Result\) bool\)](<#ForEachLine>)
+- [func ModifierExists\(name string, fn func\(json, arg string\) string\) bool](<#ModifierExists>)
+- [func Valid\(json string\) bool](<#Valid>)
+- [func ValidBytes\(json \[\]byte\) bool](<#ValidBytes>)
+- [type Result](<#Result>)
+  - [func Get\(json, path string\) Result](<#Get>)
+  - [func GetBytes\(json \[\]byte, path string\) Result](<#GetBytes>)
+  - [func GetMany\(json string, path ...string\) \[\]Result](<#GetMany>)
+  - [func GetManyBytes\(json \[\]byte, path ...string\) \[\]Result](<#GetManyBytes>)
+  - [func Parse\(json string\) Result](<#Parse>)
+  - [func ParseBytes\(json \[\]byte\) Result](<#ParseBytes>)
+  - [func \(t Result\) Array\(\) \[\]Result](<#Result.Array>)
+  - [func \(t Result\) Bool\(\) bool](<#Result.Bool>)
+  - [func \(t Result\) Exists\(\) bool](<#Result.Exists>)
+  - [func \(t Result\) Float\(\) float64](<#Result.Float>)
+  - [func \(t Result\) ForEach\(iterator func\(key, value Result\) bool\)](<#Result.ForEach>)
+  - [func \(t Result\) Get\(path string\) Result](<#Result.Get>)
+  - [func \(t Result\) Int\(\) int64](<#Result.Int>)
+  - [func \(t Result\) IsArray\(\) bool](<#Result.IsArray>)
+  - [func \(t Result\) IsBool\(\) bool](<#Result.IsBool>)
+  - [func \(t Result\) IsObject\(\) bool](<#Result.IsObject>)
+  - [func \(t Result\) Less\(token Result, caseSensitive bool\) bool](<#Result.Less>)
+  - [func \(t Result\) Map\(\) map\[string\]Result](<#Result.Map>)
+  - [func \(t Result\) Path\(json string\) string](<#Result.Path>)
+  - [func \(t Result\) Paths\(json string\) \[\]string](<#Result.Paths>)
+  - [func \(t Result\) String\(\) string](<#Result.String>)
+  - [func \(t Result\) Time\(\) time.Time](<#Result.Time>)
+  - [func \(t Result\) Uint\(\) uint64](<#Result.Uint>)
+  - [func \(t Result\) Value\(\) interface\{\}](<#Result.Value>)
+- [type Type](<#Type>)
+  - [func \(t Type\) String\(\) string](<#Type.String>)
 
 
 ## Variables
 
-DisableModifiers will disable the modifier syntax
+<a name="DisableEscapeHTML"></a>DisableEscapeHTML will disable the automatic escaping of certain "problamatic" HTML characters when encoding to JSON. These character include '\>', '\<' and '&', which get escaped to \\u003e, \\u0026, and \\u003c respectively.
+
+This is a global flag and will affect all further gjson operations. Ideally, if used, it should be set one time before other gjson functions are called.
+
+```go
+var DisableEscapeHTML = false
+```
+
+<a name="DisableModifiers"></a>DisableModifiers will disable the modifier syntax
 
 ```go
 var DisableModifiers = false
 ```
 
+<a name="AddModifier"></a>
 ## func AddModifier
 
 ```go
@@ -63,6 +72,7 @@ func AddModifier(name string, fn func(json, arg string) string)
 
 AddModifier binds a custom modifier command to the GJSON syntax. This operation is not thread safe and should be executed prior to using all other gjson function.
 
+<a name="AppendJSONString"></a>
 ## func AppendJSONString
 
 ```go
@@ -71,6 +81,7 @@ func AppendJSONString(dst []byte, s string) []byte
 
 AppendJSONString is a convenience function that converts the provided string to a valid JSON string and appends it to dst.
 
+<a name="Escape"></a>
 ## func Escape
 
 ```go
@@ -94,6 +105,7 @@ println(user.Get(gjson.Escape("last.name"))
 // Prichard
 ```
 
+<a name="ForEachLine"></a>
 ## func ForEachLine
 
 ```go
@@ -102,6 +114,7 @@ func ForEachLine(json string, iterator func(line Result) bool)
 
 ForEachLine iterates through lines of JSON as specified by the JSON Lines format \(http://jsonlines.org/\). Each line is returned as a GJSON Result.
 
+<a name="ModifierExists"></a>
 ## func ModifierExists
 
 ```go
@@ -110,6 +123,7 @@ func ModifierExists(name string, fn func(json, arg string) string) bool
 
 ModifierExists returns true when the specified modifier exists.
 
+<a name="Valid"></a>
 ## func Valid
 
 ```go
@@ -125,6 +139,7 @@ if !gjson.Valid(json) {
 value := gjson.Get(json, "name.last")
 ```
 
+<a name="ValidBytes"></a>
 ## func ValidBytes
 
 ```go
@@ -142,6 +157,7 @@ value := gjson.Get(json, "name.last")
 
 If working with bytes, this method preferred over ValidBytes\(string\(data\)\)
 
+<a name="Result"></a>
 ## type Result
 
 Result represents a json value that is returned from Get\(\).
@@ -164,6 +180,7 @@ type Result struct {
 }
 ```
 
+<a name="Get"></a>
 ### func Get
 
 ```go
@@ -196,6 +213,7 @@ A path is a series of keys separated by a dot. A key may contain special wildcar
 
 This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first.
 
+<a name="GetBytes"></a>
 ### func GetBytes
 
 ```go
@@ -204,6 +222,7 @@ func GetBytes(json []byte, path string) Result
 
 GetBytes searches json for the specified path. If working with bytes, this method preferred over Get\(string\(data\), path\)
 
+<a name="GetMany"></a>
 ### func GetMany
 
 ```go
@@ -212,6 +231,7 @@ func GetMany(json string, path ...string) []Result
 
 GetMany searches json for the multiple paths. The return value is a Result array where the number of items will be equal to the number of input paths.
 
+<a name="GetManyBytes"></a>
 ### func GetManyBytes
 
 ```go
@@ -220,6 +240,7 @@ func GetManyBytes(json []byte, path ...string) []Result
 
 GetManyBytes searches json for the multiple paths. The return value is a Result array where the number of items will be equal to the number of input paths.
 
+<a name="Parse"></a>
 ### func Parse
 
 ```go
@@ -230,6 +251,7 @@ Parse parses the json and returns a result.
 
 This function expects that the json is well\-formed, and does not validate. Invalid json will not panic, but it may return back unexpected results. If you are consuming JSON from an unpredictable source then you may want to use the Valid function first.
 
+<a name="ParseBytes"></a>
 ### func ParseBytes
 
 ```go
@@ -238,6 +260,7 @@ func ParseBytes(json []byte) Result
 
 ParseBytes parses the json and returns a result. If working with bytes, this method preferred over Parse\(string\(data\)\)
 
+<a name="Result.Array"></a>
 ### func \(Result\) Array
 
 ```go
@@ -246,6 +269,7 @@ func (t Result) Array() []Result
 
 Array returns back an array of values. If the result represents a null value or is non\-existent, then an empty array will be returned. If the result is not a JSON array, the return value will be an array containing one result.
 
+<a name="Result.Bool"></a>
 ### func \(Result\) Bool
 
 ```go
@@ -254,6 +278,7 @@ func (t Result) Bool() bool
 
 Bool returns an boolean representation.
 
+<a name="Result.Exists"></a>
 ### func \(Result\) Exists
 
 ```go
@@ -268,6 +293,7 @@ if gjson.Get(json, "name.last").Exists(){
  }
 ```
 
+<a name="Result.Float"></a>
 ### func \(Result\) Float
 
 ```go
@@ -276,6 +302,7 @@ func (t Result) Float() float64
 
 Float returns an float64 representation.
 
+<a name="Result.ForEach"></a>
 ### func \(Result\) ForEach
 
 ```go
@@ -284,6 +311,7 @@ func (t Result) ForEach(iterator func(key, value Result) bool)
 
 ForEach iterates through values. If the result represents a non\-existent value, then no values will be iterated. If the result is an Object, the iterator will pass the key and value of each item. If the result is an Array, the iterator will only pass the value of each item. If the result is not a JSON array or object, the iterator will pass back one value equal to the result.
 
+<a name="Result.Get"></a>
 ### func \(Result\) Get
 
 ```go
@@ -292,6 +320,7 @@ func (t Result) Get(path string) Result
 
 Get searches result for the specified path. The result should be a JSON array or object.
 
+<a name="Result.Int"></a>
 ### func \(Result\) Int
 
 ```go
@@ -300,6 +329,7 @@ func (t Result) Int() int64
 
 Int returns an integer representation.
 
+<a name="Result.IsArray"></a>
 ### func \(Result\) IsArray
 
 ```go
@@ -308,6 +338,7 @@ func (t Result) IsArray() bool
 
 IsArray returns true if the result value is a JSON array.
 
+<a name="Result.IsBool"></a>
 ### func \(Result\) IsBool
 
 ```go
@@ -316,6 +347,7 @@ func (t Result) IsBool() bool
 
 IsBool returns true if the result value is a JSON boolean.
 
+<a name="Result.IsObject"></a>
 ### func \(Result\) IsObject
 
 ```go
@@ -324,18 +356,20 @@ func (t Result) IsObject() bool
 
 IsObject returns true if the result value is a JSON object.
 
+<a name="Result.Less"></a>
 ### func \(Result\) Less
 
 ```go
 func (t Result) Less(token Result, caseSensitive bool) bool
 ```
 
-Less return true if a token is less than another token. The caseSensitive paramater is used when the tokens are Strings. The order when comparing two different type is:
+Less return true if a token is less than another token. The caseSensitive parameter is used when the tokens are Strings. The order when comparing two different type is:
 
 ```
 Null < False < Number < String < True < JSON
 ```
 
+<a name="Result.Map"></a>
 ### func \(Result\) Map
 
 ```go
@@ -344,6 +378,7 @@ func (t Result) Map() map[string]Result
 
 Map returns back a map of values. The result should be a JSON object. If the result is not a JSON object, the return value will be an empty map.
 
+<a name="Result.Path"></a>
 ### func \(Result\) Path
 
 ```go
@@ -366,6 +401,7 @@ The param 'json' must be the original JSON used when calling Get.
 
 Returns an empty string if the paths cannot be determined, which can happen when the Result came from a path that contained a multipath, modifier, or a nested query.
 
+<a name="Result.Paths"></a>
 ### func \(Result\) Paths
 
 ```go
@@ -388,6 +424,7 @@ The param 'json' must be the original JSON used when calling Get.
 
 Returns an empty string if the paths cannot be determined, which can happen when the Result came from a path that contained a multipath, modifier, or a nested query.
 
+<a name="Result.String"></a>
 ### func \(Result\) String
 
 ```go
@@ -396,6 +433,7 @@ func (t Result) String() string
 
 String returns a string representation of the value.
 
+<a name="Result.Time"></a>
 ### func \(Result\) Time
 
 ```go
@@ -404,6 +442,7 @@ func (t Result) Time() time.Time
 
 Time returns a time.Time representation.
 
+<a name="Result.Uint"></a>
 ### func \(Result\) Uint
 
 ```go
@@ -412,6 +451,7 @@ func (t Result) Uint() uint64
 
 Uint returns an unsigned integer representation.
 
+<a name="Result.Value"></a>
 ### func \(Result\) Value
 
 ```go
@@ -430,6 +470,7 @@ map[string]interface{}, for JSON objects
 []interface{}, for JSON arrays
 ```
 
+<a name="Type"></a>
 ## type Type
 
 Type is Result type
@@ -437,6 +478,8 @@ Type is Result type
 ```go
 type Type int
 ```
+
+<a name="Null"></a>
 
 ```go
 const (
@@ -455,6 +498,7 @@ const (
 )
 ```
 
+<a name="Type.String"></a>
 ### func \(Type\) String
 
 ```go
@@ -462,7 +506,5 @@ func (t Type) String() string
 ```
 
 String returns a string representation of the type.
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

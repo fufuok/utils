@@ -108,6 +108,7 @@ import "github.com/fufuok/utils"
 - [func InInts\(slice \[\]int, n int\) bool](<#InInts>)
 - [func InStrings\(ss \[\]string, s string\) bool](<#InStrings>)
 - [func InitCSTLocation\(\) \(name string, loc \*time.Location, cst \*time.Location, ok bool\)](<#InitCSTLocation>)
+- [func InitChinaLocation\(\) \*time.Location](<#InitChinaLocation>)
 - [func InitLocation\(name string\) \(\*time.Location, bool\)](<#InitLocation>)
 - [func Int2IPv6\(ipInt \*big.Int\) net.IP](<#Int2IPv6>)
 - [func Int2IPv6String\(n \*big.Int\) string](<#Int2IPv6String>)
@@ -146,6 +147,7 @@ import "github.com/fufuok/utils"
 - [func MustString\(v interface\{\}, timeLayout ...string\) string](<#MustString>)
 - [func NanoTime\(\) int64](<#NanoTime>)
 - [func NewRand\(seed ...int64\) \*rand.Rand](<#NewRand>)
+- [func NewSpinLock\(\) sync.Locker](<#NewSpinLock>)
 - [func Pad\(s, pad string, n int\) string](<#Pad>)
 - [func PadBytes\(s, pad \[\]byte, n int\) \[\]byte](<#PadBytes>)
 - [func ParseHostPort\(s string\) \(net.IP, uint16, bool, error\)](<#ParseHostPort>)
@@ -169,6 +171,7 @@ import "github.com/fufuok/utils"
 - [func RandString\(n int\) string](<#RandString>)
 - [func RandUint32\(min, max uint32\) uint32](<#RandUint32>)
 - [func Recover\(cb ...RecoveryCallback\)](<#Recover>)
+- [func RemoveRunes\(s string, toRemove string\) string](<#RemoveRunes>)
 - [func RemoveString\(ss \[\]string, s string\) \(\[\]string, bool\)](<#RemoveString>)
 - [func ReplaceHost\(a, b string\) string](<#ReplaceHost>)
 - [func Reverse\(s string\) string](<#Reverse>)
@@ -281,6 +284,15 @@ const (
 )
 ```
 
+<a name="ChinaTimeZone"></a>
+
+```go
+const (
+    ChinaTimeZone   = "UTC+8"
+    ChinaTimeOffset = 8 * 60 * 60
+)
+```
+
 <a name="PtrSize"></a>
 
 ```go
@@ -352,6 +364,12 @@ var (
     Rand = NewRand()
     Seed = FastRand()
 )
+```
+
+<a name="ChinaTimeLocation"></a>
+
+```go
+var ChinaTimeLocation = time.FixedZone(ChinaTimeZone, ChinaTimeOffset)
 ```
 
 <a name="ErrInvalidHostPort"></a>
@@ -1256,7 +1274,16 @@ InStrings 检查字符串是否存在于 slice 用 slices.Contains 替代
 func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)
 ```
 
-InitCSTLocation 初始化默认时区为中国东八区\(GMT\+8\) 返回值: name: "Asia/Shanghai" 或本地时区名称 loc: 优先尝试解析中国时区, 失败\(Windows\)后使用本地时区\(time.Local\) cst: 强制偏移的中国时区, \!\!\!注意: 无法使用 time.LoadLocation\(cst.String\(\)\) 二次加载 ok: true 表示初始化中国时区成功, false 表示 local 不一定是中国时区
+InitCSTLocation 初始化默认时区为中国东八区\(GMT\+8\) 返回值: name: "Asia/Shanghai" 或本地时区名称 loc: 优先尝试解析中国时区, 失败\(Windows\)后使用本地时区\(time.Local\) cst: 强制偏移的中国时区, \!\!\!注意: 无法使用 time.LoadLocation\(cst.String\(\)\) 二次加载 ok: true 表示初始化中国时区成功, false 表示 local 不一定是中国时区 Deprecated: 对于 公元1年 这种极早日期, 某些系统的时区数据库可能使用当时的 本地平均时间\(LMT\), 结果: \+08:05:43 而非标准 \+08:00
+
+<a name="InitChinaLocation"></a>
+## func InitChinaLocation
+
+```go
+func InitChinaLocation() *time.Location
+```
+
+InitChinaLocation 设置全局时区为中国东八区\(GMT\+8\)
 
 <a name="InitLocation"></a>
 ## func InitLocation
@@ -1600,6 +1627,15 @@ func NewRand(seed ...int64) *rand.Rand
 
 NewRand goroutine\-safe rand.Rand, optional seed value
 
+<a name="NewSpinLock"></a>
+## func NewSpinLock
+
+```go
+func NewSpinLock() sync.Locker
+```
+
+NewSpinLock instantiates a spin\-lock.
+
 <a name="Pad"></a>
 ## func Pad
 
@@ -1810,6 +1846,15 @@ func Recover(cb ...RecoveryCallback)
 ```
 
 Recover 从 panic 中恢复并记录堆栈信息
+
+<a name="RemoveRunes"></a>
+## func RemoveRunes
+
+```go
+func RemoveRunes(s string, toRemove string) string
+```
+
+RemoveRunes 清除字符串中的指定字符串的每个字符
 
 <a name="RemoveString"></a>
 ## func RemoveString

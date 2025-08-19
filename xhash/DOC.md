@@ -8,59 +8,63 @@ import "github.com/fufuok/utils/xhash"
 
 ## Index
 
-- [func AddBytes32(h uint32, b []byte) uint32](<#func-addbytes32>)
-- [func AddBytes64(h uint64, b []byte) uint64](<#func-addbytes64>)
-- [func AddString32(h uint32, s string) uint32](<#func-addstring32>)
-- [func AddString64(h uint64, s string) uint64](<#func-addstring64>)
-- [func AddUint32(h, u uint32) uint32](<#func-adduint32>)
-- [func AddUint64(h uint64, u uint64) uint64](<#func-adduint64>)
-- [func Djb33(s string) uint32](<#func-djb33>)
-- [func FnvHash(s string) uint64](<#func-fnvhash>)
-- [func FnvHash32(s string) uint32](<#func-fnvhash32>)
-- [func GenHasher[K comparable]() func(K) uintptr](<#func-genhasher>)
-- [func GenHasher64[K comparable]() func(K) uint64](<#func-genhasher64>)
-- [func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64](<#func-genseedhasher64>)
-- [func Hash(b []byte, h hash.Hash) []byte](<#func-hash>)
-- [func HashBytes(b ...[]byte) string](<#func-hashbytes>)
-- [func HashBytes32(b ...[]byte) uint32](<#func-hashbytes32>)
-- [func HashBytes64(b ...[]byte) uint64](<#func-hashbytes64>)
-- [func HashSeedString(seed maphash.Seed, s string) uint64](<#func-hashseedstring>)
-- [func HashSeedUint64(seed maphash.Seed, n uint64) uint64](<#func-hashseeduint64>)
-- [func HashString(s ...string) string](<#func-hashstring>)
-- [func HashString32(s ...string) uint32](<#func-hashstring32>)
-- [func HashString64(s ...string) uint64](<#func-hashstring64>)
-- [func HashUint32(u uint32) uint32](<#func-hashuint32>)
-- [func HashUint64(u uint64) uint64](<#func-hashuint64>)
-- [func Hmac(b []byte, key []byte, h func() hash.Hash) []byte](<#func-hmac>)
-- [func HmacSHA1(b, key []byte) []byte](<#func-hmacsha1>)
-- [func HmacSHA1Hex(s, key string) string](<#func-hmacsha1hex>)
-- [func HmacSHA256(b, key []byte) []byte](<#func-hmacsha256>)
-- [func HmacSHA256Hex(s, key string) string](<#func-hmacsha256hex>)
-- [func HmacSHA512(b, key []byte) []byte](<#func-hmacsha512>)
-- [func HmacSHA512Hex(s, key string) string](<#func-hmacsha512hex>)
-- [func MD5(b []byte) []byte](<#func-md5>)
-- [func MD5BytesHex(bs []byte) string](<#func-md5byteshex>)
-- [func MD5Hex(s string) string](<#func-md5hex>)
-- [func MD5Reader(r io.Reader) (string, error)](<#func-md5reader>)
-- [func MD5Sum(filename string) (string, error)](<#func-md5sum>)
-- [func MemHash(s string) uint64](<#func-memhash>)
-- [func MemHash32(s string) uint32](<#func-memhash32>)
-- [func MemHashb(b []byte) uint64](<#func-memhashb>)
-- [func MemHashb32(b []byte) uint32](<#func-memhashb32>)
-- [func MustMD5Sum(filename string) string](<#func-mustmd5sum>)
-- [func Sha1(b []byte) []byte](<#func-sha1>)
-- [func Sha1Hex(s string) string](<#func-sha1hex>)
-- [func Sha256(b []byte) []byte](<#func-sha256>)
-- [func Sha256Hex(s string) string](<#func-sha256hex>)
-- [func Sha512(b []byte) []byte](<#func-sha512>)
-- [func Sha512Hex(s string) string](<#func-sha512hex>)
-- [func Sum32(s string) uint32](<#func-sum32>)
-- [func Sum64(s string) uint64](<#func-sum64>)
-- [func SumBytes32(bs []byte) uint32](<#func-sumbytes32>)
-- [func SumBytes64(bs []byte) uint64](<#func-sumbytes64>)
-- [type Hashable](<#type-hashable>)
+- [func AddBytes32\(h uint32, b \[\]byte\) uint32](<#AddBytes32>)
+- [func AddBytes64\(h uint64, b \[\]byte\) uint64](<#AddBytes64>)
+- [func AddString32\(h uint32, s string\) uint32](<#AddString32>)
+- [func AddString64\(h uint64, s string\) uint64](<#AddString64>)
+- [func AddUint32\(h, u uint32\) uint32](<#AddUint32>)
+- [func AddUint64\(h uint64, u uint64\) uint64](<#AddUint64>)
+- [func Djb33\(s string\) uint32](<#Djb33>)
+- [func FastModulo\(x, n uint32\) uint32](<#FastModulo>)
+- [func FnvHash\(s string\) uint64](<#FnvHash>)
+- [func FnvHash32\(s string\) uint32](<#FnvHash32>)
+- [func GenHasher\[K comparable\]\(\) func\(K\) uintptr](<#GenHasher>)
+- [func GenHasher64\[K comparable\]\(\) func\(K\) uint64](<#GenHasher64>)
+- [func GenSeedHasher64\[K comparable\]\(\) func\(maphash.Seed, K\) uint64](<#GenSeedHasher64>)
+- [func Hash\(b \[\]byte, h hash.Hash\) \[\]byte](<#Hash>)
+- [func HashBytes\(b ...\[\]byte\) string](<#HashBytes>)
+- [func HashBytes32\(b ...\[\]byte\) uint32](<#HashBytes32>)
+- [func HashBytes64\(b ...\[\]byte\) uint64](<#HashBytes64>)
+- [func HashSeedString\(seed maphash.Seed, s string\) uint64](<#HashSeedString>)
+- [func HashSeedUint64\(seed maphash.Seed, n uint64\) uint64](<#HashSeedUint64>)
+- [func HashString\(s ...string\) string](<#HashString>)
+- [func HashString32\(s ...string\) uint32](<#HashString32>)
+- [func HashString64\(s ...string\) uint64](<#HashString64>)
+- [func HashUint32\(u uint32\) uint32](<#HashUint32>)
+- [func HashUint64\(u uint64\) uint64](<#HashUint64>)
+- [func Hmac\(b \[\]byte, key \[\]byte, h func\(\) hash.Hash\) \[\]byte](<#Hmac>)
+- [func HmacSHA1\(b, key \[\]byte\) \[\]byte](<#HmacSHA1>)
+- [func HmacSHA1Hex\(s, key string\) string](<#HmacSHA1Hex>)
+- [func HmacSHA256\(b, key \[\]byte\) \[\]byte](<#HmacSHA256>)
+- [func HmacSHA256Hex\(s, key string\) string](<#HmacSHA256Hex>)
+- [func HmacSHA512\(b, key \[\]byte\) \[\]byte](<#HmacSHA512>)
+- [func HmacSHA512Hex\(s, key string\) string](<#HmacSHA512Hex>)
+- [func MD5\(b \[\]byte\) \[\]byte](<#MD5>)
+- [func MD5BytesHex\(bs \[\]byte\) string](<#MD5BytesHex>)
+- [func MD5Hex\(s string\) string](<#MD5Hex>)
+- [func MD5Reader\(r io.Reader\) \(string, error\)](<#MD5Reader>)
+- [func MD5Sum\(filename string\) \(string, error\)](<#MD5Sum>)
+- [func MakeHasher\[T comparable\]\(\) func\(T\) uint64](<#MakeHasher>)
+- [func MakeSeed\(\) uint64](<#MakeSeed>)
+- [func MemHash\(s string\) uint64](<#MemHash>)
+- [func MemHash32\(s string\) uint32](<#MemHash32>)
+- [func MemHashb\(b \[\]byte\) uint64](<#MemHashb>)
+- [func MemHashb32\(b \[\]byte\) uint32](<#MemHashb32>)
+- [func MustMD5Sum\(filename string\) string](<#MustMD5Sum>)
+- [func Sha1\(b \[\]byte\) \[\]byte](<#Sha1>)
+- [func Sha1Hex\(s string\) string](<#Sha1Hex>)
+- [func Sha256\(b \[\]byte\) \[\]byte](<#Sha256>)
+- [func Sha256Hex\(s string\) string](<#Sha256Hex>)
+- [func Sha512\(b \[\]byte\) \[\]byte](<#Sha512>)
+- [func Sha512Hex\(s string\) string](<#Sha512Hex>)
+- [func Sum32\(s string\) uint32](<#Sum32>)
+- [func Sum64\(s string\) uint64](<#Sum64>)
+- [func SumBytes32\(bs \[\]byte\) uint32](<#SumBytes32>)
+- [func SumBytes64\(bs \[\]byte\) uint64](<#SumBytes64>)
+- [type Hashable](<#Hashable>)
 
 
+<a name="AddBytes32"></a>
 ## func AddBytes32
 
 ```go
@@ -69,6 +73,7 @@ func AddBytes32(h uint32, b []byte) uint32
 
 AddBytes32 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
 
+<a name="AddBytes64"></a>
 ## func AddBytes64
 
 ```go
@@ -77,6 +82,7 @@ func AddBytes64(h uint64, b []byte) uint64
 
 AddBytes64 adds the hash of b to the precomputed hash value h. Ref: segmentio/fasthash
 
+<a name="AddString32"></a>
 ## func AddString32
 
 ```go
@@ -85,6 +91,7 @@ func AddString32(h uint32, s string) uint32
 
 AddString32 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
 
+<a name="AddString64"></a>
 ## func AddString64
 
 ```go
@@ -93,6 +100,7 @@ func AddString64(h uint64, s string) uint64
 
 AddString64 adds the hash of s to the precomputed hash value h. Ref: segmentio/fasthash
 
+<a name="AddUint32"></a>
 ## func AddUint32
 
 ```go
@@ -101,6 +109,7 @@ func AddUint32(h, u uint32) uint32
 
 AddUint32 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
 
+<a name="AddUint64"></a>
 ## func AddUint64
 
 ```go
@@ -109,6 +118,7 @@ func AddUint64(h uint64, u uint64) uint64
 
 AddUint64 adds the hash value of the 8 bytes of u to h. Ref: segmentio/fasthash
 
+<a name="Djb33"></a>
 ## func Djb33
 
 ```go
@@ -117,6 +127,16 @@ func Djb33(s string) uint32
 
 Djb33 比 FnvHash32 更快的获取字符串哈希值 djb2 with better shuffling. 5x faster than FNV with the hash.Hash overhead. Ref: patrickmn/go\-cache
 
+<a name="FastModulo"></a>
+## func FastModulo
+
+```go
+func FastModulo(x, n uint32) uint32
+```
+
+FastModulo calculates x % n without using the modulo operator \(\~4x faster\). Reference: https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+
+<a name="FnvHash"></a>
 ## func FnvHash
 
 ```go
@@ -125,6 +145,7 @@ func FnvHash(s string) uint64
 
 FnvHash 获取字符串的哈希值
 
+<a name="FnvHash32"></a>
 ## func FnvHash32
 
 ```go
@@ -133,32 +154,43 @@ func FnvHash32(s string) uint32
 
 FnvHash32 获取字符串的哈希值
 
+<a name="GenHasher"></a>
 ## func GenHasher
 
 ```go
 func GenHasher[K comparable]() func(K) uintptr
 ```
 
+
+
+<a name="GenHasher64"></a>
 ## func GenHasher64
 
 ```go
 func GenHasher64[K comparable]() func(K) uint64
 ```
 
-GenHasher64 返回哈希函数 Ref: smallnest/safemap, alphadose/haxmap, cornelk/hashmap
+GenHasher64 按数据类型生成哈希函数 Ref: cespare/xxhash, smallnest/safemap, alphadose/haxmap, cornelk/hashmap
 
+<a name="GenSeedHasher64"></a>
 ## func GenSeedHasher64
 
 ```go
 func GenSeedHasher64[K comparable]() func(maphash.Seed, K) uint64
 ```
 
+
+
+<a name="Hash"></a>
 ## func Hash
 
 ```go
 func Hash(b []byte, h hash.Hash) []byte
 ```
 
+
+
+<a name="HashBytes"></a>
 ## func HashBytes
 
 ```go
@@ -167,18 +199,25 @@ func HashBytes(b ...[]byte) string
 
 HashBytes 合并 Bytes, 得到字符串哈希
 
+<a name="HashBytes32"></a>
 ## func HashBytes32
 
 ```go
 func HashBytes32(b ...[]byte) uint32
 ```
 
+
+
+<a name="HashBytes64"></a>
 ## func HashBytes64
 
 ```go
 func HashBytes64(b ...[]byte) uint64
 ```
 
+
+
+<a name="HashSeedString"></a>
 ## func HashSeedString
 
 ```go
@@ -187,6 +226,7 @@ func HashSeedString(seed maphash.Seed, s string) uint64
 
 HashSeedString calculates a hash of s with the given seed.
 
+<a name="HashSeedUint64"></a>
 ## func HashSeedUint64
 
 ```go
@@ -195,6 +235,7 @@ func HashSeedUint64(seed maphash.Seed, n uint64) uint64
 
 HashSeedUint64 calculates a hash of n with the given seed.
 
+<a name="HashString"></a>
 ## func HashString
 
 ```go
@@ -203,18 +244,25 @@ func HashString(s ...string) string
 
 HashString 合并一串文本, 得到字符串哈希
 
+<a name="HashString32"></a>
 ## func HashString32
 
 ```go
 func HashString32(s ...string) uint32
 ```
 
+
+
+<a name="HashString64"></a>
 ## func HashString64
 
 ```go
 func HashString64(s ...string) uint64
 ```
 
+
+
+<a name="HashUint32"></a>
 ## func HashUint32
 
 ```go
@@ -223,6 +271,7 @@ func HashUint32(u uint32) uint32
 
 HashUint32 returns the hash of u. Ref: segmentio/fasthash
 
+<a name="HashUint64"></a>
 ## func HashUint64
 
 ```go
@@ -231,60 +280,88 @@ func HashUint64(u uint64) uint64
 
 HashUint64 returns the hash of u. Ref: segmentio/fasthash
 
+<a name="Hmac"></a>
 ## func Hmac
 
 ```go
 func Hmac(b []byte, key []byte, h func() hash.Hash) []byte
 ```
 
+
+
+<a name="HmacSHA1"></a>
 ## func HmacSHA1
 
 ```go
 func HmacSHA1(b, key []byte) []byte
 ```
 
+
+
+<a name="HmacSHA1Hex"></a>
 ## func HmacSHA1Hex
 
 ```go
 func HmacSHA1Hex(s, key string) string
 ```
 
+
+
+<a name="HmacSHA256"></a>
 ## func HmacSHA256
 
 ```go
 func HmacSHA256(b, key []byte) []byte
 ```
 
+
+
+<a name="HmacSHA256Hex"></a>
 ## func HmacSHA256Hex
 
 ```go
 func HmacSHA256Hex(s, key string) string
 ```
 
+
+
+<a name="HmacSHA512"></a>
 ## func HmacSHA512
 
 ```go
 func HmacSHA512(b, key []byte) []byte
 ```
 
+
+
+<a name="HmacSHA512Hex"></a>
 ## func HmacSHA512Hex
 
 ```go
 func HmacSHA512Hex(s, key string) string
 ```
 
+
+
+<a name="MD5"></a>
 ## func MD5
 
 ```go
 func MD5(b []byte) []byte
 ```
 
+
+
+<a name="MD5BytesHex"></a>
 ## func MD5BytesHex
 
 ```go
 func MD5BytesHex(bs []byte) string
 ```
 
+
+
+<a name="MD5Hex"></a>
 ## func MD5Hex
 
 ```go
@@ -293,6 +370,7 @@ func MD5Hex(s string) string
 
 MD5Hex 字符串 MD5
 
+<a name="MD5Reader"></a>
 ## func MD5Reader
 
 ```go
@@ -301,6 +379,7 @@ func MD5Reader(r io.Reader) (string, error)
 
 MD5Reader 计算 MD5
 
+<a name="MD5Sum"></a>
 ## func MD5Sum
 
 ```go
@@ -309,6 +388,25 @@ func MD5Sum(filename string) (string, error)
 
 MD5Sum 文件 MD5
 
+<a name="MakeHasher"></a>
+## func MakeHasher
+
+```go
+func MakeHasher[T comparable]() func(T) uint64
+```
+
+MakeHasher creates a fast hash function for the given comparable type. The only limitation is that the type should not contain interfaces inside based on runtime.typehash.
+
+<a name="MakeSeed"></a>
+## func MakeSeed
+
+```go
+func MakeSeed() uint64
+```
+
+MakeSeed creates a random seed.
+
+<a name="MemHash"></a>
 ## func MemHash
 
 ```go
@@ -317,6 +415,7 @@ func MemHash(s string) uint64
 
 MemHash 使用内置的 memhash 获取字符串哈希值
 
+<a name="MemHash32"></a>
 ## func MemHash32
 
 ```go
@@ -325,6 +424,7 @@ func MemHash32(s string) uint32
 
 MemHash32 使用内置的 memhash 获取字符串哈希值
 
+<a name="MemHashb"></a>
 ## func MemHashb
 
 ```go
@@ -333,6 +433,7 @@ func MemHashb(b []byte) uint64
 
 MemHashb 使用内置的 memhash 获取哈希值
 
+<a name="MemHashb32"></a>
 ## func MemHashb32
 
 ```go
@@ -341,48 +442,70 @@ func MemHashb32(b []byte) uint32
 
 MemHashb32 使用内置的 memhash 获取哈希值
 
+<a name="MustMD5Sum"></a>
 ## func MustMD5Sum
 
 ```go
 func MustMD5Sum(filename string) string
 ```
 
+
+
+<a name="Sha1"></a>
 ## func Sha1
 
 ```go
 func Sha1(b []byte) []byte
 ```
 
+
+
+<a name="Sha1Hex"></a>
 ## func Sha1Hex
 
 ```go
 func Sha1Hex(s string) string
 ```
 
+
+
+<a name="Sha256"></a>
 ## func Sha256
 
 ```go
 func Sha256(b []byte) []byte
 ```
 
+
+
+<a name="Sha256Hex"></a>
 ## func Sha256Hex
 
 ```go
 func Sha256Hex(s string) string
 ```
 
+
+
+<a name="Sha512"></a>
 ## func Sha512
 
 ```go
 func Sha512(b []byte) []byte
 ```
 
+
+
+<a name="Sha512Hex"></a>
 ## func Sha512Hex
 
 ```go
 func Sha512Hex(s string) string
 ```
 
+
+
+<a name="Sum32"></a>
 ## func Sum32
 
 ```go
@@ -391,6 +514,7 @@ func Sum32(s string) uint32
 
 Sum32 获取字符串的哈希值
 
+<a name="Sum64"></a>
 ## func Sum64
 
 ```go
@@ -399,6 +523,7 @@ func Sum64(s string) uint64
 
 Sum64 获取字符串的哈希值
 
+<a name="SumBytes32"></a>
 ## func SumBytes32
 
 ```go
@@ -407,6 +532,7 @@ func SumBytes32(bs []byte) uint32
 
 SumBytes32 获取 bytes 的哈希值
 
+<a name="SumBytes64"></a>
 ## func SumBytes64
 
 ```go
@@ -415,6 +541,7 @@ func SumBytes64(bs []byte) uint64
 
 SumBytes64 获取 bytes 的哈希值
 
+<a name="Hashable"></a>
 ## type Hashable
 
 Hashable allowed map key types constraint
@@ -424,7 +551,5 @@ type Hashable interface {
     // contains filtered or unexported methods
 }
 ```
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

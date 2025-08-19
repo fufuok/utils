@@ -8,6 +8,10 @@ import "github.com/fufuok/utils/xsync"
 
 ## Index
 
+- [func ToPlainMap\(m \*Map\) map\[string\]interface\{\}](<#ToPlainMap>)
+- [func ToPlainMapOf\[K comparable, V any\]\(m \*MapOf\[K, V\]\) map\[K\]V](<#ToPlainMapOf>)
+- [func WithGrowOnly\(\) func\(\*MapConfig\)](<#WithGrowOnly>)
+- [func WithPresize\(sizeHint int\) func\(\*MapConfig\)](<#WithPresize>)
 - [type Counter](<#Counter>)
   - [func NewCounter\(\) \*Counter](<#NewCounter>)
   - [func \(c \*Counter\) Add\(delta int64\)](<#Counter.Add>)
@@ -29,7 +33,7 @@ import "github.com/fufuok/utils/xsync"
   - [func \(q \*MPMCQueueOf\[I\]\) TryDequeue\(\) \(item I, ok bool\)](<#MPMCQueueOf[I].TryDequeue>)
   - [func \(q \*MPMCQueueOf\[I\]\) TryEnqueue\(item I\) bool](<#MPMCQueueOf[I].TryEnqueue>)
 - [type Map](<#Map>)
-  - [func NewMap\(\) \*Map](<#NewMap>)
+  - [func NewMap\(options ...func\(\*MapConfig\)\) \*Map](<#NewMap>)
   - [func NewMapPresized\(sizeHint int\) \*Map](<#NewMapPresized>)
   - [func \(m \*Map\) Clear\(\)](<#Map.Clear>)
   - [func \(m \*Map\) Compute\(key string, valueFn func\(oldValue interface\{\}, loaded bool\) \(newValue interface\{\}, delete bool\)\) \(actual interface\{\}, ok bool\)](<#Map.Compute>)
@@ -39,12 +43,16 @@ import "github.com/fufuok/utils/xsync"
   - [func \(m \*Map\) LoadAndStore\(key string, value interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadAndStore>)
   - [func \(m \*Map\) LoadOrCompute\(key string, valueFn func\(\) interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadOrCompute>)
   - [func \(m \*Map\) LoadOrStore\(key string, value interface\{\}\) \(actual interface\{\}, loaded bool\)](<#Map.LoadOrStore>)
+  - [func \(m \*Map\) LoadOrTryCompute\(key string, valueFn func\(\) \(newValue interface\{\}, cancel bool\)\) \(value interface\{\}, loaded bool\)](<#Map.LoadOrTryCompute>)
   - [func \(m \*Map\) Range\(f func\(key string, value interface\{\}\) bool\)](<#Map.Range>)
   - [func \(m \*Map\) Size\(\) int](<#Map.Size>)
+  - [func \(m \*Map\) Stats\(\) MapStats](<#Map.Stats>)
   - [func \(m \*Map\) Store\(key string, value interface\{\}\)](<#Map.Store>)
+- [type MapConfig](<#MapConfig>)
 - [type MapOf](<#MapOf>)
-  - [func NewMapOf\[K comparable, V any\]\(\) \*MapOf\[K, V\]](<#NewMapOf>)
+  - [func NewMapOf\[K comparable, V any\]\(options ...func\(\*MapConfig\)\) \*MapOf\[K, V\]](<#NewMapOf>)
   - [func NewMapOfPresized\[K comparable, V any\]\(sizeHint int\) \*MapOf\[K, V\]](<#NewMapOfPresized>)
+  - [func NewMapOfWithHasher\[K comparable, V any\]\(hasher func\(K, uint64\) uint64, options ...func\(\*MapConfig\)\) \*MapOf\[K, V\]](<#NewMapOfWithHasher>)
   - [func \(m \*MapOf\[K, V\]\) Clear\(\)](<#MapOf[K, V].Clear>)
   - [func \(m \*MapOf\[K, V\]\) Compute\(key K, valueFn func\(oldValue V, loaded bool\) \(newValue V, delete bool\)\) \(actual V, ok bool\)](<#MapOf[K, V].Compute>)
   - [func \(m \*MapOf\[K, V\]\) Delete\(key K\)](<#MapOf[K, V].Delete>)
@@ -53,17 +61,67 @@ import "github.com/fufuok/utils/xsync"
   - [func \(m \*MapOf\[K, V\]\) LoadAndStore\(key K, value V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadAndStore>)
   - [func \(m \*MapOf\[K, V\]\) LoadOrCompute\(key K, valueFn func\(\) V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadOrCompute>)
   - [func \(m \*MapOf\[K, V\]\) LoadOrStore\(key K, value V\) \(actual V, loaded bool\)](<#MapOf[K, V].LoadOrStore>)
+  - [func \(m \*MapOf\[K, V\]\) LoadOrTryCompute\(key K, valueFn func\(\) \(newValue V, cancel bool\)\) \(value V, loaded bool\)](<#MapOf[K, V].LoadOrTryCompute>)
   - [func \(m \*MapOf\[K, V\]\) Range\(f func\(key K, value V\) bool\)](<#MapOf[K, V].Range>)
   - [func \(m \*MapOf\[K, V\]\) Size\(\) int](<#MapOf[K, V].Size>)
+  - [func \(m \*MapOf\[K, V\]\) Stats\(\) MapStats](<#MapOf[K, V].Stats>)
   - [func \(m \*MapOf\[K, V\]\) Store\(key K, value V\)](<#MapOf[K, V].Store>)
+- [type MapStats](<#MapStats>)
+  - [func \(s \*MapStats\) ToString\(\) string](<#MapStats.ToString>)
 - [type RBMutex](<#RBMutex>)
   - [func NewRBMutex\(\) \*RBMutex](<#NewRBMutex>)
   - [func \(mu \*RBMutex\) Lock\(\)](<#RBMutex.Lock>)
   - [func \(mu \*RBMutex\) RLock\(\) \*RToken](<#RBMutex.RLock>)
   - [func \(mu \*RBMutex\) RUnlock\(t \*RToken\)](<#RBMutex.RUnlock>)
+  - [func \(mu \*RBMutex\) TryLock\(\) bool](<#RBMutex.TryLock>)
+  - [func \(mu \*RBMutex\) TryRLock\(\) \(bool, \*RToken\)](<#RBMutex.TryRLock>)
   - [func \(mu \*RBMutex\) Unlock\(\)](<#RBMutex.Unlock>)
 - [type RToken](<#RToken>)
+- [type SPSCQueue](<#SPSCQueue>)
+  - [func NewSPSCQueue\(capacity int\) \*SPSCQueue](<#NewSPSCQueue>)
+  - [func \(q \*SPSCQueue\) TryDequeue\(\) \(item interface\{\}, ok bool\)](<#SPSCQueue.TryDequeue>)
+  - [func \(q \*SPSCQueue\) TryEnqueue\(item interface\{\}\) bool](<#SPSCQueue.TryEnqueue>)
+- [type SPSCQueueOf](<#SPSCQueueOf>)
+  - [func NewSPSCQueueOf\[I any\]\(capacity int\) \*SPSCQueueOf\[I\]](<#NewSPSCQueueOf>)
+  - [func \(q \*SPSCQueueOf\[I\]\) TryDequeue\(\) \(item I, ok bool\)](<#SPSCQueueOf[I].TryDequeue>)
+  - [func \(q \*SPSCQueueOf\[I\]\) TryEnqueue\(item I\) bool](<#SPSCQueueOf[I].TryEnqueue>)
 
+
+<a name="ToPlainMap"></a>
+## func ToPlainMap
+
+```go
+func ToPlainMap(m *Map) map[string]interface{}
+```
+
+ToPlainMap returns a native map with a copy of xsync Map's contents. The copied xsync Map should not be modified while this call is made. If the copied Map is modified, the copying behavior is the same as in the Range method.
+
+<a name="ToPlainMapOf"></a>
+## func ToPlainMapOf
+
+```go
+func ToPlainMapOf[K comparable, V any](m *MapOf[K, V]) map[K]V
+```
+
+ToPlainMapOf returns a native map with a copy of xsync Map's contents. The copied xsync Map should not be modified while this call is made. If the copied Map is modified, the copying behavior is the same as in the Range method.
+
+<a name="WithGrowOnly"></a>
+## func WithGrowOnly
+
+```go
+func WithGrowOnly() func(*MapConfig)
+```
+
+WithGrowOnly configures new Map/MapOf instance to be grow\-only. This means that the underlying hash table grows in capacity when new keys are added, but does not shrink when keys are deleted. The only exception to this rule is the Clear method which shrinks the hash table back to the initial capacity.
+
+<a name="WithPresize"></a>
+## func WithPresize
+
+```go
+func WithPresize(sizeHint int) func(*MapConfig)
+```
+
+WithPresize configures new Map/MapOf instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
 
 <a name="Counter"></a>
 ## type Counter
@@ -242,6 +300,8 @@ func (q *MPMCQueue) Dequeue() interface{}
 
 Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
 
+Deprecated: use TryDequeue in combination with runtime.Gosched\(\).
+
 <a name="MPMCQueue.Enqueue"></a>
 ### func \(\*MPMCQueue\) Enqueue
 
@@ -250,6 +310,8 @@ func (q *MPMCQueue) Enqueue(item interface{})
 ```
 
 Enqueue inserts the given item into the queue. Blocks, if the queue is full.
+
+Deprecated: use TryEnqueue in combination with runtime.Gosched\(\).
 
 <a name="MPMCQueue.TryDequeue"></a>
 ### func \(\*MPMCQueue\) TryDequeue
@@ -274,7 +336,7 @@ TryEnqueue inserts the given item into the queue. Does not block and returns imm
 
 A MPMCQueueOf is a bounded multi\-producer multi\-consumer concurrent queue. It's a generic version of MPMCQueue.
 
-MPMCQueue instances must be created with NewMPMCQueueOf function. A MPMCQueueOf must not be copied after first use.
+MPMCQueueOf instances must be created with NewMPMCQueueOf function. A MPMCQueueOf must not be copied after first use.
 
 Based on the data structure from the following C\+\+ library: https://github.com/rigtorp/MPMCQueue
 
@@ -302,6 +364,8 @@ func (q *MPMCQueueOf[I]) Dequeue() I
 
 Dequeue retrieves and removes the item from the head of the queue. Blocks, if the queue is empty.
 
+Deprecated: use TryDequeue in combination with runtime.Gosched\(\).
+
 <a name="MPMCQueueOf[I].Enqueue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) Enqueue
 
@@ -310,6 +374,8 @@ func (q *MPMCQueueOf[I]) Enqueue(item I)
 ```
 
 Enqueue inserts the given item into the queue. Blocks, if the queue is full.
+
+Deprecated: use TryEnqueue in combination with runtime.Gosched\(\).
 
 <a name="MPMCQueueOf[I].TryDequeue"></a>
 ### func \(\*MPMCQueueOf\[I\]\) TryDequeue
@@ -352,10 +418,10 @@ type Map struct {
 ### func NewMap
 
 ```go
-func NewMap() *Map
+func NewMap(options ...func(*MapConfig)) *Map
 ```
 
-NewMap creates a new Map instance.
+NewMap creates a new Map instance configured with the given options.
 
 <a name="NewMapPresized"></a>
 ### func NewMapPresized
@@ -365,6 +431,8 @@ func NewMapPresized(sizeHint int) *Map
 ```
 
 NewMapPresized creates a new Map instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
+
+Deprecated: use NewMap in combination with WithPresize.
 
 <a name="Map.Clear"></a>
 ### func \(\*Map\) Clear
@@ -429,7 +497,7 @@ LoadAndStore returns the existing value for the key if present, while setting th
 func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual interface{}, loaded bool)
 ```
 
-LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
+LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function, and then stores and returns the computed value. The loaded result is true if the value was loaded, false if computed.
 
 This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
@@ -441,6 +509,17 @@ func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, lo
 ```
 
 LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
+
+<a name="Map.LoadOrTryCompute"></a>
+### func \(\*Map\) LoadOrTryCompute
+
+```go
+func (m *Map) LoadOrTryCompute(key string, valueFn func() (newValue interface{}, cancel bool)) (value interface{}, loaded bool)
+```
+
+LoadOrTryCompute returns the existing value for the key if present. Otherwise, it tries to compute the value using the provided function and, if successful, stores and returns the computed value. The loaded result is true if the value was loaded, or false if computed \(whether successfully or not\). If the compute attempt was cancelled \(due to an error, for example\), a nil value will be returned.
+
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
 <a name="Map.Range"></a>
 ### func \(\*Map\) Range
@@ -464,6 +543,15 @@ func (m *Map) Size() int
 
 Size returns current size of the map.
 
+<a name="Map.Stats"></a>
+### func \(\*Map\) Stats
+
+```go
+func (m *Map) Stats() MapStats
+```
+
+Stats returns statistics for the Map. Just like other map methods, this one is thread\-safe. Yet it's an O\(N\) operation, so it should be used only for diagnostics or debugging purposes.
+
 <a name="Map.Store"></a>
 ### func \(\*Map\) Store
 
@@ -472,6 +560,17 @@ func (m *Map) Store(key string, value interface{})
 ```
 
 Store sets the value for a key.
+
+<a name="MapConfig"></a>
+## type MapConfig
+
+MapConfig defines configurable Map/MapOf options.
+
+```go
+type MapConfig struct {
+    // contains filtered or unexported fields
+}
+```
 
 <a name="MapOf"></a>
 ## type MapOf
@@ -484,6 +583,8 @@ MapOf uses a modified version of Cache\-Line Hash Table \(CLHT\) data structure:
 
 CLHT is built around idea to organize the hash table in cache\-line\-sized buckets, so that on all modern CPUs update operations complete with at most one cache\-line transfer. Also, Get operations involve no write to memory, as well as no mutexes or any other sort of locks. Due to this design, in all considered scenarios MapOf outperforms sync.Map.
 
+MapOf also borrows ideas from Java's j.u.c.ConcurrentHashMap \(immutable K/V pair structs instead of atomic snapshots\) and C\+\+'s absl::flat\_hash\_map \(meta memory and SWAR\-based lookups\).
+
 ```go
 type MapOf[K comparable, V any] struct {
     // contains filtered or unexported fields
@@ -494,10 +595,10 @@ type MapOf[K comparable, V any] struct {
 ### func NewMapOf
 
 ```go
-func NewMapOf[K comparable, V any]() *MapOf[K, V]
+func NewMapOf[K comparable, V any](options ...func(*MapConfig)) *MapOf[K, V]
 ```
 
-NewMapOf creates a new MapOf instance.
+NewMapOf creates a new MapOf instance configured with the given options.
 
 <a name="NewMapOfPresized"></a>
 ### func NewMapOfPresized
@@ -507,6 +608,17 @@ func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]
 ```
 
 NewMapOfPresized creates a new MapOf instance with capacity enough to hold sizeHint entries. The capacity is treated as the minimal capacity meaning that the underlying hash table will never shrink to a smaller capacity. If sizeHint is zero or negative, the value is ignored.
+
+Deprecated: use NewMapOf in combination with WithPresize.
+
+<a name="NewMapOfWithHasher"></a>
+### func NewMapOfWithHasher
+
+```go
+func NewMapOfWithHasher[K comparable, V any](hasher func(K, uint64) uint64, options ...func(*MapConfig)) *MapOf[K, V]
+```
+
+NewMapOfWithHasher creates a new MapOf instance configured with the given hasher and options. The hash function is used instead of the built\-in hash function configured when a map is created with the NewMapOf function.
 
 <a name="MapOf[K, V].Clear"></a>
 ### func \(\*MapOf\[K, V\]\) Clear
@@ -653,7 +765,7 @@ LoadAndStore returns the existing value for the key if present, while setting th
 func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
 ```
 
-LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function and returns the computed value. The loaded result is true if the value was loaded, false if stored.
+LoadOrCompute returns the existing value for the key if present. Otherwise, it computes the value using the provided function, and then stores and returns the computed value. The loaded result is true if the value was loaded, false if computed.
 
 This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
@@ -665,6 +777,17 @@ func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)
 ```
 
 LoadOrStore returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, false if stored.
+
+<a name="MapOf[K, V].LoadOrTryCompute"></a>
+### func \(\*MapOf\[K, V\]\) LoadOrTryCompute
+
+```go
+func (m *MapOf[K, V]) LoadOrTryCompute(key K, valueFn func() (newValue V, cancel bool)) (value V, loaded bool)
+```
+
+LoadOrTryCompute returns the existing value for the key if present. Otherwise, it tries to compute the value using the provided function and, if successful, stores and returns the computed value. The loaded result is true if the value was loaded, or false if computed \(whether successfully or not\). If the compute attempt was cancelled \(due to an error, for example\), a zero value of type V will be returned.
+
+This call locks a hash table bucket while the compute function is executed. It means that modifications on other entries in the bucket will be blocked until the valueFn executes. Consider this when the function includes long\-running operations.
 
 <a name="MapOf[K, V].Range"></a>
 ### func \(\*MapOf\[K, V\]\) Range
@@ -688,6 +811,15 @@ func (m *MapOf[K, V]) Size() int
 
 Size returns current size of the map.
 
+<a name="MapOf[K, V].Stats"></a>
+### func \(\*MapOf\[K, V\]\) Stats
+
+```go
+func (m *MapOf[K, V]) Stats() MapStats
+```
+
+Stats returns statistics for the MapOf. Just like other map methods, this one is thread\-safe. Yet it's an O\(N\) operation, so it should be used only for diagnostics or debugging purposes.
+
 <a name="MapOf[K, V].Store"></a>
 ### func \(\*MapOf\[K, V\]\) Store
 
@@ -696,6 +828,60 @@ func (m *MapOf[K, V]) Store(key K, value V)
 ```
 
 Store sets the value for a key.
+
+<a name="MapStats"></a>
+## type MapStats
+
+MapStats is Map/MapOf statistics.
+
+Warning: map statistics are intented to be used for diagnostic purposes, not for production code. This means that breaking changes may be introduced into this struct even between minor releases.
+
+```go
+type MapStats struct {
+    // RootBuckets is the number of root buckets in the hash table.
+    // Each bucket holds a few entries.
+    RootBuckets int
+    // TotalBuckets is the total number of buckets in the hash table,
+    // including root and their chained buckets. Each bucket holds
+    // a few entries.
+    TotalBuckets int
+    // EmptyBuckets is the number of buckets that hold no entries.
+    EmptyBuckets int
+    // Capacity is the Map/MapOf capacity, i.e. the total number of
+    // entries that all buckets can physically hold. This number
+    // does not consider the load factor.
+    Capacity int
+    // Size is the exact number of entries stored in the map.
+    Size int
+    // Counter is the number of entries stored in the map according
+    // to the internal atomic counter. In case of concurrent map
+    // modifications this number may be different from Size.
+    Counter int
+    // CounterLen is the number of internal atomic counter stripes.
+    // This number may grow with the map capacity to improve
+    // multithreaded scalability.
+    CounterLen int
+    // MinEntries is the minimum number of entries per a chain of
+    // buckets, i.e. a root bucket and its chained buckets.
+    MinEntries int
+    // MinEntries is the maximum number of entries per a chain of
+    // buckets, i.e. a root bucket and its chained buckets.
+    MaxEntries int
+    // TotalGrowths is the number of times the hash table grew.
+    TotalGrowths int64
+    // TotalGrowths is the number of times the hash table shrinked.
+    TotalShrinks int64
+}
+```
+
+<a name="MapStats.ToString"></a>
+### func \(\*MapStats\) ToString
+
+```go
+func (s *MapStats) ToString() string
+```
+
+ToString returns string representation of map stats.
 
 <a name="RBMutex"></a>
 ## type RBMutex
@@ -754,6 +940,24 @@ func (mu *RBMutex) RUnlock(t *RToken)
 
 RUnlock undoes a single RLock call. A reader token obtained from the RLock call must be provided. RUnlock does not affect other simultaneous readers. A panic is raised if m is not locked for reading on entry to RUnlock.
 
+<a name="RBMutex.TryLock"></a>
+### func \(\*RBMutex\) TryLock
+
+```go
+func (mu *RBMutex) TryLock() bool
+```
+
+TryLock tries to lock m for writing without blocking.
+
+<a name="RBMutex.TryRLock"></a>
+### func \(\*RBMutex\) TryRLock
+
+```go
+func (mu *RBMutex) TryRLock() (bool, *RToken)
+```
+
+TryRLock tries to lock m for reading without blocking. When TryRLock succeeds, it returns true and a reader token. In case of a failure, a false is returned.
+
 <a name="RBMutex.Unlock"></a>
 ### func \(\*RBMutex\) Unlock
 
@@ -775,5 +979,89 @@ type RToken struct {
     // contains filtered or unexported fields
 }
 ```
+
+<a name="SPSCQueue"></a>
+## type SPSCQueue
+
+A SPSCQueue is a bounded single\-producer single\-consumer concurrent queue. This means that not more than a single goroutine must be publishing items to the queue while not more than a single goroutine must be consuming those items.
+
+SPSCQueue instances must be created with NewSPSCQueue function. A SPSCQueue must not be copied after first use.
+
+Based on the data structure from the following article: https://rigtorp.se/ringbuffer/
+
+```go
+type SPSCQueue struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewSPSCQueue"></a>
+### func NewSPSCQueue
+
+```go
+func NewSPSCQueue(capacity int) *SPSCQueue
+```
+
+NewSPSCQueue creates a new SPSCQueue instance with the given capacity.
+
+<a name="SPSCQueue.TryDequeue"></a>
+### func \(\*SPSCQueue\) TryDequeue
+
+```go
+func (q *SPSCQueue) TryDequeue() (item interface{}, ok bool)
+```
+
+TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
+
+<a name="SPSCQueue.TryEnqueue"></a>
+### func \(\*SPSCQueue\) TryEnqueue
+
+```go
+func (q *SPSCQueue) TryEnqueue(item interface{}) bool
+```
+
+TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
+
+<a name="SPSCQueueOf"></a>
+## type SPSCQueueOf
+
+A SPSCQueueOf is a bounded single\-producer single\-consumer concurrent queue. This means that not more than a single goroutine must be publishing items to the queue while not more than a single goroutine must be consuming those items.
+
+SPSCQueueOf instances must be created with NewSPSCQueueOf function. A SPSCQueueOf must not be copied after first use.
+
+Based on the data structure from the following article: https://rigtorp.se/ringbuffer/
+
+```go
+type SPSCQueueOf[I any] struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewSPSCQueueOf"></a>
+### func NewSPSCQueueOf
+
+```go
+func NewSPSCQueueOf[I any](capacity int) *SPSCQueueOf[I]
+```
+
+NewSPSCQueueOf creates a new SPSCQueueOf instance with the given capacity.
+
+<a name="SPSCQueueOf[I].TryDequeue"></a>
+### func \(\*SPSCQueueOf\[I\]\) TryDequeue
+
+```go
+func (q *SPSCQueueOf[I]) TryDequeue() (item I, ok bool)
+```
+
+TryDequeue retrieves and removes the item from the head of the queue. Does not block and returns immediately. The ok result indicates that the queue isn't empty and an item was retrieved.
+
+<a name="SPSCQueueOf[I].TryEnqueue"></a>
+### func \(\*SPSCQueueOf\[I\]\) TryEnqueue
+
+```go
+func (q *SPSCQueueOf[I]) TryEnqueue(item I) bool
+```
+
+TryEnqueue inserts the given item into the queue. Does not block and returns immediately. The result indicates that the queue isn't full and the item was inserted.
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

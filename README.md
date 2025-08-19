@@ -23,10 +23,12 @@ package utils // import "github.com/fufuok/utils"
 const Byte = 1 << (iota * 10) ...
 const IByte = 1 ...
 const IPv4Min = 0 ...
+const ChinaTimeZone = "UTC+8" ...
 const PtrSize = 4 << (^uintptr(0) >> 63)
 var BigByte ...
 var BigSIByte ...
 var Rand = NewRand() ...
+var ChinaTimeLocation = time.FixedZone(ChinaTimeZone, ChinaTimeOffset)
 var ErrInvalidHostPort = errors.New("invalid Host or Port")
 var StackTraceBufferSize = 4 << 10
 func B2S(b []byte) string
@@ -52,6 +54,7 @@ func BigCommaf(v *big.Float) string
 func Bigoom(n, b *big.Int) (float64, int)
 func CPUTicks() int64
 func CallPath() string
+func CheckDomain(name string) error
 func Comma(v int64) string
 func Commaf(v float64) string
 func Commai(v int) string
@@ -87,7 +90,9 @@ func FastRand() uint32
 func FastRand64() uint64
 func FastRandn(n uint32) uint32
 func FastRandu() uint
+func FirstString(s, sep string, defaultStr ...string) string
 func GetBytes(v interface{}, defaultVal ...[]byte) []byte
+func GetDomain(name string) string
 func GetIPPort(addr net.Addr) (ip net.IP, port int, err error)
 func GetInt(v interface{}, defaultInt ...int) int
 func GetMonthDays(t time.Time) int
@@ -124,6 +129,7 @@ func InIPNetString(ip string, ipNets map[*net.IPNet]struct{}) bool
 func InInts(slice []int, n int) bool
 func InStrings(ss []string, s string) bool
 func InitCSTLocation() (name string, loc *time.Location, cst *time.Location, ok bool)
+func InitChinaLocation() *time.Location
 func InitLocation(name string) (*time.Location, bool)
 func Int2IPv6(ipInt *big.Int) net.IP
 func Int2IPv6String(n *big.Int) string
@@ -133,12 +139,15 @@ func IsIPv6(s string) bool
 func IsInternalIPv4(ip net.IP) bool
 func IsInternalIPv4String(ip string) bool
 func IsLeapYear(year int) bool
+func IsLetter(s string) bool
+func IsLetterOrNumeric(s string) bool
 func IsNumeric(s string) bool
 func IsPrivateIP(ip net.IP) bool
 func IsPrivateIPString(ip string) bool
 func JoinBytes(b ...[]byte) []byte
 func JoinString(s ...string) string
 func JoinStringBytes(s ...string) []byte
+func LastString(s, sep string, defaultStr ...string) string
 func LeftPad(s, pad string, n int) string
 func LeftPadBytes(b, pad []byte, n int) []byte
 func Logn(n, b float64) float64
@@ -159,6 +168,7 @@ func MustParseHumanBytes(s string, defaultVal ...uint64) uint64
 func MustString(v interface{}, timeLayout ...string) string
 func NanoTime() int64
 func NewRand(seed ...int64) *rand.Rand
+func NewSpinLock() sync.Locker
 func Pad(s, pad string, n int) string
 func PadBytes(s, pad []byte, n int) []byte
 func ParseHostPort(s string) (net.IP, uint16, bool, error)
@@ -182,6 +192,7 @@ func RandInt(min, max int) int
 func RandString(n int) string
 func RandUint32(min, max uint32) uint32
 func Recover(cb ...RecoveryCallback)
+func RemoveRunes(s string, toRemove string) string
 func RemoveString(ss []string, s string) ([]string, bool)
 func ReplaceHost(a, b string) string
 func Reverse(s string) string
@@ -211,6 +222,7 @@ func TrimLeftBytes(b []byte, cutset byte) []byte
 func TrimRight(s string, cutset byte) string
 func TrimRightBytes(b []byte, cutset byte) []byte
 func TrimSlice(ss []string) []string
+func TruncStr(s string, maxLen int, suffix string) string
 func UUID() []byte
 func UUIDShort() string
 func UUIDSimple() string
@@ -296,27 +308,6 @@ func Vtof(v interface{}) float64
 func Vtoi(v interface{}) int64
 func Vtot(v interface{}) bool
 func Vtou(v interface{}) uint64
-type Value struct{ ... }
-    func Any(v interface{}) Value
-    func Bool(t bool) Value
-    func Byte(x byte) Value
-    func Bytes(b []byte) Value
-    func CustomBits(x uint64) Value
-    func Float32(x float32) Value
-    func Float64(f float64) Value
-    func Int(x int) Value
-    func Int16(x int16) Value
-    func Int32(x int32) Value
-    func Int64(x int64) Value
-    func Int8(x int8) Value
-    func Nil() Value
-    func String(s string) Value
-    func StringWithTag(s string, tag uint16) Value
-    func Uint(x uint) Value
-    func Uint16(x uint16) Value
-    func Uint32(x uint32) Value
-    func Uint64(x uint64) Value
-    func Uint8(x uint8) Value
 ```
 </details>
 
@@ -468,9 +459,10 @@ func ExternalIPv4() string
 func ExternalIPv6() string
 func InterfaceAddrs(v ...string) (map[string][]net.IP, error)
 func InternalIP(dstAddr, network string) string
+func InternalIPAny() string
 func InternalIPv4() string
 func InternalIPv6() string
-func LocalIP() string
+func LocalIP(exclude ...string) string
 func LocalIPv4s() (ips []string)
 ```
 </details>
@@ -568,6 +560,7 @@ func AddString64(h uint64, s string) uint64
 func AddUint32(h, u uint32) uint32
 func AddUint64(h uint64, u uint64) uint64
 func Djb33(s string) uint32
+func FastModulo(x, n uint32) uint32
 func FnvHash(s string) uint64
 func FnvHash32(s string) uint32
 func GenHasher[K comparable]() func(K) uintptr
@@ -596,6 +589,8 @@ func MD5BytesHex(bs []byte) string
 func MD5Hex(s string) string
 func MD5Reader(r io.Reader) (string, error)
 func MD5Sum(filename string) (string, error)
+func MakeHasher[T comparable]() func(T) uint64
+func MakeSeed() uint64
 func MemHash(s string) uint64
 func MemHash32(s string) uint32
 func MemHashb(b []byte) uint64
@@ -679,57 +674,33 @@ type Daemon struct{ ... }
 ```go
 package xsync // import "github.com/fufuok/utils/xsync"
 
-type Counter struct { ... }
-    func (c *Counter) Add(delta int64)
-    func (c *Counter) Dec()
-    func (c *Counter) Inc()
-    func (c *Counter) Reset()
-    func (c *Counter) Value() int64
-
-type IntegerConstraint interface {
-        ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
-}
-
-type MPMCQueue struct { ... }
+func ToPlainMap(m *Map) map[string]interface{}
+func ToPlainMapOf[K comparable, V any](m *MapOf[K, V]) map[K]V
+func WithGrowOnly() func(*MapConfig)
+func WithPresize(sizeHint int) func(*MapConfig)
+type Counter struct{ ... }
+    func NewCounter() *Counter
+type HashMapOf[K comparable, V any] interface{ ... }
+type MPMCQueue struct{ ... }
     func NewMPMCQueue(capacity int) *MPMCQueue
-    func (q *MPMCQueue) Dequeue() interface{}
-    func (q *MPMCQueue) Enqueue(item interface{})
-    func (q *MPMCQueue) TryDequeue() (item interface{}, ok bool)
-    func (q *MPMCQueue) TryEnqueue(item interface{}) bool
-
-type Map struct { ... }
-    func NewMap() *Map
-    func (m *Map) Delete(key string)
-    func (m *Map) Load(key string) (value interface{}, ok bool)
-    func (m *Map) LoadAndDelete(key string) (value interface{}, loaded bool)
-    func (m *Map) LoadAndStore(key string, value interface{}) (actual interface{}, loaded bool)
-    func (m *Map) LoadOrCompute(key string, valueFn func() interface{}) (actual interface{}, loaded bool)
-    func (m *Map) LoadOrStore(key string, value interface{}) (actual interface{}, loaded bool)
-    func (m *Map) Range(f func(key string, value interface{}) bool)
-    func (m *Map) Size() int
-    func (m *Map) Store(key string, value interface{})
-
-type MapOf[K comparable, V any] struct { ... }
-    func NewIntegerMapOf[K IntegerConstraint, V any]() *MapOf[K, V]
-    func NewMapOf[V any]() *MapOf[string, V]
-    func NewTypedMapOf[K comparable, V any](hasher func(K) uint64) *MapOf[K, V]
-    func (m *MapOf[K, V]) Delete(key K)
-    func (m *MapOf[K, V]) Load(key K) (value V, ok bool)
-    func (m *MapOf[K, V]) LoadAndDelete(key K) (value V, loaded bool)
-    func (m *MapOf[K, V]) LoadAndStore(key K, value V) (actual V, loaded bool)
-    func (m *MapOf[K, V]) LoadOrCompute(key K, valueFn func() V) (actual V, loaded bool)
-    func (m *MapOf[K, V]) LoadOrStore(key K, value V) (actual V, loaded bool)
-    func (m *MapOf[K, V]) Range(f func(key K, value V) bool)
-    func (m *MapOf[K, V]) Size() int
-    func (m *MapOf[K, V]) Store(key K, value V)
-
-type RBMutex struct { ... }
-    func (m *RBMutex) Lock()
-    func (m *RBMutex) RLock() *RToken
-    func (m *RBMutex) RUnlock(t *RToken)
-    func (m *RBMutex) Unlock()
-
-type RToken struct { ... }
+type MPMCQueueOf[I any] struct{ ... }
+    func NewMPMCQueueOf[I any](capacity int) *MPMCQueueOf[I]
+type Map struct{ ... }
+    func NewMap(options ...func(*MapConfig)) *Map
+    func NewMapPresized(sizeHint int) *Map
+type MapConfig struct{ ... }
+type MapOf[K comparable, V any] struct{ ... }
+    func NewMapOf[K comparable, V any](options ...func(*MapConfig)) *MapOf[K, V]
+    func NewMapOfPresized[K comparable, V any](sizeHint int) *MapOf[K, V]
+    func NewMapOfWithHasher[K comparable, V any](hasher func(K, uint64) uint64, options ...func(*MapConfig)) *MapOf[K, V]
+type MapStats struct{ ... }
+type RBMutex struct{ ... }
+    func NewRBMutex() *RBMutex
+type RToken struct{ ... }
+type SPSCQueue struct{ ... }
+    func NewSPSCQueue(capacity int) *SPSCQueue
+type SPSCQueueOf[I any] struct{ ... }
+    func NewSPSCQueueOf[I any](capacity int) *SPSCQueueOf[I]
 ```
 </details>
 
@@ -749,16 +720,23 @@ package jsongen // import "github.com/fufuok/utils/xjson/jsongen"
 
 Package jsongen forked from darjun/json-gen
 
-type Array []Value
+Package jsongen Copyright 2024 Joshua J Baker. All rights reserved. Use of this
+source code is governed by an MIT-style license that can be found in the LICENSE
+file.
+
+https://github.com/tidwall/gjson
+
+var DisableEscapeHTML = false
+func AppendJSONString(dst []byte, s string) []byte
+func EscapeString(s string) string
+type Array struct{ ... }
     func NewArray() *Array
 type Map struct{ ... }
     func NewMap() *Map
-type QuotedValue string
 type RawBytes []byte
 type RawString string
-type UnquotedValue string
+type V string
 type Value interface{ ... }
-    func EscapeString(s string) Value
 ```
 </details>
 
@@ -774,9 +752,11 @@ package gjson // import "github.com/fufuok/utils/xjson/gjson"
 
 Package gjson provides searching for json strings.
 
+var DisableEscapeHTML = false
 var DisableModifiers = false
 func AddModifier(name string, fn func(json, arg string) string)
 func AppendJSONString(dst []byte, s string) []byte
+func Escape(comp string) string
 func ForEachLine(json string, iterator func(line Result) bool)
 func ModifierExists(name string, fn func(json, arg string) string) bool
 func Valid(json string) bool
@@ -788,24 +768,6 @@ type Result struct{ ... }
     func GetManyBytes(json []byte, path ...string) []Result
     func Parse(json string) Result
     func ParseBytes(json []byte) Result
-    func (t Result) Array() []Result
-    func (t Result) Bool() bool
-    func (t Result) Exists() bool
-    func (t Result) Float() float64
-    func (t Result) ForEach(iterator func(key, value Result) bool)
-    func (t Result) Get(path string) Result
-    func (t Result) Int() int64
-    func (t Result) IsArray() bool
-    func (t Result) IsBool() bool
-    func (t Result) IsObject() bool
-    func (t Result) Less(token Result, caseSensitive bool) bool
-    func (t Result) Map() map[string]Result
-    func (t Result) Path(json string) string
-    func (t Result) Paths(json string) []string
-    func (t Result) String() string
-    func (t Result) Time() time.Time
-    func (t Result) Uint() uint64
-    func (t Result) Value() interface{}
 type Type int
     const Null Type = iota ...
 ```
@@ -968,28 +930,32 @@ type Pool struct{ ... }
   <summary>DOC</summary>
 
 ```go
-package ntp // import "github.com/fufuok/utils/ntp"
+package xfile // import "github.com/fufuok/utils/xfile"
 
-Package ntp provides an implementation of a Simple NTP (SNTP) client capable
-of querying the current time from a remote NTP server. See RFC5905
-(https://tools.ietf.org/html/rfc5905) for more details.
-
-This approach grew out of a go-nuts post by Michael Hofmann:
-https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/FlcdMU5fkLQ
-
-const LeapNoWarning LeapIndicator = 0 ...
-func ClockOffsetChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Duration
-func Time(host string) (time.Time, error)
-func TimeChan(ctx context.Context, interval time.Duration, hosts ...string) chan time.Time
-func TimeV(host string, version int) (time.Time, error)
-type HostResponse struct{ ... }
-    func HostPreferred(hosts []string) *HostResponse
-type LeapIndicator uint8
-type QueryOptions struct{ ... }
-type Response struct{ ... }
-    func GetResponse(host string) *Response
-    func Query(host string) (*Response, error)
-    func QueryWithOptions(host string, opt QueryOptions) (*Response, error)
+const DefaultFlushSizeLimit = 1 << 20 ...
+var ErrFilename = errors.New("wrong file name")
+func CopyDir(srcDir, dstDir string) error
+func CopyFile(srcFile, dstFile string) error
+func HeadLines(filename string, num int) ([]string, error)
+func IsDir(s string) bool
+func IsExist(s string) bool
+func IsFile(s string) bool
+func ModTime(filename string) time.Time
+func ReadFile(filename string) (string, error)
+func ReadLines(filename string) ([]string, error)
+func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error)
+func ResetDir(dirPath string) error
+func TailLines(filename string, num int, cleanLine ...bool) ([]string, error)
+func UnzipDir(zipFile, dstDir string) error
+func UnzipFile(zipFile *zip.File, dstFile string) error
+func ZipDir(srcDir, zipFilePath string) error
+type DefaultFilename struct{}
+type FilenameMaker interface{ ... }
+type Logger interface{ ... }
+type Options struct{ ... }
+type Roller struct{ ... }
+    func NewRoller(filename string, opt *Options) (*Roller, error)
+type TimeBasedFilename struct{ ... }
 ```
 </details>
 
@@ -1024,14 +990,6 @@ func main() {
 	s = utils.GetString(nil, "default") // "default"
 	s = utils.GetString([]byte("ff"))   // "ff"
 	s = utils.GetString(true)           // "true"
-
-	s = conv.Any(123.45).String()       // "123.45"
-	s = conv.Any(nil).String()          // ""
-	s = conv.Any([]byte("ff")).String() // "ff"
-	s = conv.Any(true).String()         // "true"
-
-	s = conv.Float64(123.45).String()     // "123.45"
-	s = conv.Bytes([]byte("ff")).String() // "ff"
 
 	s = conv.Ftoa(123.45) // "123.45"
 	s = conv.Vtoa(nil)    // ""
