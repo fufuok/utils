@@ -8,86 +8,39 @@ import "github.com/fufuok/utils/conv"
 
 ## Index
 
-- [func Atof(a string) float64](<#func-atof>)
-- [func Atoi(a string) int64](<#func-atoi>)
-- [func Atot(a string) bool](<#func-atot>)
-- [func Atou(a string) uint64](<#func-atou>)
-- [func Atov(a string) interface{}](<#func-atov>)
-- [func Ftoa(f float64) string](<#func-ftoa>)
-- [func Ftoi(f float64) int64](<#func-ftoi>)
-- [func Ftot(f float64) bool](<#func-ftot>)
-- [func Ftou(f float64) uint64](<#func-ftou>)
-- [func Ftov(f float64) interface{}](<#func-ftov>)
-- [func Itoa(i int64) string](<#func-itoa>)
-- [func Itof(i int64) float64](<#func-itof>)
-- [func Itot(i int64) bool](<#func-itot>)
-- [func Itou(i int64) uint64](<#func-itou>)
-- [func Itov(i int64) interface{}](<#func-itov>)
-- [func Ttoa(t bool) string](<#func-ttoa>)
-- [func Ttof(t bool) float64](<#func-ttof>)
-- [func Ttoi(t bool) int64](<#func-ttoi>)
-- [func Ttou(t bool) uint64](<#func-ttou>)
-- [func Ttov(t bool) interface{}](<#func-ttov>)
-- [func Utoa(u uint64) string](<#func-utoa>)
-- [func Utof(u uint64) float64](<#func-utof>)
-- [func Utoi(u uint64) int64](<#func-utoi>)
-- [func Utot(u uint64) bool](<#func-utot>)
-- [func Utov(u uint64) interface{}](<#func-utov>)
-- [func Vtoa(v interface{}) string](<#func-vtoa>)
-- [func Vtof(v interface{}) float64](<#func-vtof>)
-- [func Vtoi(v interface{}) int64](<#func-vtoi>)
-- [func Vtot(v interface{}) bool](<#func-vtot>)
-- [func Vtou(v interface{}) uint64](<#func-vtou>)
-- [type Value](<#type-value>)
-  - [func Any(v interface{}) Value](<#func-any>)
-  - [func Bool(t bool) Value](<#func-bool>)
-  - [func Byte(x byte) Value](<#func-byte>)
-  - [func Bytes(b []byte) Value](<#func-bytes>)
-  - [func CustomBits(x uint64) Value](<#func-custombits>)
-  - [func Float32(x float32) Value](<#func-float32>)
-  - [func Float64(f float64) Value](<#func-float64>)
-  - [func Int(x int) Value](<#func-int>)
-  - [func Int16(x int16) Value](<#func-int16>)
-  - [func Int32(x int32) Value](<#func-int32>)
-  - [func Int64(x int64) Value](<#func-int64>)
-  - [func Int8(x int8) Value](<#func-int8>)
-  - [func Nil() Value](<#func-nil>)
-  - [func String(s string) Value](<#func-string>)
-  - [func StringWithTag(s string, tag uint16) Value](<#func-stringwithtag>)
-  - [func Uint(x uint) Value](<#func-uint>)
-  - [func Uint16(x uint16) Value](<#func-uint16>)
-  - [func Uint32(x uint32) Value](<#func-uint32>)
-  - [func Uint64(x uint64) Value](<#func-uint64>)
-  - [func Uint8(x uint8) Value](<#func-uint8>)
-  - [func (v Value) Any() interface{}](<#func-value-any>)
-  - [func (v Value) Bool() bool](<#func-value-bool>)
-  - [func (v Value) Byte() byte](<#func-value-byte>)
-  - [func (v Value) Bytes() []byte](<#func-value-bytes>)
-  - [func (v Value) Float32() float32](<#func-value-float32>)
-  - [func (v Value) Float64() float64](<#func-value-float64>)
-  - [func (v Value) Int() int](<#func-value-int>)
-  - [func (v Value) Int16() int16](<#func-value-int16>)
-  - [func (v Value) Int32() int32](<#func-value-int32>)
-  - [func (v Value) Int64() int64](<#func-value-int64>)
-  - [func (v Value) Int8() int8](<#func-value-int8>)
-  - [func (v Value) IsBool() bool](<#func-value-isbool>)
-  - [func (v Value) IsBytes() bool](<#func-value-isbytes>)
-  - [func (v Value) IsCustomBits() bool](<#func-value-iscustombits>)
-  - [func (v Value) IsFloat() bool](<#func-value-isfloat>)
-  - [func (v Value) IsInt() bool](<#func-value-isint>)
-  - [func (v Value) IsNil() bool](<#func-value-isnil>)
-  - [func (v Value) IsNumber() bool](<#func-value-isnumber>)
-  - [func (v Value) IsString() bool](<#func-value-isstring>)
-  - [func (v Value) IsUint() bool](<#func-value-isuint>)
-  - [func (v Value) String() string](<#func-value-string>)
-  - [func (v Value) Tag() uint16](<#func-value-tag>)
-  - [func (v Value) Uint() uint](<#func-value-uint>)
-  - [func (v Value) Uint16() uint16](<#func-value-uint16>)
-  - [func (v Value) Uint32() uint32](<#func-value-uint32>)
-  - [func (v Value) Uint64() uint64](<#func-value-uint64>)
-  - [func (v Value) Uint8() uint8](<#func-value-uint8>)
+- [func Atof\(a string\) float64](<#Atof>)
+- [func Atoi\(a string\) int64](<#Atoi>)
+- [func Atot\(a string\) bool](<#Atot>)
+- [func Atou\(a string\) uint64](<#Atou>)
+- [func Atov\(a string\) interface\{\}](<#Atov>)
+- [func Ftoa\(f float64\) string](<#Ftoa>)
+- [func Ftoi\(f float64\) int64](<#Ftoi>)
+- [func Ftot\(f float64\) bool](<#Ftot>)
+- [func Ftou\(f float64\) uint64](<#Ftou>)
+- [func Ftov\(f float64\) interface\{\}](<#Ftov>)
+- [func Itoa\(i int64\) string](<#Itoa>)
+- [func Itof\(i int64\) float64](<#Itof>)
+- [func Itot\(i int64\) bool](<#Itot>)
+- [func Itou\(i int64\) uint64](<#Itou>)
+- [func Itov\(i int64\) interface\{\}](<#Itov>)
+- [func Ttoa\(t bool\) string](<#Ttoa>)
+- [func Ttof\(t bool\) float64](<#Ttof>)
+- [func Ttoi\(t bool\) int64](<#Ttoi>)
+- [func Ttou\(t bool\) uint64](<#Ttou>)
+- [func Ttov\(t bool\) interface\{\}](<#Ttov>)
+- [func Utoa\(u uint64\) string](<#Utoa>)
+- [func Utof\(u uint64\) float64](<#Utof>)
+- [func Utoi\(u uint64\) int64](<#Utoi>)
+- [func Utot\(u uint64\) bool](<#Utot>)
+- [func Utov\(u uint64\) interface\{\}](<#Utov>)
+- [func Vtoa\(v interface\{\}\) string](<#Vtoa>)
+- [func Vtof\(v interface\{\}\) float64](<#Vtof>)
+- [func Vtoi\(v interface\{\}\) int64](<#Vtoi>)
+- [func Vtot\(v interface\{\}\) bool](<#Vtot>)
+- [func Vtou\(v interface\{\}\) uint64](<#Vtou>)
 
 
+<a name="Atof"></a>
 ## func Atof
 
 ```go
@@ -96,6 +49,7 @@ func Atof(a string) float64
 
 Atof converts string to float64 For infinte numbers use 'Infinity' or '\-Infinity', not 'Inf' or '\-Inf'. Returns NaN for invalid syntax
 
+<a name="Atoi"></a>
 ## func Atoi
 
 ```go
@@ -104,6 +58,7 @@ func Atoi(a string) int64
 
 Atoi converts string to int64 Returns 0 for invalid syntax
 
+<a name="Atot"></a>
 ## func Atot
 
 ```go
@@ -112,6 +67,7 @@ func Atot(a string) bool
 
 Atot converts string to bool Always returns true unless string is empty.
 
+<a name="Atou"></a>
 ## func Atou
 
 ```go
@@ -120,6 +76,7 @@ func Atou(a string) uint64
 
 Atou converts string to uint64 Returns 0 for invalid syntax
 
+<a name="Atov"></a>
 ## func Atov
 
 ```go
@@ -128,6 +85,7 @@ func Atov(a string) interface{}
 
 Atov converts string to any
 
+<a name="Ftoa"></a>
 ## func Ftoa
 
 ```go
@@ -136,6 +94,7 @@ func Ftoa(f float64) string
 
 Ftoa converts float64 to string Returns 'Infinity' or '\-Infinity', not 'Inf' or '\-Inf', for infinite numbers. Returns 'NaN' for not\-a\-number.
 
+<a name="Ftoi"></a>
 ## func Ftoi
 
 ```go
@@ -144,6 +103,7 @@ func Ftoi(f float64) int64
 
 Ftoi converts float64 to int64
 
+<a name="Ftot"></a>
 ## func Ftot
 
 ```go
@@ -152,6 +112,7 @@ func Ftot(f float64) bool
 
 Ftot converts float64 to bool
 
+<a name="Ftou"></a>
 ## func Ftou
 
 ```go
@@ -160,6 +121,7 @@ func Ftou(f float64) uint64
 
 Ftou converts float64 to uint64
 
+<a name="Ftov"></a>
 ## func Ftov
 
 ```go
@@ -168,6 +130,7 @@ func Ftov(f float64) interface{}
 
 Ftov converts float64 to any
 
+<a name="Itoa"></a>
 ## func Itoa
 
 ```go
@@ -176,6 +139,7 @@ func Itoa(i int64) string
 
 Itoa converts int64 to string
 
+<a name="Itof"></a>
 ## func Itof
 
 ```go
@@ -184,6 +148,7 @@ func Itof(i int64) float64
 
 Itof converts int64 to float64
 
+<a name="Itot"></a>
 ## func Itot
 
 ```go
@@ -192,6 +157,7 @@ func Itot(i int64) bool
 
 Itot converts int64 to bool
 
+<a name="Itou"></a>
 ## func Itou
 
 ```go
@@ -200,6 +166,7 @@ func Itou(i int64) uint64
 
 Itou converts int64 to uint64
 
+<a name="Itov"></a>
 ## func Itov
 
 ```go
@@ -208,6 +175,7 @@ func Itov(i int64) interface{}
 
 Itov converts int64 to any
 
+<a name="Ttoa"></a>
 ## func Ttoa
 
 ```go
@@ -216,6 +184,7 @@ func Ttoa(t bool) string
 
 Ttoa converts bool to string
 
+<a name="Ttof"></a>
 ## func Ttof
 
 ```go
@@ -224,6 +193,7 @@ func Ttof(t bool) float64
 
 Ttof converts bool to float64
 
+<a name="Ttoi"></a>
 ## func Ttoi
 
 ```go
@@ -232,6 +202,7 @@ func Ttoi(t bool) int64
 
 Ttoi converts bool to int64
 
+<a name="Ttou"></a>
 ## func Ttou
 
 ```go
@@ -240,6 +211,7 @@ func Ttou(t bool) uint64
 
 Ttou converts bool to uint64
 
+<a name="Ttov"></a>
 ## func Ttov
 
 ```go
@@ -248,6 +220,7 @@ func Ttov(t bool) interface{}
 
 Ttov converts bool to any
 
+<a name="Utoa"></a>
 ## func Utoa
 
 ```go
@@ -256,6 +229,7 @@ func Utoa(u uint64) string
 
 Utoa converts uint64 to string
 
+<a name="Utof"></a>
 ## func Utof
 
 ```go
@@ -264,6 +238,7 @@ func Utof(u uint64) float64
 
 Utof converts uint64 to float64
 
+<a name="Utoi"></a>
 ## func Utoi
 
 ```go
@@ -272,6 +247,7 @@ func Utoi(u uint64) int64
 
 Utoi converts uint64 to int64
 
+<a name="Utot"></a>
 ## func Utot
 
 ```go
@@ -280,6 +256,7 @@ func Utot(u uint64) bool
 
 Utot converts uint64 to bool
 
+<a name="Utov"></a>
 ## func Utov
 
 ```go
@@ -288,6 +265,7 @@ func Utov(u uint64) interface{}
 
 Utov converts uint64 to any
 
+<a name="Vtoa"></a>
 ## func Vtoa
 
 ```go
@@ -296,6 +274,7 @@ func Vtoa(v interface{}) string
 
 Vtoa converts any to string
 
+<a name="Vtof"></a>
 ## func Vtof
 
 ```go
@@ -304,6 +283,7 @@ func Vtof(v interface{}) float64
 
 Vtof converts any to float64
 
+<a name="Vtoi"></a>
 ## func Vtoi
 
 ```go
@@ -312,6 +292,7 @@ func Vtoi(v interface{}) int64
 
 Vtoi converts any to int64
 
+<a name="Vtot"></a>
 ## func Vtot
 
 ```go
@@ -320,6 +301,7 @@ func Vtot(v interface{}) bool
 
 Vtot converts any to bool
 
+<a name="Vtou"></a>
 ## func Vtou
 
 ```go
@@ -327,393 +309,5 @@ func Vtou(v interface{}) uint64
 ```
 
 Vtou converts any to uint64
-
-## type Value
-
-Value is a boxed value
-
-```go
-type Value struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func Any
-
-```go
-func Any(v interface{}) Value
-```
-
-Any boxes anything
-
-### func Bool
-
-```go
-func Bool(t bool) Value
-```
-
-Bool boxes a bool
-
-### func Byte
-
-```go
-func Byte(x byte) Value
-```
-
-Byte boxes a byte
-
-### func Bytes
-
-```go
-func Bytes(b []byte) Value
-```
-
-Bytes boxes a byte slice
-
-### func CustomBits
-
-```go
-func CustomBits(x uint64) Value
-```
-
-CustomBits boxes a custom value.
-
-### func Float32
-
-```go
-func Float32(x float32) Value
-```
-
-Float32 boxes a float32
-
-### func Float64
-
-```go
-func Float64(f float64) Value
-```
-
-Float64 boxes a float64
-
-### func Int
-
-```go
-func Int(x int) Value
-```
-
-Int boxes an int
-
-### func Int16
-
-```go
-func Int16(x int16) Value
-```
-
-Int16 boxes an int16
-
-### func Int32
-
-```go
-func Int32(x int32) Value
-```
-
-Int32 boxes an int32
-
-### func Int64
-
-```go
-func Int64(x int64) Value
-```
-
-Int64 boxes an int64
-
-### func Int8
-
-```go
-func Int8(x int8) Value
-```
-
-Int8 boxes an int8
-
-### func Nil
-
-```go
-func Nil() Value
-```
-
-Nil boxes a nil. This is the same as the default \`box.Value\{\}\`.
-
-### func String
-
-```go
-func String(s string) Value
-```
-
-String boxes a string value
-
-### func StringWithTag
-
-```go
-func StringWithTag(s string, tag uint16) Value
-```
-
-StringWithTag boxes a string value and adds a custom tag.
-
-### func Uint
-
-```go
-func Uint(x uint) Value
-```
-
-Uint boxes a uint
-
-### func Uint16
-
-```go
-func Uint16(x uint16) Value
-```
-
-Uint16 boxes a uint16
-
-### func Uint32
-
-```go
-func Uint32(x uint32) Value
-```
-
-Uint32 boxes a uint32
-
-### func Uint64
-
-```go
-func Uint64(x uint64) Value
-```
-
-Uint64 boxes a uint64
-
-### func Uint8
-
-```go
-func Uint8(x uint8) Value
-```
-
-Uint8 boxes a uint8
-
-### func \(Value\) Any
-
-```go
-func (v Value) Any() interface{}
-```
-
-Any returns the value as an \`any/interface\{\}\` type.
-
-### func \(Value\) Bool
-
-```go
-func (v Value) Bool() bool
-```
-
-Bool returns the value as a bool
-
-### func \(Value\) Byte
-
-```go
-func (v Value) Byte() byte
-```
-
-Byte returns the value as a byte
-
-### func \(Value\) Bytes
-
-```go
-func (v Value) Bytes() []byte
-```
-
-Bytes returns the value as a byte slice. When the boxed value is a \`\[\]byte\` then those original bytes are returned. Otherwise, the string representation of the value is returned, which will be equivalent to \`\[\]byte\(value.String\(\)\)\`.
-
-### func \(Value\) Float32
-
-```go
-func (v Value) Float32() float32
-```
-
-Float32 returns the value as a float32
-
-### func \(Value\) Float64
-
-```go
-func (v Value) Float64() float64
-```
-
-Float64 returns the value as a float64
-
-### func \(Value\) Int
-
-```go
-func (v Value) Int() int
-```
-
-Int returns the value as an int
-
-### func \(Value\) Int16
-
-```go
-func (v Value) Int16() int16
-```
-
-Int16 returns the value as an int16
-
-### func \(Value\) Int32
-
-```go
-func (v Value) Int32() int32
-```
-
-Int32 returns the value as an int32
-
-### func \(Value\) Int64
-
-```go
-func (v Value) Int64() int64
-```
-
-Int64 returns the value as an int64
-
-### func \(Value\) Int8
-
-```go
-func (v Value) Int8() int8
-```
-
-Int8 returns the value as an int8
-
-### func \(Value\) IsBool
-
-```go
-func (v Value) IsBool() bool
-```
-
-IsBool returns true if the boxed value is a bool primitive.
-
-### func \(Value\) IsBytes
-
-```go
-func (v Value) IsBytes() bool
-```
-
-IsBytes returns true if the boxed value is a \[\]byte.
-
-### func \(Value\) IsCustomBits
-
-```go
-func (v Value) IsCustomBits() bool
-```
-
-IsCustomBits returns true if the boxed value was created using box.CustomBits.
-
-### func \(Value\) IsFloat
-
-```go
-func (v Value) IsFloat() bool
-```
-
-IsFloat returns true if the boxed value is a float\-like primitive: float32, float64
-
-### func \(Value\) IsInt
-
-```go
-func (v Value) IsInt() bool
-```
-
-IsInt returns true if the boxed value is an int\-like primitive: int, int8, int16, int32, int64, byte
-
-### func \(Value\) IsNil
-
-```go
-func (v Value) IsNil() bool
-```
-
-IsNil returns true if the boxed value is nil.
-
-### func \(Value\) IsNumber
-
-```go
-func (v Value) IsNumber() bool
-```
-
-IsNumber returns true if the boxed value is an numeric\-like primitive: int, int8, int16, int32, int64, byte, uint, uint8, uint16, uint32, uint64, float32, float64
-
-### func \(Value\) IsString
-
-```go
-func (v Value) IsString() bool
-```
-
-IsString returns true if the boxed value is a string.
-
-### func \(Value\) IsUint
-
-```go
-func (v Value) IsUint() bool
-```
-
-IsUint returns true if the boxed value is an uint\-like primitive: uint, uint8, uint16, uint32, uint64
-
-### func \(Value\) String
-
-```go
-func (v Value) String() string
-```
-
-String returns the value as a string.
-
-### func \(Value\) Tag
-
-```go
-func (v Value) Tag() uint16
-```
-
-Tag returns the tag from a value created by box.StringWithTag
-
-### func \(Value\) Uint
-
-```go
-func (v Value) Uint() uint
-```
-
-Uint returns the value as a uint
-
-### func \(Value\) Uint16
-
-```go
-func (v Value) Uint16() uint16
-```
-
-Uint16 returns the value as a uint16
-
-### func \(Value\) Uint32
-
-```go
-func (v Value) Uint32() uint32
-```
-
-Uint32 returns the value as a uint32
-
-### func \(Value\) Uint64
-
-```go
-func (v Value) Uint64() uint64
-```
-
-Uint64 returns the value as a uint64
-
-### func \(Value\) Uint8
-
-```go
-func (v Value) Uint8() uint8
-```
-
-Uint8 returns the value as a uint8
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)
