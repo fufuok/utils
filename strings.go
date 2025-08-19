@@ -387,3 +387,24 @@ func FirstString(s, sep string, defaultStr ...string) string {
 	}
 	return ""
 }
+
+// RemoveRunes 清除字符串中的指定字符串的每个字符
+func RemoveRunes(s string, toRemove string) string {
+	if s == "" || toRemove == "" {
+		return s
+	}
+
+	rm := make(map[rune]struct{}, len(toRemove))
+	for _, r := range toRemove {
+		rm[r] = struct{}{}
+	}
+
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, r := range s {
+		if _, exists := rm[r]; !exists {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
+}

@@ -697,3 +697,156 @@ func TestFirstString(t *testing.T) {
 
 	assert.Equal(t, "ff", FirstString("abc", "\n", "ff"))
 }
+
+func TestFilterChars(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		chars    string
+		expected string
+	}{
+		// 常规用例
+		{
+			name:     "应用场景需求: \"|'`$",
+			input:    "Merge\"|'`$' branch 'fe$a\"t$u|r`e/yy/8977_9011_攻略老后台新闻管理' into 'release/11200'",
+			chars:    "\"|'`$",
+			expected: "Merge branch feature/yy/8977_9011_攻略老后台新闻管理 into release/11200",
+		},
+		{
+			name:     "移除标准特殊字符",
+			input:    `a|b'c"d$e`,
+			chars:    `|'"$`,
+			expected: "abcde",
+		},
+		{
+			name:     "混合Unicode字符",
+			input:    "Hello|世界'！",
+			chars:    `|'！`,
+			expected: "Hello世界",
+		},
+		// 边界条件
+		{
+			name:     "空输入",
+			input:    "",
+			chars:    `|'"`,
+			expected: "",
+		},
+		{
+			name:     "空过滤",
+			input:    "空过滤",
+			chars:    "",
+			expected: "空过滤",
+		},
+		{
+			name:     "无匹配字符",
+			input:    "nothing_to_remove",
+			chars:    `|'"`,
+			expected: "nothing_to_remove",
+		},
+		{
+			name:     "全量删除",
+			input:    `|'"`,
+			chars:    `|'"`,
+			expected: "",
+		},
+		// 特殊场景
+		{
+			name:     "连续重复字符",
+			input:    "a|||b'''c",
+			chars:    `|'`,
+			expected: "abc",
+		},
+		{
+			name:     "控制字符",
+			input:    "\n\t\r", // 真实换行/制表/回车
+			chars:    "\n\t",   // 真实控制字符
+			expected: "\r",     // 只保留回车
+		},
+		{
+			name:     "字面反斜杠",
+			input:    `\n\t\r`,
+			chars:    `\n\t`, // 实际是3个字符：\ n t
+			expected: `r`,    // 会删除所有 \, n, t，最终只剩 r
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := RemoveRunes(tt.input, tt.chars)
+			if got != tt.expected {
+				t.Errorf("RemoveRunes(%q, %q) = %q, want %q",
+					tt.input, tt.chars, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestFilterChars_EdgeCases(t *testing.T) {
+	testCases := map[string]struct {
+		input    string
+		chars    string
+		expected string
+	}{
+		"emoji":         {"测试🚀|火箭", "|", "测试🚀火箭"},
+		"emojis":        {"测试🚀|👋🌿火箭", "👋🌿🚀|", "测试火箭"},
+		"control chars": {"a\x00b\tc", "\x00\t", "abc"},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			got := RemoveRunes(tc.input, tc.chars)
+			if got != tc.expected {
+				t.Errorf("got %q, want %q", got, tc.expected)
+			}
+		})
+	}
+}
+
+func FuzzFilterChars(f *testing.F) {
+	// 种子用例
+	f.Add("a|b'c", `|'`)
+	f.Add("Hello世界!", "!")
+
+	f.Fuzz(func(t *testing.T, input, chars string) {
+		result := RemoveRunes(input, chars)
+
+		// 验证结果不应包含chars中的任何字符
+		for _, r := range chars {
+			if strings.ContainsRune(result, r) {
+				t.Errorf("Result %q contains forbidden char %c", result, r)
+			}
+		}
+
+		// 验证长度约束
+		if len(result) > len(input) {
+			t.Errorf("Result longer than input: %q -> %q", input, result)
+		}
+	})
+}
+
+func BenchmarkFilterChars(b *testing.B) {
+	inputs := []string{
+		"normal|case'string",
+		strings.Repeat("a|b'c", 1000), // 长字符串测试
+		"no_special_chars",
+	}
+	chars := `|'"`
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for _, input := range inputs {
+			_ = RemoveRunes(input, chars)
+		}
+	}
+}
+
+// # go test -run=^$ -benchmem -benchtime=1s -count=3 -bench=BenchmarkFilter
+// goos: linux
+// goarch: amd64
+// pkg: github.com/fufuok/utils
+// cpu: AMD Ryzen 7 5700G with Radeon Graphics
+// BenchmarkFilterChars-16            49064             24347 ns/op            5416 B/op          3 allocs/op
+// BenchmarkFilterChars-16            48196             25782 ns/op            5416 B/op          3 allocs/op
+// BenchmarkFilterChars-16            47986             24505 ns/op            5416 B/op          3 allocs/op
+// PASS
+// ok      github.com/fufuok/utils 4.378s
