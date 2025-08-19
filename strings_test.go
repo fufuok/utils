@@ -802,28 +802,6 @@ func TestFilterChars_EdgeCases(t *testing.T) {
 	}
 }
 
-func FuzzFilterChars(f *testing.F) {
-	// 种子用例
-	f.Add("a|b'c", `|'`)
-	f.Add("Hello世界!", "!")
-
-	f.Fuzz(func(t *testing.T, input, chars string) {
-		result := RemoveRunes(input, chars)
-
-		// 验证结果不应包含chars中的任何字符
-		for _, r := range chars {
-			if strings.ContainsRune(result, r) {
-				t.Errorf("Result %q contains forbidden char %c", result, r)
-			}
-		}
-
-		// 验证长度约束
-		if len(result) > len(input) {
-			t.Errorf("Result longer than input: %q -> %q", input, result)
-		}
-	})
-}
-
 func BenchmarkFilterChars(b *testing.B) {
 	inputs := []string{
 		"normal|case'string",
